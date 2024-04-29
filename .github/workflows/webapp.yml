@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -21,7 +21,15 @@ jobs:
         run: npm install
         working-directory: ./joyboy-webapp
 
+      # Build step with working directory set to ./crates/wasm/app
+      # NODE_OPTIONS=--openssl-legacy-provider is required for the build step to work
+      - name: Build
+        run: NODE_OPTIONS=--openssl-legacy-provider npm run build
+        working-directory: ./joyboy-webapp
+
       # Deploy step
       - name: Deploy
-        run: npm run deploy
-        working-directory: ./joyboy-webapp
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./joyboy-webapp/build
