@@ -1,0 +1,26 @@
+name: Starknet Contracts
+
+on: [push, pull_request]
+
+permissions: read-all
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: software-mansion/setup-scarb@v1
+      - name: Check cairo format
+        run: scarb fmt --check
+        working-directory: onchain
+      - name: Build cairo programs
+        run: scarb build
+        working-directory: onchain
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: software-mansion/setup-scarb@v1
+      - name: Run cairo tests
+        run: scarb test
+        working-directory: onchain
