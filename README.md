@@ -29,11 +29,31 @@ Freedom requires censorship resistance, and Nostr provides exactly that.
 
 - [ ] Cairo implementation of Nostr signature verification
 - [ ] Starknet account contract implementation, controlled by Nostr keypair
-- [ ] Simple frontend to sign and verify messages (using a browser extension lke [Flamingo](https://www.getflamingo.org/))
+- [ ] Simple frontend to sign and verify messages (using a browser extension lke [Flamingo](https://www.getflamingo.org/) or any other [NIP-07](https://github.com/nostr-protocol/nips/blob/master/07.md) compatible extension, list can be found [here](https://github.com/aljazceru/awesome-nostr#nip-07-browser-extensions))
 - [ ] Joyboy landing page
 - [ ] Implement a full Nostr client application with Starknet integration
 - [ ] Run Nostr relay server
 - [ ] Crossover with [Vault](https://github.com/keep-starknet-strange/vault) to bring Social features to the Vault application
+
+## Webapp
+
+The webapp is a simple frontend to sign and verify messages using a browser extension like [Flamingo](https://www.getflamingo.org/) or [nos2x](https://github.com/fiatjaf/nos2x). It is built using React and Tailwind CSS.
+
+### Development
+
+To start the development server, run:
+
+```bash
+npm start
+```
+
+### Build
+
+To build the project, run:
+
+```bash
+npm run build
+```
 
 ## Onchain
 
