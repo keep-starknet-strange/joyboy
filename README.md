@@ -33,6 +33,7 @@ Freedom requires censorship resistance, and Nostr provides exactly that.
 - [ ] Starknet account contract implementation, controlled by Nostr keypair
 - [ ] Simple frontend to sign and verify messages (using a browser extension lke [Flamingo](https://www.getflamingo.org/) or any other [NIP-07](https://github.com/nostr-protocol/nips/blob/master/07.md) compatible extension, list can be found [here](https://github.com/aljazceru/awesome-nostr#nip-07-browser-extensions))
 - [ ] Joyboy landing page
+- [ ] SocialPay feature to send and receive tips through Nostr signed messages
 - [ ] Implement a full Nostr client application with Starknet integration
 - [ ] Run Nostr relay server
 - [ ] Crossover with [Vault](https://github.com/keep-starknet-strange/vault) to bring Social features to the Vault application
