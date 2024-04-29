@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/joyboy/static/css/main.f855e6bc.css",
-    "main.js": "/joyboy/static/js/main.54c9afc5.js",
-    "static/js/453.224b1c5e.chunk.js": "/joyboy/static/js/453.224b1c5e.chunk.js",
-    "index.html": "/joyboy/index.html",
-    "main.f855e6bc.css.map": "/joyboy/static/css/main.f855e6bc.css.map",
-    "main.54c9afc5.js.map": "/joyboy/static/js/main.54c9afc5.js.map",
-    "453.224b1c5e.chunk.js.map": "/joyboy/static/js/453.224b1c5e.chunk.js.map"
+    "main.css": "/joyboy/joyboy-webapp/static/css/main.f855e6bc.css",
+    "main.js": "/joyboy/joyboy-webapp/static/js/main.63d06e5e.js",
+    "static/js/453.224b1c5e.chunk.js": "/joyboy/joyboy-webapp/static/js/453.224b1c5e.chunk.js",
+    "index.html": "/joyboy/joyboy-webapp/index.html",
+    "main.f855e6bc.css.map": "/joyboy/joyboy-webapp/static/css/main.f855e6bc.css.map",
+    "main.63d06e5e.js.map": "/joyboy/joyboy-webapp/static/js/main.63d06e5e.js.map",
+    "453.224b1c5e.chunk.js.map": "/joyboy/joyboy-webapp/static/js/453.224b1c5e.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f855e6bc.css",
-    "static/js/main.54c9afc5.js"
+    "static/js/main.63d06e5e.js"
   ]
 }
