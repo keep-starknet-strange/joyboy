@@ -25,6 +25,16 @@ Yes! This is what social networks should be about. A place where you can be your
 
 Freedom requires censorship resistance, and Nostr provides exactly that.
 
+## Roadmap
+
+- [] Cairo implementation of Nostr signature verification
+- [] Starknet account contract implementation, controlled by Nostr keypair
+- [] Simple frontend to sign and verify messages (using a browser extension lke [Flamingo](https://www.getflamingo.org/))
+- [] Joyboy landing page
+- [] Implement a full Nostr client application with Starknet integration
+- [] Run Nostr relay server
+- [] Crossover with [Vault](https://github.com/keep-starknet-strange/vault) to bring Social features to the Vault application
+
 ## Onchain
 
 The onchain components of the project are implemented as a suite of Starknet smart contracts.
