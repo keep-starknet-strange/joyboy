@@ -9,6 +9,8 @@
 
 </div>
 
+[Website](https://www.joyboy.community/) | [Webapp](https://app.joyboy.community) | [Telegram]() | [Discord]() | [Twitter]()
+
 ## Overview
 
 Decentralized social built with Nostr and powered by Starknet account abstraction.
