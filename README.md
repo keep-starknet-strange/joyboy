@@ -38,7 +38,10 @@ Freedom requires censorship resistance, and Nostr provides exactly that.
 - [ ] Run Nostr relay server
 - [ ] Crossover with [Vault](https://github.com/keep-starknet-strange/vault) to bring Social features to the Vault application
 
-## Webapp
+## Modules
+
+<details>
+  <summary>Webapp</summary>
 
 The webapp is a simple frontend to sign and verify messages using a browser extension like [Flamingo](https://www.getflamingo.org/) or [nos2x](https://github.com/fiatjaf/nos2x). It is built using React and Tailwind CSS.
 
@@ -57,8 +60,10 @@ To build the project, run:
 ```bash
 npm run build
 ```
+</details>
 
-## Onchain
+<details>
+  <summary>Onchain</summary>
 
 The onchain components of the project are implemented as a suite of Starknet smart contracts.
 
@@ -78,11 +83,16 @@ To test the project, run:
 snforge test
 ```
 
+</details>
+
 ## Resources
 
 - [Starknet](https://starknet.io/)
 - [Nostr](https://www.nostr.com/)
 - [Nostr Implementation Possibilities](https://github.com/nostr-protocol/nips)
+- [JoinStr: Decentralized CoinJoin Implementation Using Nostr](https://www.nobsbitcoin.com/joinstr-decentralized-coinjoin-implementation-using-nostr/)
+- [Smart Vaults - Bitcoin multi-custody signature orchestration - website](https://www.smartvaults.io/)
+- [Smart Vaults - Bitcoin multi-custody signature orchestration - repo](https://github.com/smartvaults/smartvaults)
 
 ## Contributors ✨
 
