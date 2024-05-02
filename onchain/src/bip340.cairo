@@ -1,3 +1,4 @@
+use core::result::ResultTrait;
 use core::to_byte_array::AppendFormattedToByteArray;
 use core::byte_array::ByteArrayTrait;
 use core::traits::Into;
@@ -22,6 +23,8 @@ use starknet::{secp256k1::{Secp256k1Point}, secp256_trait::{Secp256Trait, Secp25
 const TWO_POW_32: u128 = 0x100000000;
 const TWO_POW_64: u128 = 0x10000000000000000;
 const TWO_POW_96: u128 = 0x1000000000000000000000000;
+
+const p: u256 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F;
 
 fn hash_challenge<
     Secp256Point,
@@ -69,16 +72,10 @@ fn hash_challenge<
     // println!("sha: {:?}", sha_u256);
 
     let [x0, x1, x2, x3, x4, x5, x6, x7] = compute_sha256_byte_array(@ba);
-    
+
     u256 {
-        high: x0.into() * TWO_POW_96
-            + x1.into() * TWO_POW_64
-            + x2.into() * TWO_POW_32
-            + x3.into(),
-        low: x4.into() * TWO_POW_96
-            + x5.into() * TWO_POW_64
-            + x6.into() * TWO_POW_32
-            + x7.into(),
+        high: x0.into() * TWO_POW_96 + x1.into() * TWO_POW_64 + x2.into() * TWO_POW_32 + x3.into(),
+        low: x4.into() * TWO_POW_96 + x5.into() * TWO_POW_64 + x6.into() * TWO_POW_32 + x7.into(),
     }
 }
 
@@ -90,25 +87,36 @@ fn generic_verify<
 >(
     px: u256, rx: u256, s: u256, m: ByteArray
 ) -> bool {
+    let n = Secp256Impl::get_curve_size();
+
+    if rx >= p || s >= n {
+        return false;
+    }
+
     // println!("px: {:?}", px);
     // println!("rx: {:?}", rx);
     // println!("s: {:?}", s);
 
     // p - field size, n - curve order
     // point P for which x(P) = px and has_even_y(P),
-    let P = Secp256Impl::secp256_ec_get_point_from_x_syscall(px, false).unwrap_syscall().unwrap();
+    let P = Secp256Impl::secp256_ec_get_point_from_x_syscall(px, false);
+    let P = if P.is_err() {
+        return false;
+    } else {
+        P.unwrap_syscall()
+    };
+    let P = if P.is_none() {
+        return false;
+    } else {
+        P.unwrap()
+    };
 
     // let (Px, Py) = P.get_coordinates().unwrap_syscall();
     // println!("P: {:?}, {:?}", Px, Py);
     // true
 
-    // TODO:
-    // if (P is None) or (r >= p) or (s >= n):
-    //     debug_print_vars()
-    //     return False
-
     // e = int(hashBIP0340/challenge(bytes(r) || bytes(P) || m)) mod n.
-    let e = hash_challenge::<Secp256Point>(rx, px, m) % Secp256Impl::get_curve_size();
+    let e = hash_challenge::<Secp256Point>(rx, px, m) % n;
 
     let G = Secp256Impl::get_generator_point();
 
@@ -324,15 +332,25 @@ mod tests {
 
         assert_eq!(verify(px, rx, s, m), true);
     }
-// TODO: message is too long!
-// #[test]
-// fn test_18() {
-//     let px: u256 =  0x778caa53b4393ac467774d09497a87224bf9fab6f6e68b23086497324d6fd117 ;
-//     let rx: u256 =  0x403b12b0d8555a344175ea7ec746566303321e5dbfa8be6f091635163eca79a8 ;
-//     let s: u256 =  0x585ed3e3170807e7c03b720fc54c7b23897fcba0e9d0b4a06894cfd249f22367 ;
-//     let m: u256 =
-//     
-//     0x99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999;
-//     assert_eq!(verify(px, rx, s, m.into()), true);
-// }
+
+    #[test]
+    fn test_18() {
+        let px: u256 = 0x778caa53b4393ac467774d09497a87224bf9fab6f6e68b23086497324d6fd117;
+        let rx: u256 = 0x403b12b0d8555a344175ea7ec746566303321e5dbfa8be6f091635163eca79a8;
+        let s: u256 = 0x585ed3e3170807e7c03b720fc54c7b23897fcba0e9d0b4a06894cfd249f22367;
+
+        let mut m: ByteArray = Default::default();
+        let mut nines: ByteArray =
+            0x9999999999999999999999999999999999999999999999999999999999999999_u256
+            .into();
+        m.append(@nines);
+        m.append(@nines);
+        m.append(@nines);
+        m.append_byte(0x99);
+        m.append_byte(0x99);
+        m.append_byte(0x99);
+        m.append_byte(0x99);
+
+        assert_eq!(verify(px, rx, s, m), true);
+    }
 }
