@@ -26,14 +26,7 @@ const TWO_POW_96: u128 = 0x1000000000000000000000000;
 
 const p: u256 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F;
 
-fn hash_challenge<
-    Secp256Point,
-    +Drop<Secp256Point>,
-    +Secp256PointTrait<Secp256Point>,
-    impl Secp256Impl: Secp256Trait<Secp256Point>
->(
-    rx: u256, px: u256, m: ByteArray
-) -> u256 {
+fn hash_challenge(rx: u256, px: u256, m: ByteArray) -> u256 {
     // sha256(tag)
     let [x0, x1, x2, x3, x4, x5, x6, x7] = compute_sha256_byte_array(@"BIP0340/challenge");
 
@@ -66,11 +59,6 @@ fn hash_challenge<
     // m
     ba.append(@m);
 
-    // println!("tagged: {:?}", ba);
-
-    // let sha_u256: u256 = sha.into();
-    // println!("sha: {:?}", sha_u256);
-
     let [x0, x1, x2, x3, x4, x5, x6, x7] = compute_sha256_byte_array(@ba);
 
     u256 {
@@ -79,69 +67,39 @@ fn hash_challenge<
     }
 }
 
-fn generic_verify<
-    Secp256Point,
-    +Drop<Secp256Point>,
-    +Secp256PointTrait<Secp256Point>,
-    impl Secp256Impl: Secp256Trait<Secp256Point>,
->(
-    px: u256, rx: u256, s: u256, m: ByteArray
-) -> bool {
-    let n = Secp256Impl::get_curve_size();
+fn verify(px: u256, rx: u256, s: u256, m: ByteArray) -> bool {
+    let n = Secp256Trait::<Secp256k1Point>::get_curve_size();
 
-    if rx >= p || s >= n {
+    if px >= p || rx >= p || s >= n {
         return false;
     }
 
-    // println!("px: {:?}", px);
-    // println!("rx: {:?}", rx);
-    // println!("s: {:?}", s);
-
     // p - field size, n - curve order
     // point P for which x(P) = px and has_even_y(P),
-    let P = Secp256Impl::secp256_ec_get_point_from_x_syscall(px, false);
-    let P = if P.is_err() {
-        return false;
-    } else {
-        P.unwrap_syscall()
+    let P =
+        match Secp256Trait::<Secp256k1Point>::secp256_ec_get_point_from_x_syscall(px, false)
+            .unwrap_syscall() {
+        Option::Some(P) => P,
+        Option::None => { return false; }
     };
-    let P = if P.is_none() {
-        return false;
-    } else {
-        P.unwrap()
-    };
-
-    // let (Px, Py) = P.get_coordinates().unwrap_syscall();
-    // println!("P: {:?}, {:?}", Px, Py);
-    // true
 
     // e = int(hashBIP0340/challenge(bytes(r) || bytes(P) || m)) mod n.
-    let e = hash_challenge::<Secp256Point>(rx, px, m) % n;
+    let e = hash_challenge(rx, px, m) % n;
 
-    let G = Secp256Impl::get_generator_point();
+    let G = Secp256Trait::<Secp256k1Point>::get_generator_point();
 
     // R = s⋅G - e⋅P
     let p1 = G.mul(s).unwrap_syscall();
-    let minus_e = Secp256Impl::get_curve_size() - e;
+    let minus_e = Secp256Trait::<Secp256k1Point>::get_curve_size() - e;
     let p2 = P.mul(minus_e).unwrap_syscall();
 
     let R = p1.add(p2).unwrap_syscall();
 
     let (Rx, Ry) = R.get_coordinates().unwrap_syscall();
 
-    // println!("e: {:?}", e);
-    // println!("Rx: {:?}", Rx);
-    // println!("rx: {:?}", rx);
-    // println!("Ry: {:?}", Ry);
-    // println!("Ry % 2 == 0: {:?}", Ry % 2 == 0);
-
+    // fail if is_infinite(R) || not has_even_y(R) || x(R) ≠ rx.
     !(Rx == 0 && Ry == 0) && Ry % 2 == 0 && Rx == rx
 }
-
-pub fn verify(px: u256, rx: u256, s: u256, m: ByteArray) -> bool {
-    generic_verify::<Secp256k1Point>(px, rx, s, m)
-}
-
 
 #[cfg(test)]
 mod tests {
