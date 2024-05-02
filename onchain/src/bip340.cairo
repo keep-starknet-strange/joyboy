@@ -311,4 +311,15 @@ mod tests {
 
         assert_eq!(verify(px, rx, s, m), true);
     }
+    
+    #[test]
+    fn test_19() {
+        // signiture of message joyboy, generated with actual nos2x extension
+        let px: u256 = 0x98298b0b4a0d586771e7f84c742394b5013d37c16af0924bd7ee62ec6a517a5d;
+        let rx: u256 = 0x3b7a0877cefa952d536fc167446a22f017922743db5cddd912b7890b7c5c34fe;
+        let s: u256 = 0x2591fff0a4ac15d3ed5d3f767e686e771ec456af2fb53ffba163e509e16b0eba;
+        let m: u256 = 0x2e5673c8b39f7a0d41219676661159c59a93644c06b81684718b8a0cd53f7f06;
+
+        assert_eq!(verify(px, rx, s, m.into()), true);
+    }
 }
