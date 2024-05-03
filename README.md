@@ -1,7 +1,5 @@
 <div align="center">
-  <img src="resources/logo/joyboy.png" alt="joyboy_logo" height="300"/>
-
-**_Starknet x Nostr_**
+  <img src="resources/logo/joyboy-base-logo.png" alt="joyboy_logo" height="300"/>
 
 [![Starknet Test Workflow Status](https://github.com/keep-starknet-strange/joyboy/actions/workflows/starknet-contracts.yml/badge.svg)](https://github.com/keep-starknet-strange/joyboy/actions/workflows/starknet-contracts.yml)
 
@@ -9,7 +7,7 @@
 
 </div>
 
-[Website](https://www.joyboy.community/) | [Webapp](https://app.joyboy.community) | [Telegram]() | [Discord]() | [Twitter]()
+[Website](https://www.joyboy.community/) | [Webapp](https://app.joyboy.community) | [Telegram](https://t.me/JoyboyStarknet) | [Discord]() | [Twitter]()
 
 ## Overview
 
