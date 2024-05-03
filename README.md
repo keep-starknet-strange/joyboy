@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="resources/logo/joyboy-base-logo.png" alt="joyboy_logo" height="300"/>
+  <img src="resources/branding/logo/joyboy-04.png" alt="joyboy_logo" height="300"/>
 
 [![Starknet Test Workflow Status](https://github.com/keep-starknet-strange/joyboy/actions/workflows/starknet-contracts.yml/badge.svg)](https://github.com/keep-starknet-strange/joyboy/actions/workflows/starknet-contracts.yml)
 
