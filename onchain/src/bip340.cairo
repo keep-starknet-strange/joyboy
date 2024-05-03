@@ -26,11 +26,20 @@ const TWO_POW_96: u128 = 0x1000000000000000000000000;
 
 const p: u256 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F;
 
+/// Computes BIP0340/challenge tagged hash.
+///
+/// # Parameters:
+/// - `rx`: `u256` - The x-coordinate of the R point from the signature.
+/// - `px`: `u256` - The x-coordinate of the public key.
+/// - `m`: `ByteArray` - The message for which the signature is being verified.
+///
+/// # Returns:
+/// Returns `sha256(tag) || sha256(tag) || bytes(rx) || bytes(px) || m` as u256 where tag =
+/// "BIP0340/challenge".
 fn hash_challenge(rx: u256, px: u256, m: ByteArray) -> u256 {
     // sha256(tag)
     let [x0, x1, x2, x3, x4, x5, x6, x7] = compute_sha256_byte_array(@"BIP0340/challenge");
 
-    // sha256(tag) || sha256(tag) || bytes(r) || bytes(pk) || m
     let mut ba = Default::default();
     // sha256(tag)
     ba.append_word(x0.into(), 4);
@@ -50,7 +59,7 @@ fn hash_challenge(rx: u256, px: u256, m: ByteArray) -> u256 {
     ba.append_word(x5.into(), 4);
     ba.append_word(x6.into(), 4);
     ba.append_word(x7.into(), 4);
-    // bytes(r)
+    // bytes(rx)
     ba.append_word(rx.high.into(), 16);
     ba.append_word(rx.low.into(), 16);
     // bytes(px)
@@ -67,6 +76,20 @@ fn hash_challenge(rx: u256, px: u256, m: ByteArray) -> u256 {
     }
 }
 
+/// Verifies a signature according to the BIP-340.
+///
+/// This function checks if the signature `(rx, s)` is valid for a message `m` with
+/// respect to the public key `px`.
+///
+/// # Parameters
+/// - `px`: `u256` - The x-coordinate of the public key.
+/// - `rx`: `u256` - The x-coordinate of the R point from the signature.
+/// - `s`: `u256` - The scalar component of the signature.
+/// - `m`: `ByteArray` - The message for which the signature is being verified.
+///
+/// # Returns
+/// Returns `true` if the signature is valid for the given message and public key; otherwise,
+/// returns `false`.
 fn verify(px: u256, rx: u256, s: u256, m: ByteArray) -> bool {
     let n = Secp256Trait::<Secp256k1Point>::get_curve_size();
 
@@ -83,7 +106,7 @@ fn verify(px: u256, rx: u256, s: u256, m: ByteArray) -> bool {
         Option::None => { return false; }
     };
 
-    // e = int(hashBIP0340/challenge(bytes(r) || bytes(P) || m)) mod n.
+    // e = int(hashBIP0340/challenge(bytes(rx) || bytes(px) || m)) mod n.
     let e = hash_challenge(rx, px, m) % n;
 
     let G = Secp256Trait::<Secp256k1Point>::get_generator_point();
@@ -126,7 +149,7 @@ mod tests {
         let rx: u256 = 0xe907831f80848d1069a5371b402410364bdf1c5f8307b0084c55f1ce2dca8215;
         let s: u256 = 0x25f66a4a85ea8b71e482a74f382d2ce5ebeee8fdb2172f477df4900d310536c0;
         let m: u256 = 0x0;
-        assert_eq!(verify(px, rx, s, m.into()), true);
+        assert!(verify(px, rx, s, m.into()));
     }
 
     #[test]
@@ -135,7 +158,7 @@ mod tests {
         let rx: u256 = 0x6896bd60eeae296db48a229ff71dfe071bde413e6d43f917dc8dcf8c78de3341;
         let s: u256 = 0x8906d11ac976abccb20b091292bff4ea897efcb639ea871cfa95f6de339e4b0a;
         let m: u256 = 0x243f6a8885a308d313198a2e03707344a4093822299f31d0082efa98ec4e6c89;
-        assert_eq!(verify(px, rx, s, m.into()), true);
+        assert!(verify(px, rx, s, m.into()));
     }
 
     #[test]
@@ -145,7 +168,7 @@ mod tests {
         let s: u256 = 0xab745879a5ad954a72c45a91c3a51d3c7adea98d82f8481e0e1e03674a6f3fb7;
         let m: u256 = 0x7e2d58d8b3bcdf1abadec7829054f90dda9805aab56c77333024b9d0a508b75c;
 
-        assert_eq!(verify(px, rx, s, m.into()), true);
+        assert!(verify(px, rx, s, m.into()));
     }
 
     #[test]
@@ -155,7 +178,7 @@ mod tests {
         let s: u256 = 0x97582b9cb13db3933705b32ba982af5af25fd78881ebb32771fc5922efc66ea3;
         let m: u256 = 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
 
-        assert_eq!(verify(px, rx, s, m.into()), true);
+        assert!(verify(px, rx, s, m.into()));
     }
 
     #[test]
@@ -165,7 +188,7 @@ mod tests {
         let s: u256 = 0x76afb1548af603b3eb45c9f8207dee1060cb71c04e80f593060b07d28308d7f4;
         let m: u256 = 0x4df3c3f68fcc83b27e9d42c90431a72499f17875c81a599b566c9889b9696703;
 
-        assert_eq!(verify(px, rx, s, m.into()), true);
+        assert!(verify(px, rx, s, m.into()));
     }
 
     #[test]
@@ -282,7 +305,7 @@ mod tests {
         let rx: u256 = 0x71535db165ecd9fbbc046e5ffaea61186bb6ad436732fccc25291a55895464cf;
         let s: u256 = 0x6069ce26bf03466228f19a3a62db8a649f2d560fac652827d1af0574e427ab63;
         let m = "";
-        assert_eq!(verify(px, rx, s, m), true);
+        assert!(verify(px, rx, s, m));
     }
 
     #[test]
@@ -292,7 +315,7 @@ mod tests {
         let rx: u256 = 0x8a20a0afef64124649232e0693c583ab1b9934ae63b4c3511f3ae1134c6a303;
         let s: u256 = 0xea3173bfea6683bd101fa5aa5dbc1996fe7cacfc5a577d33ec14564cec2bacbf;
         let m = "\x11";
-        assert_eq!(verify(px, rx, s, m), true);
+        assert!(verify(px, rx, s, m));
     }
 
     #[test]
@@ -303,7 +326,7 @@ mod tests {
         let s: u256 = 0xc4a482b77bf960f8681540e25b6771ece1e5a37fd80e5a51897c5566a97ea5a5;
         let m = "\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f\x10\x11";
 
-        assert_eq!(verify(px, rx, s, m), true);
+        assert!(verify(px, rx, s, m));
     }
 
     #[test]
@@ -325,7 +348,7 @@ mod tests {
         m.append_byte(0x99);
         m.append_byte(0x99);
 
-        assert_eq!(verify(px, rx, s, m), true);
+        assert!(verify(px, rx, s, m));
     }
 
     #[test]
@@ -336,6 +359,6 @@ mod tests {
         let s: u256 = 0x2591fff0a4ac15d3ed5d3f767e686e771ec456af2fb53ffba163e509e16b0eba;
         let m: u256 = 0x2e5673c8b39f7a0d41219676661159c59a93644c06b81684718b8a0cd53f7f06;
 
-        assert_eq!(verify(px, rx, s, m.into()), true);
+        assert!(verify(px, rx, s, m.into()));
     }
 }
