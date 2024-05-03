@@ -1,24 +1,22 @@
-use core::result::ResultTrait;
-use core::to_byte_array::AppendFormattedToByteArray;
+//! bip340 implementation
+//! references:
+//!   Schnorr signatures explained:
+//!   https://www.youtube.com/watch?v=wjACBRJDfxc&ab_channel=Bitcoinology
+//!   NIP-01:
+//!   https://github.com/nostr-protocol/nips/blob/master/01.md
+//!   BIP-340:
+//!   https://github.com/bitcoin/bips/blob/master/bip-0340.mediawiki
+//!  reference implementation:
+//!   https://github.com/bitcoin/bips/blob/master/bip-0340/reference.py
+
 use core::byte_array::ByteArrayTrait;
-use core::traits::Into;
 use core::option::OptionTrait;
-use core::starknet::SyscallResultTrait;
+use core::result::ResultTrait;
 use core::sha256::compute_sha256_byte_array;
-use core::debug::print_byte_array_as_string;
-
-// bip340 implementation
-// references:
-//   Schnorr signatures explained:
-//   https://www.youtube.com/watch?v=wjACBRJDfxc&ab_channel=Bitcoinology
-//   NIP-01:
-//   https://github.com/nostr-protocol/nips/blob/master/01.md
-//   BIP-340:
-//   https://github.com/bitcoin/bips/blob/master/bip-0340.mediawiki
-//   reference implementation:
-//   https://github.com/bitcoin/bips/blob/master/bip-0340/reference.py
-
-use starknet::{secp256k1::{Secp256k1Point}, secp256_trait::{Secp256Trait, Secp256PointTrait},};
+use core::starknet::SyscallResultTrait;
+use core::to_byte_array::AppendFormattedToByteArray;
+use core::traits::Into;
+use starknet::{secp256k1::{Secp256k1Point}, secp256_trait::{Secp256Trait, Secp256PointTrait}};
 
 const TWO_POW_32: u128 = 0x100000000;
 const TWO_POW_64: u128 = 0x10000000000000000;
@@ -34,7 +32,7 @@ const p: u256 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC
 /// - `m`: `ByteArray` - The message for which the signature is being verified.
 ///
 /// # Returns:
-/// Returns `sha256(tag) || sha256(tag) || bytes(rx) || bytes(px) || m` as u256 where tag =
+/// `sha256(tag) || sha256(tag) || bytes(rx) || bytes(px) || m` as u256 where tag =
 /// "BIP0340/challenge".
 fn hash_challenge(rx: u256, px: u256, m: ByteArray) -> u256 {
     // sha256(tag)
