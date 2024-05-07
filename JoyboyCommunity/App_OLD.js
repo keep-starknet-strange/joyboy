@@ -10,8 +10,13 @@ import ProfileScreen from './src/screens/ProfileScreen';
 const Stack = createStackNavigator();
 
 function App() {
-  const [isReady, setIsReady] = React.useState(false);
+  const [isReady, setIsReady] = React.useState(true);
+  const colorScheme = useColorScheme();
+  const [isDarkMode, setIsDarkMode] = useState(colorScheme === 'dark');
 
+  const toggleDarkMode = (value) => {
+    setIsDarkMode(value);
+  };
   useEffect(() => {
     setTimeout(() => {
       setIsReady(true);

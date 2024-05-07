@@ -8,24 +8,30 @@ const postData = [
   { id: "2", content: "Another post in Joyboy", author: "User2" },
 ];
 
-function PostCard({navigation,  post }) {
+function PostCard({ navigation, post }) {
   const { content, author, timestamp, source } = post;
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View
+      // style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+      style={styles.card}
+    >
       <View style={styles.authorContainer}>
         <Avatar navigation={navigation} source={source} />
         <Text style={styles.author}>{author}</Text>
         <Text style={styles.timestamp}>{timestamp}</Text>
       </View>
 
-      <Text style={styles.content}>{content}</Text>
+      <View style={styles.contentBox}>
+        <Text style={styles.content}>{content}</Text>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#022b3a",
+    // backgroundColor: "#022b3a",
+    width: "100%",
     borderRadius: 8,
     padding: 16,
     marginBottom: 16,
@@ -38,9 +44,12 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
+  contentBox: {
+    padding: 8,
+    marginBottom: 8,
+  },
   content: {
     fontSize: 16,
-    marginBottom: 8,
   },
   authorContainer: {
     flexDirection: "row",
