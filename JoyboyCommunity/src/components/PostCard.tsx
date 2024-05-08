@@ -1,18 +1,14 @@
 // src/screens/FeedScreen.js
 
 import React from "react";
-import { View, Text, FlatList, Button, StyleSheet } from "react-native";
+import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
 import { Avatar } from "./Avatar";
-const postData = [
-  { id: "1", content: "Hello Joyboy World!", author: "User1" },
-  { id: "2", content: "Another post in Joyboy", author: "User2" },
-];
 
 function PostCard({ navigation, post }) {
   const { content, author, timestamp, source } = post;
+
   return (
     <View
-      // style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
       style={styles.card}
     >
       <View style={styles.authorContainer}>
@@ -24,6 +20,11 @@ function PostCard({ navigation, post }) {
       <View style={styles.contentBox}>
         <Text style={styles.content}>{content}</Text>
       </View>
+
+      {/* <TouchableOpacity
+        onPress={() => navigation.navigate("Home", {
+        })}
+      ></TouchableOpacity> */}
     </View>
   );
 }

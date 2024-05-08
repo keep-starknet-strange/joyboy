@@ -1,5 +1,5 @@
-interface IPost {
-  id:string;
+export interface IPostNote {
+  id?:string;
   content?:string;
   author?:string;
   source?:string;
@@ -7,7 +7,7 @@ interface IPost {
 }
 
 
-interface IProfileNostr {
+export interface IProfileNostr {
 
   handle?:string;
   pubkey?:string;

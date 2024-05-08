@@ -13,25 +13,26 @@ const BottomBar = ({ navigation }) => {
   return (
     <>
       <View style={styles.container}>
-        {/* <TouchableOpacity
-          accessibilityRole="button"
-          onPress={handleGoBack}
-        >
-          <Button title="Go back" onPress={() => handleGoBack()} />
-        </TouchableOpacity> */}
         <TouchableOpacity
           style={styles.tab}
           onPress={() => navigation.navigate("Home")}
         >
           <Text>Home</Text>
         </TouchableOpacity>
+        
+        <TouchableOpacity
+          style={styles.tab}
+          onPress={() => navigation.navigate("Create")}
+        >
+          <Text>Create</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity
           style={styles.tab}
           onPress={() => navigation.navigate("Profile")}
         >
           <Text>Profile</Text>
         </TouchableOpacity>
-        {/* Add more tabs as needed */}
       </View>
     </>
   );

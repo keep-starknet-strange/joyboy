@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Button,
 } from "react-native";
+import { IProfileNostr } from "../../types";
 
 export const EditProfile = ({ navigation, source }) => {
   const onSubmit = (text?: string) => {};

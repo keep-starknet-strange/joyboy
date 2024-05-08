@@ -31,33 +31,32 @@ function FeedScreen({ navigation }) {
       >
         <FlatList
           data={postData}
+          // horizontal={true}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContainer}
+          style={styles.listContainer}
           renderItem={({ item }) => (
-            <View
-            >
-              {/* <CardPost navigation={navigation} post={item}></CardPost> */}
+            <>
               <PostCard navigation={navigation} post={item}></PostCard>
-            </View>
+            </>
           )}
         />
         <Button
           title="Post Something"
           onPress={() => navigation.navigate("Profile")}
         />
-      <BottomBar navigation={navigation}></BottomBar>
-
+        <BottomBar navigation={navigation}></BottomBar>
       </View>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  container : {
+  container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fff",
   },
   // container: {
   //   flex: 1,
@@ -76,6 +75,15 @@ const styles = StyleSheet.create({
   listContainer: {
     width: "100%", // Ensure the FlatList occupies the entire width
     paddingHorizontal: 20, // Add horizontal padding to create space between items
+  },
+  item: {
+    // width: 150, // Set width of each item
+    // height: 100, // Set height of each item
+    // backgroundColor: "#ccc",
+    // justifyContent: "center",
+    // alignItems: "center",
+    // marginHorizontal: 5, // Add margin between items
+    // borderRadius: 8,
   },
   title: {
     fontSize: 20,
