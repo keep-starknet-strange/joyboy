@@ -12,7 +12,8 @@ import TopBar from "./src/components/TopBar";
 import BottomBar from "./src/components/BottomBar";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { CustomTabBar } from "./src/components/CustomTabBar";
-
+import { StarknetConfig, argent, braavos, publicProvider, useInjectedConnectors,  } from "@starknet-react/core";
+import { mainnet, sepolia } from "@starknet-react/chains";
 const Stack = createStackNavigator();
 
 const Tab = createBottomTabNavigator();
@@ -21,7 +22,6 @@ function App() {
   const colorScheme = useColorScheme();
   const [isDarkMode, setIsDarkMode] = useState(colorScheme === "dark");
   // const navigation = useNavigation();
-
   const toggleDarkMode = (value: boolean) => {
     setIsDarkMode(value);
   };
@@ -30,30 +30,41 @@ function App() {
       setIsReady(true);
     }, 3000); // Splash screen will be shown for 3 seconds
   }, []);
+  const chains = [sepolia, mainnet];
+  const provider = publicProvider();
+  const { connectors } = useInjectedConnectors({
+    // Show these connectors if the user has no connector installed.
+    recommended: [argent(), braavos(),],
+    // Hide recommended connectors if the user has any connector installed.
+    // includeRecommended: "onlyIfNoConnectors",
+    // Randomize the order of the connectors.
+    order: "random",
+  });
 
   return (
-    <NavigationContainer>
-   
-      <Stack.Navigator
-      // <Tab.Navigator
-      // tabBar={props => <BottomBar {...props} />}
-      // tabBar={props => <CustomTabBar {...props} />}
-      >
-        {isReady ? (
-          <>
-            <Stack.Screen name="Home" component={FeedScreen} />
-            <Stack.Screen name="Feed" component={FeedScreen} />
-            <Stack.Screen name="Profile" component={ProfileScreen} />
-          </>
-        ) : (
-          <Stack.Screen
-            name="Splash"
-            component={SplashScreen}
-            options={{ headerShown: false }}
-          />
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+    <StarknetConfig chains={chains} provider={provider} connectors={connectors}>
+      <NavigationContainer>
+        <Stack.Navigator
+        // <Tab.Navigator
+        // tabBar={props => <BottomBar {...props} />}
+        // tabBar={props => <CustomTabBar {...props} />}
+        >
+          {isReady ? (
+            <>
+              <Stack.Screen name="Home" component={FeedScreen} />
+              {/* <Stack.Screen name="Feed" component={FeedScreen} /> */}
+              <Stack.Screen name="Profile" component={ProfileScreen} />
+            </>
+          ) : (
+            <Stack.Screen
+              name="Splash"
+              component={SplashScreen}
+              options={{ headerShown: false }}
+            />
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </StarknetConfig>
   );
 }
 
