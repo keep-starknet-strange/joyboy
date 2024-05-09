@@ -12,9 +12,7 @@ function ProfileScreen({navigation}) {
     >
       <Text>Profile Screen</Text>
       <WalletConnect></WalletConnect>
-
       <EditProfile></EditProfile>
-      <BottomBar navigation={navigation}></BottomBar>
     </View>
   );
 }

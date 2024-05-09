@@ -4,15 +4,13 @@ import React from "react";
 import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
 import { Avatar } from "../Avatar";
 
-function PostCard({ navigation, post }) {
-  const { content, author, timestamp, source } = post;
+function PostPage({ navigation, post }) {
+  const { content, author, timestamp, source, pubkey } = post;
 
   return (
-    <View
-      style={styles.card}
-    >
+    <View style={styles.card}>
       <View style={styles.authorContainer}>
-        <Avatar navigation={navigation} source={source} />
+        <Avatar navigation={navigation} source={source} userId={pubkey} />
         <Text style={styles.author}>{author}</Text>
         <Text style={styles.timestamp}>{timestamp}</Text>
       </View>
@@ -67,4 +65,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PostCard;
+export default PostPage;

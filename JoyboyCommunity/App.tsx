@@ -12,47 +12,88 @@ import TopBar from "./src/components/TopBar";
 import BottomBar from "./src/components/BottomBar";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { CustomTabBar } from "./src/components/CustomTabBar";
-import { StarknetConfig, argent, braavos, publicProvider, useInjectedConnectors,  } from "@starknet-react/core";
+import {
+  StarknetConfig,
+  argent,
+  braavos,
+  publicProvider,
+  useInjectedConnectors,
+} from "@starknet-react/core";
 import { mainnet, sepolia } from "@starknet-react/chains";
 import CreatePostScreen from "./src/screens/CreatePostScreen";
 import NoteScreen from "./src/screens/NoteScreen";
 import NoteDetailScreen from "./src/screens/NoteDetailScreen";
 import UserDetailScreen from "./src/screens/UserDetailScreen";
 import { RootStackParamList } from "./src/types";
+import { useNostr } from "./src/hooks/useNostr";
 // const Stack = createStackNavigator();
 const Stack = createStackNavigator<RootStackParamList>();
 
 const Tab = createBottomTabNavigator();
 function App() {
-  const [isReady, setIsReady] = React.useState(true);
+  const [isReady, setIsReady] = React.useState(false);
   const colorScheme = useColorScheme();
   const [isDarkMode, setIsDarkMode] = useState(colorScheme === "dark");
   // const navigation = useNavigation();
   const toggleDarkMode = (value: boolean) => {
     setIsDarkMode(value);
   };
+  const { getEvents, setEvents, events } = useNostr();
+
   useEffect(() => {
-    setTimeout(() => {
+    // setTimeout(() => {
+    //   setIsReady(true);
+    // }, 1500); // Splash screen will be shown for 3 seconds
+    const handeGetData = async () => {
+      if (isReady) {
+        return;
+      }
+      const events = await getEvents();
+      console.log("events", events);
+      setEvents(events);
       setIsReady(true);
-    }, 3000); // Splash screen will be shown for 3 seconds
-  }, []);
+    };
+
+    if (!isReady) {
+      handeGetData();
+    }
+  }, [isReady]);
+
+  // useEffect(() => {
+  //   // setTimeout(() => {
+  //   //   setIsReady(true);
+  //   // }, 1500); // Splash screen will be shown for 3 seconds
+
+  //   const handeGetData = async () => {
+  //     const events = await getEvents();
+  //     console.log("events", events);
+  //     setEvents(events);
+  //     setIsReady(true);
+  //   };
+
+  //   if (!isReady) {
+  //     handeGetData();
+  //   }
+  // }, [isReady, events]);
   const chains = [sepolia, mainnet];
   const provider = publicProvider();
   const { connectors } = useInjectedConnectors({
     // Show these connectors if the user has no connector installed.
-    recommended: [argent(), braavos(),],
+    recommended: [argent(), braavos()],
     // Hide recommended connectors if the user has any connector installed.
     // includeRecommended: "onlyIfNoConnectors",
     // Randomize the order of the connectors.
     order: "random",
   });
 
+  useEffect(() => {}, []);
+
   return (
     <StarknetConfig chains={chains} provider={provider} connectors={connectors}>
       <NavigationContainer>
-        <Stack.Navigator
-        // <Tab.Navigator
-        // tabBar={props => <BottomBar {...props} />}
+        {/* <Stack.Navigator */}
+        <Tab.Navigator
+        tabBar={props => <BottomBar {...props} />}
         // tabBar={props => <CustomTabBar {...props} />}
         >
           {isReady ? (
@@ -62,8 +103,14 @@ function App() {
               <Stack.Screen name="Profile" component={ProfileScreen} />
               <Stack.Screen name="Create" component={CreatePostScreen} />
               <Stack.Screen name="Note" component={NoteScreen} />
-              <Stack.Screen name="NoteDetailScreen" component={NoteDetailScreen} />
-              <Stack.Screen name="UserDetailScreen" component={UserDetailScreen} />
+              <Stack.Screen
+                name="NoteDetailScreen"
+                component={NoteDetailScreen}
+              />
+              <Stack.Screen
+                name="UserDetailScreen"
+                component={UserDetailScreen}
+              />
             </>
           ) : (
             <Stack.Screen
@@ -72,7 +119,7 @@ function App() {
               options={{ headerShown: false }}
             />
           )}
-        </Stack.Navigator>
+        </Tab.Navigator>
       </NavigationContainer>
     </StarknetConfig>
   );
