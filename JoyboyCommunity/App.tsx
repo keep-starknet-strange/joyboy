@@ -15,7 +15,12 @@ import { CustomTabBar } from "./src/components/CustomTabBar";
 import { StarknetConfig, argent, braavos, publicProvider, useInjectedConnectors,  } from "@starknet-react/core";
 import { mainnet, sepolia } from "@starknet-react/chains";
 import CreatePostScreen from "./src/screens/CreatePostScreen";
-const Stack = createStackNavigator();
+import NoteScreen from "./src/screens/NoteScreen";
+import NoteDetailScreen from "./src/screens/NoteDetailScreen";
+import UserDetailScreen from "./src/screens/UserDetailScreen";
+import { RootStackParamList } from "./src/types";
+// const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 
 const Tab = createBottomTabNavigator();
 function App() {
@@ -55,9 +60,10 @@ function App() {
               <Stack.Screen name="Home" component={FeedScreen} />
               {/* <Stack.Screen name="Feed" component={FeedScreen} /> */}
               <Stack.Screen name="Profile" component={ProfileScreen} />
-              <Stack.Screen name="Create" component={CreatePostScreen} 
-              
-              />
+              <Stack.Screen name="Create" component={CreatePostScreen} />
+              <Stack.Screen name="Note" component={NoteScreen} />
+              <Stack.Screen name="NoteDetailScreen" component={NoteDetailScreen} />
+              <Stack.Screen name="UserDetailScreen" component={UserDetailScreen} />
             </>
           ) : (
             <Stack.Screen

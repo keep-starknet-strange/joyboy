@@ -2,18 +2,17 @@
 
 import React from "react";
 import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
-import { Avatar } from "./Avatar";
+import { Avatar } from "../Avatar";
 
 function PostCard({ navigation, post }) {
-  const { content, author, timestamp, source, id } = post;
-  const handlePostPress = (noteId: string) => {
-    navigation.navigate("NoteDetailScreen", { noteId });
-  };
+  const { content, author, timestamp, source } = post;
 
   return (
-    <View style={styles.card}>
+    <View
+      style={styles.card}
+    >
       <View style={styles.authorContainer}>
-        <Avatar navigation={navigation} source={source} userId={author} />
+        <Avatar navigation={navigation} source={source} />
         <Text style={styles.author}>{author}</Text>
         <Text style={styles.timestamp}>{timestamp}</Text>
       </View>
@@ -22,13 +21,10 @@ function PostCard({ navigation, post }) {
         <Text style={styles.content}>{content}</Text>
       </View>
 
-      <TouchableOpacity
-        onPress={() => handlePostPress(id)}
-        // onPress={() => navigation.navigate("Home", {
-        // })}
-      >
-        See note
-      </TouchableOpacity>
+      {/* <TouchableOpacity
+        onPress={() => navigation.navigate("Home", {
+        })}
+      ></TouchableOpacity> */}
     </View>
   );
 }
