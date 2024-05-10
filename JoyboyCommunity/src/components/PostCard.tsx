@@ -24,10 +24,11 @@ function PostCard({ navigation, post, event }: Props) {
 
   return (
     <View style={styles.card}>
-      {/* <View style={styles.authorContainer}>
-      </View> */}
-      <Avatar navigation={navigation} source={source} userId={author} />
-      <Text style={styles.author}>{author}</Text>
+      <View style={styles.authorContainer}>
+        <Avatar navigation={navigation} source={source} userId={author} />
+        <Text style={styles.author}>{author}</Text>
+      </View>
+
       <Text style={styles.timestamp}>
         {new Date(Number(created_at) * 1000)?.toISOString()}
       </Text>
@@ -35,8 +36,11 @@ function PostCard({ navigation, post, event }: Props) {
         <Text style={styles.content}>{String(content)}</Text>
       </View>
 
-      <TouchableOpacity onPress={() => handlePostPress(id)}>
-        <Text>See note</Text>
+      <TouchableOpacity
+        onPress={() => handlePostPress(id)}
+        style={styles.buttonViewNote}
+      >
+        <Text style={styles.buttonViewNoteText}>See note</Text>
       </TouchableOpacity>
     </View>
   );
@@ -44,12 +48,16 @@ function PostCard({ navigation, post, event }: Props) {
 
 const styles = StyleSheet.create({
   card: {
-    // backgroundColor: "#022b3a",
+    backgroundColor: "#022b3a",
+    // backgroundColor:"gray",
+    // backgroundColor:"#04506B",
+    color: "white",
     width: "100%",
+    borderColor: "black",
     // width:"50%",
     borderRadius: 8,
     padding: 16,
-    marginBottom: 16,
+    // marginBottom: 16,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -66,6 +74,17 @@ const styles = StyleSheet.create({
   },
   content: {
     fontSize: 16,
+    color: "white",
+  },
+  buttonViewNote: {
+    backgroundColor: "#04506B",
+    color: "black",
+    // width: "auto",
+    width: 75,
+    textAlign: "center",
+  },
+  buttonViewNoteText: {
+    color: "white",
   },
   authorContainer: {
     flexDirection: "row",

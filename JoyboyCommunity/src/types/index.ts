@@ -24,3 +24,16 @@ export interface IProfileNostr {
   description?: string;
   source?: string;
 }
+
+export interface NIP05Content {
+  nip05?:string;
+  lud16?:string;
+  name?:string;
+  picture?:string;
+  about?:string;
+  website?:string;
+  lud06?:string;
+  display_name?:string;
+  npub?:string;
+  created_at?:string;
+}

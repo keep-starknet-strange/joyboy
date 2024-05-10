@@ -26,6 +26,7 @@ import NoteDetailScreen from "./src/screens/NoteDetailScreen";
 import UserDetailScreen from "./src/screens/UserDetailScreen";
 import { RootStackParamList } from "./src/types";
 import { useNostr } from "./src/hooks/useNostr";
+import { Ionicons } from "@expo/vector-icons";
 // const Stack = createStackNavigator();
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -34,54 +35,23 @@ function App() {
   const [isReady, setIsReady] = React.useState(false);
   const colorScheme = useColorScheme();
   const [isDarkMode, setIsDarkMode] = useState(colorScheme === "dark");
-  // const navigation = useNavigation();
   const toggleDarkMode = (value: boolean) => {
     setIsDarkMode(value);
   };
-  const { getEvents, setEvents, events } = useNostr();
+  const { getEvents, getEventsPost, setEvents, events } = useNostr();
 
   useEffect(() => {
-    // setTimeout(() => {
-    //   setIsReady(true);
-    // }, 1500); // Splash screen will be shown for 3 seconds
-    const handeGetData = async () => {
-      if (isReady) {
-        return;
-      }
-      const events = await getEvents();
-      console.log("events", events);
-      setEvents(events);
+    setTimeout(() => {
       setIsReady(true);
-    };
+    }, 1500); // Splash screen will be shown for 3 seconds
+  }, [isReady, events]);
 
-    if (!isReady) {
-      handeGetData();
-    }
-  }, [isReady]);
-
-  // useEffect(() => {
-  //   // setTimeout(() => {
-  //   //   setIsReady(true);
-  //   // }, 1500); // Splash screen will be shown for 3 seconds
-
-  //   const handeGetData = async () => {
-  //     const events = await getEvents();
-  //     console.log("events", events);
-  //     setEvents(events);
-  //     setIsReady(true);
-  //   };
-
-  //   if (!isReady) {
-  //     handeGetData();
-  //   }
-  // }, [isReady, events]);
   const chains = [sepolia, mainnet];
   const provider = publicProvider();
   const { connectors } = useInjectedConnectors({
     // Show these connectors if the user has no connector installed.
     recommended: [argent(), braavos()],
     // Hide recommended connectors if the user has any connector installed.
-    // includeRecommended: "onlyIfNoConnectors",
     // Randomize the order of the connectors.
     order: "random",
   });
@@ -93,14 +63,25 @@ function App() {
       <NavigationContainer>
         {/* <Stack.Navigator */}
         <Tab.Navigator
-        tabBar={props => <BottomBar {...props} />}
-        // tabBar={props => <CustomTabBar {...props} />}
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: "#022b3a", // Change the background color of the header
+            },
+          }}
+          tabBar={(props) => <BottomBar {...props} />}
         >
           {isReady ? (
             <>
               <Stack.Screen name="Home" component={FeedScreen} />
-              {/* <Stack.Screen name="Feed" component={FeedScreen} /> */}
-              <Stack.Screen name="Profile" component={ProfileScreen} />
+              <Stack.Screen
+                name="Profile"
+                component={ProfileScreen}
+                options={{
+                  headerStyle: {
+                    backgroundColor: "#022b3a", // Change the background color of the header
+                  },
+                }}
+              />
               <Stack.Screen name="Create" component={CreatePostScreen} />
               <Stack.Screen name="Note" component={NoteScreen} />
               <Stack.Screen

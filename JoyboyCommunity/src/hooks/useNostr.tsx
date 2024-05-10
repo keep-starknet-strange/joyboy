@@ -1,34 +1,50 @@
-import { NostrEvent, SimplePool, parseReferences } from "nostr-tools";
-import { useState } from "react";
+import { NostrEvent, SimplePool, nip05, parseReferences } from "nostr-tools";
+import { useMemo, useState } from "react";
 
 export const useNostr = () => {
   const pool = new SimplePool();
-  const [events, setEventsData] = useState<NostrEvent[]>([]);
   const relays = ["wss://relay.n057r.club", "wss://relay.nostr.net"];
+  
+  const [eventsData, setEventsData] = useState<NostrEvent[]>([]);
+  const [eventsUser, setEventsUser] = useState<NostrEvent[]>([]);
+  const [isReady, setIsReady] = useState(false);
+
+  const events = useMemo(() => {
+    return eventsData;
+  }, [eventsData]);
 
   const setEvents = (eventsData?: NostrEvent[]) => {
     setEventsData(eventsData);
-    console.log("events", events);
   };
 
-  const getEvents = async () => {
+  const getEvents = async (isSetEvents?:boolean) => {
     let events = await pool.querySync(relays, { kinds: [0, 1] }, {});
+    if(isSetEvents) {
+      setEventsData(events)
+    }
     return events;
   };
 
-  const getEventsPost = async () => {
+  const getEventsPost = async (isSetEvents?:boolean) => {
     let eventsNotes = await pool.querySync(relays, { kinds: [1] });
+    if(isSetEvents) {
+      setEventsData(eventsNotes)
+    }
     return eventsNotes;
   };
 
-  const getEventsUser = async () => {
+  const getEventsUser = async (isSetEvents?:boolean) => {
     let eventsUser = await pool.querySync(relays, { kinds: [0] });
+    if(isSetEvents) {
+      setEventsUser(eventsUser)
+    }
     return eventsUser;
   };
 
-  const parsingEvent = (event?: NostrEvent) => {
+  const parsingEventContent = (event?: NostrEvent) => {
     let references = parseReferences(event);
     let simpleAugmentedContent = event.content;
+
     let profilesCache;
     let eventsCache;
     for (let i = 0; i < references.length; i++) {
@@ -42,13 +58,23 @@ export const useNostr = () => {
         : text;
       simpleAugmentedContent.replaceAll(text, augmentedReference);
     }
+
+    return simpleAugmentedContent;
+  };
+
+  /** @TODO finish Give NIP05 parsed content */
+  const parsingNip05EventContent = (event?: NostrEvent)=> {
+    let references = parseReferences(event);
+    let simpleAugmentedContent = event.content;
+    let profilesCache;
+    let stringify = JSON.parse(simpleAugmentedContent)
+    return stringify;
   };
 
   const getEvent = async (id: string) => {
     let event = await pool.get(relays, {
       ids: [id],
     });
-    console.log("getEvent", event);
     return event;
   };
 
@@ -59,9 +85,11 @@ export const useNostr = () => {
     parseReferences,
     setEvents,
     events,
-    parsingEvent,
+    parsingEventContent,
     getEventsPost,
     getEventsUser,
-    relays
+    relays,
+    eventsData,
+    parsingNip05EventContent
   };
 };
