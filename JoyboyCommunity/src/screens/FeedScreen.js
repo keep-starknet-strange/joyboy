@@ -7,8 +7,6 @@ import {
   FlatList,
   Button,
   StyleSheet,
-  Pressable,
-  SafeAreaView,
   ActivityIndicator,
 } from "react-native";
 import PostCard from "../components/PostCard";
@@ -22,15 +20,11 @@ function FeedScreen({ navigation }) {
 
   const [eventsDataFeed, setEventsData] = useState(events ?? []);
   useEffect(() => {
-    console.log("events feed", events);
-    console.log("eventsData feed", eventsData);
-    console.log("eventsDataFeed feed", eventsDataFeed);
 
     const handeGetData = async () => {
       if (isReady && events?.length > 0 && eventsData?.length > 0) {
         return;
       }
-
       const events = await getEventsPost(true);
       console.log("events", events);
       setEvents(events);
@@ -43,37 +37,37 @@ function FeedScreen({ navigation }) {
   }, [isReady, eventsData, events, eventsDataFeed]);
 
   return (
-    <>
-      <View style={styles.container}>
-        {!isReady && (
-          <ActivityIndicator
-            size="large"
-            style={styles.loader}
-          ></ActivityIndicator>
-        )}
-        <FlatList
-          data={events}
-          keyExtractor={(item) => item?.id}
-          contentContainerStyle={styles.contentContainer}
-          // style={styles.container}
-          renderItem={({ item }) => {
-            return (
-              <PostCard
-                navigation={navigation}
-                post={item}
-                event={item}
-              ></PostCard>
-            );
-          }}
-        />
-      </View>
-    </>
+    <View style={styles.container}>
+      {!isReady && (
+        <ActivityIndicator
+          size="large"
+          style={styles.loader}
+        ></ActivityIndicator>
+      )}
+      <FlatList
+        data={events}
+        keyExtractor={(item) => item?.id}
+        // contentContainerStyle={styles.contentContainer}
+        // style={styles.container}
+        renderItem={({ item }) => {
+          return (
+            <PostCard
+              navigation={navigation}
+              post={item}
+              event={item}
+            ></PostCard>
+          );
+        }}
+      />
+    </View>
   );
 }
 
+/** @TODO fix desktop view border white bg */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    // width:"100%",
     overflow: "scroll", // or overflow: 'auto' if necessary
     height: "100%",
     backgroundColor: "#022b3a", // Change the background color of the header
@@ -81,12 +75,13 @@ const styles = StyleSheet.create({
   loader: {
     color: "white",
     // backgroundColor: "white",
-    margin:10
+    margin: 10,
   },
   contentContainer: {
-    flexGrow: 1,
+    // flexGrow: 1,
     padding: 0,
     margin: 0,
+    // height: "100%",
   },
   listContainer: {
     width: "100%", // Ensure the FlatList occupies the entire width

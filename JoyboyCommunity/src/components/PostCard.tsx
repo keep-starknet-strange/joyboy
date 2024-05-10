@@ -16,7 +16,7 @@ interface Props {
 }
 
 function PostCard({ navigation, post, event }: Props) {
-  const { content, author, timestamp, source, id, created_at } = post;
+  const { content, author, timestamp, source, id, created_at, pubkey } = post;
   // const {} = event
   const handlePostPress = (noteId: string) => {
     navigation.navigate("NoteDetailScreen", { noteId });
@@ -25,7 +25,7 @@ function PostCard({ navigation, post, event }: Props) {
   return (
     <View style={styles.card}>
       <View style={styles.authorContainer}>
-        <Avatar navigation={navigation} source={source} userId={author} />
+        <Avatar navigation={navigation} source={source} userId={pubkey} />
         <Text style={styles.author}>{author}</Text>
       </View>
 

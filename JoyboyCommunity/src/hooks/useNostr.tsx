@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 export const useNostr = () => {
   const pool = new SimplePool();
   const relays = ["wss://relay.n057r.club", "wss://relay.nostr.net"];
-  
+
   const [eventsData, setEventsData] = useState<NostrEvent[]>([]);
   const [eventsUser, setEventsUser] = useState<NostrEvent[]>([]);
   const [isReady, setIsReady] = useState(false);
@@ -17,26 +17,26 @@ export const useNostr = () => {
     setEventsData(eventsData);
   };
 
-  const getEvents = async (isSetEvents?:boolean) => {
+  const getEvents = async (isSetEvents?: boolean) => {
     let events = await pool.querySync(relays, { kinds: [0, 1] }, {});
-    if(isSetEvents) {
-      setEventsData(events)
+    if (isSetEvents) {
+      setEventsData(events);
     }
     return events;
   };
 
-  const getEventsPost = async (isSetEvents?:boolean) => {
+  const getEventsPost = async (isSetEvents?: boolean) => {
     let eventsNotes = await pool.querySync(relays, { kinds: [1] });
-    if(isSetEvents) {
-      setEventsData(eventsNotes)
+    if (isSetEvents) {
+      setEventsData(eventsNotes);
     }
     return eventsNotes;
   };
 
-  const getEventsUser = async (isSetEvents?:boolean) => {
+  const getEventsUser = async (isSetEvents?: boolean) => {
     let eventsUser = await pool.querySync(relays, { kinds: [0] });
-    if(isSetEvents) {
-      setEventsUser(eventsUser)
+    if (isSetEvents) {
+      setEventsUser(eventsUser);
     }
     return eventsUser;
   };
@@ -63,11 +63,11 @@ export const useNostr = () => {
   };
 
   /** @TODO finish Give NIP05 parsed content */
-  const parsingNip05EventContent = (event?: NostrEvent)=> {
+  const parsingNip05EventContent = (event?: NostrEvent) => {
     let references = parseReferences(event);
     let simpleAugmentedContent = event.content;
     let profilesCache;
-    let stringify = JSON.parse(simpleAugmentedContent)
+    let stringify = JSON.parse(simpleAugmentedContent);
     return stringify;
   };
 
@@ -76,6 +76,10 @@ export const useNostr = () => {
       ids: [id],
     });
     return event;
+  };
+
+  const getUser = async (id: string, isSetEvents?: boolean) => {
+    // return await queryProfile(id);
   };
 
   return {
@@ -90,6 +94,7 @@ export const useNostr = () => {
     getEventsUser,
     relays,
     eventsData,
-    parsingNip05EventContent
+    parsingNip05EventContent,
+    getUser,
   };
 };

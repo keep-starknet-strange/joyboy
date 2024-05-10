@@ -6,7 +6,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import SplashScreen from "./src/screens/SplashScreen";
 import FeedScreen from "./src/screens/FeedScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
-import { useColorScheme } from "react-native";
+import { Button, Pressable, View, useColorScheme } from "react-native";
 import DarkModeToggle from "./src/components/DarkModeToggle";
 import TopBar from "./src/components/TopBar";
 import BottomBar from "./src/components/BottomBar";
@@ -21,7 +21,6 @@ import {
 } from "@starknet-react/core";
 import { mainnet, sepolia } from "@starknet-react/chains";
 import CreatePostScreen from "./src/screens/CreatePostScreen";
-import NoteScreen from "./src/screens/NoteScreen";
 import NoteDetailScreen from "./src/screens/NoteDetailScreen";
 import UserDetailScreen from "./src/screens/UserDetailScreen";
 import { RootStackParamList } from "./src/types";
@@ -30,6 +29,13 @@ import { Ionicons } from "@expo/vector-icons";
 // const Stack = createStackNavigator();
 const Stack = createStackNavigator<RootStackParamList>();
 
+const HeaderGoBack = ({ navigation }) => {
+  return (
+    <View>
+      <Pressable onPress={() => navigation?.goBack()}></Pressable>
+    </View>
+  );
+};
 const Tab = createBottomTabNavigator();
 function App() {
   const [isReady, setIsReady] = React.useState(false);
@@ -63,11 +69,18 @@ function App() {
       <NavigationContainer>
         {/* <Stack.Navigator */}
         <Tab.Navigator
-          screenOptions={{
+          sceneContainerStyle={{
+            backgroundColor: "#022b3a", // Set the default background color for the bottom tab navigator
+          }}
+          screenOptions={({ navigation }) => ({
             headerStyle: {
               backgroundColor: "#022b3a", // Change the background color of the header
             },
-          }}
+
+            headerLeft: () => {
+              return <HeaderGoBack navigation={navigation} />;
+            },
+          })}
           tabBar={(props) => <BottomBar {...props} />}
         >
           {isReady ? (
@@ -83,7 +96,6 @@ function App() {
                 }}
               />
               <Stack.Screen name="Create" component={CreatePostScreen} />
-              <Stack.Screen name="Note" component={NoteScreen} />
               <Stack.Screen
                 name="NoteDetailScreen"
                 component={NoteDetailScreen}

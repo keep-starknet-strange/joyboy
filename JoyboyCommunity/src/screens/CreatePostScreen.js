@@ -11,12 +11,14 @@ function CreatePostScreen({ navigation }) {
     <View style={styles.container}>
       <View>
         <WalletConnect></WalletConnect>
-      </View>
-
-      <View>
+        <View>
         <Text>Create your note</Text>
         <CreateNote></CreateNote>
+
       </View>
+      </View>
+
+    
     </View>
   );
 }
@@ -25,7 +27,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#022b3a",
     height: "100%",
   },
   listContainer: {
