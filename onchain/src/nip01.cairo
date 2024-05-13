@@ -1,10 +1,10 @@
 #[derive(Copy, Drop)]
 struct NIP01Event {
-    id: felt252,
-    pubkey: felt252,
+    id: ByteArray,
+    pubkey: ByteArray,
     created_at: u64,
     kind: u16,
-    tags: List[List[felt252]]
+    tags: ArrayTrait<ByteArray>,
     content: ByteArray,
-    sig: felt252
+    sig: ByteArray
 }
