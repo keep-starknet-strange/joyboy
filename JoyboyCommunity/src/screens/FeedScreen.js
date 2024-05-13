@@ -47,8 +47,6 @@ function FeedScreen({ navigation }) {
       <FlatList
         data={events}
         keyExtractor={(item) => item?.id}
-        // contentContainerStyle={styles.contentContainer}
-        // style={styles.container}
         renderItem={({ item }) => {
           return (
             <PostCard

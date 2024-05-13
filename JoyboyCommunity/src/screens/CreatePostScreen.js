@@ -12,13 +12,12 @@ function CreatePostScreen({ navigation }) {
       <View>
         <WalletConnect></WalletConnect>
         <View>
-        <Text>Create your note</Text>
-        <CreateNote></CreateNote>
-
+          <Text
+          style={styles.text}
+          >Create your note</Text>
+          <CreateNote></CreateNote>
+        </View>
       </View>
-      </View>
-
-    
     </View>
   );
 }
@@ -29,6 +28,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#022b3a",
     height: "100%",
+    color:"white",
+  },
+  text: {
+    color: "white",
   },
   listContainer: {
     width: "100%", // Ensure the FlatList occupies the entire width

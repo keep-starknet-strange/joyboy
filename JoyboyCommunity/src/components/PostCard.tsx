@@ -55,7 +55,9 @@ const styles = StyleSheet.create({
     width: "100%",
     borderColor: "black",
     // width:"50%",
-    borderRadius: 8,
+    // borderRadius: 8,
+    // borderWidth: 8,
+    borderBottomWidth: 2,
     padding: 16,
     // marginBottom: 16,
     shadowColor: "#000",
@@ -66,6 +68,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 2,
     elevation: 2,
+    fontFamily:"monospace",
   },
   contentBox: {
     paddingTop: 8,
@@ -75,15 +78,21 @@ const styles = StyleSheet.create({
   content: {
     fontSize: 16,
     color: "white",
+    paddingTop: 8,
+    paddingBottom: 8,
   },
   buttonViewNote: {
     backgroundColor: "#04506B",
     color: "black",
+    // padding:"1px",
+    padding: 5,
+    borderRadius: 5,
     // width: "auto",
     width: 75,
     textAlign: "center",
   },
   buttonViewNoteText: {
+    fontFamily: "monospace",
     color: "white",
   },
   authorContainer: {
