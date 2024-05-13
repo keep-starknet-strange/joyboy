@@ -10,8 +10,7 @@ pub struct NostrProfile {
 ///
 /// Spec: https://github.com/nostr-protocol/nips/blob/master/19.md
 /// Sample implementation:
-/// 
-/// https://github.com/nbd-wtf/nostr-tools/blob/f4f9bece6edc1991e804868c84e75ef47146ad55/nip19.ts#L182
+/// https://github.com/nbd-wtf/nostr-tools/blob/master/nip19.ts#L182
 ///
 /// # Parameters:
 /// - `n_profile` - profile to be encoded
