@@ -2,15 +2,11 @@
 
 import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
-import WalletConnect from "../components/WalletConnect";
-import { EditProfile } from "../components/profile/EditProfile";
-import BottomBar from "../components/BottomBar";
 import { CreateNote } from "../components/profile/CreateNote";
 function CreatePostScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View>
-        <WalletConnect></WalletConnect>
         <View>
           <Text
           style={styles.text}

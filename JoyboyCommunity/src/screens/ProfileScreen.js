@@ -2,7 +2,6 @@
 
 import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
-import WalletConnect from "../components/WalletConnect";
 import { EditProfile } from "../components/profile/EditProfile";
 function ProfileScreen({ navigation }) {
   return (
@@ -10,8 +9,6 @@ function ProfileScreen({ navigation }) {
       <View
       style={styles.listContainer}
       >
-        <WalletConnect></WalletConnect>
-
         <EditProfile></EditProfile>
       </View>
     </View>
