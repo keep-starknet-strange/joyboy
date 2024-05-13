@@ -2,10 +2,12 @@ use joyboy::social_account::interfaces::{
     ISocialPayAccountDispatcher, ISocialPayAccountDispatcherTrait
 };
 use joyboy::social_account::social_account::SocialPayAccount::SocialAccountInitParams;
+use starknet::{ContractAddress, get_caller_address, get_contract_address, contract_address_const};
 use snforge_std as snf;
+use snforge_std::{declare, ContractClassTrait};
 
 
-const public_key: u256 = "0x69bb4cbcc59b557ed7a782a3c267be288124a4ec20be3d8648ac44475a7c53e";
+const public_key: u256 = 45;
 
 fn deploy_social_account() -> ContractAddress {
     let contract = declare("SocialPayAccount");

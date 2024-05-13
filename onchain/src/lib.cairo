@@ -9,3 +9,8 @@ mod social_account {
 }
 pub mod bip340;
 
+#[cfg(test)]
+mod tests {
+    pub(crate) mod social_account;
+}
+
