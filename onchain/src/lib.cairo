@@ -9,4 +9,3 @@ mod social_account {
 }
 pub mod bip340;
 
-
