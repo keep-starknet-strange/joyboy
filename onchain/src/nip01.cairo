@@ -1,4 +1,5 @@
 #[derive(Copy, Drop)]
+#[derive(Copy, Drop)]
 struct NIP01Event {
     id: ByteArray,
     pubkey: ByteArray,
@@ -8,3 +9,4 @@ struct NIP01Event {
     content: ByteArray,
     sig: ByteArray
 }
+
