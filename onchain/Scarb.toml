@@ -6,9 +6,11 @@ edition = "2023_11"
 # See more keys and their definitions at https://docs.swmansion.com/scarb/docs/reference/manifest.html
 
 [dependencies]
-snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry", tag = "v0.21.0" }
 openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts.git", tag = "v0.11.0" }
 starknet = "2.6.3"
+
+[dev-dependencies]
+snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry", tag = "v0.21.0" }
 
 #[lib]
 
