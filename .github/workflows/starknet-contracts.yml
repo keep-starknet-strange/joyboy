@@ -18,10 +18,13 @@ jobs:
       - name: Build cairo programs
         run: scarb build
         working-directory: onchain
-  test:
+  tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: asdf-vm/actions/install@v3
-      - run: snforge test
+      - uses: actions/checkout@v3
+      - uses: software-mansion/setup-scarb@v1
+        with:
+          scarb-version: 'nightly'
+      - name: Run cairo tests
+        run: scarb test
         working-directory: onchain
