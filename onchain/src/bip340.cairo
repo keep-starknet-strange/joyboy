@@ -1,13 +1,4 @@
 //! bip340 implementation
-//! references:
-//!   Schnorr signatures explained:
-//!   https://www.youtube.com/watch?v=wjACBRJDfxc&ab_channel=Bitcoinology
-//!   NIP-01:
-//!   https://github.com/nostr-protocol/nips/blob/master/01.md
-//!   BIP-340:
-//!   https://github.com/bitcoin/bips/blob/master/bip-0340.mediawiki
-//!  reference implementation:
-//!   https://github.com/bitcoin/bips/blob/master/bip-0340/reference.py
 
 use core::byte_array::ByteArrayTrait;
 use core::option::OptionTrait;
@@ -25,6 +16,17 @@ const TWO_POW_96: u128 = 0x1000000000000000000000000;
 const p: u256 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F;
 
 /// Computes BIP0340/challenge tagged hash.
+///
+/// References:
+///   Schnorr signatures explained:
+///   https://www.youtube.com/watch?v=wjACBRJDfxc&ab_channel=Bitcoinology
+///   NIP-01:
+///   https://github.com/nostr-protocol/nips/blob/master/01.md
+///   BIP-340:
+///   https://github.com/bitcoin/bips/blob/master/bip-0340.mediawiki
+///   reference implementation:
+///   https://github.com/bitcoin/bips/blob/master/bip-0340/reference.py
+///
 ///
 /// # Parameters:
 /// - `rx`: `u256` - The x-coordinate of the R point from the signature.
