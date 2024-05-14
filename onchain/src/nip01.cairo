@@ -4,7 +4,7 @@ struct NIP01Event {
     pubkey: u256,
     created_at: u64,
     kind: u16,
-    tags: Array<ByteArray>,
+    tags: Array<Array<ByteArray>>,
     content: ByteArray,
     sig_r: u256,
     sig_s: u256
