@@ -1,15 +1,36 @@
 // src/screens/ProfileScreen.js
 
 import React from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
 import { EditProfile } from "../components/profile/EditProfile";
 function ProfileScreen({ navigation }) {
+  const handleLoginProcess = () => {
+    navigation.navigate("Login");
+  };
+
+  const handleSignProcess = () => {
+    navigation.navigate("Sign");
+  };
+
   return (
     <View style={styles.container}>
-      <View
-      style={styles.listContainer}
-      >
+      <View style={styles.listContainer}>
         <EditProfile></EditProfile>
+
+        <View>
+          <TouchableOpacity
+            onPress={() => handleSignProcess()}
+            style={styles.buttonViewNote}
+          >
+            <Text style={styles.buttonNavigation}>Sign</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => handleLoginProcess()}
+            style={styles.buttonViewNote}
+          >
+            <Text style={styles.buttonNavigation}>Login</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -25,11 +46,21 @@ const styles = StyleSheet.create({
   listContainer: {
     width: "100%", // Ensure the FlatList occupies the entire width
     paddingHorizontal: 20, // Add horizontal padding to create space between items
-    gap:10
+    gap: 10,
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
+  },
+  buttonNavigation: {
+    backgroundColor: "#04506B",
+    color: "black",
+    // padding:"1px",
+    padding: 5,
+    borderRadius: 5,
+    // width: "auto",
+    width: 75,
+    textAlign: "center",
   },
 });
 

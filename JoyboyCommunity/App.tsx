@@ -14,6 +14,8 @@ import NoteDetailScreen from "./src/screens/NoteDetailScreen";
 import UserDetailScreen from "./src/screens/UserDetailScreen";
 import { RootStackParamList } from "./src/types";
 import { useNostr } from "./src/hooks/useNostr";
+import LoginScreen from "./src/screens/LoginScreen";
+import SignScreen from "./src/screens/SignScreen";
 const Stack = createStackNavigator<RootStackParamList>();
 
 const HeaderGoBack = ({ navigation }) => {
@@ -62,6 +64,8 @@ function App() {
         {isReady ? (
           <>
             <Stack.Screen name="Home" component={FeedScreen} />
+            <Stack.Screen name="Login" component={LoginScreen}></Stack.Screen>
+            <Stack.Screen name="Sign" component={SignScreen}></Stack.Screen>
             <Stack.Screen
               name="Profile"
               component={ProfileScreen}

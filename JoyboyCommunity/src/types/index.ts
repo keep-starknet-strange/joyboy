@@ -4,6 +4,8 @@ export type RootStackParamList = {
   Profile: undefined;
   Create: undefined;
   Note: undefined;
+  Sign: undefined;
+  Login: undefined;
   NoteDetailScreen: { noteId: string };
   UserDetailScreen: { userId: string };
 };
