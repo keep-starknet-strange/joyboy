@@ -36,8 +36,8 @@ Freedom requires censorship resistance, and Nostr provides exactly that.
 - [ ] Crossover with [Vault](https://github.com/keep-starknet-strange/vault) to bring Social features to the Vault application
 
 ## Architecture
-### Joyboy
-
+### SocialPay
+#### Alice sends tokens to Bob 
 ```mermaid
 sequenceDiagram
     actor Alice
