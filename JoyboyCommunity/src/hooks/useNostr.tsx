@@ -1,9 +1,10 @@
 import { NostrEvent, SimplePool, nip05, parseReferences } from "nostr-tools";
 import { useMemo, useState } from "react";
+import { REALAYS_PROD } from "../utils/relay";
 
 export const useNostr = () => {
   const pool = new SimplePool();
-  const relays = ["wss://relay.n057r.club", "wss://relay.nostr.net"];
+  const relays = REALAYS_PROD;
 
   const [eventsData, setEventsData] = useState<NostrEvent[]>([]);
   const [eventsUser, setEventsUser] = useState<NostrEvent[]>([]);
@@ -42,24 +43,26 @@ export const useNostr = () => {
   };
 
   const parsingEventContent = (event?: NostrEvent) => {
-    let references = parseReferences(event);
-    let simpleAugmentedContent = event.content;
+    try {
+      let references = parseReferences(event);
+      let simpleAugmentedContent = event.content;
 
-    let profilesCache;
-    let eventsCache;
-    for (let i = 0; i < references.length; i++) {
-      let { text, profile, event, address } = references[i];
-      let augmentedReference = profile
-        ? `<strong>@${profilesCache[profile.pubkey].name}</strong>`
-        : event
-        ? `<em>${eventsCache[event.id].content.slice(0, 5)}</em>`
-        : address
-        ? `<a href="${text}">[link]</a>`
-        : text;
-      simpleAugmentedContent.replaceAll(text, augmentedReference);
-    }
+      let profilesCache;
+      let eventsCache;
+      for (let i = 0; i < references.length; i++) {
+        let { text, profile, event, address } = references[i];
+        let augmentedReference = profile
+          ? `<strong>@${profilesCache[profile.pubkey].name}</strong>`
+          : event
+          ? `<em>${eventsCache[event.id].content.slice(0, 5)}</em>`
+          : address
+          ? `<a href="${text}">[link]</a>`
+          : text;
+        simpleAugmentedContent.replaceAll(text, augmentedReference);
+      }
 
-    return simpleAugmentedContent;
+      return simpleAugmentedContent;
+    } catch (e) {}
   };
 
   /** @TODO finish Give NIP05 parsed content */

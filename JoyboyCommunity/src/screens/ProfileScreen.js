@@ -15,8 +15,6 @@ function ProfileScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.listContainer}>
-        <EditProfile></EditProfile>
-
         <View>
           <TouchableOpacity
             onPress={() => handleSignProcess()}
@@ -31,6 +29,8 @@ function ProfileScreen({ navigation }) {
             <Text style={styles.buttonNavigation}>Login</Text>
           </TouchableOpacity>
         </View>
+
+        <EditProfile></EditProfile>
       </View>
     </View>
   );
@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
     // width: "auto",
     width: 75,
     textAlign: "center",
+    marginVertical:10
   },
 });
 

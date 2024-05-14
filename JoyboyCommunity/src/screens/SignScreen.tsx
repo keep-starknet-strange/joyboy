@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { View, TextInput, Button, Alert } from "react-native";
+import {
+  View,
+  TextInput,
+  Button,
+  Alert,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+} from "react-native";
 import * as Keychain from "react-native-keychain";
 import {
   getCredentialsWithBiometry,
   isBiometrySupported,
   saveCredentialsWithBiometry,
-} from "../hooks/generatePassword";
+} from "../hooks/keychain";
+import { signInWithGoogle } from "../hooks/google";
 
-const SignScreen = ({navigation}) => {
+const SignScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   // Example usage
@@ -56,47 +65,92 @@ const SignScreen = ({navigation}) => {
   //     });
   // }, []);
 
-  // const handleLogin = () => {
-  //   // Authenticate the user (e.g., validate username/password)
-  //   // For demonstration, let's assume authentication is successful
+  const handleLogin = () => {
+    // Authenticate the user (e.g., validate username/password)
+    // For demonstration, let's assume authentication is successful
 
-  //   // Store the credentials securely
-  //   Keychain.setInternetCredentials('auth', username, password)
-  //     .then(() => {
-  //       console.log('Credentials stored successfully');
-  //       // Navigate to the main screen
-  //     })
-  //     .catch(error => {
-  //       console.error('Error storing credentials:', error);
-  //       Alert.alert('Error', 'Failed to store credentials. Please try again.');
-  //     });
-  // };
+    // Store the credentials securely
+    Keychain.setGenericPassword(username, password)
+      .then(() => {
+        console.log("Credentials stored successfully");
+        // Navigate to the main screen
+      })
+      .catch((error) => {
+        console.error("Error storing credentials:", error);
+        Alert.alert("Error", "Failed to store credentials. Please try again.");
+      });
+  };
   const handleNavigateProfile = () => {
     navigation.navigate("Profile");
   };
 
   return (
-    <View>
-      <TextInput
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-      />
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry={true}
-      />
-      <Button title="Biometric" onPress={callBiometric} />
-
-      <Button
-        title="Create"
-        // onPress={handleLogin}
-      />
-      <Button title="Back" onPress={handleNavigateProfile}></Button>
+    <View style={styles.container}>
+      <View style={styles.listContainer}>
+        {" "}
+        <View>
+          <TextInput
+            placeholder="Username"
+            value={username}
+            onChangeText={setUsername}
+          />
+          <TextInput
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={true}
+          />
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
+            Login credentials
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity style={styles.button} onPress={callBiometric}>
+          <Text>Biometric</Text>
+        </TouchableOpacity>
+        {/* <TouchableOpacity style={styles.button}>Login</TouchableOpacity> */}
+        <TouchableOpacity
+          style={styles.button}
+          // onPress={signInWithGoogle}
+        >
+          <Text>Google</Text>
+        </TouchableOpacity>
+        <Button title="Back" onPress={handleNavigateProfile}></Button>
+      </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: "#022b3a",
+    height: "100%",
+    color: "white",
+    padding: 4,
+  },
+  text: {
+    color: "white",
+  },
+  listContainer: {
+    width: "100%", // Ensure the FlatList occupies the entire width
+    paddingHorizontal: 20, // Add horizontal padding to create space between items
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  button: {
+    backgroundColor: "#04506B",
+    color: "black",
+    // padding:"1px",
+    padding: 5,
+    borderRadius: 5,
+    // width: "auto",
+    width: 130,
+    textAlign: "center",
+    marginVertical: 10,
+  },
+});
 
 export default SignScreen;

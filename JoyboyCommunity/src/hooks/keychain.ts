@@ -1,9 +1,7 @@
 import * as Keychain from "react-native-keychain";
 
-export const generatePassword = async () => {
-  const username = "zuck";
-  const password = "poniesRgr8";
-
+export const generatePassword = async (username:string, password:string ) => {
+  try {
   // Store the credentials
   await Keychain.setGenericPassword(username, password);
 
@@ -20,13 +18,18 @@ export const generatePassword = async () => {
   } catch (error) {
     console.log("Keychain couldn't be accessed!", error);
   }
-  await Keychain.resetGenericPassword();
+  await Keychain?.resetGenericPassword();
+  }catch(e) {
+    console.log('Error generatePassword',e)
+
+  }
+
 };
 
 // Function to check if biometric authentication is supported
 export const isBiometrySupported = async () => {
   try {
-    const biometryType = await Keychain.getSupportedBiometryType();
+    const biometryType = await Keychain?.getSupportedBiometryType();
     console.log("getSupportedBiometryType", biometryType);
     alert(biometryType);
     return !!biometryType;

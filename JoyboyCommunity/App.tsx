@@ -1,4 +1,5 @@
 // App.js
+import { registerRootComponent } from 'expo';
 
 import React, { useEffect, useState } from "react";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
@@ -96,5 +97,9 @@ function App() {
     </NavigationContainer>
   );
 }
+
+
+registerRootComponent(App);
+
 
 export default App;

@@ -29,20 +29,31 @@ const LoginScreen = ({navigation}) => {
     try {
       // Authenticate the user (e.g., validate username/password)
       // For demonstration, let's assume authentication is successful
-
+      Keychain.setGenericPassword(username, password)
+      .then(() => {
+        console.log("Credentials stored successfully");
+        // Navigate to the main screen
+      })
+      .catch((error) => {
+        console.error("Error storing credentials:", error);
+        Alert.alert(
+          "Error",
+          "Failed to store credentials. Please try again."
+        );
+      });
       // Store the credentials securely
-      Keychain.setInternetCredentials("auth", username, password)
-        .then(() => {
-          console.log("Credentials stored successfully");
-          // Navigate to the main screen
-        })
-        .catch((error) => {
-          console.error("Error storing credentials:", error);
-          Alert.alert(
-            "Error",
-            "Failed to store credentials. Please try again."
-          );
-        });
+      // Keychain.setInternetCredentials("auth", username, password)
+      //   .then(() => {
+      //     console.log("Credentials stored successfully");
+      //     // Navigate to the main screen
+      //   })
+      //   .catch((error) => {
+      //     console.error("Error storing credentials:", error);
+      //     Alert.alert(
+      //       "Error",
+      //       "Failed to store credentials. Please try again."
+      //     );
+      //   });
     } catch (e) {}
   };
 

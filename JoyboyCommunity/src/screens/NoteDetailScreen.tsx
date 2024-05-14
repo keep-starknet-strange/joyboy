@@ -44,7 +44,7 @@ const PostDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   useEffect(() => {
     if ((!eventNote && noteId) || eventNote?.id != noteId) {
       handleGetEventById();
-    } else if (eventNote) {
+    } else if (eventNote && eventNote?.content) {
       let parseEvent = parsingEventContent(eventNote);
       // console.log("parseEvent", parseEvent);
       setContentParsed(parseEvent);

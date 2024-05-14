@@ -26,7 +26,7 @@ function FeedScreen({ navigation }) {
         return;
       }
       const events = await getEventsPost(true);
-      console.log("events", events);
+      // console.log("events", events);
       setEvents(events);
       setIsReady(true);
     };
