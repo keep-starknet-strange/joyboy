@@ -6,6 +6,7 @@ struct NIP01Event {
     kind: u16,
     tags: Array<ByteArray>,
     content: ByteArray,
-    sig: u256
+    sig_r: u256,
+    sig_s: u256
 }
 
