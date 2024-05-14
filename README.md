@@ -27,14 +27,36 @@ Freedom requires censorship resistance, and Nostr provides exactly that.
 
 ## Roadmap
 
-- [ ] Cairo implementation of Nostr signature verification
+- [x] Cairo implementation of Nostr signature verification
 - [ ] Starknet account contract implementation, controlled by Nostr keypair
-- [ ] Simple frontend to sign and verify messages (using a browser extension lke [Flamingo](https://www.getflamingo.org/) or any other [NIP-07](https://github.com/nostr-protocol/nips/blob/master/07.md) compatible extension, list can be found [here](https://github.com/aljazceru/awesome-nostr#nip-07-browser-extensions))
 - [ ] Joyboy landing page
 - [ ] SocialPay feature to send and receive tips through Nostr signed messages
 - [ ] Implement a full Nostr client application with Starknet integration
 - [ ] Run Nostr relay server
 - [ ] Crossover with [Vault](https://github.com/keep-starknet-strange/vault) to bring Social features to the Vault application
+
+## Architecture
+### Joyboy
+
+```mermaid
+sequenceDiagram
+    actor Alice
+    actor Bob
+    participant SocialPay relay
+    participant Starknet Node
+    participant Alice Account
+    participant STRK Token
+
+    Alice->>SocialPay relay: @joyboy send 10 STRK to @bob
+    activate SocialPay relay
+    SocialPay relay->>Starknet Node: SocialPay transaction
+    Starknet Node->>Alice Account: SocialPay handler
+    Alice Account->>STRK Token: transfer
+    Starknet Node->>SocialPay relay: SocialPay transaction complete
+    SocialPay relay->>Bob: @bob you just recived 10 STRK from @alice
+    SocialPay relay->>Alice: @alice transfer of 10 STRK to @bob is complete
+    deactivate SocialPay relay
+```
 
 ## Modules
 
