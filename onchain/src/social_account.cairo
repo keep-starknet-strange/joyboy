@@ -66,19 +66,18 @@ mod tests {
 
         println!("precalculated address ______ {:?}", address);
 
-        let deployed_contract_address = contract.deploy(@social_account_calldata).unwrap();
-
         let mut spy = spy_events(SpyOn::One(address));
+
+        let deployed_contract_address = contract.deploy(@social_account_calldata).unwrap();
 
         spy.fetch_events();
         println!("fetch event numbers: {:?}", spy.fetch_events());
 
         println!("event number: {}", spy.events.len());
-        
+
         assert(spy.events.len() == 1, 'there should be one event');
 
         deployed_contract_address
-       
     }
 
     #[test]
