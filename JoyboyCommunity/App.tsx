@@ -1,8 +1,12 @@
 // App.js
-import { registerRootComponent } from 'expo';
+import { registerRootComponent } from "expo";
 
 import React, { useEffect, useState } from "react";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import SplashScreen from "./src/screens/SplashScreen";
 import FeedScreen from "./src/screens/FeedScreen";
@@ -17,7 +21,9 @@ import { RootStackParamList } from "./src/types";
 import { useNostr } from "./src/hooks/useNostr";
 import LoginScreen from "./src/screens/LoginScreen";
 import SignScreen from "./src/screens/SignScreen";
+
 const Stack = createStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator();
 
 const HeaderGoBack = ({ navigation }) => {
   return (
@@ -26,7 +32,6 @@ const HeaderGoBack = ({ navigation }) => {
     </View>
   );
 };
-const Tab = createBottomTabNavigator();
 function App() {
   const [isReady, setIsReady] = React.useState(false);
   const colorScheme = useColorScheme();
@@ -39,10 +44,8 @@ function App() {
   useEffect(() => {
     setTimeout(() => {
       setIsReady(true);
-    }, 1500); // Splash screen will be shown for 3 seconds
+    }, []);
   }, [isReady, events]);
-
-  useEffect(() => {}, []);
 
   return (
     <NavigationContainer>
@@ -98,8 +101,6 @@ function App() {
   );
 }
 
-
 registerRootComponent(App);
-
 
 export default App;

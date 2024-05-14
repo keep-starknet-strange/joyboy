@@ -1,5 +1,30 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import * as Keychain from 'react-native-keychain';
+import * as Google from 'expo-auth-session/providers/google';
+import { ResponseType } from 'expo-auth-session';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+export const getUserInfo = async (token) => {
+  //absent token
+  if (!token) return;
+  //present token
+  try {
+    const response = await fetch(
+      "https://www.googleapis.com/userinfo/v2/me",
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    const user = await response.json();
+    //store user information  in Asyncstorage
+    await AsyncStorage.setItem("user", JSON.stringify(user));
+  } catch (error) {
+    // console.error(
+    //   "Failed to fetch user data:",
+    //   response.status,
+    //   response.statusText
+    // );
+  }
+};
 
 // Initialize Google Sign-In
 GoogleSignin.configure({
@@ -22,7 +47,6 @@ export const signInWithGoogle = async () => {
     console.error('Error signing in with Google:', error);
   }
 };
-
 // Retrieve tokens from Keychain
 export const getGoogleTokens = async () => {
   try {

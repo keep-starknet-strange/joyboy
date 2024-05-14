@@ -14,7 +14,7 @@ import {
   isBiometrySupported,
   saveCredentialsWithBiometry,
 } from "../hooks/keychain";
-import { signInWithGoogle } from "../hooks/google";
+import { GoogleSession } from "../components/profile/GoogleSession";
 
 const SignScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
@@ -65,6 +65,16 @@ const SignScreen = ({ navigation }) => {
   //     });
   // }, []);
 
+  // const [userInfo, setUserInfo] = useState(null);
+  // //client IDs from .env
+  // const config = {
+  //   // androidClientId: process.env.GOOGLE_CLIENT_ID,
+  //   // iosClientId: process.env.GOOGLE_CLIENT_ID,
+  //   webClientId: process.env.GOOGLE_CLIENT_ID,
+  // };
+
+  // const [request, response, promptAsync] = Google.useAuthRequest(config);
+
   const handleLogin = () => {
     // Authenticate the user (e.g., validate username/password)
     // For demonstration, let's assume authentication is successful
@@ -108,12 +118,13 @@ const SignScreen = ({ navigation }) => {
           <Text>Biometric</Text>
         </TouchableOpacity>
         {/* <TouchableOpacity style={styles.button}>Login</TouchableOpacity> */}
-        <TouchableOpacity
+        <GoogleSession></GoogleSession>
+        {/* <TouchableOpacity
           style={styles.button}
           // onPress={signInWithGoogle}
         >
           <Text>Google</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <Button title="Back" onPress={handleNavigateProfile}></Button>
       </View>
     </View>

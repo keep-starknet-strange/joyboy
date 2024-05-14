@@ -1,9 +1,30 @@
 // BottomBar.tsx
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
 import TopBar from "./TopBar";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import * as Google from "expo-auth-session/providers/google";
+import * as Keychain from "react-native-keychain";
+
 const BottomBar = ({ navigation }) => {
+  const route = useRoute();
+  // // const { id_token } = navigation?.params;
+  // const { id_token } = route?.params;
+  // console.log("id_token", id_token);
+  // // Handle authentication response
+  // useEffect(() => {
+  //   if (id_token) {
+  //     console.log("id_token", id_token);
+
+  //     // Store the ID token securely
+  //     Keychain.setInternetCredentials("google", "idToken", id_token)
+  //       .then(() => console.log("ID token stored securely"))
+  //       .catch((error) => console.error("Error storing ID token:", error));
+  //   }
+  // }, [id_token]);
+
+
+  
   const { goBack } = useNavigation();
 
   const handleGoBack = () => {
