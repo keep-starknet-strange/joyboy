@@ -24,13 +24,21 @@ import { useLocalstorage } from "../hooks/useLocalstorage";
 const SignScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [publicKey, setPublicKey] = useState<string | undefined>();
+  const [privateKey, setPrivateKey] = useState<Uint8Array | undefined>();
+
   const { generateKeypair } = useNostr();
   const { encryptAndStorePrivateKey, retrieveAndDecryptPrivateKey } =
     useLocalstorage();
 
   const callBiometric = async () => {
     const biometrySupported = await isBiometrySupported();
-    // if (biometrySupported) {
+
+    if (password?.length == 0) {
+      alert("Enter password")
+      return;
+    }
+    // if (true) {
     if (biometrySupported) {
       // Save credentials with biometric protection
       await saveCredentialsWithBiometry(username, password);
@@ -43,9 +51,14 @@ const SignScreen = ({ navigation }) => {
         /**Generate keypair */
         let { pk, sk } = generateKeypair();
 
+
+        setPublicKey(pk)
+        setPrivateKey(sk)
+
         /** Save pk in localstorage */
         let encryptedPk = encryptAndStorePrivateKey(sk, credentials?.password);
       } else {
+      
         alert(
           JSON.stringify(
             "Biometric authentication failed or credentials not found."
@@ -62,9 +75,44 @@ const SignScreen = ({ navigation }) => {
     navigation.navigate("Profile");
   };
 
+
+  // const textDecoder = new TextDecoder('utf-8'); // Specify the encoding (e.g., utf-8)
+  const textDecoder = new TextDecoder("base64"); // Specify the encoding (e.g., utf-8)
+
+  const readableSk = textDecoder.decode(privateKey); // Convert Uint8Array to string
+
+
   return (
     <View style={styles.container}>
       <View style={styles.listContainer}>
+        <TextInput
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
+        />
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={true}
+        />
+
+
+        {publicKey &&
+          <Text>{publicKey}</Text>
+        }
+
+        {privateKey &&
+          <Text>{readableSk}</Text>
+        }
+
+
+
+
+
+        <Text>Generate your Nostr keypar with biometric</Text>
+
+
         <TouchableOpacity style={styles.button} onPress={callBiometric}>
           <Text>Biometric connection</Text>
         </TouchableOpacity>

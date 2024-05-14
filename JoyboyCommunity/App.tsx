@@ -71,10 +71,10 @@ function App() {
       >
         {isReady ? (
           <>
-            <Stack.Screen name="Home" component={FeedScreen} />
-            <Stack.Screen name="Login" component={LoginScreen}></Stack.Screen>
-            <Stack.Screen name="Sign" component={SignScreen}></Stack.Screen>
-            <Stack.Screen
+            <Tab.Screen name="Home" component={FeedScreen} />
+            <Tab.Screen name="Login" component={LoginScreen}></Tab.Screen>
+            <Tab.Screen name="Sign" component={SignScreen}></Tab.Screen>
+            <Tab.Screen
               name="Profile"
               component={ProfileScreen}
               options={{
@@ -83,18 +83,18 @@ function App() {
                 },
               }}
             />
-            <Stack.Screen name="Create" component={CreatePostScreen} />
-            <Stack.Screen
+            <Tab.Screen name="Create" component={CreatePostScreen} />
+            <Tab.Screen
               name="NoteDetailScreen"
               component={NoteDetailScreen}
             />
-            <Stack.Screen
+            <Tab.Screen
               name="UserDetailScreen"
               component={UserDetailScreen}
             />
           </>
         ) : (
-          <Stack.Screen
+          <Tab.Screen
             name="Splash"
             component={SplashScreen}
             options={{ headerShown: false }}
