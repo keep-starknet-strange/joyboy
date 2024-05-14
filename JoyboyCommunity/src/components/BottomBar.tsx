@@ -5,9 +5,8 @@ import TopBar from "./TopBar";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import * as Google from "expo-auth-session/providers/google";
 import * as Keychain from "react-native-keychain";
-
 const BottomBar = ({ navigation }) => {
-  const route = useRoute();
+  // const route = useRoute();
   // // const { id_token } = navigation?.params;
   // const { id_token } = route?.params;
   // console.log("id_token", id_token);

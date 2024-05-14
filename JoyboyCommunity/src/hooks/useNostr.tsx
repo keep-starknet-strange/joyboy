@@ -1,14 +1,38 @@
 import { NostrEvent, SimplePool, nip05, parseReferences } from "nostr-tools";
 import { useMemo, useState } from "react";
 import { REALAYS_PROD } from "../utils/relay";
+import { generateSecretKey, getPublicKey } from "nostr-tools";
+import { bytesToHex, hexToBytes } from "@noble/hashes/utils"; // already an installed dependency
+import NDK, { NDKEvent, NDKNip07Signer } from "@nostr-dev-kit/ndk";
 
 export const useNostr = () => {
   const pool = new SimplePool();
   const relays = REALAYS_PROD;
+  const nip07signer = new NDKNip07Signer();
+  const ndk = new NDK({ signer: nip07signer });
 
   const [eventsData, setEventsData] = useState<NostrEvent[]>([]);
   const [eventsUser, setEventsUser] = useState<NostrEvent[]>([]);
   const [isReady, setIsReady] = useState(false);
+
+  const generateKeypair = () => {
+    let sk = generateSecretKey();
+    let pk = getPublicKey(sk);
+    return {
+      pk: pk,
+      sk: sk,
+    };
+  };
+
+  const generatePk = () => {};
+  const getKeypair = (sk: Uint8Array) => {
+    let pk = getPublicKey(sk);
+  };
+
+  const getSecretKeyHex = (sk: Uint8Array) => {
+    let skHex = bytesToHex(sk);
+    let backToBytes = hexToBytes(skHex);
+  };
 
   const events = useMemo(() => {
     return eventsData;
@@ -99,5 +123,6 @@ export const useNostr = () => {
     eventsData,
     parsingNip05EventContent,
     getUser,
+    generateKeypair,
   };
 };

@@ -13,40 +13,40 @@ import * as Keychain from "react-native-keychain";
 import { AuthSessionResult } from "expo-auth-session";
 
 export const GoogleSession = () => {
-  const clientId= process.env.EXPO_GOOGLE_CLIENT_ID;
-  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-    clientId,
-  });
+  // const clientId= process.env.EXPO_GOOGLE_CLIENT_ID;
+  // const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
+  //   clientId,
+  // });
 
-  // Handle authentication response
-  useEffect(() => {
-    console.log("response",response)
+  // // Handle authentication response
+  // useEffect(() => {
+  //   console.log("response",response)
 
-    if (response?.type === "success") {
-      const { id_token } = response.params;
-      console.log("id_token",id_token)
+  //   if (response?.type === "success") {
+  //     const { id_token } = response.params;
+  //     console.log("id_token",id_token)
 
-      // Store the ID token securely
-      Keychain.setInternetCredentials("google", "idToken", id_token)
-        .then(() => console.log("ID token stored securely"))
-        .catch((error) => console.error("Error storing ID token:", error));
-    }
-  }, [response]);
+  //     // Store the ID token securely
+  //     Keychain.setInternetCredentials("google", "idToken", id_token)
+  //       .then(() => console.log("ID token stored securely"))
+  //       .catch((error) => console.error("Error storing ID token:", error));
+  //   }
+  // }, [response]);
 
-  // Handle sign-in button press
-  const handleSignIn = async () => {
-    let authResult = await promptAsync();
-  };
+  // // Handle sign-in button press
+  // const handleSignIn = async () => {
+  //   let authResult = await promptAsync();
+  // };
 
   return (
     <View>
 
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.button}
         onPress={handleSignIn}
       >
         <Text>Google</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     
     </View>
   );

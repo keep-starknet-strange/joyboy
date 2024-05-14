@@ -1,4 +1,6 @@
 import * as Keychain from "react-native-keychain";
+import { useNostr } from "../hooks/useNostr";
+import { encrypt, decrypt } from 'crypto-js'; // Import encryption functions from crypto-js
 
 export const generatePassword = async (username:string, password:string ) => {
   try {
@@ -43,6 +45,7 @@ export const isBiometrySupported = async () => {
 // Function to save credentials with biometric protection
 export const saveCredentialsWithBiometry = async (username, password) => {
   try {
+    console.log("saveCredentialsWithBiometry")
     await Keychain.setGenericPassword(username, password, {
       accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_ANY,
       accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED,

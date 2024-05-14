@@ -22,6 +22,10 @@ import { useNostr } from "./src/hooks/useNostr";
 import LoginScreen from "./src/screens/LoginScreen";
 import SignScreen from "./src/screens/SignScreen";
 
+import {AppRegistry} from 'react-native';
+// import App from './App';
+import {expo } from './app.json';
+
 const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
 
@@ -44,7 +48,7 @@ function App() {
   useEffect(() => {
     setTimeout(() => {
       setIsReady(true);
-    }, []);
+    }, );
   }, [isReady, events]);
 
   return (
@@ -100,6 +104,11 @@ function App() {
     </NavigationContainer>
   );
 }
+
+
+
+AppRegistry.registerComponent(expo?.entryPoint, () => App);
+
 
 registerRootComponent(App);
 
