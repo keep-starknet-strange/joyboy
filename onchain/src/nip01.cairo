@@ -1,5 +1,5 @@
 #[derive(Copy, Drop)]
-struct NIP01Event {
+pub struct NIP01Event {
     id: u256,
     pubkey: u256,
     created_at: u64,

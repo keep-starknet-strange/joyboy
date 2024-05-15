@@ -3,6 +3,8 @@ use core::to_byte_array::{FormatAsByteArray, AppendFormattedToByteArray};
 use core::fmt::{Display, Formatter, Error};
 
 use joyboy::nostr_profile::{NostrProfile, encode};
+use joyboy::bip340::{verify};
+use joyboy::nip01::{NIP01Event};
 
 type NostrKey = u256;
 

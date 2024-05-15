@@ -9,6 +9,7 @@ use core::to_byte_array::AppendFormattedToByteArray;
 use core::traits::Into;
 use starknet::{secp256k1::{Secp256k1Point}, secp256_trait::{Secp256Trait, Secp256PointTrait}};
 
+
 const TWO_POW_32: u128 = 0x100000000;
 const TWO_POW_64: u128 = 0x10000000000000000;
 const TWO_POW_96: u128 = 0x1000000000000000000000000;
@@ -90,7 +91,7 @@ fn hash_challenge(rx: u256, px: u256, m: ByteArray) -> u256 {
 /// # Returns
 /// Returns `true` if the signature is valid for the given message and public key; otherwise,
 /// returns `false`.
-fn verify(px: u256, rx: u256, s: u256, m: ByteArray) -> bool {
+pub fn verify(px: u256, rx: u256, s: u256, m: ByteArray) -> bool {
     let n = Secp256Trait::<Secp256k1Point>::get_curve_size();
 
     if px >= p || rx >= p || s >= n {
@@ -123,6 +124,7 @@ fn verify(px: u256, rx: u256, s: u256, m: ByteArray) -> bool {
     // fail if is_infinite(R) || not has_even_y(R) || x(R) ≠ rx.
     !(Rx == 0 && Ry == 0) && Ry % 2 == 0 && Rx == rx
 }
+
 
 #[cfg(test)]
 mod tests {
