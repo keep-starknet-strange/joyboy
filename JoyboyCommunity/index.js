@@ -1,6 +1,4 @@
-import { AppRegistry } from 'react-native';
-import App from './App';
-import { expo  } from './app.json';
-
-AppRegistry.registerComponent(expo?.name, () => App);
+import registerRootComponent from "expo/build/launch/registerRootComponent";
+import "fast-text-encoding";
+import App from './App.tsx';
 registerRootComponent(App);

@@ -31,7 +31,7 @@ export const generatePassword = async (username:string, password:string ) => {
 // Function to check if biometric authentication is supported
 export const isBiometrySupported = async () => {
   try {
-    const biometryType = await Keychain?.getSupportedBiometryType();
+    const biometryType = await Keychain.getSupportedBiometryType();
     console.log("getSupportedBiometryType", biometryType);
     alert(biometryType);
     return !!biometryType;

@@ -1,7 +1,7 @@
 {
   "name": "JoyboyCommunity",
   "version": "1.0.0",
-  "entryPoint": "node_modules/expo/AppEntry.js",
+  "main": "index.js",
   "scripts": {
     "start": "expo start",
     "start:dev": "expo start --tunnel",
@@ -38,6 +38,7 @@
     "@types/react-native": "^0.73.0",
     "react-native-dotenv": "^3.4.11",
     "typescript": "^5.4.5",
+    "react-native-keychain": "^8.2.0",
     "fast-text-encoding": "^1.0.6"
   },
   "private": true
