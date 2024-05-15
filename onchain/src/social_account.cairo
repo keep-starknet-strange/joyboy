@@ -1,5 +1,6 @@
 use starknet::{ContractAddress, get_caller_address, get_contract_address, contract_address_const};
-
+// use traits::TryInto;
+// use traits::Into;
 
 #[starknet::interface]
 pub trait ISocialPayAccount<TContractState> {
@@ -30,7 +31,7 @@ pub mod SocialPayAccount {
     #[constructor]
     fn constructor(ref self: ContractState, public_key: u256) {
         self.public_key.write(public_key);
-        self.emit(AccountCreated { public_key });
+        self.emit(AccountCreated { public_key: public_key });
     }
 
     #[abi(embed_v0)]
@@ -43,7 +44,8 @@ pub mod SocialPayAccount {
 
 #[cfg(test)]
 mod tests {
-    use starknet::{
+    use core::array::ArrayTrait;
+use starknet::{
         ContractAddress, get_caller_address, get_contract_address, contract_address_const
     };
     use snforge_std as snf;
@@ -71,6 +73,9 @@ mod tests {
         spy.fetch_events();
 
         assert(spy.events.len() == 1, 'there should be one event');
+
+        let (_, event) = spy.events.at(0);
+        assert(event.keys.at(0) == @selector!("AccountCreated"), 'Wrong event name');
 
         deployed_contract_address
     }
