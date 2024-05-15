@@ -1,6 +1,4 @@
 use starknet::{ContractAddress, get_caller_address, get_contract_address, contract_address_const};
-// use traits::TryInto;
-// use traits::Into;
 
 #[starknet::interface]
 pub trait ISocialPayAccount<TContractState> {
@@ -78,9 +76,9 @@ mod tests {
         let (_, event) = spy.events.at(0);
         assert(event.keys.at(0) == @selector!("AccountCreated"), 'Wrong event name');
 
-        let key_felt252 = *event.keys.at(1);
-        let key: u256 = key_felt252.into();
-        assert(key == public_key, 'Wrong Public Key');
+        let event_key: u256 = (*event.keys.at(1)).into();
+
+        assert(event_key == public_key, 'Wrong Public Key');
 
         deployed_contract_address
     }
