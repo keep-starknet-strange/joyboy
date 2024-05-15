@@ -107,7 +107,7 @@ function App() {
 
 
 
-AppRegistry.registerComponent(expo?.entryPoint, () => App);
+AppRegistry.registerComponent(expo?.name, () => App);
 
 
 registerRootComponent(App);

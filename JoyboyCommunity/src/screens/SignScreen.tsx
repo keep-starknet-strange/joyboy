@@ -77,9 +77,9 @@ const SignScreen = ({ navigation }) => {
 
 
   // const textDecoder = new TextDecoder('utf-8'); // Specify the encoding (e.g., utf-8)
-  const textDecoder = new TextDecoder("base64"); // Specify the encoding (e.g., utf-8)
+  // const textDecoder = new TextDecoder("base"); // Specify the encoding (e.g., utf-8)
 
-  const readableSk = textDecoder.decode(privateKey); // Convert Uint8Array to string
+  // const readableSk = textDecoder.decode(privateKey); // Convert Uint8Array to string
 
 
   return (
@@ -102,9 +102,9 @@ const SignScreen = ({ navigation }) => {
           <Text>{publicKey}</Text>
         }
 
-        {privateKey &&
+        {/* {privateKey &&
           <Text>{readableSk}</Text>
-        }
+        } */}
 
 
 
