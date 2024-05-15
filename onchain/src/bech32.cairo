@@ -3,7 +3,7 @@ use core::array::ToSpanTrait;
 use core::option::OptionTrait;
 use core::array::ArrayTrait;
 use core::byte_array::ByteArrayTrait;
-use core::integer::{ u32_wide_mul, BoundedInt };
+use core::integer::{u32_wide_mul, BoundedInt};
 
 //! bech32 encoding implementation
 //! Spec: https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki
@@ -14,16 +14,16 @@ use core::integer::{ u32_wide_mul, BoundedInt };
 #[inline]
 fn pow2(n: u32) -> u32 {
     match n {
-        0 =>  0b1,
-        1 =>  0b10,
-        2 =>  0b100,
-        3 =>  0b1000,
-        4 =>  0b10000,
-        5 =>  0b100000,
-        6 =>  0b1000000,
-        7 =>  0b10000000,
-        8 =>  0b100000000,
-        9 =>  0b1000000000,
+        0 => 0b1,
+        1 => 0b10,
+        2 => 0b100,
+        3 => 0b1000,
+        4 => 0b10000,
+        5 => 0b100000,
+        6 => 0b1000000,
+        7 => 0b10000000,
+        8 => 0b100000000,
+        9 => 0b1000000000,
         10 => 0b10000000000,
         11 => 0b100000000000,
         12 => 0b1000000000000,
@@ -41,7 +41,7 @@ fn pow2(n: u32) -> u32 {
         24 => 0b1000000000000000000000000,
         25 => 0b10000000000000000000000000,
         _ => core::panic_with_felt252('n = {n} ouf of range'),
-    }    
+    }
 }
 
 #[inline]
@@ -60,14 +60,15 @@ fn shr5(x: u8) -> u8 {
 }
 
 fn polymod(values: Array<u8>) -> u32 {
-
-    let generator = array![0x3b6a57b2_u32, 0x26508e6d_u32, 0x1ea119fa_u32, 0x3d4233dd_u32, 0x2a1462b3_u32];
+    let generator = array![
+        0x3b6a57b2_u32, 0x26508e6d_u32, 0x1ea119fa_u32, 0x3d4233dd_u32, 0x2a1462b3_u32
+    ];
     let generator = generator.span();
 
     println!("{}", generator.at(0_usize));
 
     let mut chk = 1_u32;
-    
+
     let len = values.len();
     let mut p: usize = 0;
     loop {
@@ -84,16 +85,16 @@ fn polymod(values: Array<u8>) -> u32 {
             if shr(top, i) & 1_u32 != 0 {
                 chk = chk ^ *generator.at(i.into());
             }
-            i+=1;  
+            i += 1;
         };
-        p+=1;
+        p += 1;
     };
 
     chk
 }
 
 fn hrp_expand(hrp: Array<u8>) -> Array<u8> {
-    let mut r: Array<u8> = ArrayTrait::new();    
+    let mut r: Array<u8> = ArrayTrait::new();
 
     let hrp = hrp.span();
 
@@ -145,7 +146,7 @@ fn checksum(hrp: @ByteArray, data: @ByteArray) -> ByteArray {
     values.append_span(the_data.span());
     let the_data: Array<u8> = array![0, 0, 0, 0, 0, 0];
     values.append_span(the_data.span());
-  
+
     let m = polymod(values) ^ 1;
 
     let mut r = Default::default();
