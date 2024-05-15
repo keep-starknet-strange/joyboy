@@ -44,14 +44,15 @@ pub mod SocialPayAccount {
 
 #[cfg(test)]
 mod tests {
+    use core::traits::Into;
     use core::array::ArrayTrait;
-use starknet::{
+    use starknet::{
         ContractAddress, get_caller_address, get_contract_address, contract_address_const
     };
     use snforge_std as snf;
     use snforge_std::{
         declare, ContractClassTrait, start_prank, stop_prank, CheatTarget, spy_events, SpyOn,
-        EventSpy, EventFetcher, Event
+        EventSpy, EventFetcher, Event, EventAssertions
     };
     use super::{ISocialPayAccountDispatcher, ISocialPayAccountDispatcherTrait};
 
@@ -76,6 +77,10 @@ use starknet::{
 
         let (_, event) = spy.events.at(0);
         assert(event.keys.at(0) == @selector!("AccountCreated"), 'Wrong event name');
+
+        let key_felt252 = *event.keys.at(1);
+        let key: u256 = key_felt252.into();
+        assert(key == public_key, 'Wrong Public Key');
 
         deployed_contract_address
     }
