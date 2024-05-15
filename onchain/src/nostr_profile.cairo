@@ -1,9 +1,16 @@
+use core::option::OptionTrait;
+use core::traits::TryInto;
+use core::byte_array::ByteArrayTrait;
+use core::array::SpanTrait;
+use core::array::ToSpanTrait;
 //! Representation of Nostr profiles
+
+use joyboy::bech32;
 
 #[derive(Drop, Debug)]
 pub struct NostrProfile {
     pub public_key: u256,
-    pub relays: Array<ByteArray>
+    pub relays: Array<ByteArray> //UTF-8 encoded
 }
 
 /// nip19 bech32 encoding of NostrProfile
@@ -16,7 +23,26 @@ pub struct NostrProfile {
 /// - `n_profile` - profile to be encoded
 /// # Returns:
 //  bech32 encoding of NostrProfile
-pub fn encode(n_profile: @NostrProfile) -> ByteArray {
-    // TODO: implement full bech32 profile encoding
-    "nprofile1qqsrhuxx8l9ex335q7he0f09aej04zpazpl0ne2cgukyawd24mayt8gpp4mhxue69uhhytnc9e3k7mgpz4mhxue69uhkg6nzv9ejuumpv34kytnrdaksjlyr9p"
+pub fn encode(profile: @NostrProfile) -> ByteArray {
+    let mut data: ByteArray = Default::default();
+
+    let mut relays = profile.relays.span();
+    loop {
+        match relays.pop_front() {
+            Option::Some(relay) => {
+                data.append_byte(1);
+                data.append_byte(relay.len().try_into().unwrap());
+                data.append(relay);
+            },
+            Option::None => { break (); },
+        }
+    };
+
+    data.append_byte(0);
+    data.append_byte(32);
+    data.append_word(profile.public_key.high.clone().into(), 16);
+    data.append_word(profile.public_key.low.clone().into(), 16);
+
+    let len = data.len();
+    bech32::encode("nprofile", data, len)
 }
