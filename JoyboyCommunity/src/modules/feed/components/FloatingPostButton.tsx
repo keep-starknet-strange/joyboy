@@ -7,8 +7,8 @@ import { useNavigation } from "@react-navigation/native";
 const CircleButton = styled(Pressable)`
   width: 56px;
   height: 56px;
-  border-radius: 50%;
   background-color: black;
+  border-radius: 28px;
   display: flex;
   justify-content: center;
   align-items: center;

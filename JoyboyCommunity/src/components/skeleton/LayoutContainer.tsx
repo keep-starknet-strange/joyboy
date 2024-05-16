@@ -1,8 +1,5 @@
 import { Text, View } from "react-native";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+// import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { styled } from "styled-components/native";
 
 const Container = styled(View)`
@@ -11,7 +8,7 @@ const Container = styled(View)`
 `;
 
 const LayoutContainer = ({ title, children }) => {
-  const insets = useSafeAreaInsets();
+  // const insets = useSafeAreaInsets();
 
   return (
     <Container style={{ flex: 1 }}>
@@ -19,7 +16,7 @@ const LayoutContainer = ({ title, children }) => {
         style={{
           width: "100%",
           padding: 16,
-          paddingTop: insets.top,
+          // paddingTop: insets.top,
         }}
       >
         <Text style={{ fontWeight: "bold", fontSize: 18, textAlign: "center" }}>
