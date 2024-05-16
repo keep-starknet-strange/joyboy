@@ -129,6 +129,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/MSghais"><img src="https://avatars.githubusercontent.com/u/59928086?v=4?s=100" width="100px;" alt="MSG"/><br /><sub><b>MSG</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=MSghais" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/kateberryd"><img src="https://avatars.githubusercontent.com/u/35270183?v=4?s=100" width="100px;" alt="Catherine Jonathan"/><br /><sub><b>Catherine Jonathan</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=kateberryd" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ayushtom"><img src="https://avatars.githubusercontent.com/u/41674634?v=4?s=100" width="100px;" alt="Ayush Tomar"/><br /><sub><b>Ayush Tomar</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=ayushtom" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://mubarak23.github.io/"><img src="https://avatars.githubusercontent.com/u/7858376?v=4?s=100" width="100px;" alt="Mubarak Muhammad Aminu"/><br /><sub><b>Mubarak Muhammad Aminu</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=mubarak23" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
