@@ -2,7 +2,7 @@
 
 import React from "react";
 import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
-import { Avatar } from "../Avatar";
+import { Avatar } from "../avatar";
 
 function PostPage({ navigation, post }) {
   const { content, author, timestamp, source, pubkey } = post;
