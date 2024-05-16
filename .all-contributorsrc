@@ -36,6 +36,24 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "kateberryd",
+      "name": "Catherine Jonathan",
+      "avatar_url": "https://avatars.githubusercontent.com/u/35270183?v=4",
+      "profile": "https://github.com/kateberryd",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "ayushtom",
+      "name": "Ayush Tomar",
+      "avatar_url": "https://avatars.githubusercontent.com/u/41674634?v=4",
+      "profile": "https://github.com/ayushtom",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
