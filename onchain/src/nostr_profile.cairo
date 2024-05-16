@@ -44,5 +44,5 @@ pub fn encode(profile: @NostrProfile) -> ByteArray {
     data.append_word(profile.public_key.low.clone().into(), 16);
 
     let len = data.len();
-    bech32::encode("nprofile", data, len)
+    bech32::encode(@"nprofile", @data, len)
 }

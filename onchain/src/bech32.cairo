@@ -1,63 +1,18 @@
-use core::traits::Into;
+use core::traits::{Into, TryInto};
 use core::array::ToSpanTrait;
 use core::option::OptionTrait;
 use core::array::ArrayTrait;
 use core::byte_array::ByteArrayTrait;
-use core::integer::{u32_wide_mul, BoundedInt};
+use core::to_byte_array::FormatAsByteArray;
+use core::cmp::min;
+
+use joyboy::utils::{shl, shr};
 
 //! bech32 encoding implementation
 //! Spec: https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki
 //! Sample implementations:
 //! https://github.com/sipa/bech32/blob/master/ref/javascript/bech32.js#L86
 //! https://github.com/paulmillr/scure-base/blob/main/index.ts#L479
-
-#[inline]
-fn pow2(n: u32) -> u32 {
-    match n {
-        0 => 0b1,
-        1 => 0b10,
-        2 => 0b100,
-        3 => 0b1000,
-        4 => 0b10000,
-        5 => 0b100000,
-        6 => 0b1000000,
-        7 => 0b10000000,
-        8 => 0b100000000,
-        9 => 0b1000000000,
-        10 => 0b10000000000,
-        11 => 0b100000000000,
-        12 => 0b1000000000000,
-        13 => 0b10000000000000,
-        14 => 0b100000000000000,
-        15 => 0b1000000000000000,
-        16 => 0b10000000000000000,
-        17 => 0b100000000000000000,
-        18 => 0b1000000000000000000,
-        19 => 0b10000000000000000000,
-        20 => 0b100000000000000000000,
-        21 => 0b1000000000000000000000,
-        22 => 0b10000000000000000000000,
-        23 => 0b100000000000000000000000,
-        24 => 0b1000000000000000000000000,
-        25 => 0b10000000000000000000000000,
-        _ => core::panic_with_felt252('n = {n} ouf of range'),
-    }
-}
-
-#[inline]
-fn shr<V, N, +Drop<V>, +Div<V>, +Into<N, u32>, +Into<u32, V>>(v: V, n: N) -> V {
-    v / pow2(n.into()).into()
-}
-
-#[inline]
-fn shl5(x: u32) -> u32 {
-    (u32_wide_mul(x, 32_u32) & BoundedInt::<u32>::max().into()).try_into().unwrap()
-}
-
-#[inline]
-fn shr5(x: u8) -> u8 {
-    x / 32_u8.into()
-}
 
 fn polymod(values: Array<u8>) -> u32 {
     let generator = array![
@@ -75,8 +30,8 @@ fn polymod(values: Array<u8>) -> u32 {
         if p == len {
             break ();
         }
-        let top = shr(chk, 25_u8);
-        chk = shl5(chk & 0x1ffffff_u32) ^ (*values.at(p)).into();
+        let top = shr(chk, 25);
+        chk = shl((chk & 0x1ffffff_u32), 5) ^ (*values.at(p)).into();
         let mut i = 0_usize;
         loop {
             if i == 5 {
@@ -93,10 +48,8 @@ fn polymod(values: Array<u8>) -> u32 {
     chk
 }
 
-fn hrp_expand(hrp: Array<u8>) -> Array<u8> {
+fn hrp_expand(hrp: @Array<u8>) -> Array<u8> {
     let mut r: Array<u8> = ArrayTrait::new();
-
-    let hrp = hrp.span();
 
     let len = hrp.len();
     let mut i = 0;
@@ -104,7 +57,7 @@ fn hrp_expand(hrp: Array<u8>) -> Array<u8> {
         if i == len {
             break ();
         }
-        r.append(shr5(*hrp.at(i)));
+        r.append(shr(*hrp.at(i), 5));
         i += 1;
     };
     r.append(0);
@@ -119,6 +72,54 @@ fn hrp_expand(hrp: Array<u8>) -> Array<u8> {
         i += 1;
     };
 
+    r
+}
+
+fn convert_bytes_to_5bit_chunks(bytes: @Array<u8>) -> Array<u8> {
+    let mut r = ArrayTrait::new();
+
+    let len = bytes.len();
+    let mut i = 0;
+
+    let mut acc = 0_u8;
+    let mut missing_bits = 5_u8;
+
+    println!("bytes = {bytes:?}");
+    loop {
+        if i == len {
+            break ();
+        }
+        let mut byte: u8 = *bytes.at(i);
+        let mut bits_left = 8_u8;
+        loop {
+            let chunk_size = min(missing_bits, bits_left);
+            let chunk = shr(byte, 8 - chunk_size);
+            println!(
+                "byte: {}, acc: {}, chunk: {} -> {}",
+                byte.format_as_byte_array(2),
+                acc.format_as_byte_array(2),
+                chunk.format_as_byte_array(2),
+                (acc + chunk).format_as_byte_array(2)
+            );
+            r.append(acc + chunk);
+            byte = shl(byte, chunk_size);
+            bits_left -= chunk_size;
+            if bits_left < 5 {
+                acc = shr(byte, 3);
+                missing_bits = 5 - bits_left;
+                break ();
+            } else {
+                acc = 0;
+                missing_bits = 5
+            }
+        };
+        i += 1;
+    };
+    if missing_bits < 5 {
+        println!("-> {}", acc.format_as_byte_array(2));
+        r.append(acc);
+    }
+    println!("r = {r:?}");
     r
 }
 
@@ -138,47 +139,61 @@ impl ByteArrayTraitIntoArray of Into<@ByteArray, Array<u8>> {
     }
 }
 
-fn checksum(hrp: @ByteArray, data: @ByteArray) -> ByteArray {
+fn checksum(hrp: @ByteArray, data: @Array<u8>) -> Array<u8> {
     let mut values = ArrayTrait::new();
 
-    values.append_span(hrp_expand(hrp.into()).span());
-    let the_data: Array<u8> = data.into();
-    values.append_span(the_data.span());
+    values.append_span(hrp_expand(@hrp.into()).span());
+    values.append_span(data.span());
     let the_data: Array<u8> = array![0, 0, 0, 0, 0, 0];
     values.append_span(the_data.span());
 
     let m = polymod(values) ^ 1;
 
-    let mut r = Default::default();
-    r.append_byte((shr(m, 25_u8) & 31).try_into().unwrap());
-    r.append_byte((shr(m, 20_u8) & 31).try_into().unwrap());
-    r.append_byte((shr(m, 15_u8) & 31).try_into().unwrap());
-    r.append_byte((shr(m, 10_u8) & 31).try_into().unwrap());
-    r.append_byte((shr(m, 5_u8) & 31).try_into().unwrap());
-    r.append_byte((m & 31).try_into().unwrap());
+    let mut r = ArrayTrait::new();
+    r.append((shr(m, 25) & 31).try_into().unwrap());
+    r.append((shr(m, 20) & 31).try_into().unwrap());
+    r.append((shr(m, 15) & 31).try_into().unwrap());
+    r.append((shr(m, 10) & 31).try_into().unwrap());
+    r.append((shr(m, 5) & 31).try_into().unwrap());
+    r.append((m & 31).try_into().unwrap());
 
     r
 }
 
-pub fn encode(hrp: ByteArray, data: ByteArray, limit: usize) -> ByteArray {
+pub fn encode(hrp: @ByteArray, data: @ByteArray, limit: usize) -> ByteArray {
     // change into an array and a const
     let alphabet: ByteArray = "qpzry9x8gf2tvdw0s3jn54khce6mua7l";
 
-    let check_sum = checksum(@hrp, @data);
+    let data_5bits = convert_bytes_to_5bit_chunks(@data.into());
 
-    let combined = ByteArrayTrait::concat(@data, @check_sum);
+    let cs = checksum(hrp, @data_5bits);
+
+    let mut combined = ArrayTrait::new();
+    combined.append_span(data_5bits.span());
+    combined.append_span(cs.span());
 
     let mut encoded: ByteArray = Default::default();
-
     let mut i = 0;
-    let len = data.len();
+    let len = combined.len();
     loop {
         if i == len {
             break ();
         }
-        encoded.append_byte(alphabet.at(combined.at(i).unwrap().into()).unwrap());
+        encoded.append_byte(alphabet.at((*combined.at(i)).into()).unwrap());
         i += 1;
     };
 
     format!("{hrp}1{encoded}")
+}
+
+#[cfg(test)]
+mod tests {
+    // test data generated with: https://slowli.github.io/bech32-buffer/
+    use super::encode;
+
+    #[test]
+    fn test_simple() {
+        assert_eq!(encode(@"abc", @"\x64\x65\x66", 90), "abc1v3jkv2rtp78");
+        assert_eq!(encode(@"abc", @"\x01", 90), "abc1qy928epu");
+    }
 }

@@ -67,6 +67,9 @@ mod tests {
         let joyboy = NostrProfile { public_key: 123_u256, relays: array![] };
         let recipient = NostrProfile { public_key: 345_u256, relays: array![] };
         let r = SocialPayRequest { amount: 1, token: Token::USDC, joyboy, recipient };
+
+        println!("{r}");
+
         assert_eq!(
             format!("{r}"),
             "nprofile1qqsrhuxx8l9ex335q7he0f09aej04zpazpl0ne2cgukyawd24mayt8gpp4mhxue69uhhytnc9e3k7mgpz4mhxue69uhkg6nzv9ejuumpv34kytnrdaksjlyr9p send 1 USDC to nprofile1qqsrhuxx8l9ex335q7he0f09aej04zpazpl0ne2cgukyawd24mayt8gpp4mhxue69uhhytnc9e3k7mgpz4mhxue69uhkg6nzv9ejuumpv34kytnrdaksjlyr9p"
