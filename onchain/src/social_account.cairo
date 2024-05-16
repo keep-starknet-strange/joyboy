@@ -52,10 +52,14 @@ mod tests {
         declare, ContractClassTrait, start_prank, stop_prank, CheatTarget, spy_events, SpyOn,
         EventSpy, EventFetcher, Event, EventAssertions
     };
-    use super::{ISocialPayAccountDispatcher, ISocialPayAccountDispatcherTrait};
+    use super::{
+        ISocialPayAccountDispatcher, ISocialPayAccountDispatcherTrait,
+        ISocialPayAccountSafeDispatcher, ISocialPayAccountSafeDispatcherTrait
+    };
 
 
     const public_key: u256 = 45;
+
 
     fn deploy_social_account() -> ContractAddress {
         let contract = declare("SocialPayAccount");
@@ -76,12 +80,13 @@ mod tests {
         let (_, event) = spy.events.at(0);
         assert(event.keys.at(0) == @selector!("AccountCreated"), 'Wrong event name');
 
-        let event_key: u256 = (*event.keys.at(1)).into();
+        let event_key = (*event.keys.at(1)).into();
 
         assert(event_key == public_key, 'Wrong Public Key');
 
         deployed_contract_address
     }
+
 
     #[test]
     fn test_get_public_key() {
@@ -90,7 +95,7 @@ mod tests {
 
         let get_public_key = dispatcher.get_public_key();
 
-        assert!(get_public_key == public_key, "Public key is not the same");
+        assert!(get_public_key == 45, "Public key is not the same");
     }
 }
 
