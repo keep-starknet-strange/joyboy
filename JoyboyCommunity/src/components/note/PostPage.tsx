@@ -1,7 +1,7 @@
 // src/screens/FeedScreen.js
 
 import React from "react";
-import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, Button, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import { Avatar } from "../avatar";
 
 function PostPage({ navigation, post }) {
@@ -30,7 +30,7 @@ function PostPage({ navigation, post }) {
 const styles = StyleSheet.create({
   card: {
     // backgroundColor: "#022b3a",
-    width: "100%",
+    width: Platform.OS != "android" ? "100%" : 250,
     borderRadius: 8,
     padding: 16,
     marginBottom: 16,

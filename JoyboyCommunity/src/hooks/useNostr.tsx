@@ -1,4 +1,12 @@
-import { NostrEvent, SimplePool, nip05, parseReferences } from "nostr-tools";
+import {
+  NostrEvent,
+  SimplePool,
+  VerifiedEvent,
+  finalizeEvent,
+  nip05,
+  parseReferences,
+  verifyEvent,
+} from "nostr-tools";
 import { useMemo, useState } from "react";
 import { generateSecretKey, getPublicKey } from "nostr-tools";
 import { bytesToHex, hexToBytes } from "@noble/hashes/utils"; // already an installed dependency
@@ -135,6 +143,48 @@ export const useNostr = () => {
     }
   };
 
+  const sendNote = (
+    sk: Uint8Array,
+    content: string,
+    tags?: string[][]
+  ): {
+    event?: VerifiedEvent;
+    isValid?: boolean;
+  } => {
+    try {
+      let event = finalizeEvent(
+        {
+          kind: 1,
+          created_at: Math.floor(Date.now() / 1000),
+          tags: tags ?? [],
+          content: content,
+        },
+        sk
+      );
+      console.log("event", event);
+
+      let isGood = verifyEvent(event);
+
+      if (isGood) {
+        return {
+          event,
+          isValid: true,
+        };
+      } else {
+        return {
+          event,
+          isValid: false,
+        };
+      }
+    } catch (e) {
+      console.log("issue sendNote", e);
+      return {
+        event: undefined,
+        isValid: false,
+      };
+    }
+  };
+
   return {
     pool,
     getEvents,
@@ -151,5 +201,6 @@ export const useNostr = () => {
     getUser,
     generateKeypair,
     getEventsNotesFromPubkey,
+    sendNote,
   };
 };

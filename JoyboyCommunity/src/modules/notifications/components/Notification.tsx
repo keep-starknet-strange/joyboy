@@ -1,4 +1,4 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, Platform } from "react-native";
 import React from "react";
 import styled from "styled-components/native";
 
@@ -10,10 +10,11 @@ const NotificationLayout = styled(View)`
 
 type NotificationProps = {
   post: {
-    id: number;
+    id?: string;
     content: string;
-    username: string;
+    username?: string;
     image?: string;
+    author?:string;
   };
 };
 
@@ -30,14 +31,14 @@ export default function Notification(props: NotificationProps) {
 
       <View style={{ gap: 4, flex: 0.9 }}>
         <Text style={{ color: "black", fontWeight: "700" }}>
-          {post.author}
+          {post?.author}
         </Text>
         <Text style={{ color: "black" }}>{post.content}</Text>
         {post.image && (
           <Image
             source={{ uri: post.image }}
             style={{
-              width: "100%",
+              width: Platform.OS == "ios" ? "100%" : 250,
               height: 200,
               borderRadius: 8,
               marginTop: 8,

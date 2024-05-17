@@ -1,4 +1,4 @@
-import { View, Text, Image, Pressable, TouchableOpacity } from "react-native";
+import { View, Text, Image, Pressable, TouchableOpacity, Platform } from "react-native";
 import React from "react";
 import styled from "styled-components/native";
 import { Event as EventNostr } from "nostr-tools";
@@ -52,7 +52,8 @@ export default function Post(props: PostProps) {
           <Image
             source={{ uri: post.source }}
             style={{
-              width: "100%",
+              width: Platform.OS != "android" ? "100%" : 250,
+
               height: 200,
               borderRadius: 8,
               marginTop: 8,

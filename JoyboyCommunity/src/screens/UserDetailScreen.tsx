@@ -350,10 +350,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "left",
     marginBottom: 20,
-    width: Platform.OS === "ios" ? "100%" : 250, // check css by platform
+    width: Platform.OS != "android" ? "100%" : 250,
+
   },
   listContainer: {
-    width: Platform.OS === "ios" ? "100%" : 250, // check css by platform
+    width: Platform.OS != "android" ? "100%" : 250,
     paddingHorizontal: 20, // Add horizontal padding to create space between items
   },
   title: {
@@ -361,7 +362,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   tabBar: {
-    width: "100%",
+    width: Platform.OS != "android" ? "100%" : 250,
     paddingHorizontal: 4,
     flexDirection: "row",
     borderBottomColor: "#e4e4e7",

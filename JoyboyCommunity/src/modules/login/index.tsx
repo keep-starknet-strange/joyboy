@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   TextInput,
   StyleSheet,
+  Platform,
 } from "react-native";
 import React, { useState } from "react";
 import useAuth from "../../hooks/useAuth";
@@ -39,8 +40,11 @@ export default function Login() {
   const [publicKey, setPublicKey] = useState<string | undefined>();
   const [privateKey, setPrivateKey] = useState<Uint8Array | undefined>();
   const { generateKeypair } = useNostr();
-  const { encryptAndStorePrivateKey, retrieveAndDecryptPrivateKey } =
-    useLocalstorage();
+  const {
+    encryptAndStorePrivateKey,
+    retrieveAndDecryptPrivateKey,
+    storePublicKey,
+  } = useLocalstorage();
 
   const callBiometric = async () => {
     if (username?.length == 0 || !username) {
@@ -52,7 +56,10 @@ export default function Login() {
       return;
     }
     const biometrySupported = await isBiometrySupported();
-    // if (true) { // BY PASS in dev web
+    // @TODO (biometrySupported) uncomment web mode
+
+    // if (true) {
+    // BY PASS in dev web
     if (biometrySupported) {
       // Save credentials with biometric protection
       await saveCredentialsWithBiometry(username, password);
@@ -62,8 +69,6 @@ export default function Login() {
       // Retrieve credentials with biometric authentication
       const credentials = await getCredentialsWithBiometry();
       if (credentials) {
-        alert(JSON.stringify(credentials.username + credentials.password));
-
         /**Generate keypair */
         let { pk, sk } = generateKeypair();
 
@@ -71,8 +76,21 @@ export default function Login() {
         setPrivateKey(sk);
 
         /** Save pk in localstorage */
-        let encryptedPk = encryptAndStorePrivateKey(sk, credentials?.password);
+        let encryptedPk = await encryptAndStorePrivateKey(
+          sk,
+          credentials?.password
+        );
+        let storedPk = await storePublicKey(pk);
       } else {
+        /** @TODO comment web mode */
+        /**Generate keypair */
+        // let { pk, sk } = generateKeypair();
+        // setPublicKey(pk);
+        // setPrivateKey(sk);
+        // /** Save pk in localstorage */
+        // let storedPk = await storePublicKey(pk);
+        // // let encryptedPk = await encryptAndStorePrivateKey(Uint8Array.from(sk), password);
+        // let encryptedPk = await encryptAndStorePrivateKey(sk, password);
         alert(
           JSON.stringify(
             "Biometric authentication failed or credentials not found."
@@ -121,9 +139,7 @@ export default function Login() {
           secureTextEntry={true}
         />
 
-        <LoginButton onPress={callBiometric}
-        style={{paddingVertical:3}}
-        >
+        <LoginButton onPress={callBiometric} style={{ paddingVertical: 3 }}>
           <Typography
             variant="ts19m"
             // colorCode={theme.black[100]}
@@ -132,7 +148,17 @@ export default function Login() {
           </Typography>
         </LoginButton>
 
-        {publicKey && <Text selectable={true}>{publicKey}</Text>}
+        {publicKey && (
+          <Text style={styles.text} selectable={true}>
+            {publicKey}
+          </Text>
+        )}
+
+        {privateKey && (
+          <Text style={styles.text} selectable={true}>
+            {privateKey}
+          </Text>
+        )}
       </View>
 
       <SkipButton onPress={login}>
@@ -169,5 +195,8 @@ const styles = StyleSheet.create({
   },
   inputFocused: {
     borderColor: "#007AFF", // Change border color when focused
+  },
+  text: {
+    width: Platform.OS != "android" ? "100%" : 250,
   },
 });
