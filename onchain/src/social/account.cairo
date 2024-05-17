@@ -1,13 +1,13 @@
 use starknet::{ContractAddress, get_caller_address, get_contract_address, contract_address_const};
 
 #[starknet::interface]
-pub trait ISocialPayAccount<TContractState> {
+pub trait ISocialAccount<TContractState> {
     fn get_public_key(self: @TContractState) -> u256;
 }
 
 
 #[starknet::contract]
-pub mod SocialPayAccount {
+pub mod SocialAccount {
     #[storage]
     struct Storage {
         #[key]
@@ -33,7 +33,7 @@ pub mod SocialPayAccount {
     }
 
     #[abi(embed_v0)]
-    impl SocialPayAccount of super::ISocialPayAccount<ContractState> {
+    impl SocialAccount of super::ISocialAccount<ContractState> {
         fn get_public_key(self: @ContractState) -> u256 {
             self.public_key.read()
         }
@@ -53,8 +53,8 @@ mod tests {
         EventSpy, EventFetcher, Event, EventAssertions
     };
     use super::{
-        ISocialPayAccountDispatcher, ISocialPayAccountDispatcherTrait,
-        ISocialPayAccountSafeDispatcher, ISocialPayAccountSafeDispatcherTrait
+        ISocialAccountDispatcher, ISocialAccountDispatcherTrait,
+        ISocialAccountSafeDispatcher, ISocialAccountSafeDispatcherTrait
     };
 
 
@@ -62,7 +62,7 @@ mod tests {
 
 
     fn deploy_social_account() -> ContractAddress {
-        let contract = declare("SocialPayAccount");
+        let contract = declare("SocialAccount");
 
         let mut social_account_calldata = array![];
         public_key.serialize(ref social_account_calldata);
@@ -92,7 +92,7 @@ mod tests {
     #[ignore]
     fn test_get_public_key() {
         let contract_address = deploy_social_account();
-        let dispatcher = ISocialPayAccountDispatcher { contract_address };
+        let dispatcher = ISocialAccountDispatcher { contract_address };
 
         let get_public_key = dispatcher.get_public_key();
 
