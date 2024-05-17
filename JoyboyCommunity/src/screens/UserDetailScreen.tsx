@@ -372,8 +372,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 4,
     alignItems: "flex-start",
-    height: 350,
-
   },
 });
 
