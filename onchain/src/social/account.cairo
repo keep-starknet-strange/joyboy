@@ -53,8 +53,8 @@ mod tests {
         EventSpy, EventFetcher, Event, EventAssertions
     };
     use super::{
-        ISocialAccountDispatcher, ISocialAccountDispatcherTrait,
-        ISocialAccountSafeDispatcher, ISocialAccountSafeDispatcherTrait
+        ISocialAccountDispatcher, ISocialAccountDispatcherTrait, ISocialAccountSafeDispatcher,
+        ISocialAccountSafeDispatcherTrait
     };
 
 

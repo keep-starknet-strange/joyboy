@@ -3,7 +3,7 @@ use core::fmt::Display;
 #[derive(Copy, Drop, Debug)]
 pub struct Signature {
     r: u256,
-    s: u256    
+    s: u256
 }
 
 #[derive(Drop)]
