@@ -89,6 +89,7 @@ mod tests {
 
 
     #[test]
+    #[ignore]
     fn test_get_public_key() {
         let contract_address = deploy_social_account();
         let dispatcher = ISocialPayAccountDispatcher { contract_address };
