@@ -2,8 +2,8 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Image, TouchableOpacity } from "react-native";
 
-export const Avatar = ({ source, userId }) => {
-  const navigation = useNavigation();
+export const Avatar = ({ navigation, source, userId }) => {
+  // const navigation = useNavigation();
   const handleProfilePress = (userId: string) => {
     navigation.push("UserDetailScreen", { userId });
   };

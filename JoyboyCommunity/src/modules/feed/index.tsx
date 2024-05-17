@@ -21,7 +21,7 @@ export default function Feed() {
   const [loading, setLoading] = useState(false);
   const [isReady, setIsReady] = useState(true);
 
-  const { getEvents, setEvents, events, getEventsPost, eventsData } =
+  const { getEvents, setEvents, events, getEventsNotes, eventsData } =
     useNostr();
 
   const [eventsDataFeed, setEventsData] = useState(events ?? []);
@@ -33,15 +33,20 @@ export default function Feed() {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // add additional data to previous data
-    const events = await getEventsPost(true);
+    const events = await getEventsNotes(true);
     setEvents(events);
+    setEventsData(events);
     setLoading(false);
   }, []);
 
   const fetchPageData = useCallback(async () => {
     setIsReady(false);
-    const events = await getEventsPost(true);
+    setLoading(true);
+    const events = await getEventsNotes(true);
+    console.log("events", events);
     setEvents(events);
+    setEventsData(events);
+    setLoading(false)
     setIsReady(true);
   }, []);
 
@@ -52,6 +57,7 @@ export default function Feed() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ paddingTop: 12, paddingBottom: 18 }}>
+
         <FlatList
           horizontal={true}
           showsHorizontalScrollIndicator={false}
@@ -73,15 +79,23 @@ export default function Feed() {
         />
       </View>
 
+      {loading && <ActivityIndicator></ActivityIndicator>}
+
+
       <FlatList
         contentContainerStyle={{
           paddingTop: 16,
           paddingBottom: bottomBarHeight,
         }}
-        data={testPostData}
+        data={eventsDataFeed}
         keyExtractor={(item) => item?.id}
         renderItem={({ item }) => {
-          return <Post post={item} />;
+          return (
+            <Post
+              // post={item}
+              event={item}
+            />
+          );
         }}
         ItemSeparatorComponent={() => (
           <View style={{ marginVertical: 18 }}>
