@@ -20,8 +20,6 @@ fn polymod(values: Array<u8>) -> u32 {
     ];
     let generator = generator.span();
 
-    println!("{}", generator.at(0_usize));
-
     let mut chk = 1_u32;
 
     let len = values.len();
@@ -84,7 +82,7 @@ fn convert_bytes_to_5bit_chunks(bytes: @Array<u8>) -> Array<u8> {
     let mut acc = 0_u8;
     let mut missing_bits = 5_u8;
 
-    println!("bytes = {bytes:?}");
+    // println!("bytes = {bytes:?}");
     loop {
         if i == len {
             break ();
@@ -94,13 +92,13 @@ fn convert_bytes_to_5bit_chunks(bytes: @Array<u8>) -> Array<u8> {
         loop {
             let chunk_size = min(missing_bits, bits_left);
             let chunk = shr(byte, 8 - chunk_size);
-            println!(
-                "byte: {}, acc: {}, chunk: {} -> {}",
-                byte.format_as_byte_array(2),
-                acc.format_as_byte_array(2),
-                chunk.format_as_byte_array(2),
-                (acc + chunk).format_as_byte_array(2)
-            );
+            // println!(
+            //     "byte: {}, acc: {}, chunk: {} -> {}",
+            //     byte.format_as_byte_array(2),
+            //     acc.format_as_byte_array(2),
+            //     chunk.format_as_byte_array(2),
+            //     (acc + chunk).format_as_byte_array(2)
+            // );
             r.append(acc + chunk);
             byte = shl(byte, chunk_size);
             bits_left -= chunk_size;
@@ -116,10 +114,10 @@ fn convert_bytes_to_5bit_chunks(bytes: @Array<u8>) -> Array<u8> {
         i += 1;
     };
     if missing_bits < 5 {
-        println!("-> {}", acc.format_as_byte_array(2));
+        // println!("-> {}", acc.format_as_byte_array(2));
         r.append(acc);
     }
-    println!("r = {r:?}");
+    // println!("r = {r:?}");
     r
 }
 
