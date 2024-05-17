@@ -19,6 +19,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
 import Notifications from "./src/modules/notifications";
 import CreatePost from "./src/modules/post";
+import UserDetailScreen from "./src/screens/UserDetailScreen";
 
 const RootStack = createNativeStackNavigator();
 const HomePageBottomTabs = createBottomTabNavigator();
@@ -114,6 +115,7 @@ const AppScreens: React.FC = () => {
           <React.Fragment>
             <RootStack.Screen name="Home" component={HomePageBottomTabScreen} />
             <RootStack.Screen name="CreatePost" component={CreatePost} />
+            <RootStack.Screen name="UserDetailScreen"  component={UserDetailScreen} />
           </React.Fragment>
         );
       case "loading":
@@ -158,7 +160,7 @@ SplashScreen.preventAutoHideAsync();
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
 
-  const { getEvents, getEventsPost, setEvents, events } = useNostr();
+  const { getEvents, getEventsNotes, setEvents, events } = useNostr();
 
   useEffect(() => {
     async function prepare() {
