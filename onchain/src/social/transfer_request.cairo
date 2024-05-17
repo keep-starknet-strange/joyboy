@@ -2,20 +2,20 @@ use starknet::ContractAddress;
 use core::to_byte_array::{FormatAsByteArray, AppendFormattedToByteArray};
 use core::fmt::{Display, Formatter, Error};
 
-use joyboy::nostr_profile::{NostrProfile, encode};
+use super::profile::{NostrProfile, encode};
 
 type NostrKey = u256;
 
 #[derive(Drop)]
-struct SocialPayRequest {
+struct TransferRequest {
     amount: u256,
     token: felt252,
     joyboy: NostrProfile,
     recipient: NostrProfile
 }
 
-impl DisplaySocialPayRequest of Display<SocialPayRequest> {
-    fn fmt(self: @SocialPayRequest, ref f: Formatter) -> Result<(), Error> {
+impl DisplayTransferRequest of Display<TransferRequest> {
+    fn fmt(self: @TransferRequest, ref f: Formatter) -> Result<(), Error> {
         f
             .buffer
             .append(
@@ -35,8 +35,8 @@ impl DisplaySocialPayRequest of Display<SocialPayRequest> {
 #[cfg(test)]
 mod tests {
     use core::option::OptionTrait;
-    use super::{SocialPayRequest};
-    use joyboy::nostr_profile::NostrProfile;
+    use super::{TransferRequest};
+    use super::nostr_profile::NostrProfile;
 
     #[test]
     fn test_fmt() {
@@ -50,7 +50,7 @@ mod tests {
             relays: array![]
         };
 
-        let request = SocialPayRequest { amount: 1, token: 'USDC', joyboy, recipient };
+        let request = TransferRequest { amount: 1, token: 'USDC', joyboy, recipient };
 
         let expected =
             "nprofile1qys8wumn8ghj7un9d3shjtn2daukymme9e3k7mtdw4hxjare9e3k7mgqyzzxqw6wxqyyqqmv4rxgz2l0ej8zgrqfkuupycuatnwcannad6ayqx7zdcy send 1 1431520323 to nprofile1qqs2sa3zk4a49umxg4lgvlsaenrqaf33ejkffd78f2cgy4xy38h393s2w22mm";

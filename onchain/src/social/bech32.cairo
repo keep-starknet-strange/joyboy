@@ -1,3 +1,5 @@
+//! bech32 encoding implementation
+
 use core::traits::{Into, TryInto};
 use core::array::ToSpanTrait;
 use core::option::OptionTrait;

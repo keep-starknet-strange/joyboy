@@ -3,9 +3,10 @@ use core::traits::TryInto;
 use core::byte_array::ByteArrayTrait;
 use core::array::SpanTrait;
 use core::array::ToSpanTrait;
+
 //! Representation of Nostr profiles
 
-use joyboy::bech32;
+use super::bech32;
 
 #[derive(Drop, Debug)]
 pub struct NostrProfile {
@@ -49,7 +50,7 @@ pub fn encode(profile: @NostrProfile) -> ByteArray {
 
 #[cfg(test)]
 mod tests {
-    use joyboy::nostr_profile::{NostrProfile, encode};
+    use super::{NostrProfile, encode};
 
     // test data generated with: https://replit.com/@maciejka/WanIndolentKilobyte
 
