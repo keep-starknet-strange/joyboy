@@ -190,8 +190,13 @@ mod tests {
     use super::encode;
 
     #[test]
-    fn test_simple() {
+    fn test_bech32() {
         assert_eq!(encode(@"abc", @"\x64\x65\x66", 90), "abc1v3jkv2rtp78");
+        assert_eq!(encode(@"abc", @"\x64\x65\x66\x67", 90), "abc1v3jkveceusavp");
         assert_eq!(encode(@"abc", @"\x01", 90), "abc1qy928epu");
+        assert_eq!(encode(@"abcd", @"\x01", 90), "abcd1qynxpyxs");
+        assert_eq!(encode(@"abcd", @"\x00\x00", 90), "abcd1qqqqzclr2u");
+        assert_eq!(encode(@"abcd", @"\x00\x00\x00\x00", 90), "abcd1qqqqqqqgf3j03");
+        assert_eq!(encode(@"abcdef", @"\x00\x00\x00\x00", 90), "abcdef1qqqqqqqex27k2");
     }
 }
