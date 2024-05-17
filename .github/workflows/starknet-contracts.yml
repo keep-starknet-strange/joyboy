@@ -26,6 +26,5 @@ jobs:
         with:
           scarb-version: 'nightly'
       - name: Run cairo tests
-        uses: foundry-rs/setup-snfoundry@v3
         run: scarb test
         working-directory: onchain
