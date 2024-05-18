@@ -1,22 +1,14 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
 import CryptoJS from "react-native-crypto-js";
+import {
+  base64ToUint8Array,
+  uint8ArrayToBase64,
+  uint8ArrayToString,
+  utf8StringToUint8Array,
+} from "../utils/format";
 // import CryptoJS from "crypto-js";
 
 export const useLocalstorage = () => {
-  // Convert Uint8Array to Base64 string
-  const uint8ArrayToBase64 = (uint8Array: Uint8Array) => {
-    return btoa(String.fromCharCode.apply(null, Array.from(uint8Array)));
-  };
-
-  // Convert Base64 string to Uint8Array
-  const base64ToUint8Array = (base64: string) => {
-    return new Uint8Array(
-      atob(base64)
-        .split("")
-        .map((char) => char.charCodeAt(0))
-    );
-  };
-
   // Function to encrypt and store the private key
   const storePublicKey = async (publicKey: string) => {
     try {
@@ -28,26 +20,48 @@ export const useLocalstorage = () => {
     }
   };
 
-  // Function to generate a random symmetric key
-
-  // Function to encrypt and store the private key
+  /**
+   * / Function to encrypt and store the private key 
+  // as a String of Uint8Array not encoded
+   * @param privateKey 
+   * @param password 
+   * @param readablePrivateKey 
+   * @returns 
+   */
   const encryptAndStorePrivateKey = async (
     privateKey: Uint8Array,
-    password: string
+    password: string,
+    readablePrivateKey?: string
   ) => {
     try {
+      console.log("privateKey", privateKey?.toString());
+
       const base64Key = uint8ArrayToBase64(privateKey);
-      const encryptedPrivateKey = CryptoJS.AES.encrypt(
+      console.log("base64Key", base64Key?.toString());
+
+      const encryptedPrivateKeyArray = CryptoJS.AES.encrypt(
         base64Key,
         password
       ).toString();
 
       await AsyncStorage.setItem("symmetricKey", password);
+      console.log("base64Key", base64Key);
 
       // Store the encrypted private key using AsyncStorage
-      await AsyncStorage.setItem("encryptedPrivateKey", encryptedPrivateKey);
+      await AsyncStorage.setItem(
+        "encryptedPrivateKeyArray",
+        encryptedPrivateKeyArray
+      );
 
-      return encryptedPrivateKey;
+      if (readablePrivateKey) {
+        const readablePk = CryptoJS.AES.encrypt(
+          readablePrivateKey,
+          password
+        ).toString();
+        await AsyncStorage.setItem("encryptedPrivateKeyUtf8", readablePk);
+      }
+
+      return encryptedPrivateKeyArray;
     } catch (e) {
       console.log("Error encryptAndStorePrivateKey", e);
     }
@@ -64,40 +78,42 @@ export const useLocalstorage = () => {
       }
 
       // Retrieve the encrypted private key from AsyncStorage
-      const encryptedPrivateKey = await AsyncStorage.getItem(
-        "encryptedPrivateKey"
+      const encryptedPrivateKeyArray = await AsyncStorage.getItem(
+        "encryptedPrivateKeyArray"
       );
-      if (!encryptedPrivateKey) {
+      if (!encryptedPrivateKeyArray) {
         throw new Error("Encrypted private key not found");
       }
 
       const decryptedPrivateKey = CryptoJS.AES.decrypt(
-        encryptedPrivateKey,
+        encryptedPrivateKeyArray,
         symmetricKey
       )?.toString(CryptoJS.enc.Utf8);
       const uint8Array = base64ToUint8Array(decryptedPrivateKey);
-      return uint8Array;
+
+      const encryptedPrivateKeyUtf8 = await AsyncStorage.getItem(
+        "encryptedPrivateKeyUtf8"
+      );
+
+      if (!encryptedPrivateKeyUtf8) {
+        return { array: uint8Array };
+      }
+      const decryptedPrivateKeyReadable = CryptoJS.AES.decrypt(
+        encryptedPrivateKeyUtf8,
+        symmetricKey
+      )?.toString(CryptoJS.enc.Utf8);
+      const privateKey = utf8StringToUint8Array(decryptedPrivateKey);
+
+      return { array: uint8Array, privateKey: privateKey };
     } catch (e) {
       console.log("Error retrieveAndDecryptPrivateKey", e);
-      return undefined;
+      return { array: undefined, privateKey: undefined };
     }
   };
-
-  //   // Usage example
-  //   const privateKey = "YOUR_PRIVATE_KEY";
-  //   encryptAndStorePrivateKey(privateKey);
-
-  //   // Later, when you need to retrieve the private key
-  //   retrieveAndDecryptPrivateKey().then((decryptedPrivateKey) => {
-  //     console.log(decryptedPrivateKey);
-  //   });
 
   return {
     retrieveAndDecryptPrivateKey,
     encryptAndStorePrivateKey,
     storePublicKey,
-    base64ToUint8Array,
-    uint8ArrayToBase64,
-    // generateSymmetricKey,
   };
 };

@@ -8,8 +8,6 @@ import Divider from "../../components/divider/Divider";
 import { useNostr } from "../../hooks/useNostr";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
 
-import encode from "fast-text-encoding";
-
 export default function CreatePost() {
   const navigation = useNavigation();
 
@@ -29,13 +27,13 @@ export default function CreatePost() {
         return;
       }
       alert("Note sending");
-      let sk = await retrieveAndDecryptPrivateKey();
+      let {array} = await retrieveAndDecryptPrivateKey();
 
-      if (!sk) {
+      if (!array) {
         alert("Please login");
         return;
       }
-      let noteEvent = sendNote(sk, note);
+      let noteEvent = sendNote(array, note);
       console.log("noteEvent", noteEvent);
       if (noteEvent?.isValid) {
         alert("Note send");

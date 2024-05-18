@@ -6,6 +6,7 @@ import {
   TextInput,
   StyleSheet,
   Platform,
+  Image,
 } from "react-native";
 import React, { useState } from "react";
 import useAuth from "../../hooks/useAuth";
@@ -20,33 +21,73 @@ import {
   isBiometrySupported,
   saveCredentialsWithBiometry,
 } from "../../utils/keychain";
+import { utf8StringToUint8Array } from "../../utils/format";
+
+const ImportButton = styled(Pressable)`
+  padding: 8px 24px;
+  border-color: black;
+  color: white;
+  border-radius: 8px;
+`;
+
+const CreateAccountButton = styled(Pressable)`
+  border-radius: 8px;
+  padding: 8px 24px;
+  border-color: black;
+  border: 1px;
+  color: white;
+`;
+
 const LoginButton = styled(Pressable)`
   border-radius: 8px;
+  border: 1px;
+  background-color: gray;
   padding: 8px 24px;
   color: white;
 `;
 
 const SkipButton = styled(Pressable)`
-  background-color: black;
   border-radius: 8px;
   padding: 8px 24px;
+  border-color: black;
+  color: white;
 `;
+
+enum LoginStep {
+  HOME = "HOME",
+  IMPORT = "IMPORT",
+  CREATE_ACCOUNT = "CREATE_ACCOUNT",
+  ACCOUNT_CREATED = "ACCOUNT_CREATED",
+  EXPORTED_ACCOUNT = "EXPORTED_ACCOUNT",
+}
 
 export default function Login() {
   const { login } = useAuth();
   const theme = useTheme();
+
+  const [step, setStep] = useState<LoginStep>(LoginStep.HOME);
+  const [bypassBiometric, setBiometrics] = useState<boolean>(
+    Platform.OS == "web" ? true : false
+  ); // DEV MODE in web to bypass biometric connection
+  const [isSkipAvailable, setIsSkipAvailable] = useState<boolean>(true); // skip button available if possible to read data only without be connected
   const [username, setUsername] = useState<string | undefined>();
   const [password, setPassword] = useState<string | undefined>();
   const [publicKey, setPublicKey] = useState<string | undefined>();
+  const [privateKeyImport, setImportPrivateKey] = useState<
+    string | undefined
+  >();
   const [privateKey, setPrivateKey] = useState<Uint8Array | undefined>();
-  const { generateKeypair } = useNostr();
-  const {
-    encryptAndStorePrivateKey,
-    retrieveAndDecryptPrivateKey,
-    storePublicKey,
-  } = useLocalstorage();
+  const [privateKeyReadable, setPrivateKeyReadable] = useState<
+    string | undefined
+  >();
+  const { generateKeypair, getPublicKeyByPk } = useNostr();
+  const { encryptAndStorePrivateKey, storePublicKey } = useLocalstorage();
 
-  const callBiometric = async () => {
+  /** Create private key
+   * Saved it with a password credentials biometrics
+   * Add on localstorage
+   */
+  const handleCreateAccount = async () => {
     if (username?.length == 0 || !username) {
       alert("Enter username to login");
       return;
@@ -57,40 +98,47 @@ export default function Login() {
     }
     const biometrySupported = await isBiometrySupported();
     // @TODO (biometrySupported) uncomment web mode
-
-    // if (true) {
-    // BY PASS in dev web
-    if (biometrySupported) {
+    if (biometrySupported || bypassBiometric) {
       // Save credentials with biometric protection
       await saveCredentialsWithBiometry(username, password);
-
       let credentialsSaved = await generatePassword(username, password);
-
       // Retrieve credentials with biometric authentication
       const credentials = await getCredentialsWithBiometry();
       if (credentials) {
         /**Generate keypair */
-        let { pk, sk } = generateKeypair();
+        let { pk, sk, skString } = generateKeypair();
 
         setPublicKey(pk);
         setPrivateKey(sk);
+        await storePublicKey(pk);
+        setPrivateKeyReadable(skString);
 
         /** Save pk in localstorage */
         let encryptedPk = await encryptAndStorePrivateKey(
           sk,
-          credentials?.password
+          credentials?.password,
+          skString
         );
         let storedPk = await storePublicKey(pk);
-      } else {
+      } else if (bypassBiometric) {
         /** @TODO comment web mode */
         /**Generate keypair */
-        // let { pk, sk } = generateKeypair();
-        // setPublicKey(pk);
-        // setPrivateKey(sk);
-        // /** Save pk in localstorage */
-        // let storedPk = await storePublicKey(pk);
-        // // let encryptedPk = await encryptAndStorePrivateKey(Uint8Array.from(sk), password);
-        // let encryptedPk = await encryptAndStorePrivateKey(sk, password);
+        let { pk, sk, skString } = generateKeypair();
+        setPublicKey(pk);
+        setPrivateKey(sk);
+        setPrivateKeyReadable(skString);
+        /** Save pk in localstorage */
+        await storePublicKey(pk);
+        let encryptedPk = await encryptAndStorePrivateKey(
+          sk,
+          password,
+          skString
+        );
+
+        if(encryptedPk) {
+          setStep(LoginStep.ACCOUNT_CREATED);
+
+        }
         alert(
           JSON.stringify(
             "Biometric authentication failed or credentials not found."
@@ -103,82 +151,298 @@ export default function Login() {
     }
   };
 
+  /** Import private key
+   * Saved it with a password credentials biometrics
+   * Add on localstorage
+   *
+   */
+  const handleImportPrivateKey = async () => {
+    if (privateKeyImport?.length == 0) {
+      alert("Enter a key to import");
+      return;
+    }
+    if (password?.length == 0) {
+      alert("Enter a password");
+      return;
+    }
+    const biometrySupported = await isBiometrySupported();
+    // @TODO (biometrySupported) uncomment web mode
+    // BY PASS in dev web
+    if (biometrySupported || bypassBiometric) {
+      // Save credentials with biometric protection
+      await saveCredentialsWithBiometry(username, password);
+      let credentialsSaved = await generatePassword(username, password);
+      // Retrieve credentials with biometric authentication
+      const credentials = await getCredentialsWithBiometry();
+      if (credentials) {
+        /** @TODO comment web mode */
+        // let keypairImport = await base64ToUint8Array(privateKeyImport);
+        let keypairImport = await utf8StringToUint8Array(privateKeyImport);
+        let publicKey = getPublicKeyByPk(keypairImport);
+        setPublicKey(publicKey);
+
+        /** Save pk in localstorage */
+        let encryptedPk = await encryptAndStorePrivateKey(
+          keypairImport,
+          password,
+          privateKeyImport
+        );
+
+        if (privateKeyImport && keypairImport) {
+          setPrivateKeyReadable(privateKeyImport);
+          setIsSkipAvailable(true);
+          setStep(LoginStep.EXPORTED_ACCOUNT);
+          await storePublicKey(publicKey);
+        }
+        // let storedPk = await storePublicKey(pk);
+      } else if (bypassBiometric) {
+        /** @TODO comment web mode */
+        // let keypairImport = await base64ToUint8Array(privateKeyImport);
+        let keypairImport = await utf8StringToUint8Array(privateKeyImport);
+        let publicKey = getPublicKeyByPk(keypairImport);
+        setPublicKey(publicKey);
+        /** Save pk in localstorage */
+        let encryptedPk = await encryptAndStorePrivateKey(
+          keypairImport,
+          password,
+          privateKeyImport
+        );
+
+        if (privateKeyImport && keypairImport) {
+          setPrivateKeyReadable(privateKeyImport);
+          setIsSkipAvailable(true);
+          await storePublicKey(publicKey);
+          setStep(LoginStep.EXPORTED_ACCOUNT);
+        }
+
+        alert(
+          JSON.stringify(
+            "Biometric authentication failed or credentials not found."
+          )
+        );
+      }
+    } else {
+      console.log("Biometry not supported on this device.");
+      alert("Biometry not supported on this device.");
+    }
+  };
+
+  let isImportDisabled: boolean =
+    !password ||
+    !privateKeyImport ||
+    (password?.length == 0 && privateKeyImport?.length == 0)
+      ? true
+      : false;
+  console.log("isImportDisabled", isImportDisabled);
   return (
-    <ScreenContainer
-      style={{
-        justifyContent: "center",
-        alignItems: "center",
-        gap: 1,
-      }}
-    >
-      <View
-        // style={{
-        //   justifyContent: "center",
-        //   alignItems: "center",
-        //   gap: 1,
-        // }}
-        style={styles.inputContainer}
-      >
-        <Text>Generate your Nostr keypair with biometric</Text>
+    <ScreenContainer style={styles.container}>
+      <Image
+        source={require("../../../assets/joyboy-logo.png")}
+        style={styles.logo}
+        resizeMode="contain"
+      />
 
-        <TextInput
-          style={[styles.input]}
-          //  placeholder={placeholder}
-          placeholderTextColor="#888"
-          //  secureTextEntry={secureTextEntry}
-          //  value={value}
-          placeholder="Username"
-          value={username}
-          onChangeText={setUsername}
-        />
-        <TextInput
-          style={[styles.input]}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={true}
-        />
+      {step == LoginStep.HOME && (
+        <View style={styles.inputContainer}>
+          {/* <Text>Enter your login for Nostr</Text> */}
+          <TextInput
+            style={[styles.input]}
+            placeholderTextColor="#888"
+            placeholder="Enter your login key"
+            value={privateKeyImport}
+            onChangeText={setImportPrivateKey}
+          />
+          <TextInput
+            style={[styles.input]}
+            placeholder="Enter a password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={true}
+          />
 
-        <LoginButton onPress={callBiometric} style={{ paddingVertical: 3 }}>
-          <Typography
-            variant="ts19m"
-            // colorCode={theme.black[100]}
+          <ImportButton
+            onPress={handleImportPrivateKey}
+            style={{
+              paddingVertical: 8,
+              width: Platform.OS != "android" ? "100%" : 100,
+              backgroundColor: isImportDisabled && "gray",
+            }}
+            disabled={isImportDisabled}
           >
-            Login
-          </Typography>
-        </LoginButton>
+            <Typography variant="ts19m">Login</Typography>
+          </ImportButton>
+        </View>
+      )}
+      {step == LoginStep.EXPORTED_ACCOUNT && (
+        <View
+          style={{
+            paddingHorizontal: 12,
+            gap: 4,
+            padding: 8,
+            width: 230,
+          }}
+        >
+          {publicKey && (
+            <Text style={styles.text} selectable={true}>
+              {publicKey}
+            </Text>
+          )}
 
-        {publicKey && (
-          <Text style={styles.text} selectable={true}>
-            {publicKey}
-          </Text>
+          {privateKeyReadable && (
+            <>
+              <Text style={styles.text} selectable={true}>
+                {privateKeyReadable}
+              </Text>
+            </>
+          )}
+        </View>
+      )}
+
+      {step != LoginStep.CREATE_ACCOUNT &&
+        step != LoginStep.EXPORTED_ACCOUNT && (
+          <View style={styles.inputContainer}>
+            <CreateAccountButton
+              onPress={() => setStep(LoginStep.CREATE_ACCOUNT)}
+              style={{
+                paddingVertical: 8,
+                marginVertical: 8,
+                width: Platform.OS != "android" ? "100%" : 100,
+              }}
+            >
+              <Typography variant="ts19m">Create an account</Typography>
+            </CreateAccountButton>
+          </View>
         )}
 
-        {privateKey && (
-          <Text style={styles.text} selectable={true}>
-            {privateKey}
-          </Text>
-        )}
+      <View style={styles.inputContainer}>
+        <View>
+          {step == LoginStep.CREATE_ACCOUNT && (
+            <View>
+              <TextInput
+                style={[styles.input]}
+                placeholderTextColor="#888"
+                placeholder="Username"
+                value={username}
+                onChangeText={setUsername}
+              />
+              <TextInput
+                style={[styles.input]}
+                placeholder="Password"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={true}
+              />
+
+              <LoginButton
+                onPress={handleCreateAccount}
+                style={{
+                  paddingVertical: 8,
+                  marginVertical: 8,
+                }}
+              >
+                <Typography variant="ts19m">Create</Typography>
+              </LoginButton>
+
+              <CreateAccountButton
+                onPress={() => setStep(LoginStep.HOME)}
+                style={{
+                  paddingVertical: 8,
+                  marginVertical: 8,
+                  width: Platform.OS != "android" ? "100%" : 100,
+                }}
+                disabled={privateKeyImport?.length == 0}
+              >
+                <Typography variant="ts19m">
+                  Try login with an account
+                </Typography>
+              </CreateAccountButton>
+
+              <View
+                style={{
+                  paddingHorizontal: 12,
+                  gap: 4,
+                  padding: 8,
+                  width: 230,
+                }}
+              >
+                {publicKey && (
+                  <Text style={styles.text} selectable={true}>
+                    {publicKey}
+                  </Text>
+                )}
+
+                {privateKey && (
+                  <>
+                    <Text style={styles.text} selectable={true}>
+                      {Uint8Array.from(privateKey)}
+                    </Text>
+                  </>
+                )}
+              </View>
+            </View>
+          )}
+
+          {step == LoginStep.ACCOUNT_CREATED && (
+            <View
+              style={{
+                paddingHorizontal: 12,
+                gap: 4,
+                padding: 8,
+                width: 230,
+              }}
+            >
+              {publicKey && (
+                <Text style={styles.text} selectable={true}>
+                  {publicKey}
+                </Text>
+              )}
+
+              {privateKeyReadable && (
+                <>
+                  <Text style={styles.text} selectable={true}>
+                    {privateKeyReadable}
+                  </Text>
+                </>
+              )}
+            </View>
+          )}
+        </View>
       </View>
 
-      <SkipButton onPress={login}>
-        <Typography variant="ts19m" colorCode={theme.black[100]}>
-          Skip
-        </Typography>
-      </SkipButton>
+      {isSkipAvailable && (
+        <SkipButton onPress={login}>
+          <Typography variant="ts19m" style={styles.textButton}>
+            Skip
+          </Typography>
+        </SkipButton>
+      )}
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  inputContainer: {
-    marginVertical: 10,
+  container: {
     justifyContent: "center",
     alignItems: "center",
     gap: 1,
   },
+  logo: {
+    width: 200,
+    height: 200,
+  },
+  inputContainer: {
+    marginVertical: 10,
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    gap: 4,
+  },
+  formContainer: {
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    gap: 4,
+  },
   input: {
-    height: 40,
+    minHeight: 40,
     borderColor: "#ccc",
     borderWidth: 1,
     borderRadius: 5,
@@ -192,11 +456,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 1,
     elevation: 2,
+    marginVertical: 4,
   },
   inputFocused: {
     borderColor: "#007AFF", // Change border color when focused
   },
   text: {
-    width: Platform.OS != "android" ? "100%" : 250,
+    width: Platform.OS != "android" ? "100%" : 200,
+    color: "white,",
+  },
+  textButton: {
+    color: "white,",
   },
 });
