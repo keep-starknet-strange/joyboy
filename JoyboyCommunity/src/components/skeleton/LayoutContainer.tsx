@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { Platform, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { styled } from "styled-components/native";
 
@@ -14,7 +14,8 @@ const LayoutContainer = ({ title, children }) => {
     <Container style={{ flex: 1 }}>
       <View
         style={{
-          width: "100%",
+    width: Platform.OS != "android" ? "100%" : 250,
+
           padding: 16,
           paddingTop: insets.top,
         }}

@@ -1,6 +1,4 @@
 import * as Keychain from "react-native-keychain"; 
-import { useNostr } from "../hooks/useNostr"; 
-import { encrypt, decrypt } from 'crypto-js'; // Import encryption functions from crypto-js 
  
 export const generatePassword = async (username:string, password:string ) => { 
   try { 
@@ -33,11 +31,9 @@ export const isBiometrySupported = async () => {
   try { 
     const biometryType = await Keychain.getSupportedBiometryType(); 
     console.log("getSupportedBiometryType", biometryType); 
-    alert(biometryType); 
     return !!biometryType; 
   } catch (error) { 
     console.log("Error checking biometry support:", error.message); 
-    alert(JSON.stringify(error.message)); 
     return false; 
   } 
 }; 
@@ -66,7 +62,6 @@ export const saveCredentialsWithBiometry = async (username, password) => {
       alert(JSON.stringify("Biometric enrollment canceled by the user.")); 
     } else { 
       console.log("Unknown error:", error); 
-      alert(JSON.stringify(error.message)); 
     } 
   } 
 }; 
@@ -80,7 +75,6 @@ export const getCredentialsWithBiometry = async () => {
     return credentials; 
   } catch (error) { 
     console.log("Error retrieving credentials:", error.message); 
-    alert(JSON.stringify(error.message)); 
     // Handle specific errors (e.g., biometric authentication failed) 
     if (error.message.includes("authentication failed")) { 
       console.log("Biometric authentication failed."); 

@@ -1,6 +1,6 @@
 // screens/PostDetailScreen.tsx
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image, Platform } from "react-native";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../types";
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     backgroundColor: "#022b3a",
-    height: "100%",
+    height: Platform.OS != "android" ? "100%" : 250,
     color: "white",
     padding: 4,
   },
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   listContainer: {
-    width: "100%", // Ensure the FlatList occupies the entire width
+    width: Platform.OS != "android" ? "100%" : 250,
     paddingHorizontal: 20, // Add horizontal padding to create space between items
   },
   title: {

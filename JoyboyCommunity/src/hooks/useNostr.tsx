@@ -1,11 +1,17 @@
-import { NostrEvent, SimplePool, nip05, parseReferences } from "nostr-tools";
+import {
+  NostrEvent,
+  SimplePool,
+  VerifiedEvent,
+  finalizeEvent,
+  nip05,
+  parseReferences,
+  verifyEvent,
+} from "nostr-tools";
 import { useMemo, useState } from "react";
 import { generateSecretKey, getPublicKey } from "nostr-tools";
-import { bytesToHex, hexToBytes } from "@noble/hashes/utils"; // already an installed dependency
 import NDK, { NDKEvent, NDKNip07Signer } from "@nostr-dev-kit/ndk";
 import { RELAYS_PROD } from "../utils/relay";
-import { queryProfile } from "nostr-tools/lib/types/nip05";
-
+import { uint8ArrayToHex } from "../utils/format";
 export const useNostr = () => {
   const pool = new SimplePool();
   const relays = RELAYS_PROD;
@@ -22,12 +28,31 @@ export const useNostr = () => {
   const [isReady, setIsReady] = useState(false);
 
   const generateKeypair = () => {
-    let sk = generateSecretKey();
-    let pk = getPublicKey(sk);
-    return {
-      pk: pk,
-      sk: sk,
-    };
+    try {
+      let sk = generateSecretKey();
+      let skString = uint8ArrayToHex(sk);
+      console.log("skString", skString);
+
+      let pk = getPublicKey(sk);
+      return {
+        pk: pk,
+        sk: sk,
+        skString: skString,
+      };
+    } catch (e) {
+      console.log("Error generateKeypair", e);
+    }
+  };
+
+  const getPublicKeyByPk = (sk: Uint8Array) => {
+    try {
+      let pk = getPublicKey(sk);
+      return pk;
+    } catch (e) {
+      console.log("Error getPublicKeyByPk", e);
+
+      return undefined;
+    }
   };
 
   const setEvents = (eventsData?: NostrEvent[]) => {
@@ -135,6 +160,48 @@ export const useNostr = () => {
     }
   };
 
+  const sendNote = (
+    sk: Uint8Array,
+    content: string,
+    tags?: string[][]
+  ): {
+    event?: VerifiedEvent;
+    isValid?: boolean;
+  } => {
+    try {
+      let event = finalizeEvent(
+        {
+          kind: 1,
+          created_at: Math.floor(Date.now() / 1000),
+          tags: tags ?? [],
+          content: content,
+        },
+        sk
+      );
+      console.log("event", event);
+
+      let isGood = verifyEvent(event);
+
+      if (isGood) {
+        return {
+          event,
+          isValid: true,
+        };
+      } else {
+        return {
+          event,
+          isValid: false,
+        };
+      }
+    } catch (e) {
+      console.log("issue sendNote", e);
+      return {
+        event: undefined,
+        isValid: false,
+      };
+    }
+  };
+
   return {
     pool,
     getEvents,
@@ -151,5 +218,7 @@ export const useNostr = () => {
     getUser,
     generateKeypair,
     getEventsNotesFromPubkey,
+    sendNote,
+    getPublicKeyByPk,
   };
 };

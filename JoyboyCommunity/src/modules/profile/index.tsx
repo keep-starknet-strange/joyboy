@@ -1,4 +1,4 @@
-import { View, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet, Platform } from "react-native";
 import React from "react";
 import styled, { useTheme } from "styled-components/native";
 import Typography from "../../components/typography";
@@ -143,7 +143,8 @@ export default function Profile() {
         <Image
           source={{ uri: "https://picsum.photos/200/300" }}
           style={{
-            width: "100%",
+            width: Platform.OS != "android" ? "100%" : 250,
+
             height: 200,
             resizeMode: "cover",
             marginTop: 8,
@@ -193,7 +194,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tabBar: {
-    width: "100%",
+    width: Platform.OS != "android" ? "100%" : 250,
+
     paddingHorizontal: 4,
     flexDirection: "row",
     borderBottomColor: "#e4e4e7",
