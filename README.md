@@ -123,41 +123,32 @@ snforge test
 
 ## Mobile
 
-The Mobile app is on the JoboyCommunity folder.
+The Joyboy Mobile app is built with React-native & Expo.
+[Mobile repo](https://github.com/keep-starknet-strange/joyboy/blob/main/JoyboyCommunity/README)
 
 ### Test
 
-To test the project, run:
+To test the mobile app, run:
 
 ```bash
 cd JoyboyCommunity
 npm i
 npm start
 ```
+Select Expo web, Android or IOS. You can scan it with Expo GO on your phone.
 
 ### Screens of the mobile app
 Recent implementation PoC on React Native.
 Here is what we have on the mobile app on the first days, contributions welcome! 
 Check the issues with the "mobile" labels.
-
-Done:
-- Create or import Nostr account
-- Feed for notes
-- See user page with notes 
-- Create note on Nostr 
-
-WIP:
-- Read Nostr tags content
-- View user page details: followers and follows, replies, likes, repost with all details of the users.
-- Note interactions: Replies, Likes, Report, Tips
-- My profile: Update my profile
-- Feed: Search, Trending fees, For you, Discover
-- DM with private message: NIP-17
-- Public chat: NIP-28
  
+TODO and WIP on the README of the mobile folder, you can see more details on the README here:
+[Mobile repo](https://github.com/keep-starknet-strange/joyboy/blob/main/JoyboyCommunity/README)
+
+Proposal for UI Mobile.
 [UI/UX proposal for video discussions](https://github.com/keep-starknet-strange/joyboy/discussions/48#discussion-6683225)
 
-Work present: 
+Here are some work already merge and available for test:
 
 Home page: 
   <img src="resources/screens/onboard.png" alt="onboard" height="300"/>
@@ -173,6 +164,7 @@ Feed by default
 User feed with notes
   <img src="resources/screens/user-page-feed.png" alt="user-page-feed" height="300"/>
 
+Pick an issue with the labels "mobile" to start work on React-native and contribute!
 
 ## Resources
 

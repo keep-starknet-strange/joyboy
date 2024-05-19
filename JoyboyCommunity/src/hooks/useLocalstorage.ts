@@ -111,9 +111,27 @@ export const useLocalstorage = () => {
     }
   };
 
+  
+  // Function to retrieve and decrypt the private key
+  const retrievePublicKey = async () => {
+    try {
+      // Retrieve the symmetric key from AsyncStorage
+      const publicKey = await AsyncStorage.getItem("publicKey");
+      if (!publicKey) {
+        return undefined
+      }
+      return publicKey
+
+    } catch (e) {
+      console.log("Error retrievePublicKey", e);
+      return undefined;
+    }
+  };
+
   return {
     retrieveAndDecryptPrivateKey,
     encryptAndStorePrivateKey,
     storePublicKey,
+    retrievePublicKey
   };
 };
