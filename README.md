@@ -48,8 +48,11 @@ Tech stack:
 - [ ] Crossover with [Vault](https://github.com/keep-starknet-strange/vault) to bring Social features to the Vault application
 
 ## Architecture
+
 ### SocialPay
-#### Alice sends tokens to Bob 
+
+#### Alice sends tokens to Bob
+
 ```mermaid
 sequenceDiagram
     actor Alice
@@ -92,6 +95,7 @@ To build the project, run:
 ```bash
 npm run build
 ```
+
 </details>
 
 <details>
@@ -116,6 +120,59 @@ snforge test
 ```
 
 </details>
+
+## Mobile
+
+The Mobile app is on the JoboyCommunity folder.
+
+### Test
+
+To test the project, run:
+
+```bash
+cd JoyboyCommunity
+npm i
+npm start
+```
+
+### Screens of the mobile app
+Recent implementation PoC on React Native.
+Here is what we have on the mobile app on the first days, contributions welcome! 
+Check the issues with the "mobile" labels.
+
+Done:
+- Create or import Nostr account
+- Feed for notes
+- See user page with notes 
+- Create note on Nostr 
+
+WIP:
+- Read Nostr tags content
+- View user page details: followers and follows, replies, likes, repost with all details of the users.
+- Note interactions: Replies, Likes, Report, Tips
+- My profile: Update my profile
+- Feed: Search, Trending fees, For you, Discover
+- DM with private message: NIP-17
+- Public chat: NIP-28
+ 
+[UI/UX proposal for video discussions](https://github.com/keep-starknet-strange/joyboy/discussions/48#discussion-6683225)
+
+Work present: 
+
+Home page: 
+  <img src="resources/screens/onboard.png" alt="onboard" height="300"/>
+
+[UI video discussions](https://t.me/JoyboyStarknet/206/397)
+
+Create Nostr account
+  <img src="resources/screens/create-account.png" alt="create-account" height="300"/>
+
+Feed by default
+  <img src="resources/screens/feed-default.png" alt="feed-default" height="300"/>
+
+User feed with notes
+  <img src="resources/screens/user-page-feed.png" alt="user-page-feed" height="300"/>
+
 
 ## Resources
 

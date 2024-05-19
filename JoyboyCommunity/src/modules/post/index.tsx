@@ -7,6 +7,15 @@ import KeyboardAvoidingView from "../../components/skeleton/KeyboardAvoidingView
 import Divider from "../../components/divider/Divider";
 import { useNostr } from "../../hooks/useNostr";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
+import styled from "styled-components";
+
+const CreateButton = styled(Pressable)`
+  border-radius: 8px;
+  padding: 8px 24px;
+  border-color: black;
+  border: 1px;
+  color: white;
+`;
 
 export default function CreatePost() {
   const navigation = useNavigation();
@@ -27,7 +36,7 @@ export default function CreatePost() {
         return;
       }
       alert("Note sending");
-      let {array} = await retrieveAndDecryptPrivateKey();
+      let { array } = await retrieveAndDecryptPrivateKey();
 
       if (!array) {
         alert("Please login");
@@ -42,6 +51,7 @@ export default function CreatePost() {
       console.log("Error send note", e);
     }
   }, [note]);
+  const isCreateDisabled = note && note?.length > 0 ? true : false;
 
   return (
     <KeyboardAvoidingView>
@@ -56,9 +66,17 @@ export default function CreatePost() {
         <Pressable onPress={handleGoBack}>
           <Typography variant="ts15r">Cancel</Typography>
         </Pressable>
-        <Pressable onPress={handlePost}>
+        <CreateButton
+          onPress={handlePost}
+          // style={{
+          //   paddingVertical: 8,
+          //   width: Platform.OS != "android" ? "100%" : 100,
+          //   backgroundColor: isCreateDisabled && "gray",
+          // }}
+          disabled={isCreateDisabled}
+        >
           <Typography variant="ts15r">Post</Typography>
-        </Pressable>
+        </CreateButton>
       </View>
       <View style={{ marginBottom: 12 }}>
         <Divider />
