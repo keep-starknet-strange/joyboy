@@ -44,12 +44,15 @@ Home page:
 [UI video discussions](https://t.me/JoyboyStarknet/206/397)
 
 Create Nostr account
-  <img src="../resources/screens/create-account.png" alt="create-account" height="300"/>
+<img src="../resources/screens/create-account.png" alt="create-account" height="300"/>
 
 Feed by default
-  <img src="../resources/screens/feed-default.png" alt="feed-default" height="300"/>
+<img src="../resources/screens/feed-default.png" alt="feed-default" height="300"/>
 
 User feed with notes
+<img src="../resources/screens/user-profile-details.png" alt="feed-default" height="300"/>
 
+My profile page: WIP
+<img src="../resources/screens/my-profile.png" alt="my-profile" height="300"/>
 
 Pick a good first issue with the mobile labels, and let's contribute and keep building cool things in Open-source.

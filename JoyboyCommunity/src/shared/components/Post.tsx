@@ -1,4 +1,11 @@
-import { View, Text, Image, Pressable, TouchableOpacity, Platform } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  Pressable,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
 import React from "react";
 import styled from "styled-components/native";
 import { Event as EventNostr } from "nostr-tools";
@@ -21,6 +28,7 @@ interface PostProps {
     pubkey: string;
   }; // TODO FIX and use only typed event
   event?: EventNostr;
+  sourceUser?: string;
 }
 
 export default function Post(props: PostProps) {
@@ -37,7 +45,7 @@ export default function Post(props: PostProps) {
       <View style={{ flex: 0.1 }}>
         <Pressable onPress={() => handleProfilePress(event?.pubkey)}>
           <Image
-            source={require("../../../assets/joyboy-logo.png")}
+            source={props?.sourceUser ?? require("../../../assets/joyboy-logo.png")}
             style={{ width: 44, height: 44 }}
           />
         </Pressable>

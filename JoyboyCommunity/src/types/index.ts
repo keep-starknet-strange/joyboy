@@ -37,3 +37,15 @@ export interface NIP05Content {
   npub?:string;
   created_at?:string;
 }
+
+
+export interface IUserEvent {
+  about?:string;
+  display_name?:string;
+  lud16?:string;
+  website?:string;
+  picture?:string;
+  nip05?:string;
+  banner?:string;
+  name?:string;
+}

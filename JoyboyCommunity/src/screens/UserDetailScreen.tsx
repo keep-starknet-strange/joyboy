@@ -10,10 +10,11 @@ import {
   Platform,
   FlatList,
   useWindowDimensions,
+  ActivityIndicator,
 } from "react-native";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "../types";
+import { IUserEvent, RootStackParamList } from "../types";
 import { useNostr } from "../hooks/useNostr";
 import { Event as EventNostr } from "nostr-tools";
 import styled, { useTheme } from "styled-components";
@@ -124,7 +125,8 @@ const ThirdRoute = (datas: EventNostr[]) => {
 
 /** @TODO fetch user */
 const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
-  const { getEvent, getUser, getEventsNotesFromPubkey } = useNostr();
+  const { getEvent, getUser, getEventsNotesFromPubkey, getUserQuery } =
+    useNostr();
 
   const { userId: userQuery } = route.params;
   const [eventProfile, setEventProfile] = useState<NDKUser | undefined>();
@@ -132,6 +134,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
   const [events, setEvents] = useState<EventNostr[] | undefined>();
   const [imgUser, setImageUser] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState<boolean | undefined>(false);
+  const [profile, setProfile] = useState<IUserEvent | undefined>();
   const navigation = useNavigation();
   const [index, setIndex] = React.useState(0);
   const [contentParsed, setContentParsed] = useState<string | undefined>();
@@ -159,14 +162,19 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
 
       if (userQuery) {
         let eventUser = await getUser(userQuery);
-        console.log("eventUser", eventUser);
-        console.log("eventUser profile", eventUser?.profile);
-        // let profile = await eventUser?.fetchProfile();
-        // console.log("profile", profile);
         setEventProfile(eventUser);
+        let userQueryReq = await getUserQuery(userQuery);
 
+        /** NIP-05 Metadata is in string 
+         * kind:0 
+         * Parsed content to UserMetadata
+        */
+        let contentParsed = JSON.parse(userQueryReq?.content);
+        let profile: IUserEvent = contentParsed;
+        console.log("profile", profile);
+        setProfile(profile);
+     
         let events = await getEventsNotesFromPubkey(userQuery);
-        console.log("events user", events);
         setEvents(events);
         return events;
       }
@@ -196,6 +204,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
           return (
             <Post
               //  post={item}
+              sourceUser={profile?.picture}
               event={item}
             />
           );
@@ -208,7 +217,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
       />
     );
   };
-  
+
   const renderScene = SceneMap({
     posts: FirstRoute,
     replies: SecondRoute,
@@ -253,9 +262,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
   };
 
   return (
-    <ScrollView
-    style={styles.container}
-    >
+    <ScrollView style={styles.container}>
       <BackButton onPress={() => handleGoBack()}>
         <Typography
           variant="ts19m"
@@ -264,16 +271,41 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
           Back
         </Typography>
       </BackButton>
-      <View 
-      style={styles.profileContainer}>
-        <Image
-          source={
-            eventProfile?.profile?.image ??
-            require("../../assets/joyboy-logo.png")
-          }
-          style={styles.profilePicture}
-        />
+      <View style={{ position: "relative", marginTop: -10, height: 270 }}>
+        {profile?.banner && (
+          <Image
+            source={{ uri: profile?.banner }}
+            style={{
+              width: Platform.OS != "android" ? "100%" : 250,
 
+              height: 200,
+              resizeMode: "cover",
+              marginTop: 8,
+            }}
+          />
+        )}
+
+        <View style={{ position: "relative" }}>
+          <Image
+            source={{
+              uri: profile?.picture ?? require("../../assets/joyboy-logo.png"),
+            }}
+            style={{
+              borderWidth: 2,
+              borderColor: "white",
+              height: 100,
+              width: 100,
+              resizeMode: "cover",
+              borderRadius: 50,
+              left: 12,
+              top: 0,
+              transform: [{ translateY: -50 }],
+            }}
+          />
+        </View>
+      </View>
+      <View style={styles.profileContainer}>
+        {isLoading && <ActivityIndicator></ActivityIndicator>}
         <Text
           style={styles.text}
           // numberOfLines={1}
@@ -286,7 +318,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
           style={styles.text}
           // colorCode={theme.black[10]}
         >
-          {eventProfile?.profile?.name}
+          {eventProfile?.profile?.name ?? profile?.name}
         </Text>
 
         <Text
@@ -294,7 +326,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
           style={styles.text}
           // colorCode={theme.black[10]}
         >
-          {eventProfile?.profile?.bio}
+          {eventProfile?.profile?.bio ?? profile?.about}
         </Text>
 
         {/* Render user details here */}
@@ -324,7 +356,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     height: 350,
     color: "white",
-    padding: 4,
+    // padding: 4,
     gap: 4,
     flex: 0.9,
   },
@@ -351,7 +383,6 @@ const styles = StyleSheet.create({
     textAlign: "left",
     marginBottom: 20,
     width: Platform.OS != "android" ? "100%" : 250,
-
   },
   listContainer: {
     width: Platform.OS != "android" ? "100%" : 250,

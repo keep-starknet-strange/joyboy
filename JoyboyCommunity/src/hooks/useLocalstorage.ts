@@ -3,10 +3,8 @@ import CryptoJS from "react-native-crypto-js";
 import {
   base64ToUint8Array,
   uint8ArrayToBase64,
-  uint8ArrayToString,
   utf8StringToUint8Array,
 } from "../utils/format";
-// import CryptoJS from "crypto-js";
 
 export const useLocalstorage = () => {
   // Function to encrypt and store the private key
@@ -34,10 +32,7 @@ export const useLocalstorage = () => {
     readablePrivateKey?: string
   ) => {
     try {
-      console.log("privateKey", privateKey?.toString());
-
       const base64Key = uint8ArrayToBase64(privateKey);
-      console.log("base64Key", base64Key?.toString());
 
       const encryptedPrivateKeyArray = CryptoJS.AES.encrypt(
         base64Key,
@@ -45,7 +40,6 @@ export const useLocalstorage = () => {
       ).toString();
 
       await AsyncStorage.setItem("symmetricKey", password);
-      console.log("base64Key", base64Key);
 
       // Store the encrypted private key using AsyncStorage
       await AsyncStorage.setItem(

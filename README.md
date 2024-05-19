@@ -151,18 +151,21 @@ Proposal for UI Mobile.
 Here are some work already merge and available for test:
 
 Home page: 
-  <img src="resources/screens/onboard.png" alt="onboard" height="300"/>
+<img src="resources/screens/onboard.png" alt="onboard" height="300"/>
 
 [UI video discussions](https://t.me/JoyboyStarknet/206/397)
 
-Create Nostr account
-  <img src="resources/screens/create-account.png" alt="create-account" height="300"/>
+Create Nostr account:
+<img src="resources/screens/create-account.png" alt="create-account" height="300"/>
 
 Feed by default
-  <img src="resources/screens/feed-default.png" alt="feed-default" height="300"/>
+<img src="resources/screens/feed-default.png" alt="feed-default" height="300"/>
 
 User feed with notes
-  <img src="resources/screens/user-page-feed.png" alt="user-page-feed" height="300"/>
+<img src="resources/screens/user-profile-details.png" alt="user-profile-details" height="300"/>
+
+My profile
+<img src="resources/screens/user-profile.png" alt="my-profile" height="300"/>
 
 Pick an issue with the labels "mobile" to start work on React-native and contribute!
 
