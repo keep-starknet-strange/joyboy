@@ -157,23 +157,23 @@ Here are some work already merge and available for test:
 1. Home page: 
 
 [Home page onboard](../resources/screens/onboard.png)
-<img src="../resources/screens/onboard.png" alt="onboard" height="300"/>
+<img src="/resources/screens/onboard.png" alt="onboard" height="300"/>
 
 2. Create Nostr account
 
-<img src="../resources/screens/create-account.png" alt="create account" height="300"/>
+<img src="resources/screens/create-account.png" alt="create account" height="300"/>
 
 3. Feed by default:
 
-<img src="../resources/screens/feed-default.png" alt="feed default" height="300"/>
+<img src="/resources/screens/feed-default.png" alt="feed default" height="300"/>
 
 4. User feed with notes:
 
-<img src="../resources/screens/user-profile-details.png" alt="user-profile-details" height="300"/>
+<img src="/resources/screens/user-profile-details.png" alt="user-profile-details" height="300"/>
 
 5. My profile page: WIP
 
-<img src="../resources/screens/my-profile.png" alt="my-profile" height="300"/>
+<img src="/resources/screens/my-profile.png" alt="my-profile" height="300"/>
 
 
 ## Resources
