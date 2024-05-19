@@ -126,6 +126,8 @@ snforge test
 The Joyboy Mobile app is built with React-native & Expo.
 [Mobile repo](https://github.com/keep-starknet-strange/joyboy/blob/main/JoyboyCommunity/README)
 
+Pick an issue with the labels "mobile" to start work on React-native and contribute!
+
 ### Test
 
 To test the mobile app, run:
@@ -142,32 +144,37 @@ Recent implementation PoC on React Native.
 Here is what we have on the mobile app on the first days, contributions welcome! 
 Check the issues with the "mobile" labels.
  
-TODO and WIP on the README of the mobile folder, you can see more details on the README here:
+You can see more details on the README here:
 [Mobile repo](https://github.com/keep-starknet-strange/joyboy/blob/main/JoyboyCommunity/README)
 
 Proposal for UI Mobile.
 [UI/UX proposal for video discussions](https://github.com/keep-starknet-strange/joyboy/discussions/48#discussion-6683225)
 
-Here are some work already merge and available for test:
-
-Home page: 
-<img src="resources/screens/onboard.png" alt="onboard" height="300"/>
-
 [UI video discussions](https://t.me/JoyboyStarknet/206/397)
 
-Create Nostr account:
-<img src="resources/screens/create-account.png" alt="create-account" height="300"/>
+Here are some work already merge and available for test:
 
-Feed by default
-<img src="resources/screens/feed-default.png" alt="feed-default" height="300"/>
+1. Home page: 
 
-User feed with notes
-<img src="resources/screens/user-profile-details.png" alt="user-profile-details" height="300"/>
+[Home page onboard](../resources/screens/onboard.png)
+<img src="../resources/screens/onboard.png" alt="onboard" height="300"/>
 
-My profile
-<img src="resources/screens/user-profile.png" alt="my-profile" height="300"/>
+2. Create Nostr account
 
-Pick an issue with the labels "mobile" to start work on React-native and contribute!
+<img src="../resources/screens/create-account.png" alt="create account" height="300"/>
+
+3. Feed by default:
+
+<img src="../resources/screens/feed-default.png" alt="feed default" height="300"/>
+
+4. User feed with notes:
+
+<img src="../resources/screens/user-profile-details.png" alt="user-profile-details" height="300"/>
+
+5. My profile page: WIP
+
+<img src="../resources/screens/my-profile.png" alt="my-profile" height="300"/>
+
 
 ## Resources
 
