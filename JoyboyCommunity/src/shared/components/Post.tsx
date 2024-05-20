@@ -43,43 +43,45 @@ export default function Post(props: PostProps) {
   };
 
   return (
-    <PostLayout>
+    <View>
       {repostedEvent && (
         <View>
           <Typography>Reposted</Typography>
         </View>
       )}
-      <View style={{ flex: 0.1 }}>
-        <Pressable onPress={() => handleProfilePress(event?.pubkey)}>
-          <Image
-            source={
-              props?.sourceUser ?? require("../../../assets/joyboy-logo.png")
-            }
-            style={{ width: 44, height: 44 }}
-          />
-        </Pressable>
-      </View>
+      <PostLayout>
+        <View style={{ flex: 0.1 }}>
+          <Pressable onPress={() => handleProfilePress(event?.pubkey)}>
+            <Image
+              source={
+                props?.sourceUser ?? require("../../../assets/joyboy-logo.png")
+              }
+              style={{ width: 44, height: 44 }}
+            />
+          </Pressable>
+        </View>
 
-      <View style={{ gap: 4, flex: 0.9 }}>
-        <Text style={{ color: "black", fontWeight: "700" }}>
-          {event?.pubkey}
-        </Text>
-        <Text style={{ color: "black" }}>
-          {repostedEvent?.content ? repostedEvent?.content : event?.content}
-        </Text>
-        {post?.source && (
-          <Image
-            source={{ uri: post.source }}
-            style={{
-              width: Platform.OS != "android" ? "100%" : 250,
+        <View style={{ gap: 4, flex: 0.9 }}>
+          <Text style={{ color: "black", fontWeight: "700" }}>
+            {event?.pubkey}
+          </Text>
+          <Text style={{ color: "black" }}>
+            {repostedEvent?.content ? repostedEvent?.content : event?.content}
+          </Text>
+          {post?.source && (
+            <Image
+              source={{ uri: post.source }}
+              style={{
+                width: Platform.OS != "android" ? "100%" : 250,
 
-              height: 200,
-              borderRadius: 8,
-              marginTop: 8,
-            }}
-          />
-        )}
-      </View>
-    </PostLayout>
+                height: 200,
+                borderRadius: 8,
+                marginTop: 8,
+              }}
+            />
+          )}
+        </View>
+      </PostLayout>
+    </View>
   );
 }

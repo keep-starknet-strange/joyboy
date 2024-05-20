@@ -53,6 +53,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
   const [reactions, setReactions] = useState<EventNostr[] | undefined>();
   const [imgUser, setImageUser] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState<boolean | undefined>(false);
+  const [isFirstLoadDone, setIsFirstLoadDone] = useState<boolean | undefined>(false);
   const [profile, setProfile] = useState<IUserEvent | undefined>();
   const navigation = useNavigation();
   const [index, setIndex] = React.useState(0);
@@ -75,16 +76,13 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
   const handleGetUserEventById = async () => {
     try {
       console.log("handleGetEventById try get event");
-      if (isLoading || eventProfile) {
+      if (isLoading || profile) {
         return;
       }
       setIsLoading(true);
 
       if (userQuery) {
-        let eventUser = await getUser(userQuery);
-        setEventProfile(eventUser);
         let userQueryReq = await getUserQuery(userQuery);
-
         /** NIP-05 Metadata is in string
          * kind:0
          * Parsed content to UserMetadata
@@ -124,7 +122,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
         setReplies(replies);
         setReactions(reactions);
         setReposts(reposts);
-        // console.log("replies", replies);
+        console.log("replies", replies);
         // console.log("notes", notes);
         // console.log("reposts", reposts);
         // console.log("reactions", reactions);
@@ -135,6 +133,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
       console.log("Error handle event user by id", e);
     } finally {
       setIsLoading(false);
+      setIsFirstLoadDone(true)
     }
   };
 
@@ -220,7 +219,6 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
   };
 
   const ReactionsRoute = () => {
-    console.log("ReactionsRoute route",reactions)
     // const bottomBarHeight = useBottomTabBarHeight();
     return (
       <FlatList
@@ -249,9 +247,9 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
   };
   const renderScene = SceneMap({
     posts: NotesRoute,
-    replies: RepliesRoute,
     reactions: ReactionsRoute,
     reposts: RepostRoute,
+    replies: RepliesRoute,
   });
 
   const renderTabBar = (props) => {

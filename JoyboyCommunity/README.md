@@ -42,7 +42,7 @@ WIP:
 
 Home page: 
 
-[Home page onboard](../resources/screens/onboard.png)<img src="../resources/screens/onboard.png" alt="onboard" height="300"/>
+<img src="../resources/screens/onboard.png" alt="onboard" height="300"/>
 
 Create Nostr account
 
