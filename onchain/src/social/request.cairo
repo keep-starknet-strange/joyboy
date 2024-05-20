@@ -1,4 +1,14 @@
+use core::clone::Clone;
+use core::option::OptionTrait;
+use core::traits::Destruct;
+use core::serde::Serde;
+use core::byte_array::ByteArrayTrait;
+use core::traits::TryInto;
+use core::traits::Into;
 use core::fmt::Display;
+
+use starknet::{secp256k1::{Secp256k1Point}, secp256_trait::{Secp256Trait, Secp256PointTrait}};
+use joyboy::bip340;
 
 #[derive(Copy, Drop, Debug)]
 pub struct Signature {
@@ -18,10 +28,33 @@ pub struct SocialRequest<C, +Display<C>> {
 
 pub fn verify<C, +Display<C>>(request: @SocialRequest<C>) -> bool {
     // TODO: implement verification
-    // println!("{}", request.pubkey);
-    // println!("{}", request.content);
-    // println!("{:?}", request.sig);
-    false
+    println!("{}", request.pubkey);
+    println!("{}", request.content);
+    println!("{:?}", request.sig);
+
+    let valid: bool = bip340::verify(
+        *request.pubkey, *request.sig.r, *request.sig.s, request.tags.clone()
+    );
+
+    valid
+}
+
+pub trait Summary<T> {
+    fn summarize(self: @T) -> ByteArray;
+}
+
+#[derive(Drop)]
+pub struct Tweet {
+    pub username: ByteArray,
+    pub content: ByteArray,
+    pub reply: bool,
+    pub retweet: bool,
+}
+
+impl TweetSummary of Summary<Tweet> {
+    fn summarize(self: @Tweet) -> ByteArray {
+        format!("{}: {}", self.username, self.content)
+    }
 }
 
 #[cfg(test)]

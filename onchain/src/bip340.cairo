@@ -90,7 +90,7 @@ fn hash_challenge(rx: u256, px: u256, m: ByteArray) -> u256 {
 /// # Returns
 /// Returns `true` if the signature is valid for the given message and public key; otherwise,
 /// returns `false`.
-fn verify(px: u256, rx: u256, s: u256, m: ByteArray) -> bool {
+pub fn verify(px: u256, rx: u256, s: u256, m: ByteArray) -> bool {
     let n = Secp256Trait::<Secp256k1Point>::get_curve_size();
 
     if px >= p || rx >= p || s >= n {
