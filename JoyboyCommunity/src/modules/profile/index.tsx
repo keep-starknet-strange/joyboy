@@ -17,7 +17,8 @@ import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
 import { useNostr } from "../../hooks/useNostr";
 import { Event as EventNostr } from "nostr-tools";
-import { INoteRepost1622, IUserEvent } from "../../types";
+import { INoteRepostParsed, IUserEvent } from "../../types";
+import { filterRepliesOnEvents } from "../../utils/filter";
 
 export default function Profile() {
   const theme = useTheme();
@@ -36,7 +37,7 @@ export default function Profile() {
 
   const [events, setEvents] = useState<EventNostr[] | undefined>();
   const [replies, setReplies] = useState<EventNostr[] | undefined>();
-  const [reposts, setReposts] = useState<INoteRepost1622[] | undefined>();
+  const [reposts, setReposts] = useState<INoteRepostParsed[] | undefined>();
   const [reactions, setReactions] = useState<EventNostr[] | undefined>();
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
@@ -72,7 +73,7 @@ export default function Profile() {
       />
     );
   };
-
+  /** TODO fix issue multi renders replies */
   const RepliesRoute = () => {
     return (
       <FlatList
@@ -80,9 +81,13 @@ export default function Profile() {
           paddingTop: 16,
         }}
         data={replies}
-        keyExtractor={(item) => item?.id}
+        // keyExtractor={(item) => item?.id}
+        keyExtractor={(item, index) => index?.toString()}
+
         renderItem={({ item }) => {
-          return <Post event={item} />;
+          return <Post event={item}
+            sourceUser={profile?.picture}
+          />;
         }}
         ItemSeparatorComponent={() => (
           <View style={{ marginVertical: 18 }}>
@@ -163,13 +168,13 @@ export default function Profile() {
           setIsConnected(true);
           setPublicKey(publicKeyConnected);
         }
-      } catch (e) {}
+      } catch (e) { }
     };
 
     isConnectedUser();
   }, []);
 
-  console.log("profile", profile);
+  // console.log("profile", profile);
   // Fetch user based on userId pubkey
   useEffect(() => {
     const handleInfo = async () => {
@@ -177,7 +182,7 @@ export default function Profile() {
         if (publicKey && !isLoading && !profile && !isFirstLoadDone) {
           await handleMyProfileByPublicKey();
         }
-      } catch (e) {}
+      } catch (e) { }
     };
     handleInfo();
   }, [publicKey, isLoading, profile, isFirstLoadDone]);
@@ -189,33 +194,35 @@ export default function Profile() {
         return;
       }
       setIsLoading(true);
-      console.log("publicKey", publicKey);
+      // console.log("publicKey", publicKey);
 
       if (publicKey) {
         console.log("get profile data");
 
         let userQueryReq = await getUserQuery(publicKey);
-        console.log("userQueryReq", userQueryReq);
+        // console.log("userQueryReq", userQueryReq);
 
         /** NIP-05 Metadata is in string
          * kind:0
          * Parsed content to UserMetadata
          */
-        let contentParsed = JSON.parse(userQueryReq?.content);
-        let profile: IUserEvent = contentParsed;
-        console.log("profile");
-        setProfile(profile);
+        try {
+          /** Metadata can be undefined */
+          let contentParsed = JSON.parse(userQueryReq?.content);
+          let profile: IUserEvent = contentParsed;
+          setProfile(profile);
+        } catch (e) { }
 
         let events = await getEventsNotesFromPubkey(publicKey, [
           1, // note
           6, // repost
           7, // reactions
-          1622, // replies
+
         ]);
 
-        let notes = events?.filter((e) => e?.kind == 1);
+        let notesAllTags = events?.filter((e) => e?.kind == 1);
 
-        let reposts: INoteRepost1622[] = [];
+        let reposts: INoteRepostParsed[] = [];
 
         /** Parse content note as anoter event to repost */
         events?.filter((e) => {
@@ -233,14 +240,18 @@ export default function Profile() {
           }
         });
         let reactions = events?.filter((e) => e?.kind == 7);
-        let replies = events?.filter((e) => e?.kind == 1622);
-        setReplies(replies);
+        // let replies = filterRepliesOnEvents(events)
+        let repliesFilter = filterRepliesOnEvents(notesAllTags)
+
+        setReplies(repliesFilter);
         setReactions(reactions);
         setReposts(reposts);
-        console.log("replies", replies);
+        console.log("replies", repliesFilter);
+        let notes = notesAllTags?.filter((n) => n?.tags?.length == 0 )
+        // let notes = notesAllTags?.filter((n) => n?.tags?.length == 0 || !n?.tags?.find(e => e?.includes("e")))
         console.log("notes", notes);
-        console.log("reposts", reposts);
-        console.log("reactions", reactions);
+        // console.log("reposts", reposts);
+        // console.log("reactions", reactions);
         setEvents(notes);
         return events;
       }

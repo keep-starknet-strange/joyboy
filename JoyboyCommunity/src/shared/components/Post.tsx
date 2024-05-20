@@ -45,7 +45,7 @@ export default function Post(props: PostProps) {
   };
 
   /** @TODO comment in Nostr */
-  const handleComment = () => {};
+  const handleComment = () => { };
 
   /** @TODO repost in Nostr */
   const handleRepostNote = () => {
@@ -53,7 +53,7 @@ export default function Post(props: PostProps) {
   };
 
   /** @TODO react in Nostr */
-  const handleReact = () => {};
+  const handleReact = () => { };
 
   return (
     <View>
@@ -62,6 +62,7 @@ export default function Post(props: PostProps) {
           <Typography>Reposted</Typography>
         </View>
       )}
+      {/* TODO different rendering base on kind =1,6,7 and tags for kind = 1 */}
       <PostLayout>
         <View style={{ flex: 0.1 }}>
           <Pressable onPress={() => handleProfilePress(event?.pubkey)}>
@@ -94,6 +95,10 @@ export default function Post(props: PostProps) {
             />
           )}
         </View>
+        {/* TODO check tags if it's:
+        quote
+        repost
+        reply  */}
       </PostLayout>
 
       <View style={styles.interactionContainer}>
@@ -131,8 +136,8 @@ const styles = StyleSheet.create({
     display: "flex",
     gap: 8,
     flexDirection: "row",
-    alignContent:"center",
-    alignSelf:"center"
+    alignContent: "center",
+    alignSelf: "center"
   },
   icon: {
     paddingHorizontal: 4,

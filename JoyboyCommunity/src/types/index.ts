@@ -11,7 +11,7 @@ export type RootStackParamList = {
 };
 
 
-export interface INoteRepost1622 {
+export interface INoteRepostParsed {
   event?:EventNostr;
   repost?:EventNostr
 }
