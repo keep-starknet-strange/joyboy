@@ -53,7 +53,9 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
   const [reactions, setReactions] = useState<EventNostr[] | undefined>();
   const [imgUser, setImageUser] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState<boolean | undefined>(false);
-  const [isFirstLoadDone, setIsFirstLoadDone] = useState<boolean | undefined>(false);
+  const [isFirstLoadDone, setIsFirstLoadDone] = useState<boolean | undefined>(
+    false
+  );
   const [profile, setProfile] = useState<IUserEvent | undefined>();
   const navigation = useNavigation();
   const [index, setIndex] = React.useState(0);
@@ -76,7 +78,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
   const handleGetUserEventById = async () => {
     try {
       console.log("handleGetEventById try get event");
-      if (isLoading || profile) {
+      if (isLoading || (profile || isFirstLoadDone)) {
         return;
       }
       setIsLoading(true);
@@ -87,9 +89,13 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
          * kind:0
          * Parsed content to UserMetadata
          */
-        let contentParsed = JSON.parse(userQueryReq?.content);
-        let profile: IUserEvent = contentParsed;
-        setProfile(profile);
+
+        try {
+          /** Metadata can be undefined */
+          let contentParsed = JSON.parse(userQueryReq?.content);
+          let profile: IUserEvent = contentParsed;
+          setProfile(profile);
+        } catch (e) {}
 
         let events = await getEventsNotesFromPubkey(userQuery, [
           1, // note
@@ -103,6 +109,9 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
         let reposts: INoteRepost1622[] = [];
 
         /** Parse content note as anoter event to repost */
+
+        console.log("reposts", reposts);
+
         events?.filter((e) => {
           if (e?.kind == 6) {
             let parsedNote = JSON.parse(e?.content);
@@ -123,9 +132,9 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
         setReactions(reactions);
         setReposts(reposts);
         console.log("replies", replies);
-        // console.log("notes", notes);
-        // console.log("reposts", reposts);
-        // console.log("reactions", reactions);
+        console.log("notes", notes);
+        console.log("reposts", reposts);
+        console.log("reactions", reactions);
         setEvents(notes);
         return events;
       }
@@ -133,7 +142,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
       console.log("Error handle event user by id", e);
     } finally {
       setIsLoading(false);
-      setIsFirstLoadDone(true)
+      setIsFirstLoadDone(true);
     }
   };
 

@@ -257,7 +257,6 @@ export default function Login() {
     (password?.length == 0 && privateKeyImport?.length == 0)
       ? true
       : false;
-  console.log("isImportDisabled", isImportDisabled);
   return (
     <ScreenContainer style={styles.container}>
       <Image

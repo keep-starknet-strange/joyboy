@@ -35,6 +35,8 @@ export default function CreatePost() {
         alert("Please login before send a note");
         return;
       }
+
+      /** @TODO handle tags NIP-10  */
       let noteEvent = sendNote(array, note);
       console.log("noteEvent", noteEvent);
       if (noteEvent?.isValid) {
