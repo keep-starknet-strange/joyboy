@@ -39,24 +39,6 @@ pub fn verify<C, +Display<C>>(request: @SocialRequest<C>) -> bool {
     valid
 }
 
-pub trait Summary<T> {
-    fn summarize(self: @T) -> ByteArray;
-}
-
-#[derive(Drop)]
-pub struct Tweet {
-    pub username: ByteArray,
-    pub content: ByteArray,
-    pub reply: bool,
-    pub retweet: bool,
-}
-
-impl TweetSummary of Summary<Tweet> {
-    fn summarize(self: @Tweet) -> ByteArray {
-        format!("{}: {}", self.username, self.content)
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::{Signature, SocialRequest, verify};
