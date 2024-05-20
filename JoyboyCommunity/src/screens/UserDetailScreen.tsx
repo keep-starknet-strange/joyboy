@@ -14,16 +14,14 @@ import {
 } from "react-native";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { IUserEvent, RootStackParamList } from "../types";
+import { INoteRepost1622, IUserEvent, RootStackParamList } from "../types";
 import { useNostr } from "../hooks/useNostr";
 import { Event as EventNostr } from "nostr-tools";
 import styled, { useTheme } from "styled-components";
 import Typography from "../components/typography";
 import { SceneMap, TabView } from "react-native-tab-view";
-// import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import Post from "../shared/components/Post";
 import Divider from "../components/divider/Divider";
-import { testPostData } from "../shared/data/testData";
 import { NDKUser } from "@nostr-dev-kit/ndk";
 type UserDetailScreenRouteProp = RouteProp<
   RootStackParamList,
@@ -41,88 +39,6 @@ type Props = {
   userId?: string;
 };
 
-const FirstRoute = (events: EventNostr[]) => {
-  // const bottomBarHeight = useBottomTabBarHeight();
-  return (
-    <FlatList
-      contentContainerStyle={{
-        paddingTop: 16,
-        // paddingBottom: bottomBarHeight,
-      }}
-      data={events}
-      keyExtractor={(item) => item?.id}
-      renderItem={({ item }) => {
-        return (
-          <Post
-            //  post={item}
-            event={item}
-          />
-        );
-      }}
-      ItemSeparatorComponent={() => (
-        <View style={{ marginVertical: 18 }}>
-          <Divider />
-        </View>
-      )}
-    />
-  );
-};
-
-const SecondRoute = (datas: EventNostr[]) => {
-  // const bottomBarHeight = useBottomTabBarHeight();
-
-  return (
-    <FlatList
-      contentContainerStyle={{
-        paddingTop: 16,
-        // paddingBottom: bottomBarHeight,
-      }}
-      data={datas}
-      keyExtractor={(item) => item?.id}
-      renderItem={({ item }) => {
-        return (
-          <Post
-            // post={item}
-            event={item}
-          />
-        );
-      }}
-      ItemSeparatorComponent={() => (
-        <View style={{ marginVertical: 18 }}>
-          <Divider />
-        </View>
-      )}
-    />
-  );
-};
-
-const ThirdRoute = (datas: EventNostr[]) => {
-  // const bottomBarHeight = useBottomTabBarHeight();
-  return (
-    <FlatList
-      contentContainerStyle={{
-        paddingTop: 16,
-        // paddingBottom: bottomBarHeight,
-      }}
-      data={datas}
-      keyExtractor={(item) => item?.id}
-      renderItem={({ item }) => {
-        return (
-          <Post
-            //  post={item}
-            event={item}
-          />
-        );
-      }}
-      ItemSeparatorComponent={() => (
-        <View style={{ marginVertical: 18 }}>
-          <Divider />
-        </View>
-      )}
-    />
-  );
-};
-
 /** @TODO fetch user */
 const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
   const { getEvent, getUser, getEventsNotesFromPubkey, getUserQuery } =
@@ -132,6 +48,9 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
   const [eventProfile, setEventProfile] = useState<NDKUser | undefined>();
   const [eventsTool, setEventsTool] = useState<EventNostr[] | undefined>();
   const [events, setEvents] = useState<EventNostr[] | undefined>();
+  const [replies, setReplies] = useState<EventNostr[] | undefined>();
+  const [reposts, setReposts] = useState<INoteRepost1622[] | undefined>();
+  const [reactions, setReactions] = useState<EventNostr[] | undefined>();
   const [imgUser, setImageUser] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState<boolean | undefined>(false);
   const [profile, setProfile] = useState<IUserEvent | undefined>();
@@ -143,7 +62,8 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
   const [routes] = React.useState([
     { key: "posts", title: "Posts" },
     { key: "replies", title: "Replies" },
-    { key: "likes", title: "Likes" },
+    { key: "reactions", title: "Reactions" },
+    { key: "reposts", title: "Reposts" },
   ]);
 
   // Fetch user based on userId pubkey
@@ -165,17 +85,50 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
         setEventProfile(eventUser);
         let userQueryReq = await getUserQuery(userQuery);
 
-        /** NIP-05 Metadata is in string 
-         * kind:0 
+        /** NIP-05 Metadata is in string
+         * kind:0
          * Parsed content to UserMetadata
-        */
+         */
         let contentParsed = JSON.parse(userQueryReq?.content);
         let profile: IUserEvent = contentParsed;
-        console.log("profile", profile);
         setProfile(profile);
-     
-        let events = await getEventsNotesFromPubkey(userQuery);
-        setEvents(events);
+
+        let events = await getEventsNotesFromPubkey(userQuery, [
+          1, // note
+          6, // repost
+          7, // reactions
+          1622, // replies
+        ]);
+
+        let notes = events?.filter((e) => e?.kind == 1);
+
+        let reposts: INoteRepost1622[] = [];
+
+        /** Parse content note as anoter event to repost */
+        events?.filter((e) => {
+          if (e?.kind == 6) {
+            let parsedNote = JSON.parse(e?.content);
+            let repost = {
+              event: e,
+              repost: parsedNote,
+            };
+            reposts?.push(repost);
+            return {
+              event: e,
+              repost: parsedNote,
+            };
+          }
+        });
+        let reactions = events?.filter((e) => e?.kind == 7);
+        let replies = events?.filter((e) => e?.kind == 1622);
+        setReplies(replies);
+        setReactions(reactions);
+        setReposts(reposts);
+        // console.log("replies", replies);
+        // console.log("notes", notes);
+        // console.log("reposts", reposts);
+        // console.log("reactions", reactions);
+        setEvents(notes);
         return events;
       }
     } catch (e) {
@@ -189,8 +142,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
     navigation.goBack();
   };
 
-  const FirstRoute = () => {
-    // const bottomBarHeight = useBottomTabBarHeight();
+  const NotesRoute = () => {
     return (
       <FlatList
         contentContainerStyle={{
@@ -198,7 +150,6 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
           // paddingBottom: bottomBarHeight,
         }}
         data={events}
-        // data={testPostData}
         keyExtractor={(item) => item?.id}
         renderItem={({ item }) => {
           return (
@@ -218,10 +169,89 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
     );
   };
 
+  const RepliesRoute = () => {
+    return (
+      <FlatList
+        contentContainerStyle={{
+          paddingTop: 16,
+        }}
+        data={replies}
+        keyExtractor={(item) => item?.id}
+        renderItem={({ item }) => {
+          return <Post event={item} />;
+        }}
+        ItemSeparatorComponent={() => (
+          <View style={{ marginVertical: 18 }}>
+            <Divider />
+          </View>
+        )}
+      />
+    );
+  };
+
+  const RepostRoute = () => {
+    // const bottomBarHeight = useBottomTabBarHeight();
+
+    return (
+      <FlatList
+        contentContainerStyle={{
+          paddingTop: 16,
+          // paddingBottom: bottomBarHeight,
+        }}
+        data={reposts}
+        keyExtractor={(item) => item?.event?.id}
+        renderItem={({ item }) => {
+          return (
+            <Post
+              // post={item}
+              sourceUser={profile?.picture}
+              event={item?.event}
+              repostedEvent={item?.repost}
+            />
+          );
+        }}
+        ItemSeparatorComponent={() => (
+          <View style={{ marginVertical: 18 }}>
+            <Divider />
+          </View>
+        )}
+      />
+    );
+  };
+
+  const ReactionsRoute = () => {
+    console.log("ReactionsRoute route",reactions)
+    // const bottomBarHeight = useBottomTabBarHeight();
+    return (
+      <FlatList
+        contentContainerStyle={{
+          paddingTop: 16,
+          // paddingBottom: bottomBarHeight,
+        }}
+        data={reactions}
+        keyExtractor={(item) => item?.id}
+        renderItem={({ item }) => {
+          return (
+            <Post
+              //  post={item}
+              sourceUser={profile?.picture}
+              event={item}
+            />
+          );
+        }}
+        ItemSeparatorComponent={() => (
+          <View style={{ marginVertical: 18 }}>
+            <Divider />
+          </View>
+        )}
+      />
+    );
+  };
   const renderScene = SceneMap({
-    posts: FirstRoute,
-    replies: SecondRoute,
-    likes: ThirdRoute,
+    posts: NotesRoute,
+    replies: RepliesRoute,
+    reactions: ReactionsRoute,
+    reposts: RepostRoute,
   });
 
   const renderTabBar = (props) => {

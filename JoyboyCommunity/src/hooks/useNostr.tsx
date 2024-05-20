@@ -178,12 +178,13 @@ export const useNostr = () => {
 
   const getEventsNotesFromPubkey = async (
     pubkey: string,
+    kinds?:number[],
     relaysUser?: string[],
     isSetEvents?: boolean
   ) => {
     try {
       let events = await pool.querySync(relaysUser ?? relays, {
-        kinds: [1],
+        kinds: kinds ?? [1],
         authors: [pubkey],
       });
       if (isSetEvents) {

@@ -1,3 +1,5 @@
+import { Event as EventNostr } from "nostr-tools";
+
 export type RootStackParamList = {
   Splash: undefined;
   Home: undefined;
@@ -8,6 +10,11 @@ export type RootStackParamList = {
   UserDetailScreen: { userId: string };
 };
 
+
+export interface INoteRepost1622 {
+  event?:EventNostr;
+  repost?:EventNostr
+}
 
 export interface IPostNote {
   id?: string;
