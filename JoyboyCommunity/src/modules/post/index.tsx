@@ -7,6 +7,7 @@ import KeyboardAvoidingView from "../../components/skeleton/KeyboardAvoidingView
 import Divider from "../../components/divider/Divider";
 import { useNostr } from "../../hooks/useNostr";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
+import styled from "styled-components";
 
 export default function CreatePost() {
   const navigation = useNavigation();
@@ -19,18 +20,19 @@ export default function CreatePost() {
     navigation.goBack();
   }, []);
 
-  const handlePost = useCallback(async () => {
+  const handlePostNote = useCallback(async () => {
     try {
+      console.log("handle send note");
       // do something on post
       if (!note || note?.length == 0) {
         alert("Write your note");
         return;
       }
-      alert("Note sending");
-      let {array} = await retrieveAndDecryptPrivateKey();
+      alert("Note sending, please wait.");
+      let { array } = await retrieveAndDecryptPrivateKey();
 
       if (!array) {
-        alert("Please login");
+        alert("Please login before send a note");
         return;
       }
       let noteEvent = sendNote(array, note);
@@ -42,6 +44,7 @@ export default function CreatePost() {
       console.log("Error send note", e);
     }
   }, [note]);
+  const isCreateDisabled = note && note?.length > 0 ? false : true;
 
   return (
     <KeyboardAvoidingView>
@@ -56,7 +59,18 @@ export default function CreatePost() {
         <Pressable onPress={handleGoBack}>
           <Typography variant="ts15r">Cancel</Typography>
         </Pressable>
-        <Pressable onPress={handlePost}>
+        <Pressable
+          onPress={handlePostNote}
+          style={{
+            // paddingVertical: 8,
+            // width: Platform.OS != "android" ? "100%" : 100,
+            padding:8,
+            borderRadius:8,
+            backgroundColor: isCreateDisabled && "gray",
+            borderColor:"black",
+          }}
+          disabled={isCreateDisabled}
+        >
           <Typography variant="ts15r">Post</Typography>
         </Pressable>
       </View>
