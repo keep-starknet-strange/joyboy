@@ -203,6 +203,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="http://mubarak23.github.io/"><img src="https://avatars.githubusercontent.com/u/7858376?v=4?s=100" width="100px;" alt="Mubarak Muhammad Aminu"/><br /><sub><b>Mubarak Muhammad Aminu</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=mubarak23" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://ugureren.net/"><img src="https://avatars.githubusercontent.com/u/86152092?v=4?s=100" width="100px;" alt="Uğur Eren"/><br /><sub><b>Uğur Eren</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=ugur-eren" title="Code">💻</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Oshioke-Salaki"><img src="https://avatars.githubusercontent.com/u/105825121?v=4?s=100" width="100px;" alt="Oshioke Salaki"/><br /><sub><b>Oshioke Salaki</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=Oshioke-Salaki" title="Code">💻</a></td>
+    </tr>
   </tbody>
 </table>
 
