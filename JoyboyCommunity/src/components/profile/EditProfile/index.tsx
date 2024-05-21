@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { TextInput, TouchableOpacity, View, Button } from "react-native";
+import { TouchableOpacity, View, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { IProfileNostr } from "../../../types";
 import { HomeNavigationProp } from "../../../types";
-import styles from "./styles";
+import { Input } from "./styled";
 
 export const EditProfile: React.FC = () => {
   const navigation = useNavigation<HomeNavigationProp>();
@@ -25,15 +25,13 @@ export const EditProfile: React.FC = () => {
   return (
     <View>
       <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-        <TextInput
-          style={styles.input}
+        <Input
           value={text}
           onChangeText={handleChangeText}
           placeholder="Enter your handle..."
         />
 
-        <TextInput
-          style={styles.input}
+        <Input
           value={text}
           onChangeText={handleChangeText}
           placeholder="Bio of your profile"

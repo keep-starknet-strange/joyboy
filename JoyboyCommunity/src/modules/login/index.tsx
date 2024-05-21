@@ -1,14 +1,7 @@
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  Platform,
-  Image,
-} from "react-native";
+import { View, Platform } from "react-native";
 import React, { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
-import { Typography, ScreenContainer } from "../../components";
+import { Typography } from "../../components";
 import { useNostr } from "../../hooks/useNostr";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
 import {
@@ -23,8 +16,12 @@ import {
   ImportButton,
   LoginButton,
   SkipButton,
+  Container,
+  Logo,
+  InputContainer,
+  Input,
+  Text,
 } from "./styled";
-import styles from "./styles";
 
 enum LoginStep {
   HOME = "HOME",
@@ -231,25 +228,24 @@ export default function Login() {
   };
 
   return (
-    <ScreenContainer style={styles.container}>
-      <Image
+    <Container>
+      <Logo
         source={require("../../../assets/joyboy-logo.png")}
-        style={styles.logo}
         resizeMode="contain"
       />
 
       {step == LoginStep.HOME && (
-        <View style={styles.inputContainer}>
+        <InputContainer>
           {/* <Text>Enter your login for Nostr</Text> */}
-          <TextInput
-            style={[styles.input]}
+          <Input
+            $focused={false}
             placeholderTextColor="#888"
             placeholder="Enter your login key"
             value={privateKeyImport}
             onChangeText={setImportPrivateKey}
           />
-          <TextInput
-            style={[styles.input]}
+          <Input
+            $focused={false}
             placeholder="Enter a password"
             value={password}
             onChangeText={setPassword}
@@ -260,14 +256,14 @@ export default function Login() {
             onPress={handleImportPrivateKey}
             style={{
               paddingVertical: 8,
-              width: Platform.OS != "android" ? "100%" : 100,
+              width: "100%",
               backgroundColor: isImportDisabled && "gray",
             }}
             disabled={isImportDisabled}
           >
             <Typography variant="ts19m">Login</Typography>
           </ImportButton>
-        </View>
+        </InputContainer>
       )}
       {step == LoginStep.EXPORTED_ACCOUNT && (
         <View
@@ -278,17 +274,11 @@ export default function Login() {
             width: 230,
           }}
         >
-          {publicKey && (
-            <Text style={styles.text} selectable={true}>
-              {publicKey}
-            </Text>
-          )}
+          {publicKey && <Text selectable={true}>{publicKey}</Text>}
 
           {privateKeyReadable && (
             <>
-              <Text style={styles.text} selectable={true}>
-                {privateKeyReadable}
-              </Text>
+              <Text selectable={true}>{privateKeyReadable}</Text>
             </>
           )}
         </View>
@@ -296,7 +286,7 @@ export default function Login() {
 
       {step != LoginStep.CREATE_ACCOUNT &&
         step != LoginStep.EXPORTED_ACCOUNT && (
-          <View style={styles.inputContainer}>
+          <InputContainer>
             <CreateAccountButton
               onPress={() => setStep(LoginStep.CREATE_ACCOUNT)}
               style={{
@@ -307,22 +297,20 @@ export default function Login() {
             >
               <Typography variant="ts19m">Create an account</Typography>
             </CreateAccountButton>
-          </View>
+          </InputContainer>
         )}
 
-      <View style={styles.inputContainer}>
+      <InputContainer>
         <View>
           {step == LoginStep.CREATE_ACCOUNT && (
             <View>
-              <TextInput
-                style={[styles.input]}
+              <Input
                 placeholderTextColor="#888"
                 placeholder="Username"
                 value={username}
                 onChangeText={setUsername}
               />
-              <TextInput
-                style={[styles.input]}
+              <Input
                 placeholder="Password"
                 value={password}
                 onChangeText={setPassword}
@@ -361,17 +349,11 @@ export default function Login() {
                   width: 230,
                 }}
               >
-                {publicKey && (
-                  <Text style={styles.text} selectable={true}>
-                    {publicKey}
-                  </Text>
-                )}
+                {publicKey && <Text selectable={true}>{publicKey}</Text>}
 
                 {privateKey && (
                   <>
-                    <Text style={styles.text} selectable={true}>
-                      {Uint8Array.from(privateKey)}
-                    </Text>
+                    <Text selectable={true}>{Uint8Array.from(privateKey)}</Text>
                   </>
                 )}
               </View>
@@ -387,23 +369,17 @@ export default function Login() {
                 width: 230,
               }}
             >
-              {publicKey && (
-                <Text style={styles.text} selectable={true}>
-                  {publicKey}
-                </Text>
-              )}
+              {publicKey && <Text selectable={true}>{publicKey}</Text>}
 
               {privateKeyReadable && (
                 <>
-                  <Text style={styles.text} selectable={true}>
-                    {privateKeyReadable}
-                  </Text>
+                  <Text selectable={true}>{privateKeyReadable}</Text>
                 </>
               )}
             </View>
           )}
         </View>
-      </View>
+      </InputContainer>
 
       {isConnected && (
         <View
@@ -415,21 +391,15 @@ export default function Login() {
           }}
         >
           <Typography>You have a connected account.</Typography>
-          {publicKey && (
-            <Text style={styles.text} selectable={true}>
-              {publicKey}
-            </Text>
-          )}
+          {publicKey && <Text selectable={true}>{publicKey}</Text>}
         </View>
       )}
 
       {isSkipAvailable && (
         <SkipButton onPress={login}>
-          <Typography variant="ts19m" style={styles.textButton}>
-            Skip
-          </Typography>
+          <Typography variant="ts19m">Skip</Typography>
         </SkipButton>
       )}
-    </ScreenContainer>
+    </Container>
   );
 }

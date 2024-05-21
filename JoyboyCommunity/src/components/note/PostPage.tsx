@@ -1,28 +1,34 @@
 // src/screens/FeedScreen.js
 
-import { View, Text } from "react-native";
 import { Avatar } from "../avatar";
-import styles from "./styles";
+import {
+  Card,
+  AuthorContainer,
+  Author,
+  Timestamp,
+  ContentBox,
+  Content,
+} from "./styled";
 
 export const PostPage: React.FC<{ post: any }> = ({ post }) => {
   const { content, author, timestamp, source, pubkey } = post;
 
   return (
-    <View style={styles.card}>
-      <View style={styles.authorContainer}>
+    <Card>
+      <AuthorContainer>
         <Avatar source={source} userId={pubkey} />
-        <Text style={styles.author}>{author}</Text>
-        <Text style={styles.timestamp}>{timestamp}</Text>
-      </View>
+        <Author>{author}</Author>
+        <Timestamp>{timestamp}</Timestamp>
+      </AuthorContainer>
 
-      <View style={styles.contentBox}>
-        <Text style={styles.content}>{content}</Text>
-      </View>
+      <ContentBox>
+        <Content>{content}</Content>
+      </ContentBox>
 
       {/* <TouchableOpacity
         onPress={() => navigation.navigate("Home", {
         })}
       ></TouchableOpacity> */}
-    </View>
+    </Card>
   );
 };

@@ -1,4 +1,4 @@
-export { Avatar } from "./avatar";
+export { Avatar, AvatarImage } from "./avatar";
 export { Divider } from "./divider";
 export { PostPage } from "./note/PostPage";
 export { CreateNote } from "./profile/CreateNote";

@@ -7,6 +7,7 @@ import {
 } from "../../components";
 import { testPostData } from "../../shared/data/testData";
 import { Notification } from "./Notification";
+import { Container } from "./styled";
 
 export default function Notifications() {
   return (
@@ -18,7 +19,7 @@ export default function Notifications() {
           flex: 1,
         }}
       >
-        <View style={{ paddingVertical: 12, flex: 1, gap: 18, width: "100%" }}>
+        <Container>
           {testPostData.map((post, i) => (
             <View key={post.id} style={{ gap: 12 }}>
               <Notification
@@ -32,7 +33,7 @@ export default function Notifications() {
               <Divider />
             </View>
           ))}
-        </View>
+        </Container>
       </ScrollableContainer>
     </LayoutContainer>
   );

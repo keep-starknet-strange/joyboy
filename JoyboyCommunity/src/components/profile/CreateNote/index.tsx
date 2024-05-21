@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextInput, View, Button } from "react-native";
 import { IPostNote } from "../../../types/index";
-import styles from "./styles";
+import { Input } from "./styled";
 
 export const CreateNote: React.FC = () => {
   const [text, setText] = useState("");
@@ -22,8 +22,7 @@ export const CreateNote: React.FC = () => {
 
   return (
     <View>
-      <TextInput
-        style={styles.input}
+      <Input
         multiline
         value={text}
         onChangeText={handleChangeText}

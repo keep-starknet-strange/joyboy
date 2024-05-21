@@ -1,19 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  Pressable,
-  ScrollView,
-  Platform,
-  FlatList,
-  useWindowDimensions,
-  ActivityIndicator,
-} from "react-native";
-import { RouteProp, useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { View, Image, ScrollView, ActivityIndicator } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import {
   INoteRepostParsed,
   IUserEvent,
@@ -21,7 +8,6 @@ import {
 } from "../../types";
 import { useNostr } from "../../hooks/useNostr";
 import { Event as EventNostr } from "nostr-tools";
-import styled, { useTheme } from "styled-components";
 import { Typography } from "../../components";
 import { SceneMap, TabView } from "react-native-tab-view";
 import { NDKUser } from "@nostr-dev-kit/ndk";
@@ -32,7 +18,15 @@ import {
   RepostsRoute,
   RepliesRoute,
 } from "./routes";
-import styles from "./styles";
+import {
+  BackButton,
+  Container,
+  ProfileContainer,
+  TabBar,
+  TabContainer,
+  TabItem,
+  Text,
+} from "./styled";
 
 /** @TODO fetch user */
 export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({
@@ -171,13 +165,12 @@ export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({
           justifyContent: "space-between",
         }}
       >
-        <View style={styles.tabBar}>
+        <TabBar>
           {props?.navigationState?.routes.map((route, i) => {
             return (
-              <TouchableOpacity
+              <TabItem
                 key={i}
                 style={[
-                  styles.tabItem,
                   {
                     borderBottomWidth: 1,
                     // borderBottomColor: index === i ? theme.black[10] : "transparent",
@@ -192,16 +185,16 @@ export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({
                 >
                   {route.title}
                 </Typography>
-              </TouchableOpacity>
+              </TabItem>
             );
           })}
-        </View>
+        </TabBar>
       </View>
     );
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <Container as={ScrollView}>
       <BackButton onPress={() => handleGoBack()}>
         <Typography
           variant="ts19m"
@@ -210,6 +203,7 @@ export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({
           Back
         </Typography>
       </BackButton>
+
       <View style={{ position: "relative", marginTop: -10, height: 270 }}>
         {profile?.banner && (
           <Image
@@ -244,34 +238,33 @@ export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({
           />
         </View>
       </View>
-      <View style={styles.profileContainer}>
+
+      <ProfileContainer>
         {isLoading && <ActivityIndicator></ActivityIndicator>}
         <Text
-          style={styles.text}
-          // numberOfLines={1}
-          // lineBreakMode="tail"
+        // numberOfLines={1}
+        // lineBreakMode="tail"
         >
           {userQuery}
         </Text>
         <Text
-          // variant="ts19m"
-          style={styles.text}
-          // colorCode={theme.black[10]}
+        // variant="ts19m"
+        // colorCode={theme.black[10]}
         >
           {eventProfile?.profile?.name ?? profile?.name}
         </Text>
 
         <Text
-          // variant="ts15r"
-          style={styles.text}
-          // colorCode={theme.black[10]}
+        // variant="ts15r"
+        // colorCode={theme.black[10]}
         >
           {eventProfile?.profile?.bio ?? profile?.about}
         </Text>
 
         {/* Render user details here */}
-      </View>
-      <View style={styles.tabContainer}>
+      </ProfileContainer>
+
+      <TabContainer>
         <TabView
           renderTabBar={renderTabBar}
           navigationState={{ index, routes }}
@@ -279,14 +272,7 @@ export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({
           onIndexChange={setIndex}
           // initialLayout={{ width: layout.width }}
         />
-      </View>
-    </ScrollView>
+      </TabContainer>
+    </Container>
   );
 };
-
-const BackButton = styled(Pressable)`
-  border-radius: 8px;
-  padding: 8px 24px;
-  color: white;
-  border-color: black;
-`;

@@ -1,8 +1,7 @@
-import { View, Image, StyleSheet, Platform, Pressable } from "react-native";
+import { View, Pressable } from "react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import { useTheme } from "styled-components/native";
 import { Event as EventNostr } from "nostr-tools";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { Typography } from "../../components";
 import { useWindowDimensions } from "react-native";
 import { TabView, SceneMap } from "react-native-tab-view";
@@ -16,7 +15,15 @@ import {
   RepostsRoute,
   ReactionsRoute,
 } from "./routes";
-import styles from "./styles";
+import {
+  AboutContainer,
+  CoverImage,
+  ImageContainer,
+  ProfileImage,
+  TabBar,
+  TabBarContainer,
+  TabItem,
+} from "./styled";
 
 export default function Profile() {
   const theme = useTheme();
@@ -154,21 +161,14 @@ export default function Profile() {
 
   const renderTabBar = (props) => {
     return (
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <View style={styles.tabBar}>
+      <TabBarContainer>
+        <TabBar>
           {props.navigationState.routes.map((route, i) => {
             return (
-              <TouchableOpacity
+              <TabItem
                 key={i}
                 style={[
-                  styles.tabItem,
                   {
-                    borderBottomWidth: 1,
                     borderBottomColor:
                       index === i ? theme.black[10] : "transparent",
                   },
@@ -182,11 +182,11 @@ export default function Profile() {
                 >
                   {route.title}
                 </Typography>
-              </TouchableOpacity>
+              </TabItem>
             );
           })}
-        </View>
-      </View>
+        </TabBar>
+      </TabBarContainer>
     );
   };
 
@@ -203,35 +203,15 @@ export default function Profile() {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ position: "relative", marginTop: -10, height: 270 }}>
-        <Image
-          source={{ uri: "https://picsum.photos/200/300" }}
-          style={{
-            width: "100%",
+      <ImageContainer>
+        <CoverImage source={{ uri: "https://picsum.photos/200/300" }} />
 
-            height: 200,
-            resizeMode: "cover",
-            marginTop: 8,
-          }}
-        />
         <View style={{ position: "relative" }}>
-          <Image
-            source={{ uri: "https://picsum.photos/201/300" }}
-            style={{
-              borderWidth: 2,
-              borderColor: "white",
-              height: 100,
-              width: 100,
-              resizeMode: "cover",
-              borderRadius: 50,
-              left: 12,
-              top: 0,
-              transform: [{ translateY: -50 }],
-            }}
-          />
+          <ProfileImage source={{ uri: "https://picsum.photos/201/300" }} />
         </View>
-      </View>
-      <View style={{ paddingHorizontal: 12, gap: 4 }}>
+      </ImageContainer>
+
+      <AboutContainer>
         <Typography variant="ts19m" colorCode={theme.black[10]}>
           {publicKey ?? ""}
         </Typography>
@@ -251,7 +231,7 @@ export default function Profile() {
             <Typography>Edit your profile</Typography>
           </Pressable>
         </View>
-      </View>
+      </AboutContainer>
 
       <View style={{ flex: 1, paddingTop: 8 }}>
         <TabView

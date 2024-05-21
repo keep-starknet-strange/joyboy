@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  Image,
-  Pressable,
-  Platform,
-  StyleSheet,
-} from "react-native";
+import { View, Text, Image, Pressable } from "react-native";
 import React from "react";
 import styled from "styled-components/native";
 import { Event as EventNostr } from "nostr-tools";
@@ -18,6 +11,20 @@ const PostLayout = styled(View)`
   flex-direction: row;
   gap: 18px;
   padding: 0px 12px;
+`;
+
+export const InteractionContainer = styled(View)`
+  margin-vertical: 10px;
+  margin-horizontal: 20px;
+  display: flex;
+  gap: 8px;
+  flex-direction: row;
+  align-content: center;
+  align-self: center;
+`;
+
+export const Icon = styled(View)`
+  padding-horizontal: 4px;
 `;
 
 interface PostProps {
@@ -74,6 +81,7 @@ export const Post: React.FC<PostProps> = (props) => {
           <Text style={{ color: "black" }}>
             {repostedEvent?.content ? repostedEvent?.content : event?.content}
           </Text>
+
           {post?.source && (
             <Image
               source={{ uri: post.source }}
@@ -93,53 +101,30 @@ export const Post: React.FC<PostProps> = (props) => {
         reply  */}
       </PostLayout>
 
-      <View style={styles.interactionContainer}>
-        <Octicons
-          style={styles.icon}
+      <InteractionContainer>
+        <Icon
+          as={Octicons}
           name="comment"
           size={24}
           color="black"
           onPress={handleComment}
         />
-        <Octicons
-          style={styles.icon}
+        <Icon
+          as={Octicons}
           name="share"
           size={24}
           color="black"
           onPress={handleRepostNote}
         />
 
-        <MaterialIcons
-          style={styles.icon}
+        <Icon
+          as={MaterialIcons}
           name="add-reaction"
           size={24}
           color="black"
           onPress={handleReact}
         />
-      </View>
+      </InteractionContainer>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  interactionContainer: {
-    marginVertical: 10,
-    marginHorizontal: 20,
-    display: "flex",
-    gap: 8,
-    flexDirection: "row",
-    alignContent: "center",
-    alignSelf: "center",
-  },
-  icon: {
-    paddingHorizontal: 4,
-  },
-  input: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-    color: "white",
-  },
-});

@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { TouchableOpacity, Image } from "react-native";
 import { Event as EventNostr } from "nostr-tools";
 import { RootStackNoteDetailScreenProps } from "../../types";
 import { useNostr } from "../../hooks/useNostr";
-import styles from "./styles";
+import {
+  Container,
+  ContentContainer,
+  ProfileImage,
+  Timestamp,
+  Text,
+} from "./styled";
 
 export const NoteDetail: React.FC<RootStackNoteDetailScreenProps> = ({
   route,
@@ -44,36 +50,33 @@ export const NoteDetail: React.FC<RootStackNoteDetailScreenProps> = ({
   };
 
   return (
-    <View style={styles.container}>
+    <Container>
       {/* <Text lineBreakMode="tail" style={styles.text} numberOfLines={2}>
         {noteId}
       </Text> */}
 
       {eventNote && eventNote?.created_at && (
-        <Text style={styles.timestamp}>
+        <Timestamp>
           {new Date(Number(eventNote?.created_at) * 1000)?.toISOString()}
-        </Text>
+        </Timestamp>
       )}
 
       <TouchableOpacity onPress={() => handleProfilePress(eventNote?.pubkey)}>
-        <Image
+        <ProfileImage
           source={imgUser ?? require("../../../assets/joyboy-logo.png")}
-          style={{ width: 50, height: 50 }}
         />
       </TouchableOpacity>
 
-      <View style={styles.contentContainer}>
+      <ContentContainer>
         {eventNote?.id == noteId && contentParsed && (
-          <Text style={styles.text} lineBreakMode="tail">
-            {contentParsed}
-          </Text>
+          <Text lineBreakMode="tail">{contentParsed}</Text>
         )}
-      </View>
+      </ContentContainer>
       {/* Render post details here */}
 
       {/* @TODO render metadata */}
 
       {/* TODO render interactions NOSTR */}
-    </View>
+    </Container>
   );
 };

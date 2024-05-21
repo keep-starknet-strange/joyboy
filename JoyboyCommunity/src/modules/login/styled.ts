@@ -1,5 +1,12 @@
-import { Pressable } from "react-native";
+import {
+  Text as RNText,
+  Image,
+  TextInput,
+  View,
+  Pressable,
+} from "react-native";
 import styled from "styled-components";
+import { ScreenContainer, Typography } from "../../components";
 
 export const ImportButton = styled(Pressable)`
   padding: 8px 24px;
@@ -28,5 +35,57 @@ export const SkipButton = styled(Pressable)`
   border-radius: 8px;
   padding: 8px 24px;
   border-color: black;
+  color: white;
+`;
+
+export const Container = styled(ScreenContainer)`
+  justify-content: center;
+  align-items: center;
+  gap: 1;
+`;
+
+export const Logo = styled(Image)`
+  width: 200px;
+  height: 200px;
+`;
+
+export const InputContainer = styled(View)`
+  margin-vertical: 10;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 4;
+`;
+
+export const FormContainer = styled(View)`
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 4;
+`;
+
+export const Input = styled(TextInput)<{ $focused?: boolean }>`
+  min-height: 40px;
+  border-color: #ccc;
+  border-width: 1px;
+  border-radius: 5px;
+  padding-horizontal: 10px;
+  background-color: #fff;
+  color: #000;
+  font-size: 16px;
+  /* Shadow for better visibility */
+  shadow-color: #000;
+  shadow-offset: {
+    width: 0;
+    height: 1px;
+  }
+  shadow-opacity: 0.2;
+  shadow-radius: 1px;
+  elevation: 2;
+  margin-vertical: 4px;
+
+  ${({ $focused }) => $focused && `border-color: #007AFF;`}
+`;
+
+export const Text = styled(RNText)`
+  width: 100%;
   color: white;
 `;

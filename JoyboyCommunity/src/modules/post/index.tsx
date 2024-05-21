@@ -1,10 +1,11 @@
-import { View, Image, Pressable, Platform } from "react-native";
+import { View, Image, Pressable } from "react-native";
 import React, { useCallback, useState } from "react";
 import { TextInput } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { Typography, Divider, KeyboardAvoidingView } from "../../components";
 import { useNostr } from "../../hooks/useNostr";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
+import { Container, Photo, PostButton, TitleContainer } from "./styled";
 
 export default function CreatePost() {
   const navigation = useNavigation();
@@ -47,40 +48,22 @@ export default function CreatePost() {
 
   return (
     <KeyboardAvoidingView>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          width: "100%",
-          padding: 16,
-        }}
-      >
+      <Container>
         <Pressable onPress={handleGoBack}>
           <Typography variant="ts15r">Cancel</Typography>
         </Pressable>
-        <Pressable
-          onPress={handlePostNote}
-          style={{
-            // paddingVertical: 8,
-            // width: Platform.OS != "android" ? "100%" : 100,
-            padding: 8,
-            borderRadius: 8,
-            backgroundColor: isCreateDisabled && "gray",
-            borderColor: "black",
-          }}
-          disabled={isCreateDisabled}
-        >
+
+        <PostButton onPress={handlePostNote} disabled={isCreateDisabled}>
           <Typography variant="ts15r">Post</Typography>
-        </Pressable>
-      </View>
+        </PostButton>
+      </Container>
+
       <View style={{ marginBottom: 12 }}>
         <Divider />
       </View>
-      <View style={{ paddingHorizontal: 12, flexDirection: "row", gap: 8 }}>
-        <Image
-          source={{ uri: "https://picsum.photos/201/300" }}
-          style={{ width: 50, height: 50, borderRadius: 25 }}
-        />
+
+      <TitleContainer>
+        <Photo source={{ uri: "https://picsum.photos/201/300" }} />
         <TextInput
           autoFocus
           multiline={true}
@@ -88,7 +71,7 @@ export default function CreatePost() {
           placeholder="Title"
           onChangeText={setNote}
         />
-      </View>
+      </TitleContainer>
     </KeyboardAvoidingView>
   );
 }
