@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useTheme } from "styled-components/native";
 import { Ionicons, Octicons } from "@expo/vector-icons";
 import useNavigationStore from "../hooks/useNavigationContext";
-import { HomeStackParams, RootStackParams } from "../types/routes";
+import { HomeStackParams, RootStackParams } from "../types";
 
 import Profile from "../modules/profile";
 import Feed from "../modules/feed";

@@ -1,19 +1,17 @@
 import React, { useState } from "react";
-import {
-  Image,
-  TextInput,
-  TouchableOpacity,
-  View,
-  StyleSheet,
-  Button,
-} from "react-native";
-import { IProfileNostr } from "../../types";
+import { TextInput, TouchableOpacity, View, Button } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { IProfileNostr } from "../../../types";
+import { HomeNavigationProp } from "../../../types";
+import styles from "./styles";
 
-export const EditProfile = ({ navigation, source }) => {
-  const onSubmit = (text?: string) => {};
+export const EditProfile: React.FC = () => {
+  const navigation = useNavigation<HomeNavigationProp>();
+
   const [text, setText] = useState("");
-
   const [profile, setProfile] = useState<IProfileNostr | undefined>({});
+
+  const onSubmit = (text?: string) => {};
 
   const handleChangeText = (inputText: string) => {
     setText(inputText);
@@ -32,15 +30,16 @@ export const EditProfile = ({ navigation, source }) => {
           value={text}
           onChangeText={handleChangeText}
           placeholder="Enter your handle..."
-        ></TextInput>
+        />
 
         <TextInput
           style={styles.input}
           value={text}
           onChangeText={handleChangeText}
           placeholder="Bio of your profile"
-        ></TextInput>
+        />
       </TouchableOpacity>
+
       <Button
         title="Edit Profile"
         onPress={() => console.log("Edit profile")}
@@ -48,19 +47,3 @@ export const EditProfile = ({ navigation, source }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    marginVertical: 10,
-    marginHorizontal: 20,
-  },
-  input: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-    color:"white",
-
-  },
-});

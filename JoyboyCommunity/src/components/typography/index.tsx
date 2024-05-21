@@ -21,6 +21,7 @@ interface TypographyProps extends IStyledTypographyType {
   children: React.ReactNode;
   style?: CSSProperties;
 }
-export default function Typography(props: TypographyProps) {
-  return <StyledTypography {...props}>{props.children}</StyledTypography>;
+
+export default function Typography({ children, ...props }: TypographyProps) {
+  return <StyledTypography {...props}>{children}</StyledTypography>;
 }

@@ -3,7 +3,7 @@ import React, { useCallback, useState } from "react";
 import { TextInput } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import Typography from "../../components/typography";
-import KeyboardAvoidingView from "../../components/skeleton/KeyboardAvoidingView";
+import { KeyboardAvoidingView } from "../../components/skeleton/KeyboardAvoidingView";
 import Divider from "../../components/divider/Divider";
 import { useNostr } from "../../hooks/useNostr";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
@@ -66,10 +66,10 @@ export default function CreatePost() {
           style={{
             // paddingVertical: 8,
             // width: Platform.OS != "android" ? "100%" : 100,
-            padding:8,
-            borderRadius:8,
+            padding: 8,
+            borderRadius: 8,
             backgroundColor: isCreateDisabled && "gray",
-            borderColor:"black",
+            borderColor: "black",
           }}
           disabled={isCreateDisabled}
         >

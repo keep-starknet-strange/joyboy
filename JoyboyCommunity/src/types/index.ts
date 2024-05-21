@@ -1,5 +1,8 @@
 import { Event as EventNostr } from "nostr-tools";
 
+export * from "./routes";
+export * from "./post";
+
 export interface INoteRepostParsed {
   event?: EventNostr;
   repost?: EventNostr;

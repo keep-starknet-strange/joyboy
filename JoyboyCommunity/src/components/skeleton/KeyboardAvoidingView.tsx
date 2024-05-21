@@ -1,7 +1,7 @@
 import React from "react";
-import { SafeAreaView } from "react-native";
 import {
   Keyboard,
+  SafeAreaView,
   TouchableWithoutFeedback,
   KeyboardAvoidingView as RNKeyboardAvoidingView,
   Platform,
@@ -12,7 +12,11 @@ interface Props {
 }
 
 const KeyboardAvoidingView = (props: Props) => {
-  return Platform.OS === "ios" ? (
+  if (Platform.OS !== "ios") {
+    return props.children;
+  }
+
+  return (
     <RNKeyboardAvoidingView behavior="padding" style={{ flex: 1 }} {...props}>
       <TouchableWithoutFeedback
         style={{ flexGrow: 1 }}
@@ -21,8 +25,6 @@ const KeyboardAvoidingView = (props: Props) => {
         <SafeAreaView style={{ flex: 1 }}>{props.children}</SafeAreaView>
       </TouchableWithoutFeedback>
     </RNKeyboardAvoidingView>
-  ) : (
-    <>{props.children}</>
   );
 };
 
