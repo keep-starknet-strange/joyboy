@@ -1,5 +1,5 @@
 import registerRootComponent from "expo/build/launch/registerRootComponent";
 import "fast-text-encoding";
-import Wrapper from "./src/bootstrap/Wrapper";
+import App from "./src/app/App";
 
-registerRootComponent(Wrapper);
+registerRootComponent(App);
