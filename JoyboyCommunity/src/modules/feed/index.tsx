@@ -20,11 +20,12 @@ export default function Feed() {
   const bottomBarHeight = useBottomTabBarHeight();
   const [loading, setLoading] = useState(false);
   const [isReady, setIsReady] = useState(true);
-
   const { getEvents, setEvents, events, getEventsNotes, eventsData } =
-    useNostr();
+  useNostr();
 
   const [eventsDataFeed, setEventsData] = useState(events ?? []);
+
+
 
   const handeGetData = useCallback(async () => {
     setLoading(true);
