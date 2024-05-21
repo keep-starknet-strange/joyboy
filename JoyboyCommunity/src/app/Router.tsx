@@ -1,8 +1,11 @@
 import { useMemo } from "react";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useTheme } from "styled-components/native";
 import { Ionicons, Octicons } from "@expo/vector-icons";
+import useNavigationStore from "../hooks/useNavigationContext";
+import { HomeStackParams, RootStackParams } from "../types/routes";
 
 import Profile from "../modules/profile";
 import Feed from "../modules/feed";
@@ -10,19 +13,16 @@ import Error from "../modules/error";
 import Login from "../modules/login";
 import Notifications from "../modules/notifications";
 import CreatePost from "../modules/post";
-import UserDetailScreen from "../screens/UserDetailScreen";
+import UserDetail from "../screens/UserDetailScreen";
 
-import useNavigationStore from "../hooks/useNavigationContext";
-import { NavigationContainer } from "@react-navigation/native";
+const RootStack = createNativeStackNavigator<RootStackParams>();
+const HomeBottomTabsStack = createBottomTabNavigator<HomeStackParams>();
 
-const RootStack = createNativeStackNavigator();
-const HomePageBottomTabs = createBottomTabNavigator();
-
-const HomePageBottomTabNavigator: React.FC = () => {
+const HomeBottomTabNavigator: React.FC = () => {
   const theme = useTheme();
 
   return (
-    <HomePageBottomTabs.Navigator
+    <HomeBottomTabsStack.Navigator
       sceneContainerStyle={{
         backgroundColor: theme.black[100],
       }}
@@ -36,7 +36,7 @@ const HomePageBottomTabNavigator: React.FC = () => {
         },
       }}
     >
-      <HomePageBottomTabs.Screen
+      <HomeBottomTabsStack.Screen
         name="Feed"
         component={Feed}
         options={{
@@ -51,7 +51,7 @@ const HomePageBottomTabNavigator: React.FC = () => {
           ),
         }}
       />
-      <HomePageBottomTabs.Screen
+      <HomeBottomTabsStack.Screen
         name="Profile"
         component={Profile}
         options={{
@@ -67,7 +67,7 @@ const HomePageBottomTabNavigator: React.FC = () => {
         }}
       />
 
-      <HomePageBottomTabs.Screen
+      <HomeBottomTabsStack.Screen
         name="Notifications"
         component={Notifications}
         options={{
@@ -82,7 +82,7 @@ const HomePageBottomTabNavigator: React.FC = () => {
           ),
         }}
       />
-    </HomePageBottomTabs.Navigator>
+    </HomeBottomTabsStack.Navigator>
   );
 };
 
@@ -95,15 +95,9 @@ const RootNavigator: React.FC = () => {
       case "app":
         return (
           <>
-            <RootStack.Screen
-              name="Home"
-              component={HomePageBottomTabNavigator}
-            />
+            <RootStack.Screen name="Home" component={HomeBottomTabNavigator} />
             <RootStack.Screen name="CreatePost" component={CreatePost} />
-            <RootStack.Screen
-              name="UserDetailScreen"
-              component={UserDetailScreen}
-            />
+            <RootStack.Screen name="UserDetail" component={UserDetail} />
           </>
         );
 
