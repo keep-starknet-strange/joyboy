@@ -21,13 +21,13 @@ export const useNostr = () => {
   const ndk = new NDK({ signer: nip07signer });
 
   const [eventsData, setEventsData] = useState<NostrEvent[]>([]);
+  const [eventsUser, setEventsUser] = useState<NostrEvent[]>([]);
+  const [isReady, setIsReady] = useState(false);
 
   /** fix memo reload */
   const events = useMemo(() => {
     return eventsData;
   }, [eventsData]);
-  const [eventsUser, setEventsUser] = useState<NostrEvent[]>([]);
-  const [isReady, setIsReady] = useState(false);
 
   const generateKeypair = () => {
     try {

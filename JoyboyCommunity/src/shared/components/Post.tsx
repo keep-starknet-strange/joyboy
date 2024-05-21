@@ -5,12 +5,14 @@ import {
   Pressable,
   TouchableOpacity,
   Platform,
+  StyleSheet,
 } from "react-native";
 import React from "react";
 import styled from "styled-components/native";
 import { Event as EventNostr } from "nostr-tools";
 import { useNavigation } from "@react-navigation/native";
 import Typography from "../../components/typography";
+import { Octicons, Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 const PostLayout = styled(View)`
   flex-direction: row;
@@ -42,6 +44,17 @@ export default function Post(props: PostProps) {
     }
   };
 
+  /** @TODO comment in Nostr */
+  const handleComment = () => { };
+
+  /** @TODO repost in Nostr */
+  const handleRepostNote = () => {
+    alert("Handle repost");
+  };
+
+  /** @TODO react in Nostr */
+  const handleReact = () => { };
+
   return (
     <View>
       {repostedEvent && (
@@ -49,6 +62,7 @@ export default function Post(props: PostProps) {
           <Typography>Reposted</Typography>
         </View>
       )}
+      {/* TODO different rendering base on kind =1,6,7 and tags for kind = 1 */}
       <PostLayout>
         <View style={{ flex: 0.1 }}>
           <Pressable onPress={() => handleProfilePress(event?.pubkey)}>
@@ -81,7 +95,59 @@ export default function Post(props: PostProps) {
             />
           )}
         </View>
+        {/* TODO check tags if it's:
+        quote
+        repost
+        reply  */}
       </PostLayout>
+
+      <View style={styles.interactionContainer}>
+        <Octicons
+          style={styles.icon}
+          name="comment"
+          size={24}
+          color="black"
+          onPress={handleComment}
+        />
+        <Octicons
+          style={styles.icon}
+          name="share"
+          size={24}
+          color="black"
+          onPress={handleRepostNote}
+        />
+
+        <MaterialIcons
+          style={styles.icon}
+          name="add-reaction"
+          size={24}
+          color="black"
+          onPress={handleReact}
+        />
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  interactionContainer: {
+    marginVertical: 10,
+    marginHorizontal: 20,
+    display: "flex",
+    gap: 8,
+    flexDirection: "row",
+    alignContent: "center",
+    alignSelf: "center"
+  },
+  icon: {
+    paddingHorizontal: 4,
+  },
+  input: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+    color: "white",
+  },
+});

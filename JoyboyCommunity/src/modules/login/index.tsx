@@ -81,6 +81,13 @@ export default function Login() {
   const [privateKeyReadable, setPrivateKeyReadable] = useState<
     string | undefined
   >();
+  
+  let isImportDisabled: boolean =
+    !password ||
+    !privateKeyImport ||
+    (password?.length == 0 && privateKeyImport?.length == 0)
+      ? true
+      : false;
   const { generateKeypair, getPublicKeyByPk } = useNostr();
   const {
     encryptAndStorePrivateKey,
@@ -251,13 +258,6 @@ export default function Login() {
     }
   };
 
-  let isImportDisabled: boolean =
-    !password ||
-    !privateKeyImport ||
-    (password?.length == 0 && privateKeyImport?.length == 0)
-      ? true
-      : false;
-  console.log("isImportDisabled", isImportDisabled);
   return (
     <ScreenContainer style={styles.container}>
       <Image

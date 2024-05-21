@@ -14,7 +14,7 @@ import {
 } from "react-native";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { INoteRepost1622, IUserEvent, RootStackParamList } from "../types";
+import { INoteRepostParsed, IUserEvent, RootStackParamList } from "../types";
 import { useNostr } from "../hooks/useNostr";
 import { Event as EventNostr } from "nostr-tools";
 import styled, { useTheme } from "styled-components";
@@ -23,6 +23,7 @@ import { SceneMap, TabView } from "react-native-tab-view";
 import Post from "../shared/components/Post";
 import Divider from "../components/divider/Divider";
 import { NDKUser } from "@nostr-dev-kit/ndk";
+import { filterRepliesOnEvents } from "../utils/filter";
 type UserDetailScreenRouteProp = RouteProp<
   RootStackParamList,
   "UserDetailScreen"
@@ -49,11 +50,13 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
   const [eventsTool, setEventsTool] = useState<EventNostr[] | undefined>();
   const [events, setEvents] = useState<EventNostr[] | undefined>();
   const [replies, setReplies] = useState<EventNostr[] | undefined>();
-  const [reposts, setReposts] = useState<INoteRepost1622[] | undefined>();
+  const [reposts, setReposts] = useState<INoteRepostParsed[] | undefined>();
   const [reactions, setReactions] = useState<EventNostr[] | undefined>();
   const [imgUser, setImageUser] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState<boolean | undefined>(false);
-  const [isFirstLoadDone, setIsFirstLoadDone] = useState<boolean | undefined>(false);
+  const [isFirstLoadDone, setIsFirstLoadDone] = useState<boolean | undefined>(
+    false
+  );
   const [profile, setProfile] = useState<IUserEvent | undefined>();
   const navigation = useNavigation();
   const [index, setIndex] = React.useState(0);
@@ -76,7 +79,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
   const handleGetUserEventById = async () => {
     try {
       console.log("handleGetEventById try get event");
-      if (isLoading || profile) {
+      if (isLoading || (profile || isFirstLoadDone)) {
         return;
       }
       setIsLoading(true);
@@ -87,20 +90,25 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
          * kind:0
          * Parsed content to UserMetadata
          */
-        let contentParsed = JSON.parse(userQueryReq?.content);
-        let profile: IUserEvent = contentParsed;
-        setProfile(profile);
+
+        try {
+          /** Metadata can be undefined */
+          let contentParsed = JSON.parse(userQueryReq?.content);
+          let profile: IUserEvent = contentParsed;
+          setProfile(profile);
+        } catch (e) { }
 
         let events = await getEventsNotesFromPubkey(userQuery, [
           1, // note
+          //  + replies if NIP-10 with tags p and e t
           6, // repost
           7, // reactions
-          1622, // replies
         ]);
 
-        let notes = events?.filter((e) => e?.kind == 1);
+        let notesAllTags = events?.filter((e) => e?.kind == 1);
+        console.log("notesAllTags", notesAllTags);
 
-        let reposts: INoteRepost1622[] = [];
+        let reposts: INoteRepostParsed[] = [];
 
         /** Parse content note as anoter event to repost */
         events?.filter((e) => {
@@ -118,12 +126,18 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
           }
         });
         let reactions = events?.filter((e) => e?.kind == 7);
-        let replies = events?.filter((e) => e?.kind == 1622);
-        setReplies(replies);
+
+        /** TODO fix multi reply */
+        // let repliesFilter = filterRepliesOnEvents(events)
+        let repliesFilter = filterRepliesOnEvents(notesAllTags)
+        console.log("repliesFilter", repliesFilter);
+        setReplies(repliesFilter);
         setReactions(reactions);
         setReposts(reposts);
-        console.log("replies", replies);
-        // console.log("notes", notes);
+
+        let notes = notesAllTags?.filter((n) => n?.tags?.length == 0 )
+        // let notes = notesAllTags?.filter((n) => n?.tags?.length == 0 || !n?.tags?.find(e => e?.includes("e")))
+        console.log("notes", notes);
         // console.log("reposts", reposts);
         // console.log("reactions", reactions);
         setEvents(notes);
@@ -133,7 +147,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
       console.log("Error handle event user by id", e);
     } finally {
       setIsLoading(false);
-      setIsFirstLoadDone(true)
+      setIsFirstLoadDone(true);
     }
   };
 
@@ -168,6 +182,8 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
     );
   };
 
+
+  /** TODO fix issue multi renders replies */
   const RepliesRoute = () => {
     return (
       <FlatList
@@ -175,9 +191,15 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
           paddingTop: 16,
         }}
         data={replies}
-        keyExtractor={(item) => item?.id}
-        renderItem={({ item }) => {
-          return <Post event={item} />;
+        // keyExtractor={(item,index) => item?.id}
+        keyExtractor={(item, index) => index?.toString()}
+        renderItem={({ item, index }) => {
+          return <Post
+            key={index}
+
+            event={item}
+            sourceUser={profile?.picture}
+          />;
         }}
         ItemSeparatorComponent={() => (
           <View style={{ marginVertical: 18 }}>
@@ -277,7 +299,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
                 <Typography
                   variant="ts15b"
                   align="left"
-                  // colorCode={index === i ? theme.black[10] : theme.black[40]}
+                // colorCode={index === i ? theme.black[10] : theme.black[40]}
                 >
                   {route.title}
                 </Typography>
@@ -294,7 +316,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
       <BackButton onPress={() => handleGoBack()}>
         <Typography
           variant="ts19m"
-          //  colorCode={theme.black[100]}
+        //  colorCode={theme.black[100]}
         >
           Back
         </Typography>
@@ -336,15 +358,15 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
         {isLoading && <ActivityIndicator></ActivityIndicator>}
         <Text
           style={styles.text}
-          // numberOfLines={1}
-          // lineBreakMode="tail"
+        // numberOfLines={1}
+        // lineBreakMode="tail"
         >
           {userQuery}
         </Text>
         <Text
           // variant="ts19m"
           style={styles.text}
-          // colorCode={theme.black[10]}
+        // colorCode={theme.black[10]}
         >
           {eventProfile?.profile?.name ?? profile?.name}
         </Text>
@@ -352,7 +374,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
         <Text
           // variant="ts15r"
           style={styles.text}
-          // colorCode={theme.black[10]}
+        // colorCode={theme.black[10]}
         >
           {eventProfile?.profile?.bio ?? profile?.about}
         </Text>
@@ -365,7 +387,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
           navigationState={{ index, routes }}
           renderScene={renderScene}
           onIndexChange={setIndex}
-          // initialLayout={{ width: layout.width }}
+        // initialLayout={{ width: layout.width }}
         />
       </View>
     </ScrollView>
