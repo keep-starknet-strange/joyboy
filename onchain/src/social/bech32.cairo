@@ -1,7 +1,8 @@
 //! bech32 encoding implementation
 
 use core::traits::{Into, TryInto};
-use core::array::ToSpanTrait;
+// TODO: uncomment once Cairo 2.7 is available
+// use core::array::ToSpanTrait;
 use core::option::OptionTrait;
 use core::array::ArrayTrait;
 use core::byte_array::ByteArrayTrait;

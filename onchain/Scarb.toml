@@ -10,6 +10,7 @@ starknet = "2.6.3"
 
 [dev-dependencies]
 snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry", tag = "v0.21.0" }
+alexandria_math = { git = "https://github.com/keep-starknet-strange/alexandria.git" }
 
 #[lib]
 
