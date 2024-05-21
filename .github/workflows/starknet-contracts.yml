@@ -10,6 +10,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: software-mansion/setup-scarb@v1
+        with:
+          scarb-version: 'nightly'
+      - name: Scarb version
+        run: scarb --version
+        working-directory: onchain
       - name: Check cairo format
         run: scarb fmt --check
         working-directory: onchain
@@ -21,6 +26,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: software-mansion/setup-scarb@v1
+        with:
+          scarb-version: 'nightly'
       - name: Run cairo tests
         run: scarb test
         working-directory: onchain
