@@ -2,7 +2,8 @@ use core::option::OptionTrait;
 use core::traits::TryInto;
 use core::byte_array::ByteArrayTrait;
 use core::array::SpanTrait;
-use core::array::ToSpanTrait;
+// TODO: uncomment once Cairo 2.7 is available
+// use core::array::ToSpanTrait;
 
 //! Representation of Nostr profiles
 

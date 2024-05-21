@@ -16,7 +16,7 @@ impl Pow2u8u8 of Pow2<u8, u8> {
             5 => 0b100000,
             6 => 0b1000000,
             7 => 0b10000000,
-            _ => core::panic_with_felt252('n = {n} ouf of range'),
+            _ => core::panic_with_felt252('n ouf of range'),
         }
     }
 }
@@ -56,7 +56,7 @@ impl Pow2u32u32 of Pow2<u32, u32> {
             29 => 0b100000000000000000000000000000,
             30 => 0b1000000000000000000000000000000,
             31 => 0b10000000000000000000000000000000,
-            _ => core::panic_with_felt252('n = {n} ouf of range'),
+            _ => core::panic_with_felt252('n ouf of range'),
         }
     }
 }
