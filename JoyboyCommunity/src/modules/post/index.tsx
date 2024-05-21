@@ -7,7 +7,6 @@ import { KeyboardAvoidingView } from "../../components/skeleton/KeyboardAvoiding
 import Divider from "../../components/divider/Divider";
 import { useNostr } from "../../hooks/useNostr";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
-import styled from "styled-components";
 
 export default function CreatePost() {
   const navigation = useNavigation();

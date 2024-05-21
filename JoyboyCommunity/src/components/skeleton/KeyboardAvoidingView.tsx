@@ -11,7 +11,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-const KeyboardAvoidingView = (props: Props) => {
+export const KeyboardAvoidingView = (props: Props) => {
   if (Platform.OS !== "ios") {
     return props.children;
   }
@@ -27,5 +27,3 @@ const KeyboardAvoidingView = (props: Props) => {
     </RNKeyboardAvoidingView>
   );
 };
-
-export default KeyboardAvoidingView;

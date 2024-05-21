@@ -1,7 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
 import { Image, TouchableOpacity } from "react-native";
 import { RootStackNavigationProps } from "../../types";
-import { AvatarProps } from "./props";
+
+export type AvatarProps = {
+  userId: string;
+  source?: string;
+};
 
 export const Avatar: React.FC<AvatarProps> = ({ source, userId }) => {
   const navigation = useNavigation<RootStackNavigationProps>();

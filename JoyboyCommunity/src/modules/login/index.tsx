@@ -1,8 +1,6 @@
 import {
   View,
   Text,
-  Pressable,
-  SafeAreaView,
   TextInput,
   StyleSheet,
   Platform,
@@ -11,7 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import ScreenContainer from "../../components/skeleton/ScreenContainer";
-import styled, { useTheme } from "styled-components/native";
+import { useTheme } from "styled-components/native";
 import Typography from "../../components/typography";
 import { useNostr } from "../../hooks/useNostr";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
@@ -22,36 +20,13 @@ import {
   saveCredentialsWithBiometry,
 } from "../../utils/keychain";
 import { utf8StringToUint8Array } from "../../utils/format";
-
-const ImportButton = styled(Pressable)`
-  padding: 8px 24px;
-  border-color: black;
-  color: white;
-  border-radius: 8px;
-`;
-
-const CreateAccountButton = styled(Pressable)`
-  border-radius: 8px;
-  padding: 8px 24px;
-  border-color: black;
-  border: 1px;
-  color: white;
-`;
-
-const LoginButton = styled(Pressable)`
-  border-radius: 8px;
-  border: 1px;
-  background-color: gray;
-  padding: 8px 24px;
-  color: white;
-`;
-
-const SkipButton = styled(Pressable)`
-  border-radius: 8px;
-  padding: 8px 24px;
-  border-color: black;
-  color: white;
-`;
+import {
+  CreateAccountButton,
+  ImportButton,
+  LoginButton,
+  SkipButton,
+} from "./styled";
+import styles from "./styles";
 
 enum LoginStep {
   HOME = "HOME",
@@ -63,7 +38,6 @@ enum LoginStep {
 
 export default function Login() {
   const { login } = useAuth();
-  const theme = useTheme();
 
   const [step, setStep] = useState<LoginStep>(LoginStep.HOME);
   const [bypassBiometric, setBiometrics] = useState<boolean>(
@@ -81,7 +55,7 @@ export default function Login() {
   const [privateKeyReadable, setPrivateKeyReadable] = useState<
     string | undefined
   >();
-  
+
   let isImportDisabled: boolean =
     !password ||
     !privateKeyImport ||
@@ -461,53 +435,3 @@ export default function Login() {
     </ScreenContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 1,
-  },
-  logo: {
-    width: 200,
-    height: 200,
-  },
-  inputContainer: {
-    marginVertical: 10,
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    gap: 4,
-  },
-  formContainer: {
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    gap: 4,
-  },
-  input: {
-    minHeight: 40,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    backgroundColor: "#fff",
-    color: "#000",
-    fontSize: 16,
-    // Shadow for better visibility
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
-    elevation: 2,
-    marginVertical: 4,
-  },
-  inputFocused: {
-    borderColor: "#007AFF", // Change border color when focused
-  },
-  text: {
-    width: Platform.OS != "android" ? "100%" : 200,
-    color: "white,",
-  },
-  textButton: {
-    color: "white,",
-  },
-});

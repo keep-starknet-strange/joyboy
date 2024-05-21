@@ -1,25 +1,18 @@
 import { View, Text, Image, Platform } from "react-native";
 import React from "react";
-import styled from "styled-components/native";
+import { NotificationLayout } from "./styled";
 
-const NotificationLayout = styled(View)`
-  flex-direction: row;
-  gap: 18px;
-  padding: 0px 12px;
-`;
-
-type NotificationProps = {
+export type NotificationProps = {
   post: {
     id?: string;
     content: string;
     username?: string;
     image?: string;
-    author?:string;
+    author?: string;
   };
 };
 
-export default function Notification(props: NotificationProps) {
-  const { post } = props;
+export const Notification: React.FC<NotificationProps> = ({ post }) => {
   return (
     <NotificationLayout>
       <View style={{ flex: 0.1 }}>
@@ -48,4 +41,4 @@ export default function Notification(props: NotificationProps) {
       </View>
     </NotificationLayout>
   );
-}
+};
