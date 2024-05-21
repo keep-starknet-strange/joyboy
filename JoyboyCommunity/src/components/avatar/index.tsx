@@ -1,19 +1,27 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
-import { Image, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
+import { RootStackNavigationProps } from "../../types";
+import { AvatarImage } from "./styled";
 
-export const Avatar = ({ navigation, source, userId }) => {
-  // const navigation = useNavigation();
-  const handleProfilePress = (userId: string) => {
-    navigation.push("UserDetailScreen", { userId });
+export type AvatarProps = {
+  userId: string;
+  source?: string;
+};
+
+export const Avatar: React.FC<AvatarProps> = ({ source, userId }) => {
+  const navigation = useNavigation<RootStackNavigationProps>();
+
+  const handleProfilePress = () => {
+    navigation.push("UserDetail", { userId });
   };
 
   return (
-    <TouchableOpacity onPress={() => handleProfilePress(userId)}>
-      <Image
+    <TouchableOpacity onPress={handleProfilePress}>
+      <AvatarImage
         source={source ?? require("../../../assets/joyboy-logo.png")}
-        style={{ width: 44, height: 44 }}
       />
     </TouchableOpacity>
   );
 };
+
+export { AvatarImage };

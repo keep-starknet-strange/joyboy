@@ -1,27 +1,20 @@
-// screens/PostDetailScreen.tsx
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image, Platform } from "react-native";
-import { RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "../types";
-import { useNostr } from "../hooks/useNostr";
+import { TouchableOpacity, Image } from "react-native";
 import { Event as EventNostr } from "nostr-tools";
-type PostDetailScreenRouteProp = RouteProp<
-  RootStackParamList,
-  "NoteDetailScreen"
->;
+import { RootStackNoteDetailScreenProps } from "../../types";
+import { useNostr } from "../../hooks/useNostr";
+import {
+  Container,
+  ContentContainer,
+  ProfileImage,
+  Timestamp,
+  Text,
+} from "./styled";
 
-type PostDetailScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  "NoteDetailScreen"
->;
-
-type Props = {
-  route: PostDetailScreenRouteProp;
-  navigation: PostDetailScreenNavigationProp;
-};
-
-const PostDetailScreen: React.FC<Props> = ({ route, navigation }) => {
+export const NoteDetail: React.FC<RootStackNoteDetailScreenProps> = ({
+  route,
+  navigation,
+}) => {
   const { noteId } = route.params;
   // console.log("noteId", noteId);
 
@@ -33,6 +26,7 @@ const PostDetailScreen: React.FC<Props> = ({ route, navigation }) => {
 
   const event = events?.find((e) => e?.id == noteId);
   // console.log("event", event);
+
   const handleGetEventById = async () => {
     // console.log("handleGetEventById try get event");
     let event = await getEvent(noteId);
@@ -50,72 +44,39 @@ const PostDetailScreen: React.FC<Props> = ({ route, navigation }) => {
       setContentParsed(parseEvent);
     }
   }, [event, eventNote, noteId]);
+
   const handleProfilePress = (userId: string) => {
-    navigation.navigate("UserDetailScreen", { userId });
+    navigation.navigate("UserDetail", { userId });
   };
 
   return (
-    <View style={styles.container}>
+    <Container>
       {/* <Text lineBreakMode="tail" style={styles.text} numberOfLines={2}>
         {noteId}
       </Text> */}
 
       {eventNote && eventNote?.created_at && (
-        <Text style={styles.timestamp}>
+        <Timestamp>
           {new Date(Number(eventNote?.created_at) * 1000)?.toISOString()}
-        </Text>
+        </Timestamp>
       )}
 
       <TouchableOpacity onPress={() => handleProfilePress(eventNote?.pubkey)}>
-        <Image
-          source={imgUser ?? require("../../assets/joyboy-logo.png")}
-          style={{ width: 50, height: 50 }}
+        <ProfileImage
+          source={imgUser ?? require("../../../assets/joyboy-logo.png")}
         />
       </TouchableOpacity>
 
-      <View style={styles.contentContainer}>
+      <ContentContainer>
         {eventNote?.id == noteId && contentParsed && (
-          <Text style={styles.text} lineBreakMode="tail">
-            {contentParsed}
-          </Text>
+          <Text lineBreakMode="tail">{contentParsed}</Text>
         )}
-      </View>
+      </ContentContainer>
       {/* Render post details here */}
 
       {/* @TODO render metadata */}
 
       {/* TODO render interactions NOSTR */}
-    </View>
+    </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    backgroundColor: "#022b3a",
-    height: Platform.OS != "android" ? "100%" : 250,
-    color: "white",
-    padding: 4,
-  },
-  text: {
-    color: "white",
-  },
-  contentContainer: {
-    padding: 8,
-  },
-  listContainer: {
-    width: Platform.OS != "android" ? "100%" : 250,
-    paddingHorizontal: 20, // Add horizontal padding to create space between items
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  timestamp: {
-    fontSize: 12,
-    color: "#666",
-  },
-});
-
-export default PostDetailScreen;

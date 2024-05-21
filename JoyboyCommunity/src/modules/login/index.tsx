@@ -1,18 +1,7 @@
-import {
-  View,
-  Text,
-  Pressable,
-  SafeAreaView,
-  TextInput,
-  StyleSheet,
-  Platform,
-  Image,
-} from "react-native";
+import { View, Platform } from "react-native";
 import React, { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
-import ScreenContainer from "../../components/skeleton/ScreenContainer";
-import styled, { useTheme } from "styled-components/native";
-import Typography from "../../components/typography";
+import { Typography } from "../../components";
 import { useNostr } from "../../hooks/useNostr";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
 import {
@@ -22,36 +11,17 @@ import {
   saveCredentialsWithBiometry,
 } from "../../utils/keychain";
 import { utf8StringToUint8Array } from "../../utils/format";
-
-const ImportButton = styled(Pressable)`
-  padding: 8px 24px;
-  border-color: black;
-  color: white;
-  border-radius: 8px;
-`;
-
-const CreateAccountButton = styled(Pressable)`
-  border-radius: 8px;
-  padding: 8px 24px;
-  border-color: black;
-  border: 1px;
-  color: white;
-`;
-
-const LoginButton = styled(Pressable)`
-  border-radius: 8px;
-  border: 1px;
-  background-color: gray;
-  padding: 8px 24px;
-  color: white;
-`;
-
-const SkipButton = styled(Pressable)`
-  border-radius: 8px;
-  padding: 8px 24px;
-  border-color: black;
-  color: white;
-`;
+import {
+  CreateAccountButton,
+  ImportButton,
+  LoginButton,
+  SkipButton,
+  Container,
+  Logo,
+  InputContainer,
+  Input,
+  Text,
+} from "./styled";
 
 enum LoginStep {
   HOME = "HOME",
@@ -63,7 +33,6 @@ enum LoginStep {
 
 export default function Login() {
   const { login } = useAuth();
-  const theme = useTheme();
 
   const [step, setStep] = useState<LoginStep>(LoginStep.HOME);
   const [bypassBiometric, setBiometrics] = useState<boolean>(
@@ -81,7 +50,7 @@ export default function Login() {
   const [privateKeyReadable, setPrivateKeyReadable] = useState<
     string | undefined
   >();
-  
+
   let isImportDisabled: boolean =
     !password ||
     !privateKeyImport ||
@@ -259,25 +228,24 @@ export default function Login() {
   };
 
   return (
-    <ScreenContainer style={styles.container}>
-      <Image
+    <Container>
+      <Logo
         source={require("../../../assets/joyboy-logo.png")}
-        style={styles.logo}
         resizeMode="contain"
       />
 
       {step == LoginStep.HOME && (
-        <View style={styles.inputContainer}>
+        <InputContainer>
           {/* <Text>Enter your login for Nostr</Text> */}
-          <TextInput
-            style={[styles.input]}
+          <Input
+            $focused={false}
             placeholderTextColor="#888"
             placeholder="Enter your login key"
             value={privateKeyImport}
             onChangeText={setImportPrivateKey}
           />
-          <TextInput
-            style={[styles.input]}
+          <Input
+            $focused={false}
             placeholder="Enter a password"
             value={password}
             onChangeText={setPassword}
@@ -288,14 +256,14 @@ export default function Login() {
             onPress={handleImportPrivateKey}
             style={{
               paddingVertical: 8,
-              width: Platform.OS != "android" ? "100%" : 100,
+              width: "100%",
               backgroundColor: isImportDisabled && "gray",
             }}
             disabled={isImportDisabled}
           >
             <Typography variant="ts19m">Login</Typography>
           </ImportButton>
-        </View>
+        </InputContainer>
       )}
       {step == LoginStep.EXPORTED_ACCOUNT && (
         <View
@@ -306,17 +274,11 @@ export default function Login() {
             width: 230,
           }}
         >
-          {publicKey && (
-            <Text style={styles.text} selectable={true}>
-              {publicKey}
-            </Text>
-          )}
+          {publicKey && <Text selectable={true}>{publicKey}</Text>}
 
           {privateKeyReadable && (
             <>
-              <Text style={styles.text} selectable={true}>
-                {privateKeyReadable}
-              </Text>
+              <Text selectable={true}>{privateKeyReadable}</Text>
             </>
           )}
         </View>
@@ -324,7 +286,7 @@ export default function Login() {
 
       {step != LoginStep.CREATE_ACCOUNT &&
         step != LoginStep.EXPORTED_ACCOUNT && (
-          <View style={styles.inputContainer}>
+          <InputContainer>
             <CreateAccountButton
               onPress={() => setStep(LoginStep.CREATE_ACCOUNT)}
               style={{
@@ -335,22 +297,20 @@ export default function Login() {
             >
               <Typography variant="ts19m">Create an account</Typography>
             </CreateAccountButton>
-          </View>
+          </InputContainer>
         )}
 
-      <View style={styles.inputContainer}>
+      <InputContainer>
         <View>
           {step == LoginStep.CREATE_ACCOUNT && (
             <View>
-              <TextInput
-                style={[styles.input]}
+              <Input
                 placeholderTextColor="#888"
                 placeholder="Username"
                 value={username}
                 onChangeText={setUsername}
               />
-              <TextInput
-                style={[styles.input]}
+              <Input
                 placeholder="Password"
                 value={password}
                 onChangeText={setPassword}
@@ -389,17 +349,11 @@ export default function Login() {
                   width: 230,
                 }}
               >
-                {publicKey && (
-                  <Text style={styles.text} selectable={true}>
-                    {publicKey}
-                  </Text>
-                )}
+                {publicKey && <Text selectable={true}>{publicKey}</Text>}
 
                 {privateKey && (
                   <>
-                    <Text style={styles.text} selectable={true}>
-                      {Uint8Array.from(privateKey)}
-                    </Text>
+                    <Text selectable={true}>{Uint8Array.from(privateKey)}</Text>
                   </>
                 )}
               </View>
@@ -415,23 +369,17 @@ export default function Login() {
                 width: 230,
               }}
             >
-              {publicKey && (
-                <Text style={styles.text} selectable={true}>
-                  {publicKey}
-                </Text>
-              )}
+              {publicKey && <Text selectable={true}>{publicKey}</Text>}
 
               {privateKeyReadable && (
                 <>
-                  <Text style={styles.text} selectable={true}>
-                    {privateKeyReadable}
-                  </Text>
+                  <Text selectable={true}>{privateKeyReadable}</Text>
                 </>
               )}
             </View>
           )}
         </View>
-      </View>
+      </InputContainer>
 
       {isConnected && (
         <View
@@ -443,71 +391,15 @@ export default function Login() {
           }}
         >
           <Typography>You have a connected account.</Typography>
-          {publicKey && (
-            <Text style={styles.text} selectable={true}>
-              {publicKey}
-            </Text>
-          )}
+          {publicKey && <Text selectable={true}>{publicKey}</Text>}
         </View>
       )}
 
       {isSkipAvailable && (
         <SkipButton onPress={login}>
-          <Typography variant="ts19m" style={styles.textButton}>
-            Skip
-          </Typography>
+          <Typography variant="ts19m">Skip</Typography>
         </SkipButton>
       )}
-    </ScreenContainer>
+    </Container>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 1,
-  },
-  logo: {
-    width: 200,
-    height: 200,
-  },
-  inputContainer: {
-    marginVertical: 10,
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    gap: 4,
-  },
-  formContainer: {
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    gap: 4,
-  },
-  input: {
-    minHeight: 40,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    backgroundColor: "#fff",
-    color: "#000",
-    fontSize: 16,
-    // Shadow for better visibility
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
-    elevation: 2,
-    marginVertical: 4,
-  },
-  inputFocused: {
-    borderColor: "#007AFF", // Change border color when focused
-  },
-  text: {
-    width: Platform.OS != "android" ? "100%" : 200,
-    color: "white,",
-  },
-  textButton: {
-    color: "white,",
-  },
-});

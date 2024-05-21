@@ -1,18 +1,11 @@
-import {
-  View,
-  Text,
-  Image,
-  Pressable,
-  TouchableOpacity,
-  Platform,
-  StyleSheet,
-} from "react-native";
+import { View, Text, Image, Pressable } from "react-native";
 import React from "react";
 import styled from "styled-components/native";
 import { Event as EventNostr } from "nostr-tools";
 import { useNavigation } from "@react-navigation/native";
-import Typography from "../../components/typography";
-import { Octicons, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Typography } from "../../components";
+import { Octicons, MaterialIcons } from "@expo/vector-icons";
+import { Post as PostType, RootStackNavigationProps } from "../../types";
 
 const PostLayout = styled(View)`
   flex-direction: row;
@@ -20,32 +13,38 @@ const PostLayout = styled(View)`
   padding: 0px 12px;
 `;
 
+export const InteractionContainer = styled(View)`
+  margin-vertical: 10px;
+  margin-horizontal: 20px;
+  display: flex;
+  gap: 8px;
+  flex-direction: row;
+  align-content: center;
+  align-self: center;
+`;
+
+export const Icon = styled(View)`
+  padding-horizontal: 4px;
+`;
+
 interface PostProps {
-  post?: {
-    content: string;
-    author: string;
-    timestamp?: number;
-    source?: string;
-    id: string;
-    created_at: string;
-    pubkey: string;
-  }; // TODO FIX and use only typed event
+  post?: PostType; // TODO FIX and use only typed event
   event?: EventNostr;
   sourceUser?: string;
   repostedEvent?: EventNostr;
 }
 
-export default function Post(props: PostProps) {
+export const Post: React.FC<PostProps> = (props) => {
   const { post, event, repostedEvent } = props;
-  const navigation = useNavigation();
+  const navigation = useNavigation<RootStackNavigationProps>();
   const handleProfilePress = (userId?: string) => {
     if (userId) {
-      navigation.navigate("UserDetailScreen", { userId });
+      navigation.navigate("UserDetail", { userId });
     }
   };
 
   /** @TODO comment in Nostr */
-  const handleComment = () => { };
+  const handleComment = () => {};
 
   /** @TODO repost in Nostr */
   const handleRepostNote = () => {
@@ -53,7 +52,7 @@ export default function Post(props: PostProps) {
   };
 
   /** @TODO react in Nostr */
-  const handleReact = () => { };
+  const handleReact = () => {};
 
   return (
     <View>
@@ -82,11 +81,12 @@ export default function Post(props: PostProps) {
           <Text style={{ color: "black" }}>
             {repostedEvent?.content ? repostedEvent?.content : event?.content}
           </Text>
+
           {post?.source && (
             <Image
               source={{ uri: post.source }}
               style={{
-                width: Platform.OS != "android" ? "100%" : 250,
+                width: "100%",
 
                 height: 200,
                 borderRadius: 8,
@@ -101,53 +101,30 @@ export default function Post(props: PostProps) {
         reply  */}
       </PostLayout>
 
-      <View style={styles.interactionContainer}>
-        <Octicons
-          style={styles.icon}
+      <InteractionContainer>
+        <Icon
+          as={Octicons}
           name="comment"
           size={24}
           color="black"
           onPress={handleComment}
         />
-        <Octicons
-          style={styles.icon}
+        <Icon
+          as={Octicons}
           name="share"
           size={24}
           color="black"
           onPress={handleRepostNote}
         />
 
-        <MaterialIcons
-          style={styles.icon}
+        <Icon
+          as={MaterialIcons}
           name="add-reaction"
           size={24}
           color="black"
           onPress={handleReact}
         />
-      </View>
+      </InteractionContainer>
     </View>
   );
-}
-
-const styles = StyleSheet.create({
-  interactionContainer: {
-    marginVertical: 10,
-    marginHorizontal: 20,
-    display: "flex",
-    gap: 8,
-    flexDirection: "row",
-    alignContent: "center",
-    alignSelf: "center"
-  },
-  icon: {
-    paddingHorizontal: 4,
-  },
-  input: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-    color: "white",
-  },
-});
+};

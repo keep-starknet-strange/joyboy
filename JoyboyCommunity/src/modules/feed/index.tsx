@@ -1,10 +1,9 @@
 import { View, Text, SafeAreaView, ActivityIndicator } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
-import FloatingPostButton from "./components/FloatingPostButton";
-import styled, { useTheme } from "styled-components/native";
-import Post from "../../shared/components/Post";
-import { testPostData } from "../../shared/data/testData";
-import Divider from "../../components/divider/Divider";
+import FloatingPostButton from "./FloatingPostButton";
+import styled from "styled-components/native";
+import { Post } from "../../shared/components/Post";
+import { Divider } from "../../components";
 import { FlatList, RefreshControl } from "react-native-gesture-handler";
 import { useNostr } from "../../hooks/useNostr";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
@@ -16,16 +15,13 @@ const FixedPostButton = styled(View)`
 `;
 
 export default function Feed() {
-  const theme = useTheme();
   const bottomBarHeight = useBottomTabBarHeight();
   const [loading, setLoading] = useState(false);
   const [isReady, setIsReady] = useState(true);
   const { getEvents, setEvents, events, getEventsNotes, eventsData } =
-  useNostr();
+    useNostr();
 
   const [eventsDataFeed, setEventsData] = useState(events ?? []);
-
-
 
   const handeGetData = useCallback(async () => {
     setLoading(true);
@@ -47,7 +43,7 @@ export default function Feed() {
     console.log("events", events);
     setEvents(events);
     setEventsData(events);
-    setLoading(false)
+    setLoading(false);
     setIsReady(true);
   }, []);
 
@@ -58,7 +54,6 @@ export default function Feed() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ paddingTop: 12, paddingBottom: 18 }}>
-
         <FlatList
           horizontal={true}
           showsHorizontalScrollIndicator={false}
@@ -81,7 +76,6 @@ export default function Feed() {
       </View>
 
       {loading && <ActivityIndicator></ActivityIndicator>}
-
 
       <FlatList
         contentContainerStyle={{

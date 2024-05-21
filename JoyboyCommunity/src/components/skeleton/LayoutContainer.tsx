@@ -1,4 +1,4 @@
-import { Platform, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { styled } from "styled-components/native";
 
@@ -7,26 +7,28 @@ const Container = styled(View)`
   background-color: ${({ theme }) => theme.black[100]};
 `;
 
-const LayoutContainer = ({ title, children }) => {
+const Content = styled(View)<{ $top: number }>`
+  width: 100%;
+  padding: 16px;
+  padding-top: ${(props) => props.$top}px;
+`;
+
+const Title = styled(Text)`
+  font-weight: bold;
+  font-size: 18px;
+  text-align: center;
+`;
+
+export const LayoutContainer = ({ title, children }) => {
   const insets = useSafeAreaInsets();
 
   return (
     <Container style={{ flex: 1 }}>
-      <View
-        style={{
-    width: Platform.OS != "android" ? "100%" : 250,
+      <Content $top={insets.top}>
+        <Title>{title}</Title>
+      </Content>
 
-          padding: 16,
-          paddingTop: insets.top,
-        }}
-      >
-        <Text style={{ fontWeight: "bold", fontSize: 18, textAlign: "center" }}>
-          {title}
-        </Text>
-      </View>
       {children}
     </Container>
   );
 };
-
-export default LayoutContainer;
