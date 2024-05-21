@@ -24,8 +24,6 @@ import { Event as EventNostr } from "nostr-tools";
 import styled, { useTheme } from "styled-components";
 import Typography from "../../components/typography";
 import { SceneMap, TabView } from "react-native-tab-view";
-import Post from "../../shared/components/Post";
-import Divider from "../../components/divider/Divider";
 import { NDKUser } from "@nostr-dev-kit/ndk";
 import { filterRepliesOnEvents } from "../../utils/filter";
 import {
@@ -217,7 +215,7 @@ export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({
           <Image
             source={{ uri: profile?.banner }}
             style={{
-              width: Platform.OS != "android" ? "100%" : 250,
+              width: "100%",
 
               height: 200,
               resizeMode: "cover",
@@ -229,7 +227,8 @@ export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({
         <View style={{ position: "relative" }}>
           <Image
             source={{
-              uri: profile?.picture ?? require("../../assets/joyboy-logo.png"),
+              uri:
+                profile?.picture ?? require("../../../assets/joyboy-logo.png"),
             }}
             style={{
               borderWidth: 2,

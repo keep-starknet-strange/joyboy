@@ -1,6 +1,6 @@
 import { FlatList, View } from "react-native";
 import { Event as EventNostr } from "nostr-tools";
-import Post from "../../shared/components/Post";
+import { Post } from "../../shared/components/Post";
 import Divider from "../../components/divider/Divider";
 import { INoteRepostParsed, IUserEvent } from "../../types";
 

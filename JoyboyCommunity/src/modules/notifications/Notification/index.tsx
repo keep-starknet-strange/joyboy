@@ -31,7 +31,7 @@ export const Notification: React.FC<NotificationProps> = ({ post }) => {
           <Image
             source={{ uri: post.image }}
             style={{
-              width: Platform.OS == "ios" ? "100%" : 250,
+              width: "100%",
               height: 200,
               borderRadius: 8,
               marginTop: 8,

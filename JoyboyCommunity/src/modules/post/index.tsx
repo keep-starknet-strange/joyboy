@@ -53,7 +53,7 @@ export default function CreatePost() {
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          width: Platform.OS != "android" ? "100%" : 250,
+          width: "100%",
           padding: 16,
         }}
       >

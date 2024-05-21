@@ -2,7 +2,7 @@ import { View, Text, SafeAreaView, ActivityIndicator } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import FloatingPostButton from "./components/FloatingPostButton";
 import styled from "styled-components/native";
-import Post from "../../shared/components/Post";
+import { Post } from "../../shared/components/Post";
 import Divider from "../../components/divider/Divider";
 import { FlatList, RefreshControl } from "react-native-gesture-handler";
 import { useNostr } from "../../hooks/useNostr";

@@ -78,7 +78,7 @@ export const Post: React.FC<PostProps> = (props) => {
             <Image
               source={{ uri: post.source }}
               style={{
-                width: Platform.OS != "android" ? "100%" : 250,
+                width: "100%",
 
                 height: 200,
                 borderRadius: 8,

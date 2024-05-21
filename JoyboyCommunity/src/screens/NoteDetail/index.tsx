@@ -57,7 +57,7 @@ export const NoteDetail: React.FC<RootStackNoteDetailScreenProps> = ({
 
       <TouchableOpacity onPress={() => handleProfilePress(eventNote?.pubkey)}>
         <Image
-          source={imgUser ?? require("../../assets/joyboy-logo.png")}
+          source={imgUser ?? require("../../../assets/joyboy-logo.png")}
           style={{ width: 50, height: 50 }}
         />
       </TouchableOpacity>
