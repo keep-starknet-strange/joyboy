@@ -8,7 +8,7 @@ import {
   Platform,
   Image,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import ScreenContainer from "../../components/skeleton/ScreenContainer";
 import styled, { useTheme } from "styled-components/native";
@@ -70,6 +70,7 @@ export default function Login() {
     Platform.OS == "web" ? true : false
   ); // DEV MODE in web to bypass biometric connection
   const [isSkipAvailable, setIsSkipAvailable] = useState<boolean>(true); // skip button available if possible to read data only without be connected
+  const [isConnected, setIsConnected] = useState<boolean>(false); // skip button available if possible to read data only without be connected
   const [username, setUsername] = useState<string | undefined>();
   const [password, setPassword] = useState<string | undefined>();
   const [publicKey, setPublicKey] = useState<string | undefined>();
@@ -80,8 +81,39 @@ export default function Login() {
   const [privateKeyReadable, setPrivateKeyReadable] = useState<
     string | undefined
   >();
+  
+  let isImportDisabled: boolean =
+    !password ||
+    !privateKeyImport ||
+    (password?.length == 0 && privateKeyImport?.length == 0)
+      ? true
+      : false;
   const { generateKeypair, getPublicKeyByPk } = useNostr();
-  const { encryptAndStorePrivateKey, storePublicKey } = useLocalstorage();
+  const {
+    encryptAndStorePrivateKey,
+    storePublicKey,
+    retrieveAndDecryptPrivateKey,
+    retrievePublicKey,
+  } = useLocalstorage();
+
+  /** TODO check if user is already connected with a Nostr private key */
+  useEffect(() => {
+    const isConnectedUser = async () => {
+      try {
+        let publicKeyConnected = await retrievePublicKey();
+
+        if (!publicKeyConnected) {
+          alert("Please login");
+          return;
+        } else {
+          setIsConnected(true);
+          setPublicKey(publicKeyConnected);
+        }
+      } catch (e) {}
+    };
+
+    isConnectedUser();
+  }, []);
 
   /** Create private key
    * Saved it with a password credentials biometrics
@@ -135,9 +167,8 @@ export default function Login() {
           skString
         );
 
-        if(encryptedPk) {
+        if (encryptedPk) {
           setStep(LoginStep.ACCOUNT_CREATED);
-
         }
         alert(
           JSON.stringify(
@@ -227,13 +258,6 @@ export default function Login() {
     }
   };
 
-  let isImportDisabled: boolean =
-    !password ||
-    !privateKeyImport ||
-    (password?.length == 0 && privateKeyImport?.length == 0)
-      ? true
-      : false;
-  console.log("isImportDisabled", isImportDisabled);
   return (
     <ScreenContainer style={styles.container}>
       <Image
@@ -408,6 +432,24 @@ export default function Login() {
           )}
         </View>
       </View>
+
+      {isConnected && (
+        <View
+          style={{
+            paddingHorizontal: 12,
+            gap: 4,
+            padding: 8,
+            width: 230,
+          }}
+        >
+          <Typography>You have a connected account.</Typography>
+          {publicKey && (
+            <Text style={styles.text} selectable={true}>
+              {publicKey}
+            </Text>
+          )}
+        </View>
+      )}
 
       {isSkipAvailable && (
         <SkipButton onPress={login}>

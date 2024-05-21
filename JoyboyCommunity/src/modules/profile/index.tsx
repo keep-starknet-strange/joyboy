@@ -1,5 +1,5 @@
-import { View, Image, StyleSheet, Platform } from "react-native";
-import React from "react";
+import { View, Image, StyleSheet, Platform, Pressable } from "react-native";
+import React, { useEffect, useState } from "react";
 import styled, { useTheme } from "styled-components/native";
 import Typography from "../../components/typography";
 import {
@@ -14,90 +14,254 @@ import { useWindowDimensions } from "react-native";
 import { TabView, SceneMap } from "react-native-tab-view";
 import ScrollableContainer from "../../components/skeleton/ScrollableContainer";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-
-const FirstRoute = () => {
-  const bottomBarHeight = useBottomTabBarHeight();
-  return (
-    <FlatList
-      contentContainerStyle={{
-        paddingTop: 16,
-        paddingBottom: bottomBarHeight,
-      }}
-      data={testPostData}
-      keyExtractor={(item) => item?.id}
-      renderItem={({ item }) => {
-        return <Post post={item} />;
-      }}
-      ItemSeparatorComponent={() => (
-        <View style={{ marginVertical: 18 }}>
-          <Divider />
-        </View>
-      )}
-    />
-  );
-};
-
-const SecondRoute = () => {
-  const bottomBarHeight = useBottomTabBarHeight();
-
-  return (
-    <FlatList
-      contentContainerStyle={{
-        paddingTop: 16,
-        paddingBottom: bottomBarHeight,
-      }}
-      data={testPostData}
-      keyExtractor={(item) => item?.id}
-      renderItem={({ item }) => {
-        return <Post post={item} />;
-      }}
-      ItemSeparatorComponent={() => (
-        <View style={{ marginVertical: 18 }}>
-          <Divider />
-        </View>
-      )}
-    />
-  );
-};
-
-const ThirdRoute = () => {
-  const bottomBarHeight = useBottomTabBarHeight();
-  return (
-    <FlatList
-      contentContainerStyle={{
-        paddingTop: 16,
-        paddingBottom: bottomBarHeight,
-      }}
-      data={testPostData}
-      keyExtractor={(item) => item?.id}
-      renderItem={({ item }) => {
-        return <Post post={item} />;
-      }}
-      ItemSeparatorComponent={() => (
-        <View style={{ marginVertical: 18 }}>
-          <Divider />
-        </View>
-      )}
-    />
-  );
-};
+import { useLocalstorage } from "../../hooks/useLocalstorage";
+import { useNostr } from "../../hooks/useNostr";
+import { Event as EventNostr } from "nostr-tools";
+import { INoteRepostParsed, IUserEvent } from "../../types";
+import { filterRepliesOnEvents } from "../../utils/filter";
 
 export default function Profile() {
   const theme = useTheme();
   const layout = useWindowDimensions();
+  const [isConnected, setIsConnected] = useState<boolean>(false); // skip button available if possible to read data only without be connected
+  const [publicKey, setPublicKey] = useState<string | undefined>();
+  const [isLoading, setIsLoading] = useState<boolean | undefined>(false);
 
+  const { retrievePublicKey } = useLocalstorage();
+  const { getEvent, getUser, getEventsNotesFromPubkey, getUserQuery } =
+    useNostr();
+  const [profile, setProfile] = useState<IUserEvent | undefined>();
+  const [isFirstLoadDone, setIsFirstLoadDone] = useState<boolean | undefined>(
+    false
+  );
+
+  const [events, setEvents] = useState<EventNostr[] | undefined>();
+  const [replies, setReplies] = useState<EventNostr[] | undefined>();
+  const [reposts, setReposts] = useState<INoteRepostParsed[] | undefined>();
+  const [reactions, setReactions] = useState<EventNostr[] | undefined>();
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: "posts", title: "Posts" },
     { key: "replies", title: "Replies" },
-    { key: "likes", title: "Likes" },
+    { key: "reactions", title: "Reactions" },
+    { key: "reposts", title: "Reposts" },
   ]);
 
-  const renderScene = SceneMap({
-    posts: FirstRoute,
-    replies: SecondRoute,
-    likes: ThirdRoute,
-  });
+  const NotesRoute = () => {
+    return (
+      <FlatList
+        contentContainerStyle={{
+          paddingTop: 16,
+          // paddingBottom: bottomBarHeight,
+        }}
+        data={events}
+        keyExtractor={(item) => item?.id}
+        renderItem={({ item }) => {
+          return (
+            <Post
+              //  post={item}
+              sourceUser={profile?.picture}
+              event={item}
+            />
+          );
+        }}
+        ItemSeparatorComponent={() => (
+          <View style={{ marginVertical: 18 }}>
+            <Divider />
+          </View>
+        )}
+      />
+    );
+  };
+  /** TODO fix issue multi renders replies */
+  const RepliesRoute = () => {
+    return (
+      <FlatList
+        contentContainerStyle={{
+          paddingTop: 16,
+        }}
+        data={replies}
+        // keyExtractor={(item) => item?.id}
+        keyExtractor={(item, index) => index?.toString()}
+
+        renderItem={({ item }) => {
+          return <Post event={item}
+            sourceUser={profile?.picture}
+          />;
+        }}
+        ItemSeparatorComponent={() => (
+          <View style={{ marginVertical: 18 }}>
+            <Divider />
+          </View>
+        )}
+      />
+    );
+  };
+
+  const RepostRoute = () => {
+    // const bottomBarHeight = useBottomTabBarHeight();
+
+    return (
+      <FlatList
+        contentContainerStyle={{
+          paddingTop: 16,
+          // paddingBottom: bottomBarHeight,
+        }}
+        data={reposts}
+        keyExtractor={(item) => item?.event?.id}
+        renderItem={({ item }) => {
+          return (
+            <Post
+              // post={item}
+              sourceUser={profile?.picture}
+              event={item?.event}
+              repostedEvent={item?.repost}
+            />
+          );
+        }}
+        ItemSeparatorComponent={() => (
+          <View style={{ marginVertical: 18 }}>
+            <Divider />
+          </View>
+        )}
+      />
+    );
+  };
+
+  const ReactionsRoute = () => {
+    // const bottomBarHeight = useBottomTabBarHeight();
+    return (
+      <FlatList
+        contentContainerStyle={{
+          paddingTop: 16,
+          // paddingBottom: bottomBarHeight,
+        }}
+        data={reactions}
+        keyExtractor={(item) => item?.id}
+        renderItem={({ item }) => {
+          return (
+            <Post
+              //  post={item}
+              sourceUser={profile?.picture}
+              event={item}
+            />
+          );
+        }}
+        ItemSeparatorComponent={() => (
+          <View style={{ marginVertical: 18 }}>
+            <Divider />
+          </View>
+        )}
+      />
+    );
+  };
+  // Fetch user based on userId pubkey
+  useEffect(() => {
+    const isConnectedUser = async () => {
+      try {
+        let publicKeyConnected = await retrievePublicKey();
+
+        if (!publicKeyConnected) {
+          alert("Please login");
+          return;
+        } else {
+          setIsConnected(true);
+          setPublicKey(publicKeyConnected);
+        }
+      } catch (e) { }
+    };
+
+    isConnectedUser();
+  }, []);
+
+  // console.log("profile", profile);
+  // Fetch user based on userId pubkey
+  useEffect(() => {
+    const handleInfo = async () => {
+      try {
+        if (publicKey && !isLoading && !profile && !isFirstLoadDone) {
+          await handleMyProfileByPublicKey();
+        }
+      } catch (e) { }
+    };
+    handleInfo();
+  }, [publicKey, isLoading, profile, isFirstLoadDone]);
+
+  const handleMyProfileByPublicKey = async () => {
+    try {
+      console.log("handleMyProfileByPublicKey try get event");
+      if (isLoading || !publicKey || profile) {
+        return;
+      }
+      setIsLoading(true);
+      // console.log("publicKey", publicKey);
+
+      if (publicKey) {
+        console.log("get profile data");
+
+        let userQueryReq = await getUserQuery(publicKey);
+        // console.log("userQueryReq", userQueryReq);
+
+        /** NIP-05 Metadata is in string
+         * kind:0
+         * Parsed content to UserMetadata
+         */
+        try {
+          /** Metadata can be undefined */
+          let contentParsed = JSON.parse(userQueryReq?.content);
+          let profile: IUserEvent = contentParsed;
+          setProfile(profile);
+        } catch (e) { }
+
+        let events = await getEventsNotesFromPubkey(publicKey, [
+          1, // note
+          6, // repost
+          7, // reactions
+
+        ]);
+
+        let notesAllTags = events?.filter((e) => e?.kind == 1);
+
+        let reposts: INoteRepostParsed[] = [];
+
+        /** Parse content note as anoter event to repost */
+        events?.filter((e) => {
+          if (e?.kind == 6) {
+            let parsedNote = JSON.parse(e?.content);
+            let repost = {
+              event: e,
+              repost: parsedNote,
+            };
+            reposts?.push(repost);
+            return {
+              event: e,
+              repost: parsedNote,
+            };
+          }
+        });
+        let reactions = events?.filter((e) => e?.kind == 7);
+        // let replies = filterRepliesOnEvents(events)
+        let repliesFilter = filterRepliesOnEvents(notesAllTags)
+
+        setReplies(repliesFilter);
+        setReactions(reactions);
+        setReposts(reposts);
+        console.log("replies", repliesFilter);
+        let notes = notesAllTags?.filter((n) => n?.tags?.length == 0 )
+        // let notes = notesAllTags?.filter((n) => n?.tags?.length == 0 || !n?.tags?.find(e => e?.includes("e")))
+        console.log("notes", notes);
+        // console.log("reposts", reposts);
+        // console.log("reactions", reactions);
+        setEvents(notes);
+        return events;
+      }
+    } catch (e) {
+      console.log("Error handle my profile user by id", e);
+    } finally {
+      setIsLoading(false);
+      setIsFirstLoadDone(true);
+    }
+  };
 
   const renderTabBar = (props) => {
     return (
@@ -136,6 +300,12 @@ export default function Profile() {
       </View>
     );
   };
+  const renderScene = SceneMap({
+    posts: NotesRoute,
+    reactions: ReactionsRoute,
+    reposts: RepostRoute,
+    replies: RepliesRoute,
+  });
 
   return (
     <View style={{ flex: 1 }}>
@@ -169,13 +339,26 @@ export default function Profile() {
       </View>
       <View style={{ paddingHorizontal: 12, gap: 4 }}>
         <Typography variant="ts19m" colorCode={theme.black[10]}>
-          Cool Name
+          {publicKey ?? ""}
+        </Typography>
+
+        <Typography variant="ts19m" colorCode={theme.black[10]}>
+          {profile?.display_name ?? ""}
         </Typography>
 
         <Typography variant="ts15r" colorCode={theme.black[10]}>
-          user's bio where they add something about themselves
+          {profile?.about}
         </Typography>
+
+        {/* TODO navigate to edit profile */}
+
+        <View>
+          <Pressable>
+            <Typography>Edit your profile</Typography>
+          </Pressable>
+        </View>
       </View>
+
       <View style={{ flex: 1, paddingTop: 8 }}>
         <TabView
           renderTabBar={renderTabBar}

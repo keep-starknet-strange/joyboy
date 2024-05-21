@@ -10,20 +10,20 @@ import {
   Platform,
   FlatList,
   useWindowDimensions,
+  ActivityIndicator,
 } from "react-native";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "../types";
+import { INoteRepostParsed, IUserEvent, RootStackParamList } from "../types";
 import { useNostr } from "../hooks/useNostr";
 import { Event as EventNostr } from "nostr-tools";
 import styled, { useTheme } from "styled-components";
 import Typography from "../components/typography";
 import { SceneMap, TabView } from "react-native-tab-view";
-// import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import Post from "../shared/components/Post";
 import Divider from "../components/divider/Divider";
-import { testPostData } from "../shared/data/testData";
 import { NDKUser } from "@nostr-dev-kit/ndk";
+import { filterRepliesOnEvents } from "../utils/filter";
 type UserDetailScreenRouteProp = RouteProp<
   RootStackParamList,
   "UserDetailScreen"
@@ -40,98 +40,24 @@ type Props = {
   userId?: string;
 };
 
-const FirstRoute = (events: EventNostr[]) => {
-  // const bottomBarHeight = useBottomTabBarHeight();
-  return (
-    <FlatList
-      contentContainerStyle={{
-        paddingTop: 16,
-        // paddingBottom: bottomBarHeight,
-      }}
-      data={events}
-      keyExtractor={(item) => item?.id}
-      renderItem={({ item }) => {
-        return (
-          <Post
-            //  post={item}
-            event={item}
-          />
-        );
-      }}
-      ItemSeparatorComponent={() => (
-        <View style={{ marginVertical: 18 }}>
-          <Divider />
-        </View>
-      )}
-    />
-  );
-};
-
-const SecondRoute = (datas: EventNostr[]) => {
-  // const bottomBarHeight = useBottomTabBarHeight();
-
-  return (
-    <FlatList
-      contentContainerStyle={{
-        paddingTop: 16,
-        // paddingBottom: bottomBarHeight,
-      }}
-      data={datas}
-      keyExtractor={(item) => item?.id}
-      renderItem={({ item }) => {
-        return (
-          <Post
-            // post={item}
-            event={item}
-          />
-        );
-      }}
-      ItemSeparatorComponent={() => (
-        <View style={{ marginVertical: 18 }}>
-          <Divider />
-        </View>
-      )}
-    />
-  );
-};
-
-const ThirdRoute = (datas: EventNostr[]) => {
-  // const bottomBarHeight = useBottomTabBarHeight();
-  return (
-    <FlatList
-      contentContainerStyle={{
-        paddingTop: 16,
-        // paddingBottom: bottomBarHeight,
-      }}
-      data={datas}
-      keyExtractor={(item) => item?.id}
-      renderItem={({ item }) => {
-        return (
-          <Post
-            //  post={item}
-            event={item}
-          />
-        );
-      }}
-      ItemSeparatorComponent={() => (
-        <View style={{ marginVertical: 18 }}>
-          <Divider />
-        </View>
-      )}
-    />
-  );
-};
-
 /** @TODO fetch user */
 const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
-  const { getEvent, getUser, getEventsNotesFromPubkey } = useNostr();
+  const { getEvent, getUser, getEventsNotesFromPubkey, getUserQuery } =
+    useNostr();
 
   const { userId: userQuery } = route.params;
   const [eventProfile, setEventProfile] = useState<NDKUser | undefined>();
   const [eventsTool, setEventsTool] = useState<EventNostr[] | undefined>();
   const [events, setEvents] = useState<EventNostr[] | undefined>();
+  const [replies, setReplies] = useState<EventNostr[] | undefined>();
+  const [reposts, setReposts] = useState<INoteRepostParsed[] | undefined>();
+  const [reactions, setReactions] = useState<EventNostr[] | undefined>();
   const [imgUser, setImageUser] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState<boolean | undefined>(false);
+  const [isFirstLoadDone, setIsFirstLoadDone] = useState<boolean | undefined>(
+    false
+  );
+  const [profile, setProfile] = useState<IUserEvent | undefined>();
   const navigation = useNavigation();
   const [index, setIndex] = React.useState(0);
   const [contentParsed, setContentParsed] = useState<string | undefined>();
@@ -140,7 +66,8 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
   const [routes] = React.useState([
     { key: "posts", title: "Posts" },
     { key: "replies", title: "Replies" },
-    { key: "likes", title: "Likes" },
+    { key: "reactions", title: "Reactions" },
+    { key: "reposts", title: "Reposts" },
   ]);
 
   // Fetch user based on userId pubkey
@@ -152,28 +79,75 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
   const handleGetUserEventById = async () => {
     try {
       console.log("handleGetEventById try get event");
-      if (isLoading || eventProfile) {
+      if (isLoading || (profile || isFirstLoadDone)) {
         return;
       }
       setIsLoading(true);
 
       if (userQuery) {
-        let eventUser = await getUser(userQuery);
-        console.log("eventUser", eventUser);
-        console.log("eventUser profile", eventUser?.profile);
-        // let profile = await eventUser?.fetchProfile();
-        // console.log("profile", profile);
-        setEventProfile(eventUser);
+        let userQueryReq = await getUserQuery(userQuery);
+        /** NIP-05 Metadata is in string
+         * kind:0
+         * Parsed content to UserMetadata
+         */
 
-        let events = await getEventsNotesFromPubkey(userQuery);
-        console.log("events user", events);
-        setEvents(events);
+        try {
+          /** Metadata can be undefined */
+          let contentParsed = JSON.parse(userQueryReq?.content);
+          let profile: IUserEvent = contentParsed;
+          setProfile(profile);
+        } catch (e) { }
+
+        let events = await getEventsNotesFromPubkey(userQuery, [
+          1, // note
+          //  + replies if NIP-10 with tags p and e t
+          6, // repost
+          7, // reactions
+        ]);
+
+        let notesAllTags = events?.filter((e) => e?.kind == 1);
+        console.log("notesAllTags", notesAllTags);
+
+        let reposts: INoteRepostParsed[] = [];
+
+        /** Parse content note as anoter event to repost */
+        events?.filter((e) => {
+          if (e?.kind == 6) {
+            let parsedNote = JSON.parse(e?.content);
+            let repost = {
+              event: e,
+              repost: parsedNote,
+            };
+            reposts?.push(repost);
+            return {
+              event: e,
+              repost: parsedNote,
+            };
+          }
+        });
+        let reactions = events?.filter((e) => e?.kind == 7);
+
+        /** TODO fix multi reply */
+        // let repliesFilter = filterRepliesOnEvents(events)
+        let repliesFilter = filterRepliesOnEvents(notesAllTags)
+        console.log("repliesFilter", repliesFilter);
+        setReplies(repliesFilter);
+        setReactions(reactions);
+        setReposts(reposts);
+
+        let notes = notesAllTags?.filter((n) => n?.tags?.length == 0 )
+        // let notes = notesAllTags?.filter((n) => n?.tags?.length == 0 || !n?.tags?.find(e => e?.includes("e")))
+        console.log("notes", notes);
+        // console.log("reposts", reposts);
+        // console.log("reactions", reactions);
+        setEvents(notes);
         return events;
       }
     } catch (e) {
       console.log("Error handle event user by id", e);
     } finally {
       setIsLoading(false);
+      setIsFirstLoadDone(true);
     }
   };
 
@@ -181,8 +155,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
     navigation.goBack();
   };
 
-  const FirstRoute = () => {
-    // const bottomBarHeight = useBottomTabBarHeight();
+  const NotesRoute = () => {
     return (
       <FlatList
         contentContainerStyle={{
@@ -190,12 +163,12 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
           // paddingBottom: bottomBarHeight,
         }}
         data={events}
-        // data={testPostData}
         keyExtractor={(item) => item?.id}
         renderItem={({ item }) => {
           return (
             <Post
               //  post={item}
+              sourceUser={profile?.picture}
               event={item}
             />
           );
@@ -208,11 +181,97 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
       />
     );
   };
-  
+
+
+  /** TODO fix issue multi renders replies */
+  const RepliesRoute = () => {
+    return (
+      <FlatList
+        contentContainerStyle={{
+          paddingTop: 16,
+        }}
+        data={replies}
+        // keyExtractor={(item,index) => item?.id}
+        keyExtractor={(item, index) => index?.toString()}
+        renderItem={({ item, index }) => {
+          return <Post
+            key={index}
+
+            event={item}
+            sourceUser={profile?.picture}
+          />;
+        }}
+        ItemSeparatorComponent={() => (
+          <View style={{ marginVertical: 18 }}>
+            <Divider />
+          </View>
+        )}
+      />
+    );
+  };
+
+  const RepostRoute = () => {
+    // const bottomBarHeight = useBottomTabBarHeight();
+
+    return (
+      <FlatList
+        contentContainerStyle={{
+          paddingTop: 16,
+          // paddingBottom: bottomBarHeight,
+        }}
+        data={reposts}
+        keyExtractor={(item) => item?.event?.id}
+        renderItem={({ item }) => {
+          return (
+            <Post
+              // post={item}
+              sourceUser={profile?.picture}
+              event={item?.event}
+              repostedEvent={item?.repost}
+            />
+          );
+        }}
+        ItemSeparatorComponent={() => (
+          <View style={{ marginVertical: 18 }}>
+            <Divider />
+          </View>
+        )}
+      />
+    );
+  };
+
+  const ReactionsRoute = () => {
+    // const bottomBarHeight = useBottomTabBarHeight();
+    return (
+      <FlatList
+        contentContainerStyle={{
+          paddingTop: 16,
+          // paddingBottom: bottomBarHeight,
+        }}
+        data={reactions}
+        keyExtractor={(item) => item?.id}
+        renderItem={({ item }) => {
+          return (
+            <Post
+              //  post={item}
+              sourceUser={profile?.picture}
+              event={item}
+            />
+          );
+        }}
+        ItemSeparatorComponent={() => (
+          <View style={{ marginVertical: 18 }}>
+            <Divider />
+          </View>
+        )}
+      />
+    );
+  };
   const renderScene = SceneMap({
-    posts: FirstRoute,
-    replies: SecondRoute,
-    likes: ThirdRoute,
+    posts: NotesRoute,
+    reactions: ReactionsRoute,
+    reposts: RepostRoute,
+    replies: RepliesRoute,
   });
 
   const renderTabBar = (props) => {
@@ -240,7 +299,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
                 <Typography
                   variant="ts15b"
                   align="left"
-                  // colorCode={index === i ? theme.black[10] : theme.black[40]}
+                // colorCode={index === i ? theme.black[10] : theme.black[40]}
                 >
                   {route.title}
                 </Typography>
@@ -253,48 +312,71 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
   };
 
   return (
-    <ScrollView
-    style={styles.container}
-    >
+    <ScrollView style={styles.container}>
       <BackButton onPress={() => handleGoBack()}>
         <Typography
           variant="ts19m"
-          //  colorCode={theme.black[100]}
+        //  colorCode={theme.black[100]}
         >
           Back
         </Typography>
       </BackButton>
-      <View 
-      style={styles.profileContainer}>
-        <Image
-          source={
-            eventProfile?.profile?.image ??
-            require("../../assets/joyboy-logo.png")
-          }
-          style={styles.profilePicture}
-        />
+      <View style={{ position: "relative", marginTop: -10, height: 270 }}>
+        {profile?.banner && (
+          <Image
+            source={{ uri: profile?.banner }}
+            style={{
+              width: Platform.OS != "android" ? "100%" : 250,
 
+              height: 200,
+              resizeMode: "cover",
+              marginTop: 8,
+            }}
+          />
+        )}
+
+        <View style={{ position: "relative" }}>
+          <Image
+            source={{
+              uri: profile?.picture ?? require("../../assets/joyboy-logo.png"),
+            }}
+            style={{
+              borderWidth: 2,
+              borderColor: "white",
+              height: 100,
+              width: 100,
+              resizeMode: "cover",
+              borderRadius: 50,
+              left: 12,
+              top: 0,
+              transform: [{ translateY: -50 }],
+            }}
+          />
+        </View>
+      </View>
+      <View style={styles.profileContainer}>
+        {isLoading && <ActivityIndicator></ActivityIndicator>}
         <Text
           style={styles.text}
-          // numberOfLines={1}
-          // lineBreakMode="tail"
+        // numberOfLines={1}
+        // lineBreakMode="tail"
         >
           {userQuery}
         </Text>
         <Text
           // variant="ts19m"
           style={styles.text}
-          // colorCode={theme.black[10]}
+        // colorCode={theme.black[10]}
         >
-          {eventProfile?.profile?.name}
+          {eventProfile?.profile?.name ?? profile?.name}
         </Text>
 
         <Text
           // variant="ts15r"
           style={styles.text}
-          // colorCode={theme.black[10]}
+        // colorCode={theme.black[10]}
         >
-          {eventProfile?.profile?.bio}
+          {eventProfile?.profile?.bio ?? profile?.about}
         </Text>
 
         {/* Render user details here */}
@@ -305,7 +387,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
           navigationState={{ index, routes }}
           renderScene={renderScene}
           onIndexChange={setIndex}
-          // initialLayout={{ width: layout.width }}
+        // initialLayout={{ width: layout.width }}
         />
       </View>
     </ScrollView>
@@ -324,7 +406,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     height: 350,
     color: "white",
-    padding: 4,
+    // padding: 4,
     gap: 4,
     flex: 0.9,
   },
@@ -351,7 +433,6 @@ const styles = StyleSheet.create({
     textAlign: "left",
     marginBottom: 20,
     width: Platform.OS != "android" ? "100%" : 250,
-
   },
   listContainer: {
     width: Platform.OS != "android" ? "100%" : 250,

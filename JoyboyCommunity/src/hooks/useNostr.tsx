@@ -1,4 +1,5 @@
 import {
+  Filter,
   NostrEvent,
   SimplePool,
   VerifiedEvent,
@@ -12,6 +13,7 @@ import { generateSecretKey, getPublicKey } from "nostr-tools";
 import NDK, { NDKEvent, NDKNip07Signer } from "@nostr-dev-kit/ndk";
 import { RELAYS_PROD } from "../utils/relay";
 import { uint8ArrayToHex } from "../utils/format";
+import { queryProfile } from "nostr-tools/lib/types/nip05";
 export const useNostr = () => {
   const pool = new SimplePool();
   const relays = RELAYS_PROD;
@@ -19,13 +21,13 @@ export const useNostr = () => {
   const ndk = new NDK({ signer: nip07signer });
 
   const [eventsData, setEventsData] = useState<NostrEvent[]>([]);
+  const [eventsUser, setEventsUser] = useState<NostrEvent[]>([]);
+  const [isReady, setIsReady] = useState(false);
 
   /** fix memo reload */
   const events = useMemo(() => {
     return eventsData;
   }, [eventsData]);
-  const [eventsUser, setEventsUser] = useState<NostrEvent[]>([]);
-  const [isReady, setIsReady] = useState(false);
 
   const generateKeypair = () => {
     try {
@@ -141,14 +143,68 @@ export const useNostr = () => {
     }
   };
 
+  const getEventsByQuery = async (
+    ids: string[] = ["1", "3"],
+    filter?: Filter,
+    relaysProps?: string[]
+  ) => {
+    try {
+      let events = await pool.querySync(relaysProps ?? relays, {
+        ids: ids,
+        ...filter,
+      });
+      return events;
+    } catch (e) {
+      console.log("error getEventsByQuery", e);
+    }
+  };
+
+  const getUserQuery = async (
+    pubkey: string,
+    id: string = "0",
+    isSetEvents?: boolean
+  ) => {
+    try {
+      let events = await pool.get(relays, {
+        kinds: [Number(id)],
+        authors: [pubkey],
+      });
+      return events;
+      // return await queryProfile(pubkey);
+    } catch (e) {
+      console.log("error getUserQuery", e);
+    }
+  };
+
   const getEventsNotesFromPubkey = async (
     pubkey: string,
+    kinds?:number[],
     relaysUser?: string[],
     isSetEvents?: boolean
   ) => {
     try {
       let events = await pool.querySync(relaysUser ?? relays, {
-        kinds: [1],
+        kinds: kinds ?? [1],
+        authors: [pubkey],
+      });
+      if (isSetEvents) {
+        setEventsData(events);
+      }
+      return events;
+    } catch (e) {
+      console.log("error getUser", e);
+    }
+  };
+
+  const getEventsFromPubkey = async (
+    pubkey: string,
+    relaysUser?: string[],
+    isSetEvents?: boolean,
+    kinds?: number[]
+  ) => {
+    try {
+      let events = await pool.querySync(relaysUser ?? relays, {
+        kinds: kinds ?? [1, 3],
         authors: [pubkey],
       });
       if (isSetEvents) {
@@ -220,5 +276,8 @@ export const useNostr = () => {
     getEventsNotesFromPubkey,
     sendNote,
     getPublicKeyByPk,
+    getUserQuery,
+    getEventsFromPubkey,
+    getEventsByQuery,
   };
 };

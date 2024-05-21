@@ -48,8 +48,11 @@ Tech stack:
 - [ ] Crossover with [Vault](https://github.com/keep-starknet-strange/vault) to bring Social features to the Vault application
 
 ## Architecture
+
 ### SocialPay
-#### Alice sends tokens to Bob 
+
+#### Alice sends tokens to Bob
+
 ```mermaid
 sequenceDiagram
     actor Alice
@@ -92,6 +95,7 @@ To build the project, run:
 ```bash
 npm run build
 ```
+
 </details>
 
 <details>
@@ -116,6 +120,61 @@ snforge test
 ```
 
 </details>
+
+## Mobile
+
+The Joyboy Mobile app is built with React-native & Expo.
+[Mobile repo](https://github.com/keep-starknet-strange/joyboy/blob/main/JoyboyCommunity/README)
+
+Pick an issue with the labels "mobile" to start work on React-native and contribute!
+
+### Test
+
+To test the mobile app, run:
+
+```bash
+cd JoyboyCommunity
+npm i
+npm start
+```
+Select Expo web, Android or IOS. You can scan it with Expo GO on your phone.
+
+### Screens of the mobile app
+Recent implementation PoC on React Native.
+Here is what we have on the mobile app on the first days, contributions welcome! 
+Check the issues with the "mobile" labels.
+ 
+You can see more details on the README here:
+[Mobile repo](https://github.com/keep-starknet-strange/joyboy/blob/main/JoyboyCommunity/README)
+
+Proposal for UI Mobile.
+[UI/UX proposal for video discussions](https://github.com/keep-starknet-strange/joyboy/discussions/48#discussion-6683225)
+
+[UI video discussions](https://t.me/JoyboyStarknet/206/397)
+
+Here are some work already merge and available for test:
+
+1. Home page: 
+
+[Home page onboard](../resources/screens/onboard.png)
+<img src="/resources/screens/onboard.png" alt="onboard" height="300"/>
+
+2. Create Nostr account
+
+<img src="resources/screens/create-account.png" alt="create account" height="300"/>
+
+3. Feed by default:
+
+<img src="/resources/screens/feed-default.png" alt="feed default" height="300"/>
+
+4. User feed with notes:
+
+<img src="/resources/screens/user-profile-details.png" alt="user-profile-details" height="300"/>
+
+5. My profile page: WIP
+
+<img src="/resources/screens/my-profile.png" alt="my-profile" height="300"/>
+
 
 ## Resources
 
@@ -142,6 +201,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/kateberryd"><img src="https://avatars.githubusercontent.com/u/35270183?v=4?s=100" width="100px;" alt="Catherine Jonathan"/><br /><sub><b>Catherine Jonathan</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=kateberryd" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ayushtom"><img src="https://avatars.githubusercontent.com/u/41674634?v=4?s=100" width="100px;" alt="Ayush Tomar"/><br /><sub><b>Ayush Tomar</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=ayushtom" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://mubarak23.github.io/"><img src="https://avatars.githubusercontent.com/u/7858376?v=4?s=100" width="100px;" alt="Mubarak Muhammad Aminu"/><br /><sub><b>Mubarak Muhammad Aminu</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=mubarak23" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://ugureren.net/"><img src="https://avatars.githubusercontent.com/u/86152092?v=4?s=100" width="100px;" alt="Uğur Eren"/><br /><sub><b>Uğur Eren</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=ugur-eren" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
