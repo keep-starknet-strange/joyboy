@@ -6,7 +6,7 @@ interface Props {
   contentContainerStyle?: any;
 }
 
-const ScrollableContainer = (props: Props) => {
+export const ScrollableContainer = (props: Props) => {
   return (
     <ScrollView
       contentContainerStyle={{ flexGrow: 1, ...props.contentContainerStyle }}
@@ -15,5 +15,3 @@ const ScrollableContainer = (props: Props) => {
     </ScrollView>
   );
 };
-
-export default ScrollableContainer;

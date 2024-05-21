@@ -3,7 +3,7 @@ import { useColorScheme } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Host as PortalizeProvider } from "react-native-portalize";
 import { ThemeProvider } from "styled-components/native";
-import RootScreenContainer from "../components/skeleton/RootScreenContainer";
+import { RootScreenContainer } from "../components";
 import { darkModeColors, lightModeColors } from "../tokens/colors";
 
 export const Providers: React.FC<{ children: React.ReactNode }> = ({

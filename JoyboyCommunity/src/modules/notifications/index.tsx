@@ -1,9 +1,11 @@
 import { View } from "react-native";
 import React from "react";
-import LayoutContainer from "../../components/skeleton/LayoutContainer";
-import ScrollableContainer from "../../components/skeleton/ScrollableContainer";
+import {
+  LayoutContainer,
+  ScrollableContainer,
+  Divider,
+} from "../../components";
 import { testPostData } from "../../shared/data/testData";
-import Divider from "../../components/divider/Divider";
 import { Notification } from "./Notification";
 
 export default function Notifications() {

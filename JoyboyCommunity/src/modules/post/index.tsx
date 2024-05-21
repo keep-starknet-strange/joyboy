@@ -2,9 +2,7 @@ import { View, Image, Pressable, Platform } from "react-native";
 import React, { useCallback, useState } from "react";
 import { TextInput } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
-import Typography from "../../components/typography";
-import { KeyboardAvoidingView } from "../../components/skeleton/KeyboardAvoidingView";
-import Divider from "../../components/divider/Divider";
+import { Typography, Divider, KeyboardAvoidingView } from "../../components";
 import { useNostr } from "../../hooks/useNostr";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
 

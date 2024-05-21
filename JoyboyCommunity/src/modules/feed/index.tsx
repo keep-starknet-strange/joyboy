@@ -1,9 +1,9 @@
 import { View, Text, SafeAreaView, ActivityIndicator } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
-import FloatingPostButton from "./components/FloatingPostButton";
+import FloatingPostButton from "./FloatingPostButton";
 import styled from "styled-components/native";
 import { Post } from "../../shared/components/Post";
-import Divider from "../../components/divider/Divider";
+import { Divider } from "../../components";
 import { FlatList, RefreshControl } from "react-native-gesture-handler";
 import { useNostr } from "../../hooks/useNostr";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";

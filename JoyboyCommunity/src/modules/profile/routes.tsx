@@ -1,7 +1,7 @@
 import { FlatList, View } from "react-native";
 import { Event as EventNostr } from "nostr-tools";
 import { Post } from "../../shared/components/Post";
-import Divider from "../../components/divider/Divider";
+import { Divider } from "../../components";
 import { INoteRepostParsed, IUserEvent } from "../../types";
 
 export const NotesRoute: React.FC<{

@@ -22,7 +22,7 @@ import {
 import { useNostr } from "../../hooks/useNostr";
 import { Event as EventNostr } from "nostr-tools";
 import styled, { useTheme } from "styled-components";
-import Typography from "../../components/typography";
+import { Typography } from "../../components";
 import { SceneMap, TabView } from "react-native-tab-view";
 import { NDKUser } from "@nostr-dev-kit/ndk";
 import { filterRepliesOnEvents } from "../../utils/filter";

@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useTheme } from "styled-components/native";
 import { Event as EventNostr } from "nostr-tools";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import Typography from "../../components/typography";
+import { Typography } from "../../components";
 import { useWindowDimensions } from "react-native";
 import { TabView, SceneMap } from "react-native-tab-view";
 import { useLocalstorage } from "../../hooks/useLocalstorage";

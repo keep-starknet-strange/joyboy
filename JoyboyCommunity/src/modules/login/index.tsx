@@ -8,9 +8,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
-import ScreenContainer from "../../components/skeleton/ScreenContainer";
-import { useTheme } from "styled-components/native";
-import Typography from "../../components/typography";
+import { Typography, ScreenContainer } from "../../components";
 import { useNostr } from "../../hooks/useNostr";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
 import {

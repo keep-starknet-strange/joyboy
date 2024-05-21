@@ -7,7 +7,7 @@ const Container = styled(View)`
   background-color: ${({ theme }) => theme.black[100]};
 `;
 
-const LayoutContainer = ({ title, children }) => {
+export const LayoutContainer = ({ title, children }) => {
   const insets = useSafeAreaInsets();
 
   return (
@@ -28,5 +28,3 @@ const LayoutContainer = ({ title, children }) => {
     </Container>
   );
 };
-
-export default LayoutContainer;

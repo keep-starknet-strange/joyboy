@@ -10,7 +10,7 @@ import React from "react";
 import styled from "styled-components/native";
 import { Event as EventNostr } from "nostr-tools";
 import { useNavigation } from "@react-navigation/native";
-import Typography from "../../components/typography";
+import { Typography } from "../../components";
 import { Octicons, MaterialIcons } from "@expo/vector-icons";
 import { Post as PostType, RootStackNavigationProps } from "../../types";
 

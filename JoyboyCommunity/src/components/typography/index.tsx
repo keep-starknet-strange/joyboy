@@ -11,7 +11,7 @@ interface IStyledTypographyType {
   align?: "left" | "center" | "right";
 }
 
-const StyledTypography = styled(Text)<IStyledTypographyType>`
+export const StyledTypography = styled(Text)<IStyledTypographyType>`
   ${(props) => fontNameSpace[props.variant ?? "ts17r"]};
   color: ${(props) => props.colorCode ?? "#000000"};
   text-align: ${(props) => props.align ?? "left"};
@@ -22,6 +22,9 @@ interface TypographyProps extends IStyledTypographyType {
   style?: CSSProperties;
 }
 
-export default function Typography({ children, ...props }: TypographyProps) {
+export const Typography: React.FC<TypographyProps> = ({
+  children,
+  ...props
+}) => {
   return <StyledTypography {...props}>{children}</StyledTypography>;
-}
+};
