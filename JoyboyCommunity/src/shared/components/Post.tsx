@@ -3,7 +3,6 @@ import {
   Text,
   Image,
   Pressable,
-  TouchableOpacity,
   Platform,
   StyleSheet,
 } from "react-native";
@@ -12,7 +11,8 @@ import styled from "styled-components/native";
 import { Event as EventNostr } from "nostr-tools";
 import { useNavigation } from "@react-navigation/native";
 import Typography from "../../components/typography";
-import { Octicons, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Octicons, MaterialIcons } from "@expo/vector-icons";
+import { Post as PostType, RootStackNavigationProps } from "../../types";
 
 const PostLayout = styled(View)`
   flex-direction: row;
@@ -21,26 +21,18 @@ const PostLayout = styled(View)`
 `;
 
 interface PostProps {
-  post?: {
-    content: string;
-    author: string;
-    timestamp?: number;
-    source?: string;
-    id: string;
-    created_at: string;
-    pubkey: string;
-  }; // TODO FIX and use only typed event
+  post?: PostType; // TODO FIX and use only typed event
   event?: EventNostr;
   sourceUser?: string;
   repostedEvent?: EventNostr;
 }
 
-export default function Post(props: PostProps) {
+export const Post: React.FC<PostProps> = (props) => {
   const { post, event, repostedEvent } = props;
-  const navigation = useNavigation();
+  const navigation = useNavigation<RootStackNavigationProps>();
   const handleProfilePress = (userId?: string) => {
     if (userId) {
-      navigation.navigate("UserDetailScreen", { userId });
+      navigation.navigate("UserDetail", { userId });
     }
   };
 
@@ -127,7 +119,7 @@ export default function Post(props: PostProps) {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   interactionContainer: {
