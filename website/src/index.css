@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
+@font-face {
+  font-family: "Droid Sans";
+  src: url("../public/DroidSans.ttf");
+}
 @tailwind utilities;
+
+.gradient-text {
+  background: linear-gradient(
+    93.36deg,
+    #4564a4 -4.11%,
+    #b3bfda 40.24%,
+    #ffffff 71.14%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
