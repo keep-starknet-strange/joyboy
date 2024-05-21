@@ -10,7 +10,8 @@ import {
 export type RootStackParams = {
   Home: NavigatorScreenParams<HomeStackParams>;
   CreatePost: undefined;
-  UserDetail: { userId?: string };
+  UserDetail: { userId: string };
+  NoteDetail: { noteId: string };
 
   Loading: undefined;
 
@@ -53,6 +54,15 @@ export type RootStackUserDetailNavigationProps = NativeStackNavigationProp<
 export type RootStackUserDetailScreenProps = NativeStackScreenProps<
   RootStackParams,
   "UserDetail"
+>;
+
+export type RootStackNoteDetailNavigationProps = NativeStackNavigationProp<
+  RootStackParams,
+  "NoteDetail"
+>;
+export type RootStackNoteDetailScreenProps = NativeStackScreenProps<
+  RootStackParams,
+  "NoteDetail"
 >;
 
 export type RootStackLoadingNavigationProps = NativeStackNavigationProp<

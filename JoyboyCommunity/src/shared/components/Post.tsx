@@ -45,7 +45,7 @@ export default function Post(props: PostProps) {
   };
 
   /** @TODO comment in Nostr */
-  const handleComment = () => { };
+  const handleComment = () => {};
 
   /** @TODO repost in Nostr */
   const handleRepostNote = () => {
@@ -53,7 +53,7 @@ export default function Post(props: PostProps) {
   };
 
   /** @TODO react in Nostr */
-  const handleReact = () => { };
+  const handleReact = () => {};
 
   return (
     <View>
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     gap: 8,
     flexDirection: "row",
     alignContent: "center",
-    alignSelf: "center"
+    alignSelf: "center",
   },
   icon: {
     paddingHorizontal: 4,

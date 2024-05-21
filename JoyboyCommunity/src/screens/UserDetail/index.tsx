@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   View,
   Text,
@@ -14,38 +14,37 @@ import {
 } from "react-native";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { INoteRepostParsed, IUserEvent, RootStackParamList } from "../types";
-import { useNostr } from "../hooks/useNostr";
+import {
+  INoteRepostParsed,
+  IUserEvent,
+  RootStackUserDetailScreenProps,
+} from "../../types";
+import { useNostr } from "../../hooks/useNostr";
 import { Event as EventNostr } from "nostr-tools";
 import styled, { useTheme } from "styled-components";
-import Typography from "../components/typography";
+import Typography from "../../components/typography";
 import { SceneMap, TabView } from "react-native-tab-view";
-import Post from "../shared/components/Post";
-import Divider from "../components/divider/Divider";
+import Post from "../../shared/components/Post";
+import Divider from "../../components/divider/Divider";
 import { NDKUser } from "@nostr-dev-kit/ndk";
-import { filterRepliesOnEvents } from "../utils/filter";
-type UserDetailScreenRouteProp = RouteProp<
-  RootStackParamList,
-  "UserDetailScreen"
->;
-
-type UserDetailScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  "UserDetailScreen"
->;
-
-type Props = {
-  route: UserDetailScreenRouteProp;
-  navigationProps: UserDetailScreenNavigationProp;
-  userId?: string;
-};
+import { filterRepliesOnEvents } from "../../utils/filter";
+import {
+  NotesRoute,
+  ReactionsRoute,
+  RepostsRoute,
+  RepliesRoute,
+} from "./routes";
+import styles from "./styles";
 
 /** @TODO fetch user */
-const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
+export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({
+  route,
+}) => {
+  const { userId: userQuery } = route.params;
+
   const { getEvent, getUser, getEventsNotesFromPubkey, getUserQuery } =
     useNostr();
 
-  const { userId: userQuery } = route.params;
   const [eventProfile, setEventProfile] = useState<NDKUser | undefined>();
   const [eventsTool, setEventsTool] = useState<EventNostr[] | undefined>();
   const [events, setEvents] = useState<EventNostr[] | undefined>();
@@ -75,11 +74,11 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
     if (!eventProfile && userQuery && !isLoading) {
       handleGetUserEventById();
     }
-  }, [eventProfile, userId, userQuery, isLoading]);
+  }, [eventProfile, userQuery, isLoading]);
   const handleGetUserEventById = async () => {
     try {
       console.log("handleGetEventById try get event");
-      if (isLoading || (profile || isFirstLoadDone)) {
+      if (isLoading || profile || isFirstLoadDone) {
         return;
       }
       setIsLoading(true);
@@ -96,7 +95,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
           let contentParsed = JSON.parse(userQueryReq?.content);
           let profile: IUserEvent = contentParsed;
           setProfile(profile);
-        } catch (e) { }
+        } catch (e) {}
 
         let events = await getEventsNotesFromPubkey(userQuery, [
           1, // note
@@ -129,13 +128,13 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
 
         /** TODO fix multi reply */
         // let repliesFilter = filterRepliesOnEvents(events)
-        let repliesFilter = filterRepliesOnEvents(notesAllTags)
+        let repliesFilter = filterRepliesOnEvents(notesAllTags);
         console.log("repliesFilter", repliesFilter);
         setReplies(repliesFilter);
         setReactions(reactions);
         setReposts(reposts);
 
-        let notes = notesAllTags?.filter((n) => n?.tags?.length == 0 )
+        let notes = notesAllTags?.filter((n) => n?.tags?.length == 0);
         // let notes = notesAllTags?.filter((n) => n?.tags?.length == 0 || !n?.tags?.find(e => e?.includes("e")))
         console.log("notes", notes);
         // console.log("reposts", reposts);
@@ -155,124 +154,16 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
     navigation.goBack();
   };
 
-  const NotesRoute = () => {
-    return (
-      <FlatList
-        contentContainerStyle={{
-          paddingTop: 16,
-          // paddingBottom: bottomBarHeight,
-        }}
-        data={events}
-        keyExtractor={(item) => item?.id}
-        renderItem={({ item }) => {
-          return (
-            <Post
-              //  post={item}
-              sourceUser={profile?.picture}
-              event={item}
-            />
-          );
-        }}
-        ItemSeparatorComponent={() => (
-          <View style={{ marginVertical: 18 }}>
-            <Divider />
-          </View>
-        )}
-      />
-    );
-  };
-
-
-  /** TODO fix issue multi renders replies */
-  const RepliesRoute = () => {
-    return (
-      <FlatList
-        contentContainerStyle={{
-          paddingTop: 16,
-        }}
-        data={replies}
-        // keyExtractor={(item,index) => item?.id}
-        keyExtractor={(item, index) => index?.toString()}
-        renderItem={({ item, index }) => {
-          return <Post
-            key={index}
-
-            event={item}
-            sourceUser={profile?.picture}
-          />;
-        }}
-        ItemSeparatorComponent={() => (
-          <View style={{ marginVertical: 18 }}>
-            <Divider />
-          </View>
-        )}
-      />
-    );
-  };
-
-  const RepostRoute = () => {
-    // const bottomBarHeight = useBottomTabBarHeight();
-
-    return (
-      <FlatList
-        contentContainerStyle={{
-          paddingTop: 16,
-          // paddingBottom: bottomBarHeight,
-        }}
-        data={reposts}
-        keyExtractor={(item) => item?.event?.id}
-        renderItem={({ item }) => {
-          return (
-            <Post
-              // post={item}
-              sourceUser={profile?.picture}
-              event={item?.event}
-              repostedEvent={item?.repost}
-            />
-          );
-        }}
-        ItemSeparatorComponent={() => (
-          <View style={{ marginVertical: 18 }}>
-            <Divider />
-          </View>
-        )}
-      />
-    );
-  };
-
-  const ReactionsRoute = () => {
-    // const bottomBarHeight = useBottomTabBarHeight();
-    return (
-      <FlatList
-        contentContainerStyle={{
-          paddingTop: 16,
-          // paddingBottom: bottomBarHeight,
-        }}
-        data={reactions}
-        keyExtractor={(item) => item?.id}
-        renderItem={({ item }) => {
-          return (
-            <Post
-              //  post={item}
-              sourceUser={profile?.picture}
-              event={item}
-            />
-          );
-        }}
-        ItemSeparatorComponent={() => (
-          <View style={{ marginVertical: 18 }}>
-            <Divider />
-          </View>
-        )}
-      />
-    );
-  };
-  const renderScene = SceneMap({
-    posts: NotesRoute,
-    reactions: ReactionsRoute,
-    reposts: RepostRoute,
-    replies: RepliesRoute,
-  });
+  const renderScene = useMemo(() => {
+    return SceneMap({
+      posts: () => <NotesRoute events={events} profile={profile} />,
+      reactions: () => (
+        <ReactionsRoute reactions={reactions} profile={profile} />
+      ),
+      reposts: () => <RepostsRoute reposts={reposts} profile={profile} />,
+      replies: () => <RepliesRoute replies={replies} profile={profile} />,
+    });
+  }, [profile, events, reactions, reposts, replies]);
 
   const renderTabBar = (props) => {
     return (
@@ -299,7 +190,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
                 <Typography
                   variant="ts15b"
                   align="left"
-                // colorCode={index === i ? theme.black[10] : theme.black[40]}
+                  // colorCode={index === i ? theme.black[10] : theme.black[40]}
                 >
                   {route.title}
                 </Typography>
@@ -316,7 +207,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
       <BackButton onPress={() => handleGoBack()}>
         <Typography
           variant="ts19m"
-        //  colorCode={theme.black[100]}
+          //  colorCode={theme.black[100]}
         >
           Back
         </Typography>
@@ -358,15 +249,15 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
         {isLoading && <ActivityIndicator></ActivityIndicator>}
         <Text
           style={styles.text}
-        // numberOfLines={1}
-        // lineBreakMode="tail"
+          // numberOfLines={1}
+          // lineBreakMode="tail"
         >
           {userQuery}
         </Text>
         <Text
           // variant="ts19m"
           style={styles.text}
-        // colorCode={theme.black[10]}
+          // colorCode={theme.black[10]}
         >
           {eventProfile?.profile?.name ?? profile?.name}
         </Text>
@@ -374,7 +265,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
         <Text
           // variant="ts15r"
           style={styles.text}
-        // colorCode={theme.black[10]}
+          // colorCode={theme.black[10]}
         >
           {eventProfile?.profile?.bio ?? profile?.about}
         </Text>
@@ -387,7 +278,7 @@ const UserDetailScreen: React.FC<Props> = ({ route, userId }) => {
           navigationState={{ index, routes }}
           renderScene={renderScene}
           onIndexChange={setIndex}
-        // initialLayout={{ width: layout.width }}
+          // initialLayout={{ width: layout.width }}
         />
       </View>
     </ScrollView>
@@ -400,61 +291,3 @@ const BackButton = styled(Pressable)`
   color: white;
   border-color: black;
 `;
-
-const styles = StyleSheet.create({
-  container: {
-    // flex: 1,
-    height: 350,
-    color: "white",
-    // padding: 4,
-    gap: 4,
-    flex: 0.9,
-  },
-  tabContainer: {
-    // flex: 1,
-    padding: 4,
-    gap: 4,
-    flex: 0.9,
-  },
-  profilePicture: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginBottom: 20,
-  },
-  profileContainer: {
-    paddingHorizontal: 12,
-    gap: 4,
-    padding: 8,
-  },
-  text: {
-    color: "black",
-    fontSize: 16,
-    textAlign: "left",
-    marginBottom: 20,
-    width: Platform.OS != "android" ? "100%" : 250,
-  },
-  listContainer: {
-    width: Platform.OS != "android" ? "100%" : 250,
-    paddingHorizontal: 20, // Add horizontal padding to create space between items
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  tabBar: {
-    width: Platform.OS != "android" ? "100%" : 250,
-    paddingHorizontal: 4,
-    flexDirection: "row",
-    borderBottomColor: "#e4e4e7",
-    borderBottomWidth: 1,
-  },
-  tabItem: {
-    marginHorizontal: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 4,
-    alignItems: "flex-start",
-  },
-});
-
-export default UserDetailScreen;
