@@ -13,7 +13,8 @@ import Error from "../modules/error";
 import Login from "../modules/login";
 import Notifications from "../modules/notifications";
 import CreatePost from "../modules/post";
-import UserDetail from "../screens/UserDetailScreen";
+import { UserDetail } from "../screens/UserDetail";
+import { NoteDetail } from "../screens/NoteDetail";
 
 const RootStack = createNativeStackNavigator<RootStackParams>();
 const HomeBottomTabsStack = createBottomTabNavigator<HomeStackParams>();
@@ -98,6 +99,7 @@ const RootNavigator: React.FC = () => {
             <RootStack.Screen name="Home" component={HomeBottomTabNavigator} />
             <RootStack.Screen name="CreatePost" component={CreatePost} />
             <RootStack.Screen name="UserDetail" component={UserDetail} />
+            <RootStack.Screen name="NoteDetail" component={NoteDetail} />
           </>
         );
 

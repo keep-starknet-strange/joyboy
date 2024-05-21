@@ -6,7 +6,7 @@ import { testPostData } from "../../shared/data/testData";
 import Divider from "../../components/divider/Divider";
 import { Notification } from "./Notification";
 
-export const Notifications: React.FC = () => {
+export default function Notifications() {
   return (
     <LayoutContainer title="Notifications">
       <ScrollableContainer
@@ -34,4 +34,4 @@ export const Notifications: React.FC = () => {
       </ScrollableContainer>
     </LayoutContainer>
   );
-};
+}
