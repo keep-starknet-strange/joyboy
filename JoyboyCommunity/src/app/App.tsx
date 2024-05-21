@@ -4,7 +4,7 @@ import Entypo from "@expo/vector-icons/Entypo";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import { Router } from "./Router";
-import { Providers } from "./Providers";
+import { Providers } from "./Wrapper";
 import { useNostr } from "../hooks/useNostr";
 
 // Keep the splash screen visible while we fetch resources
@@ -50,9 +50,7 @@ export default function App() {
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
       <StatusBar backgroundColor="#15141A" />
 
-      <Providers>
-        <Router />
-      </Providers>
+      <Router />
     </View>
   );
 }

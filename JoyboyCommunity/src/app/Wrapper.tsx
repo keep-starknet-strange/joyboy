@@ -5,10 +5,9 @@ import { Host as PortalizeProvider } from "react-native-portalize";
 import { ThemeProvider } from "styled-components/native";
 import { RootScreenContainer } from "../components";
 import { darkModeColors, lightModeColors } from "../tokens/colors";
+import App from "./App";
 
-export const Providers: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const Wrapper: React.FC = () => {
   const colorScheme = useColorScheme();
 
   const [theme, setTheme] = useState<
@@ -24,7 +23,9 @@ export const Providers: React.FC<{ children: React.ReactNode }> = ({
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider theme={theme}>
         <PortalizeProvider>
-          <RootScreenContainer>{children}</RootScreenContainer>
+          <RootScreenContainer>
+            <App />
+          </RootScreenContainer>
         </PortalizeProvider>
       </ThemeProvider>
     </GestureHandlerRootView>
