@@ -265,7 +265,7 @@ export default function Login() {
             style={{
               paddingVertical: 8,
               marginVertical: 8,
-              width: Platform.OS != 'android' ? '100%' : 100,
+              width: '100%',
             }}
           >
             <Typography variant="ts19m">Create an account</Typography>
@@ -305,7 +305,7 @@ export default function Login() {
                 style={{
                   paddingVertical: 8,
                   marginVertical: 8,
-                  width: Platform.OS != 'android' ? '100%' : 100,
+                  width: '100%',
                 }}
                 disabled={privateKeyImport?.length == 0}
               >

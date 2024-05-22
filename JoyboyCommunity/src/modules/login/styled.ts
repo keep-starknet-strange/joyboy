@@ -48,13 +48,13 @@ export const InputContainer = styled(View)`
   margin-vertical: 10;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 4;
+  gap: 4px;
 `;
 
 export const FormContainer = styled(View)`
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 4;
+  gap: 4px;
 `;
 
 export const Input = styled(TextInput)<{$focused?: boolean}>`
