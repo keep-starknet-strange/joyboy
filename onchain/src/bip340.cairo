@@ -1,22 +1,17 @@
 //! bip340 implementation
-//! references:
-//!   Schnorr signatures explained:
-//!   https://www.youtube.com/watch?v=wjACBRJDfxc&ab_channel=Bitcoinology
-//!   NIP-01:
-//!   https://github.com/nostr-protocol/nips/blob/master/01.md
-//!   BIP-340:
-//!   https://github.com/bitcoin/bips/blob/master/bip-0340.mediawiki
-//!  reference implementation:
-//!   https://github.com/bitcoin/bips/blob/master/bip-0340/reference.py
 
 use core::byte_array::ByteArrayTrait;
 use core::option::OptionTrait;
 use core::result::ResultTrait;
-use core::sha256::compute_sha256_byte_array;
+// TODO: uncomment once Cairo 2.7 is available
+// use core::sha256::compute_sha256_byte_array;
 use core::starknet::SyscallResultTrait;
-use core::to_byte_array::AppendFormattedToByteArray;
+use core::to_byte_array::{AppendFormattedToByteArray, FormatAsByteArray};
 use core::traits::Into;
 use starknet::{secp256k1::{Secp256k1Point}, secp256_trait::{Secp256Trait, Secp256PointTrait}};
+
+use alexandria_math::sha256::sha256;
+use joyboy::utils::{shl, shr};
 
 const TWO_POW_32: u128 = 0x100000000;
 const TWO_POW_64: u128 = 0x10000000000000000;
@@ -24,7 +19,70 @@ const TWO_POW_96: u128 = 0x1000000000000000000000000;
 
 const p: u256 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F;
 
+fn compute_sha256_byte_array(m: @ByteArray) -> [u32; 8] {
+    let mut ba = ArrayTrait::new();
+    let len = m.len();
+    let mut i = 0;
+    loop {
+        if i == len {
+            break ();
+        }
+        ba.append(m.at(i).unwrap());
+        i += 1;
+    };
+
+    let sha = sha256(ba);
+
+    let r = [
+        shl((*sha.at(0)).into(), 24_u32)
+            + shl((*sha.at(1)).into(), 16_u32)
+            + shl((*sha.at(2)).into(), 8_u32)
+            + (*sha.at(3)).into(),
+        shl((*sha.at(4)).into(), 24_u32)
+            + shl((*sha.at(5)).into(), 16_u32)
+            + shl((*sha.at(6)).into(), 8_u32)
+            + (*sha.at(7)).into(),
+        shl((*sha.at(8)).into(), 24_u32)
+            + shl((*sha.at(9)).into(), 16_u32)
+            + shl((*sha.at(10)).into(), 8_u32)
+            + (*sha.at(11)).into(),
+        shl((*sha.at(12)).into(), 24_u32)
+            + shl((*sha.at(13)).into(), 16_u32)
+            + shl((*sha.at(14)).into(), 8_u32)
+            + (*sha.at(15)).into(),
+        shl((*sha.at(16)).into(), 24_u32)
+            + shl((*sha.at(17)).into(), 16_u32)
+            + shl((*sha.at(18)).into(), 8_u32)
+            + (*sha.at(19)).into(),
+        shl((*sha.at(20)).into(), 24_u32)
+            + shl((*sha.at(21)).into(), 16_u32)
+            + shl((*sha.at(22)).into(), 8_u32)
+            + (*sha.at(23)).into(),
+        shl((*sha.at(24)).into(), 24_u32)
+            + shl((*sha.at(25)).into(), 16_u32)
+            + shl((*sha.at(26)).into(), 8_u32)
+            + (*sha.at(27)).into(),
+        shl((*sha.at(28)).into(), 24_u32)
+            + shl((*sha.at(29)).into(), 16_u32)
+            + shl((*sha.at(30)).into(), 8_u32)
+            + (*sha.at(31)).into(),
+    ];
+
+    r
+}
+
 /// Computes BIP0340/challenge tagged hash.
+///
+/// References:
+///   Schnorr signatures explained:
+///   https://www.youtube.com/watch?v=wjACBRJDfxc&ab_channel=Bitcoinology
+///   NIP-01:
+///   https://github.com/nostr-protocol/nips/blob/master/01.md
+///   BIP-340:
+///   https://github.com/bitcoin/bips/blob/master/bip-0340.mediawiki
+///   reference implementation:
+///   https://github.com/bitcoin/bips/blob/master/bip-0340/reference.py
+///
 ///
 /// # Parameters:
 /// - `rx`: `u256` - The x-coordinate of the R point from the signature.
