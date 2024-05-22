@@ -1,8 +1,9 @@
-import { createStore } from "zustand/vanilla";
-import createBoundedUseStore from "../store/createBoundedUseStore";
+import {createStore} from 'zustand/vanilla';
 
-export type Stacks = "app" | "login" | "loading";
-export type CreateWalletStackScreens = "SecretPhrase" | "Email";
+import createBoundedUseStore from '../store/createBoundedUseStore';
+
+export type Stacks = 'app' | 'login' | 'loading';
+export type CreateWalletStackScreens = 'SecretPhrase' | 'Email';
 
 type State = {
   stack: Stacks;
@@ -17,9 +18,9 @@ export interface NavigationContextProps {
 }
 
 const navigationStore = createStore<State & Action>((set, get) => ({
-  stack: "login",
+  stack: 'login',
   setStack: (newStack) => {
-    set({ stack: newStack });
+    set({stack: newStack});
   },
 }));
 

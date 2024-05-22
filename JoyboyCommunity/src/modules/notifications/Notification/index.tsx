@@ -1,7 +1,8 @@
-import { View, Text } from "react-native";
-import React from "react";
-import { AvatarImage } from "../../../components";
-import { NotificationImage, NotificationLayout } from "./styled";
+import React from 'react';
+import {Text, View} from 'react-native';
+
+import {AvatarImage} from '../../../components';
+import {NotificationImage, NotificationLayout} from './styled';
 
 export type NotificationProps = {
   post: {
@@ -13,21 +14,19 @@ export type NotificationProps = {
   };
 };
 
-export const Notification: React.FC<NotificationProps> = ({ post }) => {
+export const Notification: React.FC<NotificationProps> = ({post}) => {
   return (
     <NotificationLayout>
-      <View style={{ flex: 1 }}>
-        <AvatarImage source={require("../../../../assets/joyboy-logo.png")} />
+      <View style={{flex: 1}}>
+        <AvatarImage source={require('../../../../assets/joyboy-logo.png')} />
       </View>
 
-      <View style={{ gap: 4, flex: 9 }}>
-        <Text style={{ color: "black", fontWeight: "700" }}>
-          {post?.author}
-        </Text>
+      <View style={{gap: 4, flex: 9}}>
+        <Text style={{color: 'black', fontWeight: '700'}}>{post?.author}</Text>
 
-        <Text style={{ color: "black" }}>{post.content}</Text>
+        <Text style={{color: 'black'}}>{post.content}</Text>
 
-        {post.image && <NotificationImage source={{ uri: post.image }} />}
+        {post.image && <NotificationImage source={{uri: post.image}} />}
       </View>
     </NotificationLayout>
   );

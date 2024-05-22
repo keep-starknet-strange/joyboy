@@ -1,5 +1,5 @@
-import { Pressable, View, Image } from "react-native";
-import styled from "styled-components";
+import {Image, Pressable, View} from 'react-native';
+import styled from 'styled-components/native';
 
 export const Container = styled(View)`
   flex-direction: row;
@@ -11,7 +11,7 @@ export const Container = styled(View)`
 export const PostButton = styled(Pressable)`
   padding: 8px;
   border-radius: 8px;
-  background-color: ${(props) => props.disabled && "gray"};
+  background-color: ${(props) => props.disabled && 'gray'};
   border-color: black;
 `;
 

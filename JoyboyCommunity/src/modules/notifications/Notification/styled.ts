@@ -1,5 +1,5 @@
-import { Image, View } from "react-native";
-import styled from "styled-components";
+import {Image, View} from 'react-native';
+import styled from 'styled-components/native';
 
 export const NotificationLayout = styled(View)`
   flex-direction: row;

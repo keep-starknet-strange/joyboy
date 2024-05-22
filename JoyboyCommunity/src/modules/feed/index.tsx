@@ -1,12 +1,13 @@
-import { View, Text, SafeAreaView, ActivityIndicator } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
-import FloatingPostButton from "./FloatingPostButton";
-import styled from "styled-components/native";
-import { Post } from "../../shared/components/Post";
-import { Divider } from "../../components";
-import { FlatList, RefreshControl } from "react-native-gesture-handler";
-import { useNostr } from "../../hooks/useNostr";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
+import React, {useCallback, useEffect, useState} from 'react';
+import {ActivityIndicator, SafeAreaView, View} from 'react-native';
+import {FlatList, RefreshControl} from 'react-native-gesture-handler';
+import styled from 'styled-components/native';
+
+import {Divider} from '../../components';
+import {useNostr} from '../../hooks/useNostr';
+import {Post} from '../../shared/components/Post';
+import FloatingPostButton from './FloatingPostButton';
 
 const FixedPostButton = styled(View)`
   position: absolute;
@@ -18,8 +19,7 @@ export default function Feed() {
   const bottomBarHeight = useBottomTabBarHeight();
   const [loading, setLoading] = useState(false);
   const [isReady, setIsReady] = useState(true);
-  const { getEvents, setEvents, events, getEventsNotes, eventsData } =
-    useNostr();
+  const {getEvents, setEvents, events, getEventsNotes, eventsData} = useNostr();
 
   const [eventsDataFeed, setEventsData] = useState(events ?? []);
 
@@ -40,7 +40,7 @@ export default function Feed() {
     setIsReady(false);
     setLoading(true);
     const events = await getEventsNotes(true);
-    console.log("events", events);
+    console.log('events', events);
     setEvents(events);
     setEventsData(events);
     setLoading(false);
@@ -52,19 +52,19 @@ export default function Feed() {
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ paddingTop: 12, paddingBottom: 18 }}>
+    <SafeAreaView style={{flex: 1}}>
+      <View style={{paddingTop: 12, paddingBottom: 18}}>
         <FlatList
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
-          ListHeaderComponent={() => <View style={{ width: 18 }} />}
-          ItemSeparatorComponent={() => <View style={{ width: 18 }} />}
+          ListHeaderComponent={() => <View style={{width: 18}} />}
+          ItemSeparatorComponent={() => <View style={{width: 18}} />}
           renderItem={() => {
             return (
               <View
                 style={{
-                  backgroundColor: "#e4e4e7",
+                  backgroundColor: '#e4e4e7',
                   height: 64,
                   width: 64,
                   borderRadius: 32,
@@ -84,7 +84,7 @@ export default function Feed() {
         }}
         data={eventsDataFeed}
         keyExtractor={(item) => item?.id}
-        renderItem={({ item }) => {
+        renderItem={({item}) => {
           return (
             <Post
               // post={item}
@@ -93,13 +93,11 @@ export default function Feed() {
           );
         }}
         ItemSeparatorComponent={() => (
-          <View style={{ marginVertical: 18 }}>
+          <View style={{marginVertical: 18}}>
             <Divider />
           </View>
         )}
-        refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={handeGetData} />
-        }
+        refreshControl={<RefreshControl refreshing={loading} onRefresh={handeGetData} />}
       />
 
       <FixedPostButton>

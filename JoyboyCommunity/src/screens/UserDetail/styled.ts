@@ -1,11 +1,5 @@
-import {
-  Image,
-  View,
-  Text as RNText,
-  TouchableOpacity,
-  Pressable,
-} from "react-native";
-import styled from "styled-components";
+import {Image, Pressable, Text as RNText, TouchableOpacity, View} from 'react-native';
+import styled from 'styled-components/native';
 
 export const BackButton = styled(Pressable)`
   border-radius: 8px;

@@ -1,23 +1,15 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { View, Image, ScrollView, ActivityIndicator } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import {
-  INoteRepostParsed,
-  IUserEvent,
-  RootStackUserDetailScreenProps,
-} from "../../types";
-import { useNostr } from "../../hooks/useNostr";
-import { Event as EventNostr } from "nostr-tools";
-import { Typography } from "../../components";
-import { SceneMap, TabView } from "react-native-tab-view";
-import { NDKUser } from "@nostr-dev-kit/ndk";
-import { filterRepliesOnEvents } from "../../utils/filter";
-import {
-  NotesRoute,
-  ReactionsRoute,
-  RepostsRoute,
-  RepliesRoute,
-} from "./routes";
+import {NDKUser} from '@nostr-dev-kit/ndk';
+import {useNavigation} from '@react-navigation/native';
+import {Event as EventNostr} from 'nostr-tools';
+import React, {useEffect, useMemo, useState} from 'react';
+import {ActivityIndicator, Image, ScrollView, View} from 'react-native';
+import {SceneMap, TabView} from 'react-native-tab-view';
+
+import {Typography} from '../../components';
+import {useNostr} from '../../hooks/useNostr';
+import {INoteRepostParsed, IUserEvent, RootStackUserDetailScreenProps} from '../../types';
+import {filterRepliesOnEvents} from '../../utils/filter';
+import {NotesRoute, ReactionsRoute, RepliesRoute, RepostsRoute} from './routes';
 import {
   BackButton,
   Container,
@@ -26,16 +18,13 @@ import {
   TabContainer,
   TabItem,
   Text,
-} from "./styled";
+} from './styled';
 
 /** @TODO fetch user */
-export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({
-  route,
-}) => {
-  const { userId: userQuery } = route.params;
+export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({route}) => {
+  const {userId: userQuery} = route.params;
 
-  const { getEvent, getUser, getEventsNotesFromPubkey, getUserQuery } =
-    useNostr();
+  const {getEvent, getUser, getEventsNotesFromPubkey, getUserQuery} = useNostr();
 
   const [eventProfile, setEventProfile] = useState<NDKUser | undefined>();
   const [eventsTool, setEventsTool] = useState<EventNostr[] | undefined>();
@@ -45,9 +34,7 @@ export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({
   const [reactions, setReactions] = useState<EventNostr[] | undefined>();
   const [imgUser, setImageUser] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState<boolean | undefined>(false);
-  const [isFirstLoadDone, setIsFirstLoadDone] = useState<boolean | undefined>(
-    false
-  );
+  const [isFirstLoadDone, setIsFirstLoadDone] = useState<boolean | undefined>(false);
   const [profile, setProfile] = useState<IUserEvent | undefined>();
   const navigation = useNavigation();
   const [index, setIndex] = React.useState(0);
@@ -55,10 +42,10 @@ export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({
   // const layout = useWindowDimensions();
   // const theme = useTheme();
   const [routes] = React.useState([
-    { key: "posts", title: "Posts" },
-    { key: "replies", title: "Replies" },
-    { key: "reactions", title: "Reactions" },
-    { key: "reposts", title: "Reposts" },
+    {key: 'posts', title: 'Posts'},
+    {key: 'replies', title: 'Replies'},
+    {key: 'reactions', title: 'Reactions'},
+    {key: 'reposts', title: 'Reposts'},
   ]);
 
   // Fetch user based on userId pubkey
@@ -69,14 +56,14 @@ export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({
   }, [eventProfile, userQuery, isLoading]);
   const handleGetUserEventById = async () => {
     try {
-      console.log("handleGetEventById try get event");
+      console.log('handleGetEventById try get event');
       if (isLoading || profile || isFirstLoadDone) {
         return;
       }
       setIsLoading(true);
 
       if (userQuery) {
-        let userQueryReq = await getUserQuery(userQuery);
+        const userQueryReq = await getUserQuery(userQuery);
         /** NIP-05 Metadata is in string
          * kind:0
          * Parsed content to UserMetadata
@@ -84,28 +71,28 @@ export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({
 
         try {
           /** Metadata can be undefined */
-          let contentParsed = JSON.parse(userQueryReq?.content);
-          let profile: IUserEvent = contentParsed;
+          const contentParsed = JSON.parse(userQueryReq?.content);
+          const profile: IUserEvent = contentParsed;
           setProfile(profile);
         } catch (e) {}
 
-        let events = await getEventsNotesFromPubkey(userQuery, [
+        const events = await getEventsNotesFromPubkey(userQuery, [
           1, // note
           //  + replies if NIP-10 with tags p and e t
           6, // repost
           7, // reactions
         ]);
 
-        let notesAllTags = events?.filter((e) => e?.kind == 1);
-        console.log("notesAllTags", notesAllTags);
+        const notesAllTags = events?.filter((e) => e?.kind == 1);
+        console.log('notesAllTags', notesAllTags);
 
-        let reposts: INoteRepostParsed[] = [];
+        const reposts: INoteRepostParsed[] = [];
 
         /** Parse content note as anoter event to repost */
         events?.filter((e) => {
           if (e?.kind == 6) {
-            let parsedNote = JSON.parse(e?.content);
-            let repost = {
+            const parsedNote = JSON.parse(e?.content);
+            const repost = {
               event: e,
               repost: parsedNote,
             };
@@ -116,26 +103,26 @@ export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({
             };
           }
         });
-        let reactions = events?.filter((e) => e?.kind == 7);
+        const reactions = events?.filter((e) => e?.kind == 7);
 
         /** TODO fix multi reply */
         // let repliesFilter = filterRepliesOnEvents(events)
-        let repliesFilter = filterRepliesOnEvents(notesAllTags);
-        console.log("repliesFilter", repliesFilter);
+        const repliesFilter = filterRepliesOnEvents(notesAllTags);
+        console.log('repliesFilter', repliesFilter);
         setReplies(repliesFilter);
         setReactions(reactions);
         setReposts(reposts);
 
-        let notes = notesAllTags?.filter((n) => n?.tags?.length == 0);
+        const notes = notesAllTags?.filter((n) => n?.tags?.length == 0);
         // let notes = notesAllTags?.filter((n) => n?.tags?.length == 0 || !n?.tags?.find(e => e?.includes("e")))
-        console.log("notes", notes);
+        console.log('notes', notes);
         // console.log("reposts", reposts);
         // console.log("reactions", reactions);
         setEvents(notes);
         return events;
       }
     } catch (e) {
-      console.log("Error handle event user by id", e);
+      console.log('Error handle event user by id', e);
     } finally {
       setIsLoading(false);
       setIsFirstLoadDone(true);
@@ -149,9 +136,7 @@ export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({
   const renderScene = useMemo(() => {
     return SceneMap({
       posts: () => <NotesRoute events={events} profile={profile} />,
-      reactions: () => (
-        <ReactionsRoute reactions={reactions} profile={profile} />
-      ),
+      reactions: () => <ReactionsRoute reactions={reactions} profile={profile} />,
       reposts: () => <RepostsRoute reposts={reposts} profile={profile} />,
       replies: () => <RepliesRoute replies={replies} profile={profile} />,
     });
@@ -161,8 +146,8 @@ export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({
     return (
       <View
         style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
+          flexDirection: 'row',
+          justifyContent: 'space-between',
         }}
       >
         <TabBar>
@@ -170,12 +155,10 @@ export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({
             return (
               <TabItem
                 key={i}
-                style={[
-                  {
-                    borderBottomWidth: 1,
-                    // borderBottomColor: index === i ? theme.black[10] : "transparent",
-                  },
-                ]}
+                style={{
+                  borderBottomWidth: 1,
+                  // borderBottomColor: index === i ? theme.black[10] : "transparent",
+                }}
                 onPress={() => setIndex(i)}
               >
                 <Typography
@@ -204,36 +187,35 @@ export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({
         </Typography>
       </BackButton>
 
-      <View style={{ position: "relative", marginTop: -10, height: 270 }}>
+      <View style={{position: 'relative', marginTop: -10, height: 270}}>
         {profile?.banner && (
           <Image
-            source={{ uri: profile?.banner }}
+            source={{uri: profile?.banner}}
             style={{
-              width: "100%",
+              width: '100%',
 
               height: 200,
-              resizeMode: "cover",
+              resizeMode: 'cover',
               marginTop: 8,
             }}
           />
         )}
 
-        <View style={{ position: "relative" }}>
+        <View style={{position: 'relative'}}>
           <Image
             source={{
-              uri:
-                profile?.picture ?? require("../../../assets/joyboy-logo.png"),
+              uri: profile?.picture ?? require('../../../assets/joyboy-logo.png'),
             }}
             style={{
               borderWidth: 2,
-              borderColor: "white",
+              borderColor: 'white',
               height: 100,
               width: 100,
-              resizeMode: "cover",
+              resizeMode: 'cover',
               borderRadius: 50,
               left: 12,
               top: 0,
-              transform: [{ translateY: -50 }],
+              transform: [{translateY: -50}],
             }}
           />
         </View>
@@ -267,7 +249,7 @@ export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({
       <TabContainer>
         <TabView
           renderTabBar={renderTabBar}
-          navigationState={{ index, routes }}
+          navigationState={{index, routes}}
           renderScene={renderScene}
           onIndexChange={setIndex}
           // initialLayout={{ width: layout.width }}

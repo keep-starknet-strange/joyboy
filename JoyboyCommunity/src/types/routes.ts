@@ -1,17 +1,11 @@
-import {
-  CompositeScreenProps,
-  NavigatorScreenParams,
-} from "@react-navigation/native";
-import {
-  NativeStackNavigationProp,
-  NativeStackScreenProps,
-} from "@react-navigation/native-stack";
+import {CompositeScreenProps, NavigatorScreenParams} from '@react-navigation/native';
+import {NativeStackNavigationProp, NativeStackScreenProps} from '@react-navigation/native-stack';
 
 export type RootStackParams = {
   Home: NavigatorScreenParams<HomeStackParams>;
   CreatePost: undefined;
-  UserDetail: { userId: string };
-  NoteDetail: { noteId: string };
+  UserDetail: {userId: string};
+  NoteDetail: {noteId: string};
 
   Loading: undefined;
 
@@ -25,68 +19,46 @@ export type HomeStackParams = {
 };
 
 // Root Stack
-export type RootStackNavigationProps =
-  NativeStackNavigationProp<RootStackParams>;
+export type RootStackNavigationProps = NativeStackNavigationProp<RootStackParams>;
 export type RootStackScreenProps = NativeStackScreenProps<RootStackParams>;
 
-export type RootStackHomeNavigationProps = NativeStackNavigationProp<
-  RootStackParams,
-  "Home"
->;
-export type RootStackHomeScreenProps = NativeStackScreenProps<
-  RootStackParams,
-  "Home"
->;
+export type RootStackHomeNavigationProps = NativeStackNavigationProp<RootStackParams, 'Home'>;
+export type RootStackHomeScreenProps = NativeStackScreenProps<RootStackParams, 'Home'>;
 
 export type RootStackCreatePostNavigationProps = NativeStackNavigationProp<
   RootStackParams,
-  "CreatePost"
+  'CreatePost'
 >;
-export type RootStackCreatePostScreenProps = NativeStackScreenProps<
-  RootStackParams,
-  "CreatePost"
->;
+export type RootStackCreatePostScreenProps = NativeStackScreenProps<RootStackParams, 'CreatePost'>;
 
 export type RootStackUserDetailNavigationProps = NativeStackNavigationProp<
   RootStackParams,
-  "UserDetail"
+  'UserDetail'
 >;
-export type RootStackUserDetailScreenProps = NativeStackScreenProps<
-  RootStackParams,
-  "UserDetail"
->;
+export type RootStackUserDetailScreenProps = NativeStackScreenProps<RootStackParams, 'UserDetail'>;
 
 export type RootStackNoteDetailNavigationProps = NativeStackNavigationProp<
   RootStackParams,
-  "NoteDetail"
+  'NoteDetail'
 >;
-export type RootStackNoteDetailScreenProps = NativeStackScreenProps<
-  RootStackParams,
-  "NoteDetail"
->;
+export type RootStackNoteDetailScreenProps = NativeStackScreenProps<RootStackParams, 'NoteDetail'>;
 
-export type RootStackLoadingNavigationProps = NativeStackNavigationProp<
-  RootStackParams,
-  "Loading"
->;
-export type RootStackLoadingScreenProps = NativeStackScreenProps<
-  RootStackParams,
-  "Loading"
->;
+export type RootStackLoadingNavigationProps = NativeStackNavigationProp<RootStackParams, 'Loading'>;
+export type RootStackLoadingScreenProps = NativeStackScreenProps<RootStackParams, 'Loading'>;
 
 // Home Stack
 export type HomeNavigationProp = NativeStackNavigationProp<HomeStackParams>;
 
 export type FeedScreenProps = CompositeScreenProps<
-  NativeStackScreenProps<HomeStackParams, "Feed">,
+  NativeStackScreenProps<HomeStackParams, 'Feed'>,
   NativeStackScreenProps<RootStackParams>
 >;
 export type ProfileScreenProps = CompositeScreenProps<
-  NativeStackScreenProps<HomeStackParams, "Profile">,
+  NativeStackScreenProps<HomeStackParams, 'Profile'>,
   NativeStackScreenProps<RootStackParams>
 >;
 
 export type NotificationsScreenProps = CompositeScreenProps<
-  NativeStackScreenProps<HomeStackParams, "Notifications">,
+  NativeStackScreenProps<HomeStackParams, 'Notifications'>,
   NativeStackScreenProps<RootStackParams>
 >;

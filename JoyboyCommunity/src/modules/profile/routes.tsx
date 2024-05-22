@@ -1,13 +1,14 @@
-import { FlatList, View } from "react-native";
-import { Event as EventNostr } from "nostr-tools";
-import { Post } from "../../shared/components/Post";
-import { Divider } from "../../components";
-import { INoteRepostParsed, IUserEvent } from "../../types";
+import {Event as EventNostr} from 'nostr-tools';
+import {FlatList, View} from 'react-native';
+
+import {Divider} from '../../components';
+import {Post} from '../../shared/components/Post';
+import {INoteRepostParsed, IUserEvent} from '../../types';
 
 export const NotesRoute: React.FC<{
   events: EventNostr[];
   profile: IUserEvent;
-}> = ({ events, profile }) => {
+}> = ({events, profile}) => {
   return (
     <FlatList
       contentContainerStyle={{
@@ -16,7 +17,7 @@ export const NotesRoute: React.FC<{
       }}
       data={events}
       keyExtractor={(item) => item?.id}
-      renderItem={({ item }) => {
+      renderItem={({item}) => {
         return (
           <Post
             //  post={item}
@@ -26,7 +27,7 @@ export const NotesRoute: React.FC<{
         );
       }}
       ItemSeparatorComponent={() => (
-        <View style={{ marginVertical: 18 }}>
+        <View style={{marginVertical: 18}}>
           <Divider />
         </View>
       )}
@@ -38,7 +39,7 @@ export const NotesRoute: React.FC<{
 export const RepliesRoute: React.FC<{
   replies: EventNostr[];
   profile: IUserEvent;
-}> = ({ replies, profile }) => {
+}> = ({replies, profile}) => {
   return (
     <FlatList
       contentContainerStyle={{
@@ -47,11 +48,11 @@ export const RepliesRoute: React.FC<{
       data={replies}
       // keyExtractor={(item) => item?.id}
       keyExtractor={(item, index) => index?.toString()}
-      renderItem={({ item }) => {
+      renderItem={({item}) => {
         return <Post event={item} sourceUser={profile?.picture} />;
       }}
       ItemSeparatorComponent={() => (
-        <View style={{ marginVertical: 18 }}>
+        <View style={{marginVertical: 18}}>
           <Divider />
         </View>
       )}
@@ -62,7 +63,7 @@ export const RepliesRoute: React.FC<{
 export const RepostsRoute: React.FC<{
   reposts: INoteRepostParsed[];
   profile: IUserEvent;
-}> = ({ reposts, profile }) => {
+}> = ({reposts, profile}) => {
   // const bottomBarHeight = useBottomTabBarHeight();
 
   return (
@@ -73,7 +74,7 @@ export const RepostsRoute: React.FC<{
       }}
       data={reposts}
       keyExtractor={(item) => item?.event?.id}
-      renderItem={({ item }) => {
+      renderItem={({item}) => {
         return (
           <Post
             // post={item}
@@ -84,7 +85,7 @@ export const RepostsRoute: React.FC<{
         );
       }}
       ItemSeparatorComponent={() => (
-        <View style={{ marginVertical: 18 }}>
+        <View style={{marginVertical: 18}}>
           <Divider />
         </View>
       )}
@@ -95,7 +96,7 @@ export const RepostsRoute: React.FC<{
 export const ReactionsRoute: React.FC<{
   reactions: EventNostr[];
   profile: IUserEvent;
-}> = ({ reactions, profile }) => {
+}> = ({reactions, profile}) => {
   // const bottomBarHeight = useBottomTabBarHeight();
   return (
     <FlatList
@@ -105,7 +106,7 @@ export const ReactionsRoute: React.FC<{
       }}
       data={reactions}
       keyExtractor={(item) => item?.id}
-      renderItem={({ item }) => {
+      renderItem={({item}) => {
         return (
           <Post
             //  post={item}
@@ -115,7 +116,7 @@ export const ReactionsRoute: React.FC<{
         );
       }}
       ItemSeparatorComponent={() => (
-        <View style={{ marginVertical: 18 }}>
+        <View style={{marginVertical: 18}}>
           <Divider />
         </View>
       )}

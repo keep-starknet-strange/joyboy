@@ -1,24 +1,23 @@
+import NDK, {NDKNip07Signer} from '@nostr-dev-kit/ndk';
 import {
   Filter,
+  finalizeEvent,
   NostrEvent,
+  parseReferences,
   SimplePool,
   VerifiedEvent,
-  finalizeEvent,
-  nip05,
-  parseReferences,
   verifyEvent,
-} from "nostr-tools";
-import { useMemo, useState } from "react";
-import { generateSecretKey, getPublicKey } from "nostr-tools";
-import NDK, { NDKEvent, NDKNip07Signer } from "@nostr-dev-kit/ndk";
-import { RELAYS_PROD } from "../utils/relay";
-import { uint8ArrayToHex } from "../utils/format";
-import { queryProfile } from "nostr-tools/lib/types/nip05";
+} from 'nostr-tools';
+import {generateSecretKey, getPublicKey} from 'nostr-tools';
+import {useMemo, useState} from 'react';
+
+import {uint8ArrayToHex} from '../utils/format';
+import {RELAYS_PROD} from '../utils/relay';
 export const useNostr = () => {
   const pool = new SimplePool();
   const relays = RELAYS_PROD;
   const nip07signer = new NDKNip07Signer();
-  const ndk = new NDK({ signer: nip07signer });
+  const ndk = new NDK({signer: nip07signer});
 
   const [eventsData, setEventsData] = useState<NostrEvent[]>([]);
   const [eventsUser, setEventsUser] = useState<NostrEvent[]>([]);
@@ -31,27 +30,27 @@ export const useNostr = () => {
 
   const generateKeypair = () => {
     try {
-      let sk = generateSecretKey();
-      let skString = uint8ArrayToHex(sk);
-      console.log("skString", skString);
+      const sk = generateSecretKey();
+      const skString = uint8ArrayToHex(sk);
+      console.log('skString', skString);
 
-      let pk = getPublicKey(sk);
+      const pk = getPublicKey(sk);
       return {
-        pk: pk,
-        sk: sk,
-        skString: skString,
+        pk,
+        sk,
+        skString,
       };
     } catch (e) {
-      console.log("Error generateKeypair", e);
+      console.log('Error generateKeypair', e);
     }
   };
 
   const getPublicKeyByPk = (sk: Uint8Array) => {
     try {
-      let pk = getPublicKey(sk);
+      const pk = getPublicKey(sk);
       return pk;
     } catch (e) {
-      console.log("Error getPublicKeyByPk", e);
+      console.log('Error getPublicKeyByPk', e);
 
       return undefined;
     }
@@ -62,7 +61,7 @@ export const useNostr = () => {
   };
 
   const getEvents = async (isSetEvents?: boolean) => {
-    let events = await pool.querySync(relays, { kinds: [0, 1] }, {});
+    const events = await pool.querySync(relays, {kinds: [0, 1]}, {});
     if (isSetEvents) {
       setEventsData(events);
     }
@@ -70,7 +69,7 @@ export const useNostr = () => {
   };
 
   const getEventsNotes = async (isSetEvents?: boolean) => {
-    let eventsNotes = await pool.querySync(relays, { kinds: [1] });
+    const eventsNotes = await pool.querySync(relays, {kinds: [1]});
     if (isSetEvents) {
       setEventsData(eventsNotes);
     }
@@ -78,7 +77,7 @@ export const useNostr = () => {
   };
 
   const getEventsUser = async (isSetEvents?: boolean) => {
-    let eventsUser = await pool.querySync(relays, { kinds: [0] });
+    const eventsUser = await pool.querySync(relays, {kinds: [0]});
     if (isSetEvents) {
       setEventsUser(eventsUser);
     }
@@ -87,14 +86,14 @@ export const useNostr = () => {
 
   const parsingEventContent = (event?: NostrEvent) => {
     try {
-      let references = parseReferences(event);
-      let simpleAugmentedContent = event.content;
+      const references = parseReferences(event);
+      const simpleAugmentedContent = event.content;
 
       let profilesCache;
       let eventsCache;
       for (let i = 0; i < references.length; i++) {
-        let { text, profile, event, address } = references[i];
-        let augmentedReference = profile ? (
+        const {text, profile, event, address} = references[i];
+        const augmentedReference = profile ? (
           <strong>@${profilesCache[profile.pubkey].name}</strong>
         ) : event ? (
           <em>${eventsCache[event.id].content.slice(0, 5)}</em>
@@ -114,17 +113,17 @@ export const useNostr = () => {
   /** @TODO finish Give NIP05 parsed content */
   const parsingNip05EventContent = (event?: NostrEvent) => {
     try {
-      let references = parseReferences(event);
-      let simpleAugmentedContent = event.content;
+      const references = parseReferences(event);
+      const simpleAugmentedContent = event.content;
       let profilesCache;
-      let stringify = JSON.parse(simpleAugmentedContent);
+      const stringify = JSON.parse(simpleAugmentedContent);
       return stringify;
     } catch (e) {}
   };
 
   const getEvent = async (id: string) => {
     try {
-      let event = await pool.get(relays, {
+      const event = await pool.get(relays, {
         ids: [id],
       });
       return event;
@@ -133,57 +132,53 @@ export const useNostr = () => {
 
   const getUser = async (pubkey: string, isSetEvents?: boolean) => {
     try {
-      let user = await ndk.getUser({
-        pubkey: pubkey,
+      const user = await ndk.getUser({
+        pubkey,
       });
       // return await queryProfile(id);
       return user;
     } catch (e) {
-      console.log("error getUser", e);
+      console.log('error getUser', e);
     }
   };
 
   const getEventsByQuery = async (
-    ids: string[] = ["1", "3"],
+    ids: string[] = ['1', '3'],
     filter?: Filter,
-    relaysProps?: string[]
+    relaysProps?: string[],
   ) => {
     try {
-      let events = await pool.querySync(relaysProps ?? relays, {
-        ids: ids,
+      const events = await pool.querySync(relaysProps ?? relays, {
+        ids,
         ...filter,
       });
       return events;
     } catch (e) {
-      console.log("error getEventsByQuery", e);
+      console.log('error getEventsByQuery', e);
     }
   };
 
-  const getUserQuery = async (
-    pubkey: string,
-    id: string = "0",
-    isSetEvents?: boolean
-  ) => {
+  const getUserQuery = async (pubkey: string, id = '0', isSetEvents?: boolean) => {
     try {
-      let events = await pool.get(relays, {
+      const events = await pool.get(relays, {
         kinds: [Number(id)],
         authors: [pubkey],
       });
       return events;
       // return await queryProfile(pubkey);
     } catch (e) {
-      console.log("error getUserQuery", e);
+      console.log('error getUserQuery', e);
     }
   };
 
   const getEventsNotesFromPubkey = async (
     pubkey: string,
-    kinds?:number[],
+    kinds?: number[],
     relaysUser?: string[],
-    isSetEvents?: boolean
+    isSetEvents?: boolean,
   ) => {
     try {
-      let events = await pool.querySync(relaysUser ?? relays, {
+      const events = await pool.querySync(relaysUser ?? relays, {
         kinds: kinds ?? [1],
         authors: [pubkey],
       });
@@ -192,7 +187,7 @@ export const useNostr = () => {
       }
       return events;
     } catch (e) {
-      console.log("error getUser", e);
+      console.log('error getUser', e);
     }
   };
 
@@ -200,10 +195,10 @@ export const useNostr = () => {
     pubkey: string,
     relaysUser?: string[],
     isSetEvents?: boolean,
-    kinds?: number[]
+    kinds?: number[],
   ) => {
     try {
-      let events = await pool.querySync(relaysUser ?? relays, {
+      const events = await pool.querySync(relaysUser ?? relays, {
         kinds: kinds ?? [1, 3],
         authors: [pubkey],
       });
@@ -212,31 +207,31 @@ export const useNostr = () => {
       }
       return events;
     } catch (e) {
-      console.log("error getUser", e);
+      console.log('error getUser', e);
     }
   };
 
   const sendNote = (
     sk: Uint8Array,
     content: string,
-    tags?: string[][]
+    tags?: string[][],
   ): {
     event?: VerifiedEvent;
     isValid?: boolean;
   } => {
     try {
-      let event = finalizeEvent(
+      const event = finalizeEvent(
         {
           kind: 1,
           created_at: Math.floor(Date.now() / 1000),
           tags: tags ?? [],
-          content: content,
+          content,
         },
-        sk
+        sk,
       );
-      console.log("event", event);
+      console.log('event', event);
 
-      let isGood = verifyEvent(event);
+      const isGood = verifyEvent(event);
 
       if (isGood) {
         return {
@@ -250,7 +245,7 @@ export const useNostr = () => {
         };
       }
     } catch (e) {
-      console.log("issue sendNote", e);
+      console.log('issue sendNote', e);
       return {
         event: undefined,
         isValid: false,

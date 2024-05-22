@@ -1,5 +1,5 @@
-import { Text, View } from "react-native";
-import styled from "styled-components";
+import {Text, View} from 'react-native';
+import styled from 'styled-components/native';
 
 export const Card = styled(View)`
   /* backgroundColor: "#022b3a"; */
