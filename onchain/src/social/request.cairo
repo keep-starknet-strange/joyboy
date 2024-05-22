@@ -1,16 +1,16 @@
-use core::clone::Clone;
-use core::option::OptionTrait;
-use core::traits::Destruct;
-use core::serde::Serde;
-use core::byte_array::ByteArrayTrait;
-use core::traits::TryInto;
 use core::traits::Into;
+use core::array::ArrayTrait;
+use core::to_byte_array::FormatAsByteArray;
 use core::fmt::Display;
-
-use starknet::{secp256k1::{Secp256k1Point}, secp256_trait::{Secp256Trait, Secp256PointTrait}};
+use core::sha256::{compute_sha256_byte_array};
 use joyboy::bip340;
 
-#[derive(Copy, Drop, Debug)]
+
+const TWO_POW_32: u128 = 0x100000000;
+const TWO_POW_64: u128 = 0x10000000000000000;
+const TWO_POW_96: u128 = 0x1000000000000000000000000;
+
+#[derive(Copy, Drop, Debug, Hash)]
 pub struct Signature {
     r: u256,
     s: u256
@@ -18,7 +18,6 @@ pub struct Signature {
 
 #[derive(Drop)]
 pub struct SocialRequest<C, +Display<C>> {
-    id: u256,
     pubkey: u256,
     created_at: u64,
     kind: u16,
@@ -37,10 +36,25 @@ impl U256IntoByteArray of Into<u256, ByteArray> {
 }
 
 pub fn verify<C, +Display<C>>(request: @SocialRequest<C>) -> bool {
-    let m: u256 = *request.id;
-    let valid: bool = bip340::verify(*request.pubkey, *request.sig.r, *request.sig.s, m.into());
+    let id = @format!(
+        "[0,\"{}\",{},{},{},\"{}\"]",
+        request.pubkey.format_as_byte_array(16),
+        request.created_at,
+        request.kind,
+        request.tags,
+        request.content
+    );
 
-    valid
+    let [x0, x1, x2, x3, x4, x5, x6, x7] = compute_sha256_byte_array(id);
+
+    let m: ByteArray = u256 {
+        high: x0.into() * TWO_POW_96 + x1.into() * TWO_POW_64 + x2.into() * TWO_POW_32 + x3.into(),
+        low: x4.into() * TWO_POW_96 + x5.into() * TWO_POW_64 + x6.into() * TWO_POW_32 + x7.into(),
+    }
+        .into();
+
+    let is_valid: bool = bip340::verify(*request.pubkey, *request.sig.r, *request.sig.s, m);
+    is_valid
 }
 
 #[cfg(test)]
@@ -52,17 +66,51 @@ mod tests {
     #[test]
     fn test_wip() {
         let r: SocialRequest<ByteArray> = SocialRequest {
-            id: 0xe915e9770219cd6c5ade1847d592d60e5d93a2340be41849724b8a385e90a157,
-            pubkey: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5,
-            created_at: 1716282455,
-            kind: 1,
-            tags: "",
-            content: "123",
+            pubkey: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256,
+            created_at: 1716380267_u64,
+            kind: 1_u16,
+            tags: "[]",
+            content: "abc",
             sig: Signature {
-                r: 0x5d60e3186e9e398509573ceba5700185d188198342c3d9003349cf120bc64461,
-                s: 0xe8eede47c034f8bc1ad5c18daec0fb36abc8c750acd47977d1c39d1637a8e1b3
+                r: 0xd6891392ca5384da7b3e471380c9927a66a71c3cf9f3e6cd4d69813fd5258274_u256,
+                s: 0x39cd462e61f6e4a7a677989da9fe6625c45979f6e23513bd8eaa81aa5c38c693_u256
             }
         };
+
+        assert!(verify(@r));
+    }
+
+    #[test]
+    fn test_wip1() {
+        let r: SocialRequest<ByteArray> = SocialRequest {
+            pubkey: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256,
+            created_at: 1716387881_u64,
+            kind: 1_u16,
+            tags: "[]",
+            content: "123",
+            sig: Signature {
+                r: 0x15a429bed0fc7501354a40bc754c8e281a97c35eab87867d4be481693bae2f89_u256,
+                s: 0xdd6e0b9a4aad519179a6ff9ccc9485c04fd3e2c247001ea95c6909e19010d11d_u256
+            }
+        };
+
+        assert!(verify(@r));
+    }
+
+    #[test]
+    fn test_wip3() {
+        let r: SocialRequest<ByteArray> = SocialRequest {
+            pubkey: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256,
+            created_at: 1716388090_u64,
+            kind: 1_u16,
+            tags: "[]",
+            content: "joyboy",
+            sig: Signature {
+                r: 0x966a0cc963ad6c3f6ae73e58e6d56840ec03cb7c092fb929f779394b02331b4a_u256,
+                s: 0xa1075eb8e5d7b767a8c1141de639bb7ce5b0b01e196fae507fe12e08a3d9b998_u256
+            }
+        };
+
         assert!(verify(@r));
     }
 }
