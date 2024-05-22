@@ -1,4 +1,4 @@
-import {Button, Input} from '../../components';
+import {Button, Input, TextButton} from '../../components';
 import {Auth} from '../../modules/auth';
 
 export const Login: React.FC = () => {
@@ -9,6 +9,8 @@ export const Login: React.FC = () => {
       <Button block disabled>
         Login
       </Button>
+
+      <TextButton>Create account</TextButton>
     </Auth>
   );
 };
