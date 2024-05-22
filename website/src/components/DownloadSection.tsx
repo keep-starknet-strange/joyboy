@@ -19,7 +19,7 @@ const DownloadSection: React.FC = () => {
           Download Joyboy
         </h2>
         <p className="text-[24px] leading-7 mb-[47px] w-[623px]">
-          Joyboy is available on Andriod, iOS, iPadOS and macOS. It's free and
+          Joyboy is available on Android, iOS, iPadOS and macOS. It's free and
           open source.
         </p>
         <div className="flex items-center gap-x-5">
