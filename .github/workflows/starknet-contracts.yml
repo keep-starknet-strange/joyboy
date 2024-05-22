@@ -26,5 +26,5 @@ jobs:
       - uses: software-mansion/setup-scarb@v1
       - uses: foundry-rs/setup-snfoundry@v3
       - name: Run cairo tests
-        run: scarb test
+        run: snforge test
         working-directory: onchain
