@@ -23,8 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: software-mansion/setup-scarb@v1
-      - name: Run cairo tests
       - uses: foundry-rs/setup-snfoundry@v3
+      - name: Run cairo tests
         run: scarb test
         working-directory: onchain
