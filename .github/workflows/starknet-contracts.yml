@@ -15,7 +15,6 @@ jobs:
         working-directory: onchain
       - name: Check cairo format
         run: scarb fmt --check
-        run: scarb test
         working-directory: onchain
       - name: Build cairo programs
         run: scarb build
