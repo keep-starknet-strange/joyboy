@@ -9,7 +9,7 @@ use core::array::SpanTrait;
 
 use super::bech32;
 
-#[derive(Drop, Debug)]
+#[derive(Drop, Debug, Serde)]
 pub struct NostrProfile {
     pub public_key: u256,
     pub relays: Array<ByteArray> //UTF-8 encoded

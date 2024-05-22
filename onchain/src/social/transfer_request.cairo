@@ -36,7 +36,7 @@ impl DisplayTransferRequest of Display<TransferRequest> {
 mod tests {
     use core::option::OptionTrait;
     use super::{TransferRequest};
-    use super::nostr_profile::NostrProfile;
+    use super::super::profile::NostrProfile;
 
     #[test]
     fn test_fmt() {
