@@ -25,5 +25,6 @@ jobs:
       - uses: actions/checkout@v3
       - uses: software-mansion/setup-scarb@v1
       - name: Run cairo tests
+      - uses: foundry-rs/setup-snfoundry@v3
         run: scarb test
         working-directory: onchain
