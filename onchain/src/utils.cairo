@@ -1,4 +1,5 @@
 use core::integer::{u32_wide_mul, u8_wide_mul, BoundedInt};
+use alexandria_math::sha256::sha256;
 
 trait Pow2<V, N> {
     #[inline]
@@ -100,4 +101,56 @@ pub fn shl<
     x: V, n: N
 ) -> V {
     (WideMul::wide_mul(x, Pow2::pow2(n)) & BoundedInt::<V>::max().into()).try_into().unwrap()
+}
+
+pub fn compute_sha256_byte_array(m: @ByteArray) -> [u32; 8] {
+    let mut ba = ArrayTrait::new();
+    let len = m.len();
+    let mut i = 0;
+    loop {
+        if i == len {
+            break ();
+        }
+        ba.append(m.at(i).unwrap());
+        i += 1;
+    };
+
+    let sha = sha256(ba);
+
+    let r = [
+        shl((*sha.at(0)).into(), 24_u32)
+            + shl((*sha.at(1)).into(), 16_u32)
+            + shl((*sha.at(2)).into(), 8_u32)
+            + (*sha.at(3)).into(),
+        shl((*sha.at(4)).into(), 24_u32)
+            + shl((*sha.at(5)).into(), 16_u32)
+            + shl((*sha.at(6)).into(), 8_u32)
+            + (*sha.at(7)).into(),
+        shl((*sha.at(8)).into(), 24_u32)
+            + shl((*sha.at(9)).into(), 16_u32)
+            + shl((*sha.at(10)).into(), 8_u32)
+            + (*sha.at(11)).into(),
+        shl((*sha.at(12)).into(), 24_u32)
+            + shl((*sha.at(13)).into(), 16_u32)
+            + shl((*sha.at(14)).into(), 8_u32)
+            + (*sha.at(15)).into(),
+        shl((*sha.at(16)).into(), 24_u32)
+            + shl((*sha.at(17)).into(), 16_u32)
+            + shl((*sha.at(18)).into(), 8_u32)
+            + (*sha.at(19)).into(),
+        shl((*sha.at(20)).into(), 24_u32)
+            + shl((*sha.at(21)).into(), 16_u32)
+            + shl((*sha.at(22)).into(), 8_u32)
+            + (*sha.at(23)).into(),
+        shl((*sha.at(24)).into(), 24_u32)
+            + shl((*sha.at(25)).into(), 16_u32)
+            + shl((*sha.at(26)).into(), 8_u32)
+            + (*sha.at(27)).into(),
+        shl((*sha.at(28)).into(), 24_u32)
+            + shl((*sha.at(29)).into(), 16_u32)
+            + shl((*sha.at(30)).into(), 8_u32)
+            + (*sha.at(31)).into(),
+    ];
+
+    r
 }
