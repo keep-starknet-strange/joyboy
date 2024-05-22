@@ -23,6 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: uses: software-mansion/setup-scarb@v1
       - uses: foundry-rs/setup-snfoundry@v3
       - name: Run cairo tests
         run: snforge test
