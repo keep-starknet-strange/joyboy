@@ -55,7 +55,7 @@ mod tests {
     use super::{Signature, SocialRequest, verify};
 
     #[test]
-    fn verify_event() {
+    fn verify_01() {
         let r: SocialRequest<ByteArray> = SocialRequest {
             pubkey: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256,
             created_at: 1716380267_u64,
@@ -72,16 +72,16 @@ mod tests {
     }
 
     #[test]
-    fn verify_event1() {
+    fn verify_02() {
         let r: SocialRequest<ByteArray> = SocialRequest {
             pubkey: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256,
-            created_at: 1716387881_u64,
+            created_at: 1716403778_u64,
             kind: 1_u16,
             tags: "[]",
-            content: "123",
+            content: "nprofile1qys8wumn8ghj7un9d3shjtn2daukymme9e3k7mtdw4hxjare9e3k7mgqyzzxqw6wxqyyqqmv4rxgz2l0ej8zgrqfkuupycuatnwcannad6ayqx7zdcy send 1 USDC to nprofile1qqs2sa3zk4a49umxg4lgvlsaenrqaf33ejkffd78f2cgy4xy38h393s2w22mm",
             sig: Signature {
-                r: 0x15a429bed0fc7501354a40bc754c8e281a97c35eab87867d4be481693bae2f89_u256,
-                s: 0xdd6e0b9a4aad519179a6ff9ccc9485c04fd3e2c247001ea95c6909e19010d11d_u256
+                r: 0x4fda18c929f820f7f93f310f4fa9a8f2efcdd544539f4ce24fe2daf4f68d0b2d_u256,
+                s: 0x279537893013f5849a716ac48e89ab4f8ce94871986326494c7311fc956639c3_u256
             }
         };
 
@@ -89,16 +89,16 @@ mod tests {
     }
 
     #[test]
-    fn verify_event2() {
+    fn verify_03() {
         let r: SocialRequest<ByteArray> = SocialRequest {
-            pubkey: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256,
-            created_at: 1716388090_u64,
+            pubkey: 0xcbddbb8b79e395d6458b49aa315b74fcc26d4d8d722e0a6421b4e04a612fc51c_u256,
+            created_at: 1716285235_u64,
             kind: 1_u16,
-            tags: "[]",
+            tags: "[[\"e\",\"5c83da77af1dec6d7289834998ad7aafbd9e2191396d75ec3cc27f5a77226f36\"]]",
             content: "joyboy",
             sig: Signature {
-                r: 0x966a0cc963ad6c3f6ae73e58e6d56840ec03cb7c092fb929f779394b02331b4a_u256,
-                s: 0xa1075eb8e5d7b767a8c1141de639bb7ce5b0b01e196fae507fe12e08a3d9b998_u256
+                r: 0x206e086fe298bf0733b0b22316721636ae7d8ce025c76baf83b8a31efaec8821_u256,
+                s: 0x494452ba56fd465a0d69baa1ff4af9efcb1d0af8f107473ce33877d7a1034a8e_u256
             }
         };
 
