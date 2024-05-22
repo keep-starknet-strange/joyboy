@@ -1,6 +1,7 @@
 export {Avatar, AvatarImage} from './avatar';
 export {Button} from './button';
 export {Divider} from './divider';
+export {Input} from './input';
 export {PostPage} from './note/PostPage';
 export {CreateNote} from './profile/CreateNote';
 export {EditProfile} from './profile/EditProfile';
