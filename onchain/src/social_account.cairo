@@ -1,4 +1,3 @@
-
 use starknet::{ContractAddress, get_caller_address, get_contract_address, contract_address_const};
 
 #[starknet::interface]
@@ -85,5 +84,4 @@ mod tests {
         assert!(public_key == 45, "Public key is not the same");
     }
 }
-
 
