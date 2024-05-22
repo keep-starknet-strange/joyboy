@@ -18,8 +18,10 @@ export default StyleSheet.create({
   input: {
     flex: 1,
     height: '100%',
-    color: '#14142C',
     paddingHorizontal: 24,
+    color: '#14142C',
+    fontSize: 15,
+    fontWeight: '600',
   },
   inputWithLeft: {
     paddingLeft: 12,

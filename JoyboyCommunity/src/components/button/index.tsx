@@ -15,13 +15,15 @@ export const Button: React.FC<ButtonProps> = ({
   right,
   block,
   children,
+  disabled,
   style: styleProp,
   ...pressableProps
 }) => {
-  const containerStyle = [styles.container, block && styles.block];
+  const containerStyle = [styles.container, block && styles.block, disabled && styles.disabled];
 
   return (
     <Pressable
+      disabled={disabled}
       style={
         typeof styleProp === 'function'
           ? (state) => [...containerStyle, styleProp(state)]
@@ -30,7 +32,7 @@ export const Button: React.FC<ButtonProps> = ({
       {...pressableProps}
     >
       {left}
-      <Typography style={styles.text}>{children}</Typography>
+      <Typography style={[styles.text, disabled && styles.disabledText]}>{children}</Typography>
       {right}
     </Pressable>
   );

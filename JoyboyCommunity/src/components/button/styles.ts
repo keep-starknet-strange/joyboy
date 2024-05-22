@@ -13,10 +13,17 @@ export default StyleSheet.create({
   block: {
     width: '100%',
   },
+  disabled: {
+    backgroundColor: 'rgba(12, 12, 79, 0.1)',
+  },
+
   text: {
     color: '#fff',
     fontSize: 15,
-    fontWeight: 600,
+    fontWeight: '600',
     textAlign: 'center',
+  },
+  disabledText: {
+    color: 'rgba(20, 20, 44, 0.5)',
   },
 });
