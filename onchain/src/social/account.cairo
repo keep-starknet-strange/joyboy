@@ -68,8 +68,7 @@ pub mod SocialAccount {
         fn get_public_key(self: @ContractState) -> u256 {
             self.public_key.read()
         }
-        fn handle_transfer_request(ref self: ContractState, request: SocialRequest) {
-            // TODO: implement handle transfer logic
+        fn handle_transfer_request(ref self: ContractState, request: SocialRequest) {// TODO: implement handle transfer logic
         }
     }
 }
