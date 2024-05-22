@@ -1,12 +1,7 @@
-import {
-  Text as RNText,
-  Image,
-  TextInput,
-  View,
-  Pressable,
-} from "react-native";
-import styled from "styled-components";
-import { ScreenContainer, Typography } from "../../components";
+import {Image, Pressable, Text as RNText, TextInput, View} from 'react-native';
+import styled from 'styled-components/native';
+
+import {ScreenContainer} from '../../components';
 
 export const ImportButton = styled(Pressable)`
   padding: 8px 24px;
@@ -62,7 +57,7 @@ export const FormContainer = styled(View)`
   gap: 4;
 `;
 
-export const Input = styled(TextInput)<{ $focused?: boolean }>`
+export const Input = styled(TextInput)<{$focused?: boolean}>`
   min-height: 40px;
   border-color: #ccc;
   border-width: 1px;
@@ -82,7 +77,7 @@ export const Input = styled(TextInput)<{ $focused?: boolean }>`
   elevation: 2;
   margin-vertical: 4px;
 
-  ${({ $focused }) => $focused && `border-color: #007AFF;`}
+  ${({$focused}) => $focused && `border-color: #007AFF;`}
 `;
 
 export const Text = styled(RNText)`

@@ -1,5 +1,5 @@
-import { Image, TouchableOpacity, View } from "react-native";
-import styled from "styled-components";
+import {Image, TouchableOpacity, View} from 'react-native';
+import styled from 'styled-components/native';
 
 export const TabBarContainer = styled(View)`
   flex-direction: row;

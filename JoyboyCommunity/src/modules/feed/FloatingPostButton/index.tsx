@@ -1,9 +1,10 @@
-import { View, Text, Pressable } from "react-native";
-import React from "react";
-import styled from "styled-components/native";
-import { Feather } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import { RootStackNavigationProps } from "../../../types";
+import {Feather} from '@expo/vector-icons';
+import {useNavigation} from '@react-navigation/native';
+import React from 'react';
+import {Pressable} from 'react-native';
+import styled from 'styled-components/native';
+
+import {RootStackNavigationProps} from '../../../types';
 
 const CircleButton = styled(Pressable)`
   width: 56px;
@@ -19,7 +20,7 @@ export default function FloatingPostButton() {
   const navigation = useNavigation<RootStackNavigationProps>();
 
   const handleNavigation = () => {
-    navigation.push("CreatePost");
+    navigation.push('CreatePost');
   };
 
   return (

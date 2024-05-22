@@ -1,17 +1,10 @@
 // src/screens/FeedScreen.js
 
-import { Avatar } from "../avatar";
-import {
-  Card,
-  AuthorContainer,
-  Author,
-  Timestamp,
-  ContentBox,
-  Content,
-} from "./styled";
+import {Avatar} from '../avatar';
+import {Author, AuthorContainer, Card, Content, ContentBox, Timestamp} from './styled';
 
-export const PostPage: React.FC<{ post: any }> = ({ post }) => {
-  const { content, author, timestamp, source, pubkey } = post;
+export const PostPage: React.FC<{post: any}> = ({post}) => {
+  const {content, author, timestamp, source, pubkey} = post;
 
   return (
     <Card>

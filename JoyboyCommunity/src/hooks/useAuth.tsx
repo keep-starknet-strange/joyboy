@@ -1,4 +1,4 @@
-import useNavigationStore from "./useNavigationContext";
+import useNavigationStore from './useNavigationContext';
 
 type AuthResponse = {
   login: () => void;
@@ -9,14 +9,14 @@ const useAuth = (): AuthResponse => {
   const setStack = useNavigationStore((state) => state.setStack);
 
   const login = async (): Promise<void> => {
-    setStack("app");
+    setStack('app');
   };
 
   const logout = async () => {
-    setStack("login");
+    setStack('login');
   };
 
-  return { login, logout };
+  return {login, logout};
 };
 
 export default useAuth;

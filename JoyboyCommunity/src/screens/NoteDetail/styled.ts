@@ -1,5 +1,5 @@
-import { View, Text as RNText, Image } from "react-native";
-import styled from "styled-components/native";
+import {Image, Text as RNText, View} from 'react-native';
+import styled from 'styled-components/native';
 
 export const Container = styled(View)`
   flex: 1;

@@ -1,20 +1,20 @@
-import { useMemo } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useTheme } from "styled-components/native";
-import { Ionicons, Octicons } from "@expo/vector-icons";
-import useNavigationStore from "../hooks/useNavigationContext";
-import { HomeStackParams, RootStackParams } from "../types";
+import {Ionicons, Octicons} from '@expo/vector-icons';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {useMemo} from 'react';
+import {useTheme} from 'styled-components/native';
 
-import Profile from "../modules/profile";
-import Feed from "../modules/feed";
-import Error from "../modules/error";
-import Login from "../modules/login";
-import Notifications from "../modules/notifications";
-import CreatePost from "../modules/post";
-import { UserDetail } from "../screens/UserDetail";
-import { NoteDetail } from "../screens/NoteDetail";
+import useNavigationStore from '../hooks/useNavigationContext';
+import Error from '../modules/error';
+import Feed from '../modules/feed';
+import Login from '../modules/login';
+import Notifications from '../modules/notifications';
+import CreatePost from '../modules/post';
+import Profile from '../modules/profile';
+import {NoteDetail} from '../screens/NoteDetail';
+import {UserDetail} from '../screens/UserDetail';
+import {HomeStackParams, RootStackParams} from '../types';
 
 const RootStack = createNativeStackNavigator<RootStackParams>();
 const HomeBottomTabsStack = createBottomTabNavigator<HomeStackParams>();
@@ -32,7 +32,7 @@ const HomeBottomTabNavigator: React.FC = () => {
         tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor: theme.black[100],
-          borderTopColor: "#E4E4E7",
+          borderTopColor: '#E4E4E7',
           borderTopWidth: 1,
         },
       }}
@@ -41,14 +41,10 @@ const HomeBottomTabNavigator: React.FC = () => {
         name="Feed"
         component={Feed}
         options={{
-          tabBarActiveTintColor: "white",
-          tabBarInactiveTintColor: "grey",
-          tabBarIcon: ({ focused }) => (
-            <Ionicons
-              name={focused ? "home" : "home-outline"}
-              size={24}
-              color="black"
-            />
+          tabBarActiveTintColor: 'white',
+          tabBarInactiveTintColor: 'grey',
+          tabBarIcon: ({focused}) => (
+            <Ionicons name={focused ? 'home' : 'home-outline'} size={24} color="black" />
           ),
         }}
       />
@@ -56,14 +52,10 @@ const HomeBottomTabNavigator: React.FC = () => {
         name="Profile"
         component={Profile}
         options={{
-          tabBarActiveTintColor: "white",
-          tabBarInactiveTintColor: "grey",
-          tabBarIcon: ({ focused }) => (
-            <Octicons
-              name={focused ? "person-fill" : "person"}
-              size={24}
-              color="black"
-            />
+          tabBarActiveTintColor: 'white',
+          tabBarInactiveTintColor: 'grey',
+          tabBarIcon: ({focused}) => (
+            <Octicons name={focused ? 'person-fill' : 'person'} size={24} color="black" />
           ),
         }}
       />
@@ -72,14 +64,10 @@ const HomeBottomTabNavigator: React.FC = () => {
         name="Notifications"
         component={Notifications}
         options={{
-          tabBarActiveTintColor: "white",
-          tabBarInactiveTintColor: "grey",
-          tabBarIcon: ({ focused }) => (
-            <Octicons
-              name={focused ? "bell-fill" : "bell"}
-              size={24}
-              color="black"
-            />
+          tabBarActiveTintColor: 'white',
+          tabBarInactiveTintColor: 'grey',
+          tabBarIcon: ({focused}) => (
+            <Octicons name={focused ? 'bell-fill' : 'bell'} size={24} color="black" />
           ),
         }}
       />
@@ -93,7 +81,7 @@ const RootNavigator: React.FC = () => {
 
   const currentStack = useMemo((): React.ReactNode => {
     switch (stack) {
-      case "app":
+      case 'app':
         return (
           <>
             <RootStack.Screen name="Home" component={HomeBottomTabNavigator} />
@@ -103,14 +91,14 @@ const RootNavigator: React.FC = () => {
           </>
         );
 
-      case "loading":
+      case 'loading':
         return (
           <>
             <RootStack.Screen name="Loading" component={Error} />
           </>
         );
 
-      case "login":
+      case 'login':
         return (
           <>
             <RootStack.Screen name="Login" component={Login} />

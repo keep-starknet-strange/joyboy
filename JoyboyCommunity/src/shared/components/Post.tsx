@@ -1,11 +1,12 @@
-import { View, Text, Image, Pressable } from "react-native";
-import React from "react";
-import styled from "styled-components/native";
-import { Event as EventNostr } from "nostr-tools";
-import { useNavigation } from "@react-navigation/native";
-import { Typography } from "../../components";
-import { Octicons, MaterialIcons } from "@expo/vector-icons";
-import { Post as PostType, RootStackNavigationProps } from "../../types";
+import {MaterialIcons, Octicons} from '@expo/vector-icons';
+import {useNavigation} from '@react-navigation/native';
+import {Event as EventNostr} from 'nostr-tools';
+import React from 'react';
+import {Image, Pressable, Text, View} from 'react-native';
+import styled from 'styled-components/native';
+
+import {Typography} from '../../components';
+import {Post as PostType, RootStackNavigationProps} from '../../types';
 
 const PostLayout = styled(View)`
   flex-direction: row;
@@ -35,11 +36,11 @@ interface PostProps {
 }
 
 export const Post: React.FC<PostProps> = (props) => {
-  const { post, event, repostedEvent } = props;
+  const {post, event, repostedEvent} = props;
   const navigation = useNavigation<RootStackNavigationProps>();
   const handleProfilePress = (userId?: string) => {
     if (userId) {
-      navigation.navigate("UserDetail", { userId });
+      navigation.navigate('UserDetail', {userId});
     }
   };
 
@@ -48,7 +49,7 @@ export const Post: React.FC<PostProps> = (props) => {
 
   /** @TODO repost in Nostr */
   const handleRepostNote = () => {
-    alert("Handle repost");
+    alert('Handle repost');
   };
 
   /** @TODO react in Nostr */
@@ -63,30 +64,26 @@ export const Post: React.FC<PostProps> = (props) => {
       )}
       {/* TODO different rendering base on kind =1,6,7 and tags for kind = 1 */}
       <PostLayout>
-        <View style={{ flex: 0.1 }}>
+        <View style={{flex: 0.1}}>
           <Pressable onPress={() => handleProfilePress(event?.pubkey)}>
             <Image
-              source={
-                props?.sourceUser ?? require("../../../assets/joyboy-logo.png")
-              }
-              style={{ width: 44, height: 44 }}
+              source={props?.sourceUser ?? require('../../../assets/joyboy-logo.png')}
+              style={{width: 44, height: 44}}
             />
           </Pressable>
         </View>
 
-        <View style={{ gap: 4, flex: 0.9 }}>
-          <Text style={{ color: "black", fontWeight: "700" }}>
-            {event?.pubkey}
-          </Text>
-          <Text style={{ color: "black" }}>
+        <View style={{gap: 4, flex: 0.9}}>
+          <Text style={{color: 'black', fontWeight: '700'}}>{event?.pubkey}</Text>
+          <Text style={{color: 'black'}}>
             {repostedEvent?.content ? repostedEvent?.content : event?.content}
           </Text>
 
           {post?.source && (
             <Image
-              source={{ uri: post.source }}
+              source={{uri: post.source}}
               style={{
-                width: "100%",
+                width: '100%',
 
                 height: 200,
                 borderRadius: 8,
@@ -102,20 +99,8 @@ export const Post: React.FC<PostProps> = (props) => {
       </PostLayout>
 
       <InteractionContainer>
-        <Icon
-          as={Octicons}
-          name="comment"
-          size={24}
-          color="black"
-          onPress={handleComment}
-        />
-        <Icon
-          as={Octicons}
-          name="share"
-          size={24}
-          color="black"
-          onPress={handleRepostNote}
-        />
+        <Icon as={Octicons} name="comment" size={24} color="black" onPress={handleComment} />
+        <Icon as={Octicons} name="share" size={24} color="black" onPress={handleRepostNote} />
 
         <Icon
           as={MaterialIcons}

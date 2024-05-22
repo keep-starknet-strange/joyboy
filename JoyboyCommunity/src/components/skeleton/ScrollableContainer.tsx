@@ -1,5 +1,5 @@
-import React from "react";
-import { ScrollView } from "react-native";
+import React from 'react';
+import {ScrollView} from 'react-native';
 
 interface Props {
   children: React.ReactNode;
@@ -8,9 +8,7 @@ interface Props {
 
 export const ScrollableContainer = (props: Props) => {
   return (
-    <ScrollView
-      contentContainerStyle={{ flexGrow: 1, ...props.contentContainerStyle }}
-    >
+    <ScrollView contentContainerStyle={{flexGrow: 1, ...props.contentContainerStyle}}>
       {props.children}
     </ScrollView>
   );

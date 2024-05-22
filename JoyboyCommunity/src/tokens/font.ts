@@ -1,10 +1,10 @@
-import { css } from "styled-components";
+import {css} from 'styled-components/native';
 
 const textStyleMixin = (
   size: number,
   letterSpacing: number,
   bold?: number,
-  lineHeight?: number
+  lineHeight?: number,
 ) => {
   return css`
     font-size: ${size}px;

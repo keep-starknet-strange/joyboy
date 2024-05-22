@@ -1,63 +1,56 @@
-import { View, Platform } from "react-native";
-import React, { useEffect, useState } from "react";
-import useAuth from "../../hooks/useAuth";
-import { Typography } from "../../components";
-import { useNostr } from "../../hooks/useNostr";
-import { useLocalstorage } from "../../hooks/useLocalstorage";
+import React, {useEffect, useState} from 'react';
+import {Platform, View} from 'react-native';
+
+import {Typography} from '../../components';
+import useAuth from '../../hooks/useAuth';
+import {useLocalstorage} from '../../hooks/useLocalstorage';
+import {useNostr} from '../../hooks/useNostr';
+import {utf8StringToUint8Array} from '../../utils/format';
 import {
   generatePassword,
   getCredentialsWithBiometry,
   isBiometrySupported,
   saveCredentialsWithBiometry,
-} from "../../utils/keychain";
-import { utf8StringToUint8Array } from "../../utils/format";
+} from '../../utils/keychain';
 import {
+  Container,
   CreateAccountButton,
   ImportButton,
-  LoginButton,
-  SkipButton,
-  Container,
-  Logo,
-  InputContainer,
   Input,
+  InputContainer,
+  LoginButton,
+  Logo,
+  SkipButton,
   Text,
-} from "./styled";
+} from './styled';
 
 enum LoginStep {
-  HOME = "HOME",
-  IMPORT = "IMPORT",
-  CREATE_ACCOUNT = "CREATE_ACCOUNT",
-  ACCOUNT_CREATED = "ACCOUNT_CREATED",
-  EXPORTED_ACCOUNT = "EXPORTED_ACCOUNT",
+  HOME = 'HOME',
+  IMPORT = 'IMPORT',
+  CREATE_ACCOUNT = 'CREATE_ACCOUNT',
+  ACCOUNT_CREATED = 'ACCOUNT_CREATED',
+  EXPORTED_ACCOUNT = 'EXPORTED_ACCOUNT',
 }
 
 export default function Login() {
-  const { login } = useAuth();
+  const {login} = useAuth();
 
   const [step, setStep] = useState<LoginStep>(LoginStep.HOME);
-  const [bypassBiometric, setBiometrics] = useState<boolean>(
-    Platform.OS == "web" ? true : false
-  ); // DEV MODE in web to bypass biometric connection
+  const [bypassBiometric, setBiometrics] = useState<boolean>(Platform.OS == 'web' ? true : false); // DEV MODE in web to bypass biometric connection
   const [isSkipAvailable, setIsSkipAvailable] = useState<boolean>(true); // skip button available if possible to read data only without be connected
   const [isConnected, setIsConnected] = useState<boolean>(false); // skip button available if possible to read data only without be connected
   const [username, setUsername] = useState<string | undefined>();
   const [password, setPassword] = useState<string | undefined>();
   const [publicKey, setPublicKey] = useState<string | undefined>();
-  const [privateKeyImport, setImportPrivateKey] = useState<
-    string | undefined
-  >();
+  const [privateKeyImport, setImportPrivateKey] = useState<string | undefined>();
   const [privateKey, setPrivateKey] = useState<Uint8Array | undefined>();
-  const [privateKeyReadable, setPrivateKeyReadable] = useState<
-    string | undefined
-  >();
+  const [privateKeyReadable, setPrivateKeyReadable] = useState<string | undefined>();
 
-  let isImportDisabled: boolean =
-    !password ||
-    !privateKeyImport ||
-    (password?.length == 0 && privateKeyImport?.length == 0)
+  const isImportDisabled: boolean =
+    !password || !privateKeyImport || (password?.length == 0 && privateKeyImport?.length == 0)
       ? true
       : false;
-  const { generateKeypair, getPublicKeyByPk } = useNostr();
+  const {generateKeypair, getPublicKeyByPk} = useNostr();
   const {
     encryptAndStorePrivateKey,
     storePublicKey,
@@ -69,10 +62,10 @@ export default function Login() {
   useEffect(() => {
     const isConnectedUser = async () => {
       try {
-        let publicKeyConnected = await retrievePublicKey();
+        const publicKeyConnected = await retrievePublicKey();
 
         if (!publicKeyConnected) {
-          alert("Please login");
+          alert('Please login');
           return;
         } else {
           setIsConnected(true);
@@ -90,11 +83,11 @@ export default function Login() {
    */
   const handleCreateAccount = async () => {
     if (username?.length == 0 || !username) {
-      alert("Enter username to login");
+      alert('Enter username to login');
       return;
     }
     if (password?.length == 0 || !password) {
-      alert("Enter password");
+      alert('Enter password');
       return;
     }
     const biometrySupported = await isBiometrySupported();
@@ -102,12 +95,12 @@ export default function Login() {
     if (biometrySupported || bypassBiometric) {
       // Save credentials with biometric protection
       await saveCredentialsWithBiometry(username, password);
-      let credentialsSaved = await generatePassword(username, password);
+      const credentialsSaved = await generatePassword(username, password);
       // Retrieve credentials with biometric authentication
       const credentials = await getCredentialsWithBiometry();
       if (credentials) {
         /**Generate keypair */
-        let { pk, sk, skString } = generateKeypair();
+        const {pk, sk, skString} = generateKeypair();
 
         setPublicKey(pk);
         setPrivateKey(sk);
@@ -115,39 +108,27 @@ export default function Login() {
         setPrivateKeyReadable(skString);
 
         /** Save pk in localstorage */
-        let encryptedPk = await encryptAndStorePrivateKey(
-          sk,
-          credentials?.password,
-          skString
-        );
-        let storedPk = await storePublicKey(pk);
+        const encryptedPk = await encryptAndStorePrivateKey(sk, credentials?.password, skString);
+        const storedPk = await storePublicKey(pk);
       } else if (bypassBiometric) {
         /** @TODO comment web mode */
         /**Generate keypair */
-        let { pk, sk, skString } = generateKeypair();
+        const {pk, sk, skString} = generateKeypair();
         setPublicKey(pk);
         setPrivateKey(sk);
         setPrivateKeyReadable(skString);
         /** Save pk in localstorage */
         await storePublicKey(pk);
-        let encryptedPk = await encryptAndStorePrivateKey(
-          sk,
-          password,
-          skString
-        );
+        const encryptedPk = await encryptAndStorePrivateKey(sk, password, skString);
 
         if (encryptedPk) {
           setStep(LoginStep.ACCOUNT_CREATED);
         }
-        alert(
-          JSON.stringify(
-            "Biometric authentication failed or credentials not found."
-          )
-        );
+        alert(JSON.stringify('Biometric authentication failed or credentials not found.'));
       }
     } else {
-      console.log("Biometry not supported on this device.");
-      alert("Biometry not supported on this device.");
+      console.log('Biometry not supported on this device.');
+      alert('Biometry not supported on this device.');
     }
   };
 
@@ -158,11 +139,11 @@ export default function Login() {
    */
   const handleImportPrivateKey = async () => {
     if (privateKeyImport?.length == 0) {
-      alert("Enter a key to import");
+      alert('Enter a key to import');
       return;
     }
     if (password?.length == 0) {
-      alert("Enter a password");
+      alert('Enter a password');
       return;
     }
     const biometrySupported = await isBiometrySupported();
@@ -171,21 +152,21 @@ export default function Login() {
     if (biometrySupported || bypassBiometric) {
       // Save credentials with biometric protection
       await saveCredentialsWithBiometry(username, password);
-      let credentialsSaved = await generatePassword(username, password);
+      const credentialsSaved = await generatePassword(username, password);
       // Retrieve credentials with biometric authentication
       const credentials = await getCredentialsWithBiometry();
       if (credentials) {
         /** @TODO comment web mode */
         // let keypairImport = await base64ToUint8Array(privateKeyImport);
-        let keypairImport = await utf8StringToUint8Array(privateKeyImport);
-        let publicKey = getPublicKeyByPk(keypairImport);
+        const keypairImport = await utf8StringToUint8Array(privateKeyImport);
+        const publicKey = getPublicKeyByPk(keypairImport);
         setPublicKey(publicKey);
 
         /** Save pk in localstorage */
-        let encryptedPk = await encryptAndStorePrivateKey(
+        const encryptedPk = await encryptAndStorePrivateKey(
           keypairImport,
           password,
-          privateKeyImport
+          privateKeyImport,
         );
 
         if (privateKeyImport && keypairImport) {
@@ -198,14 +179,14 @@ export default function Login() {
       } else if (bypassBiometric) {
         /** @TODO comment web mode */
         // let keypairImport = await base64ToUint8Array(privateKeyImport);
-        let keypairImport = await utf8StringToUint8Array(privateKeyImport);
-        let publicKey = getPublicKeyByPk(keypairImport);
+        const keypairImport = await utf8StringToUint8Array(privateKeyImport);
+        const publicKey = getPublicKeyByPk(keypairImport);
         setPublicKey(publicKey);
         /** Save pk in localstorage */
-        let encryptedPk = await encryptAndStorePrivateKey(
+        const encryptedPk = await encryptAndStorePrivateKey(
           keypairImport,
           password,
-          privateKeyImport
+          privateKeyImport,
         );
 
         if (privateKeyImport && keypairImport) {
@@ -215,24 +196,17 @@ export default function Login() {
           setStep(LoginStep.EXPORTED_ACCOUNT);
         }
 
-        alert(
-          JSON.stringify(
-            "Biometric authentication failed or credentials not found."
-          )
-        );
+        alert(JSON.stringify('Biometric authentication failed or credentials not found.'));
       }
     } else {
-      console.log("Biometry not supported on this device.");
-      alert("Biometry not supported on this device.");
+      console.log('Biometry not supported on this device.');
+      alert('Biometry not supported on this device.');
     }
   };
 
   return (
     <Container>
-      <Logo
-        source={require("../../../assets/joyboy-logo.png")}
-        resizeMode="contain"
-      />
+      <Logo source={require('../../../assets/joyboy-logo.png')} resizeMode="contain" />
 
       {step == LoginStep.HOME && (
         <InputContainer>
@@ -256,8 +230,8 @@ export default function Login() {
             onPress={handleImportPrivateKey}
             style={{
               paddingVertical: 8,
-              width: "100%",
-              backgroundColor: isImportDisabled && "gray",
+              width: '100%',
+              backgroundColor: isImportDisabled && 'gray',
             }}
             disabled={isImportDisabled}
           >
@@ -284,21 +258,20 @@ export default function Login() {
         </View>
       )}
 
-      {step != LoginStep.CREATE_ACCOUNT &&
-        step != LoginStep.EXPORTED_ACCOUNT && (
-          <InputContainer>
-            <CreateAccountButton
-              onPress={() => setStep(LoginStep.CREATE_ACCOUNT)}
-              style={{
-                paddingVertical: 8,
-                marginVertical: 8,
-                width: Platform.OS != "android" ? "100%" : 100,
-              }}
-            >
-              <Typography variant="ts19m">Create an account</Typography>
-            </CreateAccountButton>
-          </InputContainer>
-        )}
+      {step != LoginStep.CREATE_ACCOUNT && step != LoginStep.EXPORTED_ACCOUNT && (
+        <InputContainer>
+          <CreateAccountButton
+            onPress={() => setStep(LoginStep.CREATE_ACCOUNT)}
+            style={{
+              paddingVertical: 8,
+              marginVertical: 8,
+              width: Platform.OS != 'android' ? '100%' : 100,
+            }}
+          >
+            <Typography variant="ts19m">Create an account</Typography>
+          </CreateAccountButton>
+        </InputContainer>
+      )}
 
       <InputContainer>
         <View>
@@ -332,13 +305,11 @@ export default function Login() {
                 style={{
                   paddingVertical: 8,
                   marginVertical: 8,
-                  width: Platform.OS != "android" ? "100%" : 100,
+                  width: Platform.OS != 'android' ? '100%' : 100,
                 }}
                 disabled={privateKeyImport?.length == 0}
               >
-                <Typography variant="ts19m">
-                  Try login with an account
-                </Typography>
+                <Typography variant="ts19m">Try login with an account</Typography>
               </CreateAccountButton>
 
               <View
