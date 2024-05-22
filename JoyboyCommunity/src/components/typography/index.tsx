@@ -1,6 +1,5 @@
-import type {CSSProperties} from 'react';
 import React from 'react';
-import {Text} from 'react-native';
+import {StyleProp, Text, TextStyle} from 'react-native';
 import styled from 'styled-components/native';
 
 import {darkModeColors, lightModeColors} from '../../tokens/colors';
@@ -20,7 +19,7 @@ export const StyledTypography = styled(Text)<IStyledTypographyType>`
 
 interface TypographyProps extends IStyledTypographyType {
   children: React.ReactNode;
-  style?: CSSProperties;
+  style?: StyleProp<TextStyle>;
 }
 
 export const Typography: React.FC<TypographyProps> = ({children, ...props}) => {
