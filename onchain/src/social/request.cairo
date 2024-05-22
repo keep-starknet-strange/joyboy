@@ -24,15 +24,6 @@ pub struct SocialRequest<C, +Display<C>> {
     sig: Signature
 }
 
-impl U256IntoByteArray of Into<u256, ByteArray> {
-    fn into(self: u256) -> ByteArray {
-        let mut ba = Default::default();
-        ba.append_word(self.high.into(), 16);
-        ba.append_word(self.low.into(), 16);
-        ba
-    }
-}
-
 pub fn verify<C, +Display<C>>(request: @SocialRequest<C>) -> bool {
     let id = @format!(
         "[0,\"{}\",{},{},{},\"{}\"]",
@@ -45,13 +36,17 @@ pub fn verify<C, +Display<C>>(request: @SocialRequest<C>) -> bool {
 
     let [x0, x1, x2, x3, x4, x5, x6, x7] = compute_sha256_byte_array(id);
 
-    let m: ByteArray = u256 {
-        high: x0.into() * TWO_POW_96 + x1.into() * TWO_POW_64 + x2.into() * TWO_POW_32 + x3.into(),
-        low: x4.into() * TWO_POW_96 + x5.into() * TWO_POW_64 + x6.into() * TWO_POW_32 + x7.into(),
-    }
-        .into();
+    let mut ba = Default::default();
+    ba.append_word(x0.into(), 4);
+    ba.append_word(x1.into(), 4);
+    ba.append_word(x2.into(), 4);
+    ba.append_word(x3.into(), 4);
+    ba.append_word(x4.into(), 4);
+    ba.append_word(x5.into(), 4);
+    ba.append_word(x6.into(), 4);
+    ba.append_word(x7.into(), 4);
 
-    let is_valid: bool = bip340::verify(*request.pubkey, *request.sig.r, *request.sig.s, m);
+    let is_valid: bool = bip340::verify(*request.pubkey, *request.sig.r, *request.sig.s, ba);
     is_valid
 }
 
@@ -59,31 +54,8 @@ pub fn verify<C, +Display<C>>(request: @SocialRequest<C>) -> bool {
 mod tests {
     use super::{Signature, SocialRequest, verify};
 
-    // {
-    //     kind: 1,
-    //     created_at: 1716285235,
-    //     tags: [],
-    //     content: 'hello',
-    //     pubkey: 'ef4082f31f1cb99a8418b73f6101da5bbb3b82e363f458e9ae945339b4b4e68a',
-    //     id: '8d134f2d42b0b5f04c909e17e9cbc9cca405fb985dddfe5b516d47b5c0a57a71',
-    //     sig:
-    //
-    //
-    //
-    //
-    //     
-    //     'fbbe47a42df4b01348982882bb0f622f8eb6802d5c6d9d8779b773a22753e2cc14058232c01aad1f90ee1f34cf8b0e5d0678435890a8bdcfda8f361908486d48',
-    // }
-    //
-    //
-    //
-    //
-    //
-    // 
-    // [0,"ef4082f31f1cb99a8418b73f6101da5bbb3b82e363f458e9ae945339b4b4e68a",1716285235,1,[],"hello"]
-
     #[test]
-    fn test_wip() {
+    fn verify_event() {
         let r: SocialRequest<ByteArray> = SocialRequest {
             pubkey: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256,
             created_at: 1716380267_u64,
@@ -100,7 +72,7 @@ mod tests {
     }
 
     #[test]
-    fn test_wip1() {
+    fn verify_event1() {
         let r: SocialRequest<ByteArray> = SocialRequest {
             pubkey: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256,
             created_at: 1716387881_u64,
@@ -117,7 +89,7 @@ mod tests {
     }
 
     #[test]
-    fn test_wip3() {
+    fn verify_event2() {
         let r: SocialRequest<ByteArray> = SocialRequest {
             pubkey: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256,
             created_at: 1716388090_u64,
