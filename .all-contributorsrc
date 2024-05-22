@@ -3,7 +3,9 @@
   "projectOwner": "keep-starknet-strange",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "files": ["README.md"],
+  "files": [
+    "README.md"
+  ],
   "imageSize": 100,
   "commit": true,
   "commitConvention": "gitmoji",
@@ -13,14 +15,72 @@
       "name": "Abdel @ StarkWare ",
       "avatar_url": "https://avatars.githubusercontent.com/u/45264458?v=4",
       "profile": "https://github.com/AbdelStark",
-      "contributions": ["code"]
+      "contributions": [
+        "code"
+      ]
     },
     {
       "login": "maciejka",
       "name": "Maciej Kamiński @ StarkWare",
       "avatar_url": "https://avatars.githubusercontent.com/u/190855?v=4",
       "profile": "https://github.com/maciejka",
-      "contributions": ["code"]
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "MSghais",
+      "name": "MSG",
+      "avatar_url": "https://avatars.githubusercontent.com/u/59928086?v=4",
+      "profile": "https://github.com/MSghais",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "kateberryd",
+      "name": "Catherine Jonathan",
+      "avatar_url": "https://avatars.githubusercontent.com/u/35270183?v=4",
+      "profile": "https://github.com/kateberryd",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "ayushtom",
+      "name": "Ayush Tomar",
+      "avatar_url": "https://avatars.githubusercontent.com/u/41674634?v=4",
+      "profile": "https://github.com/ayushtom",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "mubarak23",
+      "name": "Mubarak Muhammad Aminu",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7858376?v=4",
+      "profile": "http://mubarak23.github.io/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "ugur-eren",
+      "name": "Uğur Eren",
+      "avatar_url": "https://avatars.githubusercontent.com/u/86152092?v=4",
+      "profile": "https://ugureren.net/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Oshioke-Salaki",
+      "name": "Oshioke Salaki",
+      "avatar_url": "https://avatars.githubusercontent.com/u/105825121?v=4",
+      "profile": "https://github.com/Oshioke-Salaki",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
