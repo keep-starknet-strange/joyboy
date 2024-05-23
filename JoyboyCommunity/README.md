@@ -9,8 +9,8 @@ To test the project, run:
 
 ```bash
 cd JoyboyCommunity
-npm i
-npm start
+yarn install
+yarn start
 ```
 
 Select Expo web, Android or IOS. You can scan it with Expo GO on your phone.
