@@ -1,12 +1,10 @@
 import joyboy from "../assets/joyboyMascot.png";
-import bg from "../assets/heroBg.jpeg";
-import About from "./About";
 import moon from "../assets/moon.svg";
 import { motion } from "framer-motion";
 
 const HeroSection: React.FC = () => {
   return (
-    <div className="h-[900px] w-full overflow-hidden relative pt-[159px] flex justify-center bg-black bg-herobg bg-bottom bg-cover">
+    <div className="desktop:h-[900px] h-[833px] w-full overflow-hidden relative pt-[98px] desktop:pt-[159px] flex justify-center bg-black desktop:bg-herobg bg-mobileHeroBg bg-no-repeat bg-bottom">
       <motion.img
         animate={{ x: [500, 0] }}
         transition={{
@@ -15,7 +13,7 @@ const HeroSection: React.FC = () => {
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         src={moon}
-        className="absolute top-[36px] right-[150px]"
+        className="absolute top-5 desktop:top-[36px] right-[31px] desktop:right-[150px] w-[50px] desktop:w-auto"
         alt=""
       />
       <motion.div
@@ -25,25 +23,27 @@ const HeroSection: React.FC = () => {
         }}
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
-        className="w-[773px] flex flex-col items-center text-white h-fit text-center relative z-[20]"
+        className="desktop:w-[773px] w-[85%] flex flex-col items-center text-white h-fit text-center relative z-[270]"
       >
-        <h1 className="text-[72px] leading-[80px] mb-3">
+        <h1 className="desktop:text-[72px] text-[36px] leading-[50px] desktop:leading-[80px] mb-3">
           Step into a New Era of Social Networking
         </h1>
-        <p className="text-[24px] leading-8 mb-8">
+        <p className="desktop:text-[24px] text-base leading-8 mb-8">
           Decentralized social built with Nostr and powered by Starknet account
           abstraction.
         </p>
-        <div className="flex items-center gap-x-6 text-[18px] leading-[21px]">
-          <button className="py-5 px-[72px] bg-black">Sign up</button>
-          <button className="py-5 px-[56px] bg-white text-black">
+        <div className="flex desktop:flex-row flex-col items-center gap-y-4 gap-x-6 text-[18px] leading-[21px]">
+          <button className="desktop:py-5 text-sm desktop:text-base py-3 px-4 bg-black w-[200px] border-white border-[1px] border-solid desktop:border-none">
+            Sign up
+          </button>
+          <button className="desktop:py-5 text-sm text-black desktop:text-base py-3 px-4 bg-white w-[200px]">
             Download App
           </button>
         </div>
       </motion.div>
       <motion.img
         src={joyboy}
-        className="absolute left-2 bottom-[49px] z-[250]"
+        className="absolute left-[-31px] desktop:left-2 bottom-[39px] desktop:bottom-[49px] z-[250] desktop:w-[380px] w-[210px]"
         alt=""
         animate={{ x: [-500, 0] }}
         transition={{

@@ -1,18 +1,43 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "../assets/logo.svg";
 import NavigationLinks from "./NavigationLinks";
+import hamburger from "../assets/hamburger-icon.svg";
+import { createPortal } from "react-dom";
+import MobileNavBar from "./MobileNavBar";
 const Navbar: React.FC = () => {
+  const [toggleNav, setToggleNav] = useState(false);
   return (
-    <div className="py-[26px] px-[120px] bg-black flex justify-between items-center">
+    <div className="desktop:py-[26px] py-3 px-6 desktop:px-[120px] bg-black flex justify-between items-center">
       <div className="flex items-center gap-x-[10px] text">
-        <img src={logo} className="h-[52px] w-[52px]" alt="" />
-        <h5 className="text-2xl leading-7 font-bold text-white">Joyboy</h5>
+        <img
+          src={logo}
+          className="desktop:h-[52px] w-9 h-9 desktop:w-[52px]"
+          alt=""
+        />
+        <h5 className="desktop:text-2xl text-lg leading-7 font-bold text-white">
+          Joyboy
+        </h5>
       </div>
       <NavigationLinks />
-      <div className="flex items-center gap-x-4 font-bold text-sm leading-[16px]">
+      <div className="desktop:flex hidden items-center gap-x-4 font-bold text-sm leading-[16px]">
         <button className="py-[15px] px-[48px] bg-[#8DAEF1]">Sign up</button>
         <button className="py-[15px] px-[48px] bg-white">Log in</button>
       </div>
+      <button
+        className="flex desktop:hidden"
+        onClick={() => {
+          setToggleNav(true);
+          window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+        }}
+      >
+        <img src={hamburger} className="w-6 h-6" alt="" />
+      </button>
+
+      {toggleNav &&
+        createPortal(
+          <MobileNavBar setToggle={setToggleNav} toggle={toggleNav} />,
+          document.body
+        )}
     </div>
   );
 };

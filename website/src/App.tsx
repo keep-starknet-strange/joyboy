@@ -16,12 +16,12 @@ function App() {
       <HeroSection />
       <About />
       <DescriptionSection />
-      <div className="flex flex-col gap-y-[140px]">
+      <div className="flex flex-col desktop:gap-y-[80px] gap-y-[50px] mt-[50px] desktop:mt-[180px]">
         <ContributeSection />
         <DownloadSection />
         <Faq />
-        <Footer />
       </div>
+      <Footer />
     </div>
   );
 }
