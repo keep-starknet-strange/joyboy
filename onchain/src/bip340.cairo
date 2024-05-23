@@ -95,10 +95,6 @@ fn hash_challenge(rx: u256, px: u256, m: ByteArray) -> u256 {
 /// Returns `true` if the signature is valid for the given message and public key; otherwise,
 /// returns `false`.
 pub fn verify(px: u256, rx: u256, s: u256, m: ByteArray) -> bool {
-    println!("p: {}", px);
-    println!("r: {}", rx);
-    println!("s: {}", s);
-    println!("m: {}", m);
     let n = Secp256Trait::<Secp256k1Point>::get_curve_size();
 
     if px >= p || rx >= p || s >= n {
@@ -127,8 +123,6 @@ pub fn verify(px: u256, rx: u256, s: u256, m: ByteArray) -> bool {
     let R = p1.add(p2).unwrap_syscall();
 
     let (Rx, Ry) = R.get_coordinates().unwrap_syscall();
-
-    println!("AAAAAAAAAAAAAAa: {}, {}, {}", Rx, Ry, rx);
 
     // fail if is_infinite(R) || not has_even_y(R) || x(R) ≠ rx.
     !(Rx == 0 && Ry == 0) && Ry % 2 == 0 && Rx == rx
