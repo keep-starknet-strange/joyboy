@@ -97,7 +97,7 @@ mod tests {
 
 
     fn deploy_social_account() -> ContractAddress {
-        let contract = declare("SocialAccount");
+        let contract = declare("SocialAccount").unwrap();
 
         let mut social_account_calldata = array![];
         public_key.serialize(ref social_account_calldata);
@@ -106,7 +106,7 @@ mod tests {
 
         let mut spy = spy_events(SpyOn::One(address));
 
-        let deployed_contract_address = contract.deploy(@social_account_calldata).unwrap();
+        let (contract_address, _) = contract.deploy(@social_account_calldata).unwrap();
 
         spy.fetch_events();
 
@@ -118,13 +118,11 @@ mod tests {
         let event_key = (*event.keys.at(1)).into();
 
         assert(event_key == public_key, 'Wrong Public Key');
-
-        deployed_contract_address
+        contract_address
     }
 
 
     #[test]
-    #[ignore]
     fn test_get_public_key() {
         let contract_address = deploy_social_account();
         let dispatcher = ISocialAccountDispatcher { contract_address };
