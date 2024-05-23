@@ -29,8 +29,8 @@ jobs:
         working-directory: onchain
       - uses: actions/checkout@v3
       - uses: foundry-rs/setup-snfoundry@v3
-       with:
-          starknet-foundry-version: "0.23.0"
+        with:
+          starknet-foundry-version: '0.23.0'
       - name: Run cairo tests
         run: snforge test
         working-directory: onchain
