@@ -54,7 +54,7 @@ mod tests {
     use super::{Signature, SocialRequest, verify};
 
     #[test]
-    fn verify_01() {
+    fn verify_valid_signature() {
         let r: SocialRequest<ByteArray> = SocialRequest {
             pubkey: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256,
             created_at: 1716380267_u64,
@@ -71,7 +71,7 @@ mod tests {
     }
 
     #[test]
-    fn verify_02() {
+    fn verify_signature_long_content() {
         let r: SocialRequest<ByteArray> = SocialRequest {
             pubkey: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256,
             created_at: 1716403778_u64,
@@ -88,7 +88,7 @@ mod tests {
     }
 
     #[test]
-    fn verify_03() {
+    fn verify_valid_signature_tags() {
         let r: SocialRequest<ByteArray> = SocialRequest {
             pubkey: 0xcbddbb8b79e395d6458b49aa315b74fcc26d4d8d722e0a6421b4e04a612fc51c_u256,
             created_at: 1716285235_u64,
@@ -105,7 +105,7 @@ mod tests {
     }
 
     #[test]
-    fn verify_04() {
+    fn verify_invalid_tags() {
         // invalid tags
         // valid tags =
         // "[[\"e\",\"5c83da77af1dec6d7289834998ad7aafbd9e2191396d75ec3cc27f5a77226f36\"]]"
@@ -121,13 +121,14 @@ mod tests {
             }
         };
 
-        assert_eq!(verify(@r), false);
+        assert!(!verify(@r));
     }
 
     #[test]
-    fn verify_05() {
+    fn verify_invalid_content() {
         // invalid content
         // valid content =
+        // 
         // "nprofile1qys8wumn8ghj7un9d3shjtn2daukymme9e3k7mtdw4hxjare9e3k7mgqyzzxqw6wxqyyqqmv4rxgz2l0ej8zgrqfkuupycuatnwcannad6ayqx7zdcy
         // send 1 USDC to nprofile1qqs2sa3zk4a49umxg4lgvlsaenrqaf33ejkffd78f2cgy4xy38h393s2w22mm"
         let r: SocialRequest<ByteArray> = SocialRequest {
@@ -142,11 +143,11 @@ mod tests {
             }
         };
 
-        assert_eq!(verify(@r), false);
+        assert!(!verify(@r));
     }
 
     #[test]
-    fn verify_06() {
+    fn verify_invalid_pubkey() {
         // invalid public key
         // valid pubkey = 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256
         let r: SocialRequest<ByteArray> = SocialRequest {
@@ -161,11 +162,11 @@ mod tests {
             }
         };
 
-        assert_eq!(verify(@r), false);
+        assert!(!verify(@r));
     }
 
     #[test]
-    fn verify_07() {
+    fn verify_invalid_timestamp() {
         // invalid timestamp
         // valid timestamp = 1716285235
         let r: SocialRequest<ByteArray> = SocialRequest {
@@ -180,11 +181,11 @@ mod tests {
             }
         };
 
-        assert_eq!(verify(@r), false);
+        assert!(!verify(@r));
     }
 
     #[test]
-    fn verify_08() {
+    fn verify_invalid_signature_r() {
         // invalid sig[0:32]
         // valid sig[0:32] = 0x206e086fe298bf0733b0b22316721636ae7d8ce025c76baf83b8a31efaec8821
         let r: SocialRequest<ByteArray> = SocialRequest {
@@ -199,11 +200,11 @@ mod tests {
             }
         };
 
-        assert_eq!(verify(@r), false);
+        assert!(!verify(@r));
     }
 
     #[test]
-    fn verify_09() {
+    fn verify_invalid_signature_s() {
         // invalid sig[32:64]
         // valid sig[32:64] = 0x494452ba56fd465a0d69baa1ff4af9efcb1d0af8f107473ce33877d7a1034a8e
         let r: SocialRequest<ByteArray> = SocialRequest {
@@ -218,7 +219,7 @@ mod tests {
             }
         };
 
-        assert_eq!(verify(@r), false);
+        assert!(!verify(@r));
     }
 }
 
