@@ -1,4 +1,5 @@
-* text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
 
 # Windows files should use crlf line endings other should use lf
 # https://help.github.com/articles/dealing-with-line-endings/
