@@ -12,12 +12,12 @@ pub mod SocialRequestComponent {
     use super::super::request::SocialRequest;
 
     #[storage]
-    struct Storage {// TODO: empty for now
+    struct Storage { // TODO: empty for now
     }
 
     #[event]
     #[derive(Drop, PartialEq, starknet::Event)]
-    pub enum Event {// TODO: empty for now
+    pub enum Event { // TODO: empty for now
     }
 
     #[embeddable_as(SocialRequestImpl)]
@@ -35,6 +35,6 @@ pub mod SocialRequestComponent {
     #[generate_trait]
     pub impl InternalImpl<
         TContractState, +HasComponent<TContractState>, +Drop<TContractState>
-    > of InternalTrait<TContractState> {// TODO: empty for now
+    > of InternalTrait<TContractState> { // TODO: empty for now
     }
 }
