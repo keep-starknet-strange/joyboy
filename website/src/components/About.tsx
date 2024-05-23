@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 const About: React.FC = () => {
   return (
-    <div className="bg-black py-[140px] text-center text-white text-[32px] leading-[50px] font-normal z-[50] relative px-[171px]">
+    <div className="bg-black py-[40px] tab:py-[140px] text-center text-white text-base tab:text-[32px] leading-[32px] desktop:leading-[50px] font-normal z-[50] relative px-6 desktop:px-[171px]">
       <motion.p
-        animate={{ x: 100 }}
+        animate={{ x: [-100, 0] }}
         transition={{ ease: "easeOut", duration: 1 }}
         className="gradient-text"
         initial={{ opacity: 0 }}

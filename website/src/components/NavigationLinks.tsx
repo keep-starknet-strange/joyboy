@@ -1,6 +1,6 @@
 const NavigationLinks: React.FC = () => {
   return (
-    <ul className="flex items-center gap-x-[32px] font-normal text-lg leading-[21px] text-white">
+    <ul className="items-center gap-x-[32px] font-normal text-lg leading-[21px] text-white hidden desktop:flex">
       <li>Servers</li>
       <li>Features</li>
       <li>Ecosystem</li>

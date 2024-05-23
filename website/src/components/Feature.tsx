@@ -2,12 +2,14 @@ type Props = { img: string; title: string; description: string };
 
 const Feature: React.FC<Props> = ({ img, title, description }) => {
   return (
-    <div className="flex flex-col gap-y-[18px] items-center text-center">
-      <div className="p-7 rounded-[10px] border-[1px] border-solid border-white w-fit">
-        <img src={img} alt="" />
+    <div className="flex flex-col gap-y-3 tab:gap-y-[18px] items-center text-center">
+      <div className="tab:p-7 p-3 rounded-[10px] border-[1px] border-solid border-white w-fit">
+        <img src={img} className="" alt="" />
       </div>
-      <h3 className="font-bold text-xl">{title}</h3>
-      <p className="text-base leading-[19px]">{description}</p>
+      <h3 className="font-bold text-base tab:text-xl">{title}</h3>
+      <p className="tab:text-base text-sm leading-[19px] tab:w-full w-[85%]">
+        {description}
+      </p>
     </div>
   );
 };
