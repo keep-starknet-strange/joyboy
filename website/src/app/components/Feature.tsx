@@ -1,6 +1,6 @@
 type Props = { img: string; title: string; description: string };
 
-const Feature: React.FC<Props> = ({ img, title, description }) => {
+export function Feature({ img, title, description }: Props) {
   return (
     <div className="flex flex-col gap-y-3 tab:gap-y-[18px] items-center text-center">
       <div className="tab:p-7 p-3 rounded-[10px] border-[1px] border-solid border-white w-fit">
@@ -13,5 +13,3 @@ const Feature: React.FC<Props> = ({ img, title, description }) => {
     </div>
   );
 };
-
-export default Feature;

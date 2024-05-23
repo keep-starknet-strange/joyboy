@@ -1,8 +1,8 @@
-import logo from "../assets/logo.svg";
-import appStore from "../assets/appStoreBtn.svg";
-import googleStore from "../assets/googlePlaybtn.svg";
+"use client";
+
 import { motion } from "framer-motion";
-const DownloadSection: React.FC = () => {
+
+export function DownloadSection() {
   return (
     <div className="desktop:pt-[84px] pt-[40px] pb-[50px] desktop:pb-[180px]  text-white text-center bg-gradientBg bg-center">
       <motion.div
@@ -15,7 +15,7 @@ const DownloadSection: React.FC = () => {
         className="flex flex-col items-center"
       >
         <img
-          src={logo}
+          src="/assets/logo.svg"
           className="desktop:h-[150px] desktop:w-[150px] h-[80px] w-[80px] mb-[13px]"
           alt=""
         />
@@ -28,11 +28,11 @@ const DownloadSection: React.FC = () => {
         </p>
         <div className="flex items-center gap-x-5">
           <button>
-            <img src={appStore} className="w-[100px] desktop:w-auto" alt="" />
+            <img src="/assets/appStoreBtn.svg" className="w-[100px] desktop:w-auto" alt="" />
           </button>
           <button>
             <img
-              src={googleStore}
+              src="/assets/googlePlaybtn.svg"
               className="w-[100px] desktop:w-auto"
               alt=""
             />
@@ -42,5 +42,3 @@ const DownloadSection: React.FC = () => {
     </div>
   );
 };
-
-export default DownloadSection;

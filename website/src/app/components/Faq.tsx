@@ -1,8 +1,8 @@
-import logo from "../assets/logo.svg";
-import appStore from "../assets/appStoreBtn.svg";
-import googleStore from "../assets/googlePlaybtn.svg";
-import FaqBar from "./FaqBar";
-const Faq: React.FC = () => {
+"use client";
+
+import { FaqBar } from "./FaqBar";
+
+export function Faq() {
   return (
     <div className="desktop:pt-[84px] pt-[40px] pb-[44px] px-[24px] desktop:px-[320px] text-white text-center bg-gradientBg">
       <h2 className="mb-[49px] text-xl desktop:text-[32px] leading-[38px]">
@@ -19,6 +19,4 @@ const Faq: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default Faq;
+}
