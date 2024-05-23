@@ -23,7 +23,6 @@ jobs:
       - uses: foundry-rs/setup-snfoundry@v3
         run: snforge
         working-directory: onchain
-
   tests:
     runs-on: ubuntu-latest
     steps:
