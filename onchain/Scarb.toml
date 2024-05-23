@@ -10,12 +10,12 @@ starknet = "2.6.3"
 alexandria_math = { git = "https://github.com/keep-starknet-strange/alexandria.git" }
 
 [dev-dependencies]
-snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry", tag = "v0.21.0" }
+snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry", tag = "v0.23.0" }
 
 #[lib]
 
-# [scripts]
-# test = "test"
+[scripts]
+test = "snforge test"
 
 [[target.starknet-contract]]
 casm = true

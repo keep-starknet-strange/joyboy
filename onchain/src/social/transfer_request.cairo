@@ -6,12 +6,12 @@ use super::profile::{NostrProfile, encode};
 
 type NostrKey = u256;
 
-#[derive(Drop)]
-struct TransferRequest {
-    amount: u256,
-    token: felt252,
-    joyboy: NostrProfile,
-    recipient: NostrProfile
+#[derive(Drop, Serde)]
+pub struct TransferRequest {
+    pub amount: u256,
+    pub token: felt252,
+    pub joyboy: NostrProfile,
+    pub recipient: NostrProfile
 }
 
 impl DisplayTransferRequest of Display<TransferRequest> {
@@ -31,11 +31,10 @@ impl DisplayTransferRequest of Display<TransferRequest> {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use core::option::OptionTrait;
-    use super::{TransferRequest};
+    use super::TransferRequest;
     use super::super::profile::NostrProfile;
 
     #[test]
