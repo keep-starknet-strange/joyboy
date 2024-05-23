@@ -24,7 +24,8 @@ pub mod SocialAccount {
 
     // SocialRequest
     #[abi(embed_v0)]
-    impl SocialRequestImpl = SocialRequestComponent::SocialRequestImpl<ContractState>;
+    impl SocialRequestImpl =
+        SocialRequestComponent::SocialRequestImpl<ContractState>;
     impl SocialRequestInternalImpl = SocialRequestComponent::InternalImpl<ContractState>;
 
     #[storage]
@@ -143,9 +144,7 @@ mod tests {
         };
         match dispatcher.handle_transfer_request(request) {
             Result::Ok(_) => panic!("FAIL"),
-            Result::Err(panic_data) => {
-                assert_eq!(*panic_data.at(2), 'NOT_IMPLEMENTED');
-            }
+            Result::Err(panic_data) => { assert_eq!(*panic_data.at(2), 'NOT_IMPLEMENTED'); }
         }
     }
 }
