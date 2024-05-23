@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "JoyboyCommunity/**"
+
+jobs:
+  compile-with-lint-and-format:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ["18.x", "20.x", "22.x"]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Dependencies
+        run: yarn --cwd JoyboyCommunity install
+
+      - name: Dependencies Check
+        run: yarn --cwd JoyboyCommunity check
+
+      - name: Run Prettier Format Check
+        run: yarn --cwd JoyboyCommunity format:check
+
+      - name: Run ESLint Check
+        run: yarn --cwd JoyboyCommunity lint
+
+      - name: Run TypeScript Check
+        run: yarn --cwd JoyboyCommunity ts:check
