@@ -1,43 +1,18 @@
 use starknet::{ContractAddress, get_caller_address, get_contract_address, contract_address_const};
 use super::profile::NostrProfile;
-
-// request types added temporarily for the OD Hack
-#[derive(Copy, Drop, Debug, Serde)]
-pub struct Signature {
-    r: u256,
-    s: u256
-}
-
-#[derive(Drop, Serde)]
-pub struct TransferRequest {
-    amount: u256,
-    token: felt252,
-    joyboy: NostrProfile,
-    recipient: NostrProfile
-}
-
-#[derive(Drop, Serde)]
-pub struct SocialRequest {
-    pubkey: u256,
-    created_at: u64,
-    kind: u16,
-    tags: ByteArray, // we don't need to look inside the tags(at least for now)
-    content: TransferRequest,
-    sig: Signature
-}
-
+use super::request::SocialRequest;
+use super::transfer::{Transfer};
 
 #[starknet::interface]
 pub trait ISocialAccount<TContractState> {
     fn get_public_key(self: @TContractState) -> u256;
-    fn handle_transfer_request(ref self: TContractState, request: SocialRequest);
+    fn handle_transfer_request(ref self: TContractState, request: SocialRequest<Transfer>);
 }
-
 
 #[starknet::contract]
 pub mod SocialAccount {
     use super::SocialRequest;
-    use super::TransferRequest;
+    use super::Transfer;
 
     #[storage]
     struct Storage {
@@ -69,7 +44,7 @@ pub mod SocialAccount {
             self.public_key.read()
         }
         fn handle_transfer_request(
-            ref self: ContractState, request: SocialRequest
+            ref self: ContractState, request: SocialRequest<Transfer>
         ) { // TODO: implement handle transfer logic
         }
     }
@@ -97,7 +72,7 @@ mod tests {
 
 
     fn deploy_social_account() -> ContractAddress {
-        let contract = declare("SocialAccount");
+        let contract = declare("SocialAccount").unwrap();
 
         let mut social_account_calldata = array![];
         public_key.serialize(ref social_account_calldata);
@@ -106,7 +81,7 @@ mod tests {
 
         let mut spy = spy_events(SpyOn::One(address));
 
-        let deployed_contract_address = contract.deploy(@social_account_calldata).unwrap();
+        let (contract_address, _) = contract.deploy(@social_account_calldata).unwrap();
 
         spy.fetch_events();
 
@@ -118,13 +93,11 @@ mod tests {
         let event_key = (*event.keys.at(1)).into();
 
         assert(event_key == public_key, 'Wrong Public Key');
-
-        deployed_contract_address
+        contract_address
     }
 
 
     #[test]
-    #[ignore]
     fn test_get_public_key() {
         let contract_address = deploy_social_account();
         let dispatcher = ISocialAccountDispatcher { contract_address };
