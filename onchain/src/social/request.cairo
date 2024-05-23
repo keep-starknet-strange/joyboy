@@ -8,15 +8,15 @@ const TWO_POW_32: u128 = 0x100000000;
 const TWO_POW_64: u128 = 0x10000000000000000;
 const TWO_POW_96: u128 = 0x1000000000000000000000000;
 
-#[derive(Copy, Drop, Debug)]
+#[derive(Copy, Drop, Debug, Serde)]
 pub struct Signature {
     r: u256,
     s: u256
 }
 
-#[derive(Drop)]
-pub struct SocialRequest<C, +Display<C>> {
-    pubkey: u256,
+#[derive(Drop, Serde)]
+pub struct SocialRequest<C> {
+    public_key: u256,
     created_at: u64,
     kind: u16,
     tags: ByteArray, // we don't need to look inside the tags(at least for now)
@@ -24,39 +24,53 @@ pub struct SocialRequest<C, +Display<C>> {
     sig: Signature
 }
 
-pub fn verify<C, +Display<C>>(request: @SocialRequest<C>) -> bool {
-    let id = @format!(
-        "[0,\"{}\",{},{},{},\"{}\"]",
-        request.pubkey.format_as_byte_array(16),
-        request.created_at,
-        request.kind,
-        request.tags,
-        request.content
-    );
+pub trait Encode<T> {
+    fn encode(self: @T) -> @ByteArray;
+}
 
-    let [x0, x1, x2, x3, x4, x5, x6, x7] = compute_sha256_byte_array(id);
 
-    let mut ba = Default::default();
-    ba.append_word(x0.into(), 4);
-    ba.append_word(x1.into(), 4);
-    ba.append_word(x2.into(), 4);
-    ba.append_word(x3.into(), 4);
-    ba.append_word(x4.into(), 4);
-    ba.append_word(x5.into(), 4);
-    ba.append_word(x6.into(), 4);
-    ba.append_word(x7.into(), 4);
+#[generate_trait]
+pub impl SocialRequestImpl<C, +Encode<C>> of SocialRequestTrait<C> {
+    fn verify(self: @SocialRequest<C>) -> bool {
+        let id = @format!(
+            "[0,\"{}\",{},{},{},\"{}\"]",
+            self.public_key.format_as_byte_array(16),
+            self.created_at,
+            self.kind,
+            self.tags,
+            self.content.encode()
+        );
 
-    bip340::verify(*request.pubkey, *request.sig.r, *request.sig.s, ba)
+        let [x0, x1, x2, x3, x4, x5, x6, x7] = compute_sha256_byte_array(id);
+
+        let mut ba = Default::default();
+        ba.append_word(x0.into(), 4);
+        ba.append_word(x1.into(), 4);
+        ba.append_word(x2.into(), 4);
+        ba.append_word(x3.into(), 4);
+        ba.append_word(x4.into(), 4);
+        ba.append_word(x5.into(), 4);
+        ba.append_word(x6.into(), 4);
+        ba.append_word(x7.into(), 4);
+
+        bip340::verify(*self.public_key, *self.sig.r, *self.sig.s, ba)
+    }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{Signature, SocialRequest, verify};
+    use super::{Encode, Signature, SocialRequest, SocialRequestTrait};
+
+    impl ByteArrayEncode of Encode<ByteArray> {
+        fn encode(self: @ByteArray) -> @ByteArray {
+            self
+        }
+    }
 
     #[test]
     fn verify_valid_signature() {
         let r: SocialRequest<ByteArray> = SocialRequest {
-            pubkey: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256,
+            public_key: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256,
             created_at: 1716380267_u64,
             kind: 1_u16,
             tags: "[]",
@@ -67,13 +81,13 @@ mod tests {
             }
         };
 
-        assert!(verify(@r));
+        assert!(r.verify());
     }
 
     #[test]
     fn verify_signature_long_content() {
         let r: SocialRequest<ByteArray> = SocialRequest {
-            pubkey: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256,
+            public_key: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256,
             created_at: 1716403778_u64,
             kind: 1_u16,
             tags: "[]",
@@ -84,13 +98,13 @@ mod tests {
             }
         };
 
-        assert!(verify(@r));
+        assert!(r.verify());
     }
 
     #[test]
     fn verify_valid_signature_tags() {
         let r: SocialRequest<ByteArray> = SocialRequest {
-            pubkey: 0xcbddbb8b79e395d6458b49aa315b74fcc26d4d8d722e0a6421b4e04a612fc51c_u256,
+            public_key: 0xcbddbb8b79e395d6458b49aa315b74fcc26d4d8d722e0a6421b4e04a612fc51c_u256,
             created_at: 1716285235_u64,
             kind: 1_u16,
             tags: "[[\"e\",\"5c83da77af1dec6d7289834998ad7aafbd9e2191396d75ec3cc27f5a77226f36\"]]",
@@ -101,7 +115,7 @@ mod tests {
             }
         };
 
-        assert!(verify(@r));
+        assert!(r.verify());
     }
 
     #[test]
@@ -109,7 +123,7 @@ mod tests {
         // valid tags =
         // "[[\"e\",\"5c83da77af1dec6d7289834998ad7aafbd9e2191396d75ec3cc27f5a77226f36\"]]"
         let r: SocialRequest<ByteArray> = SocialRequest {
-            pubkey: 0xcbddbb8b79e395d6458b49aa315b74fcc26d4d8d722e0a6421b4e04a612fc51c_u256,
+            public_key: 0xcbddbb8b79e395d6458b49aa315b74fcc26d4d8d722e0a6421b4e04a612fc51c_u256,
             created_at: 1716285235_u64,
             kind: 1_u16,
             tags: "[]",
@@ -120,7 +134,7 @@ mod tests {
             }
         };
 
-        assert!(!verify(@r));
+        assert!(!r.verify());
     }
 
     #[test]
@@ -129,7 +143,7 @@ mod tests {
         // "nprofile1qys8wumn8ghj7un9d3shjtn2daukymme9e3k7mtdw4hxjare9e3k7mgqyzzxqw6wxqyyqqmv4rxgz2l0ej8zgrqfkuupycuatnwcannad6ayqx7zdcy
         // send 1 USDC to nprofile1qqs2sa3zk4a49umxg4lgvlsaenrqaf33ejkffd78f2cgy4xy38h393s2w22mm"
         let r: SocialRequest<ByteArray> = SocialRequest {
-            pubkey: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256,
+            public_key: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256,
             created_at: 1716403778_u64,
             kind: 1_u16,
             tags: "[]",
@@ -140,14 +154,14 @@ mod tests {
             }
         };
 
-        assert!(!verify(@r));
+        assert!(!r.verify());
     }
 
     #[test]
-    fn verify_invalid_pubkey() {
-        // valid pubkey = 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256
+    fn verify_invalid_public_key() {
+        // valid public_key = 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256
         let r: SocialRequest<ByteArray> = SocialRequest {
-            pubkey: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f4_u256,
+            public_key: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f4_u256,
             created_at: 1716380267_u64,
             kind: 1_u16,
             tags: "[]",
@@ -158,14 +172,14 @@ mod tests {
             }
         };
 
-        assert!(!verify(@r));
+        assert!(!r.verify());
     }
 
     #[test]
     fn verify_invalid_timestamp() {
         // valid timestamp = 1716285235
         let r: SocialRequest<ByteArray> = SocialRequest {
-            pubkey: 0xcbddbb8b79e395d6458b49aa315b74fcc26d4d8d722e0a6421b4e04a612fc51c_u256,
+            public_key: 0xcbddbb8b79e395d6458b49aa315b74fcc26d4d8d722e0a6421b4e04a612fc51c_u256,
             created_at: 1716285236_u64,
             kind: 1_u16,
             tags: "[[\"e\",\"5c83da77af1dec6d7289834998ad7aafbd9e2191396d75ec3cc27f5a77226f36\"]]",
@@ -176,14 +190,14 @@ mod tests {
             }
         };
 
-        assert!(!verify(@r));
+        assert!(!r.verify());
     }
 
     #[test]
     fn verify_invalid_signature_r() {
         // valid sig[0:32] = 0x206e086fe298bf0733b0b22316721636ae7d8ce025c76baf83b8a31efaec8821
         let r: SocialRequest<ByteArray> = SocialRequest {
-            pubkey: 0xcbddbb8b79e395d6458b49aa315b74fcc26d4d8d722e0a6421b4e04a612fc51c_u256,
+            public_key: 0xcbddbb8b79e395d6458b49aa315b74fcc26d4d8d722e0a6421b4e04a612fc51c_u256,
             created_at: 1716285235_u64,
             kind: 1_u16,
             tags: "[[\"e\",\"5c83da77af1dec6d7289834998ad7aafbd9e2191396d75ec3cc27f5a77226f36\"]]",
@@ -194,14 +208,14 @@ mod tests {
             }
         };
 
-        assert!(!verify(@r));
+        assert!(!r.verify());
     }
 
     #[test]
     fn verify_invalid_signature_s() {
         // valid sig[32:64] = 0x494452ba56fd465a0d69baa1ff4af9efcb1d0af8f107473ce33877d7a1034a8e
         let r: SocialRequest<ByteArray> = SocialRequest {
-            pubkey: 0xcbddbb8b79e395d6458b49aa315b74fcc26d4d8d722e0a6421b4e04a612fc51c_u256,
+            public_key: 0xcbddbb8b79e395d6458b49aa315b74fcc26d4d8d722e0a6421b4e04a612fc51c_u256,
             created_at: 1716285235_u64,
             kind: 1_u16,
             tags: "[[\"e\",\"5c83da77af1dec6d7289834998ad7aafbd9e2191396d75ec3cc27f5a77226f36\"]]",
@@ -212,7 +226,7 @@ mod tests {
             }
         };
 
-        assert!(!verify(@r));
+        assert!(!r.verify());
     }
 }
 
