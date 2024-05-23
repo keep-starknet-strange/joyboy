@@ -27,21 +27,17 @@ pub mod SocialRequestComponent {
     use super::SocialRequest;
 
     #[storage]
-    struct Storage {
-        // TODO: empty for now
+    struct Storage {// TODO: empty for now
     }
 
     #[event]
     #[derive(Drop, PartialEq, starknet::Event)]
-    pub enum Event {
-        // TODO: empty for now
+    pub enum Event {// TODO: empty for now
     }
 
     #[embeddable_as(SocialRequestImpl)]
     impl SocialRequestExternal<
-        TContractState,
-        +HasComponent<TContractState>,
-        +Drop<TContractState>
+        TContractState, +HasComponent<TContractState>, +Drop<TContractState>
     > of super::ISocialRequest<ComponentState<TContractState>> {
         fn handle_transfer_request(
             ref self: ComponentState<TContractState>, request: SocialRequest
@@ -53,10 +49,7 @@ pub mod SocialRequestComponent {
 
     #[generate_trait]
     pub impl InternalImpl<
-        TContractState,
-        +HasComponent<TContractState>,
-        +Drop<TContractState>
-    > of InternalTrait<TContractState> {
-        // TODO: empty for now
+        TContractState, +HasComponent<TContractState>, +Drop<TContractState>
+    > of InternalTrait<TContractState> {// TODO: empty for now
     }
 }
