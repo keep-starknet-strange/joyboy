@@ -5,12 +5,13 @@ import {TextInput} from 'react-native-gesture-handler';
 
 import {Divider, KeyboardAvoidingView, Typography} from '../../components';
 import {useNostr} from '../../hooks/useNostr';
-import {retrieveAndDecryptPrivateKey} from '../../utils/storage';
+import {useAuth} from '../../store/auth';
 import {Container, Photo, PostButton, TitleContainer} from './styled';
 
 export default function CreatePost() {
   const navigation = useNavigation();
 
+  const {privateKey} = useAuth();
   const {sendNote} = useNostr();
   const [note, setNote] = useState<string | undefined>();
 
@@ -27,8 +28,6 @@ export default function CreatePost() {
         return;
       }
       alert('Note sending, please wait.');
-      // TODO: password
-      const privateKey = await retrieveAndDecryptPrivateKey('');
 
       if (!privateKey) {
         alert('Please login before send a note');

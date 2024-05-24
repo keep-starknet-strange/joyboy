@@ -2,7 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {Platform, View} from 'react-native';
 
 import {Typography} from '../../components';
-import useAuth from '../../hooks/useAuth';
+import {useAuth} from '../../store/auth';
+import {useNavigationStore} from '../../store/navigation';
 import {utf8StringToUint8Array} from '../../utils/format';
 import {
   generatePassword,
@@ -33,7 +34,8 @@ enum LoginStep {
 }
 
 export default function Login() {
-  const {login} = useAuth();
+  const setNavigationStack = useNavigationStore((state) => state.setStack);
+  const setAuth = useAuth((state) => state.setAuth);
 
   const [step, setStep] = useState<LoginStep>(LoginStep.HOME);
   const [bypassBiometric, setBiometrics] = useState<boolean>(Platform.OS == 'web' ? true : false); // DEV MODE in web to bypass biometric connection
@@ -104,6 +106,8 @@ export default function Login() {
         /** Save pk in localstorage */
         const encryptedPk = await storePrivateKey(secretKeyHex, credentials?.password);
         const storedPk = await storePublicKey(publicKey);
+
+        setAuth(publicKey, secretKey);
       } else if (bypassBiometric) {
         /** @TODO comment web mode */
         /**Generate keypair */
@@ -115,6 +119,7 @@ export default function Login() {
         await storePublicKey(publicKey);
         const encryptedPk = await storePrivateKey(secretKeyHex, password);
 
+        setAuth(publicKey, secretKey);
         setStep(LoginStep.ACCOUNT_CREATED);
         alert(JSON.stringify('Biometric authentication failed or credentials not found.'));
       }
@@ -162,7 +167,10 @@ export default function Login() {
           setIsSkipAvailable(true);
           setStep(LoginStep.EXPORTED_ACCOUNT);
           await storePublicKey(publicKey);
+
+          setAuth(publicKey, keypairImport);
         }
+
         // let storedPk = await storePublicKey(pk);
       } else if (bypassBiometric) {
         /** @TODO comment web mode */
@@ -178,6 +186,8 @@ export default function Login() {
           setIsSkipAvailable(true);
           await storePublicKey(publicKey);
           setStep(LoginStep.EXPORTED_ACCOUNT);
+
+          setAuth(publicKey, keypairImport);
         }
 
         alert(JSON.stringify('Biometric authentication failed or credentials not found.'));
@@ -351,7 +361,7 @@ export default function Login() {
       )}
 
       {isSkipAvailable && (
-        <SkipButton onPress={login}>
+        <SkipButton onPress={() => setNavigationStack('app')}>
           <Typography variant="ts19m">Skip</Typography>
         </SkipButton>
       )}
