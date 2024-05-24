@@ -1,41 +1,34 @@
 use starknet::ContractAddress;
-use core::to_byte_array::{FormatAsByteArray, AppendFormattedToByteArray};
-use core::fmt::{Display, Formatter, Error};
-
-use super::profile::{NostrProfile, encode};
+use super::profile::{NostrProfile, NostrProfileTrait};
 
 type NostrKey = u256;
 
 #[derive(Drop, Serde)]
-pub struct TransferRequest {
+pub struct Transfer {
     pub amount: u256,
     pub token: felt252,
     pub joyboy: NostrProfile,
     pub recipient: NostrProfile
 }
 
-impl DisplayTransferRequest of Display<TransferRequest> {
-    fn fmt(self: @TransferRequest, ref f: Formatter) -> Result<(), Error> {
-        f
-            .buffer
-            .append(
-                @format!(
-                    "{} send {} {} to {}",
-                    encode(self.joyboy),
-                    self.amount,
-                    self.token,
-                    encode(self.recipient)
-                )
-            );
-        Result::Ok(())
+#[generate_trait]
+pub impl TransferImpl of TransferTraitImpl {
+    fn encode(self: @Transfer) -> @ByteArray {
+        @format!(
+            "{} send {} {} to {}",
+            self.joyboy.encode(),
+            self.amount,
+            self.token,
+            self.recipient.encode()
+        )
     }
 }
 
 #[cfg(test)]
 mod tests {
     use core::option::OptionTrait;
-    use super::TransferRequest;
-    use super::super::profile::NostrProfile;
+    use super::{Transfer, TransferTraitImpl};
+    use super::super::profile::{NostrProfile};
 
     #[test]
     fn test_fmt() {
@@ -49,11 +42,11 @@ mod tests {
             relays: array![]
         };
 
-        let request = TransferRequest { amount: 1, token: 'USDC', joyboy, recipient };
+        let request = Transfer { amount: 1, token: 'USDC', joyboy, recipient };
 
         let expected =
             "nprofile1qys8wumn8ghj7un9d3shjtn2daukymme9e3k7mtdw4hxjare9e3k7mgqyzzxqw6wxqyyqqmv4rxgz2l0ej8zgrqfkuupycuatnwcannad6ayqx7zdcy send 1 1431520323 to nprofile1qqs2sa3zk4a49umxg4lgvlsaenrqaf33ejkffd78f2cgy4xy38h393s2w22mm";
 
-        assert_eq!(format!("{request}"), expected);
+        assert_eq!(request.encode(), @expected);
     }
 }

@@ -1,5 +1,7 @@
 use starknet::{ContractAddress, get_caller_address, get_contract_address, contract_address_const};
-use super::social_request::SocialRequest;
+use super::profile::NostrProfile;
+use super::request::SocialRequest;
+use super::transfer::{Transfer};
 
 #[starknet::interface]
 pub trait ISocialAccount<TContractState> {
@@ -11,7 +13,7 @@ pub trait ISocialAccountMixin<TContractState> {
     // ISocialAccount
     fn get_public_key(self: @TContractState) -> u256;
     // ISocialRequest
-    fn handle_transfer_request(ref self: TContractState, request: SocialRequest);
+    fn handle_transfer_request(ref self: TContractState, request: SocialRequest<Transfer>);
 }
 
 #[starknet::contract]
@@ -74,8 +76,8 @@ mod tests {
         EventSpy, EventFetcher, Event, EventAssertions
     };
     use super::super::profile::NostrProfile;
-    use super::super::transfer_request::TransferRequest;
-    use super::super::social_request::{Signature, SocialRequest};
+    use super::super::transfer::Transfer;
+    use super::super::request::{Signature, SocialRequest};
     use super::{
         ISocialAccountMixinDispatcher, ISocialAccountMixinDispatcherTrait,
         ISocialAccountMixinSafeDispatcher, ISocialAccountMixinSafeDispatcherTrait
@@ -127,11 +129,11 @@ mod tests {
         let contract_address = deploy_social_account();
         let dispatcher = ISocialAccountMixinSafeDispatcher { contract_address };
         let request = SocialRequest {
-            pubkey: 0,
+            public_key: 0,
             created_at: 0,
             kind: 0,
             tags: "",
-            content: TransferRequest {
+            content: Transfer {
                 amount: 0,
                 token: 0,
                 joyboy: NostrProfile { public_key: 0, relays: array![] },
