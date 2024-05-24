@@ -31,7 +31,6 @@
     "expo-status-bar": "~1.12.1",
     "fast-text-encoding": "^1.0.6",
     "nostr-tools": "^2.5.2",
-    "patch-package": "^8.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.74.1",
@@ -57,6 +56,8 @@
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-native": "^4.1.0",
+    "patch-package": "^8.0.0",
+    "postinstall-postinstall": "^2.1.0",
     "prettier": "^3.2.5",
     "typescript": "~5.3.3"
   },
