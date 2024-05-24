@@ -6,10 +6,10 @@ import {SceneMap, TabView} from 'react-native-tab-view';
 import {useTheme} from 'styled-components/native';
 
 import {Typography} from '../../components';
-import {useLocalstorage} from '../../hooks/useLocalstorage';
 import {useNostr} from '../../hooks/useNostr';
 import {INoteRepostParsed, IUserEvent} from '../../types';
 import {filterRepliesOnEvents} from '../../utils/filter';
+import {retrievePublicKey} from '../../utils/storage';
 import {NotesRoute, ReactionsRoute, RepliesRoute, RepostsRoute} from './routes';
 import {
   AboutContainer,
@@ -28,7 +28,6 @@ export default function Profile() {
   const [publicKey, setPublicKey] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState<boolean | undefined>(false);
 
-  const {retrievePublicKey} = useLocalstorage();
   const {getEvent, getUser, getEventsNotesFromPubkey, getUserQuery} = useNostr();
   const [profile, setProfile] = useState<IUserEvent | undefined>();
   const [isFirstLoadDone, setIsFirstLoadDone] = useState<boolean | undefined>(false);

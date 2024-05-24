@@ -2,9 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {Platform, View} from 'react-native';
 
 import {Typography} from '../../components';
-import useAuth from '../../hooks/useAuth';
-import {useLocalstorage} from '../../hooks/useLocalstorage';
-import {useNostr} from '../../hooks/useNostr';
+import {useAuth} from '../../store/auth';
+import {useNavigationStore} from '../../store/navigation';
 import {utf8StringToUint8Array} from '../../utils/format';
 import {
   generatePassword,
@@ -12,6 +11,8 @@ import {
   isBiometrySupported,
   saveCredentialsWithBiometry,
 } from '../../utils/keychain';
+import {generateRandomKeypair, getPublicKeyFromSecret} from '../../utils/keypair';
+import {retrievePublicKey, storePrivateKey, storePublicKey} from '../../utils/storage';
 import {
   Container,
   CreateAccountButton,
@@ -33,7 +34,8 @@ enum LoginStep {
 }
 
 export default function Login() {
-  const {login} = useAuth();
+  const setNavigationStack = useNavigationStore((state) => state.setStack);
+  const setAuth = useAuth((state) => state.setAuth);
 
   const [step, setStep] = useState<LoginStep>(LoginStep.HOME);
   const [bypassBiometric, setBiometrics] = useState<boolean>(Platform.OS == 'web' ? true : false); // DEV MODE in web to bypass biometric connection
@@ -50,13 +52,6 @@ export default function Login() {
     !password || !privateKeyImport || (password?.length == 0 && privateKeyImport?.length == 0)
       ? true
       : false;
-  const {generateKeypair, getPublicKeyByPk} = useNostr();
-  const {
-    encryptAndStorePrivateKey,
-    storePublicKey,
-    retrieveAndDecryptPrivateKey,
-    retrievePublicKey,
-  } = useLocalstorage();
 
   /** TODO check if user is already connected with a Nostr private key */
   useEffect(() => {
@@ -90,6 +85,7 @@ export default function Login() {
       alert('Enter password');
       return;
     }
+
     const biometrySupported = await isBiometrySupported();
     // @TODO (biometrySupported) uncomment web mode
     if (biometrySupported || bypassBiometric) {
@@ -100,30 +96,31 @@ export default function Login() {
       const credentials = await getCredentialsWithBiometry();
       if (credentials) {
         /**Generate keypair */
-        const {pk, sk, skString} = generateKeypair();
+        const {secretKey, secretKeyHex, publicKey} = generateRandomKeypair();
 
-        setPublicKey(pk);
-        setPrivateKey(sk);
-        await storePublicKey(pk);
-        setPrivateKeyReadable(skString);
+        setPublicKey(publicKey);
+        setPrivateKey(secretKey);
+        await storePublicKey(publicKey);
+        setPrivateKeyReadable(secretKeyHex);
 
         /** Save pk in localstorage */
-        const encryptedPk = await encryptAndStorePrivateKey(sk, credentials?.password, skString);
-        const storedPk = await storePublicKey(pk);
+        const encryptedPk = await storePrivateKey(secretKeyHex, credentials?.password);
+        const storedPk = await storePublicKey(publicKey);
+
+        setAuth(publicKey, secretKey);
       } else if (bypassBiometric) {
         /** @TODO comment web mode */
         /**Generate keypair */
-        const {pk, sk, skString} = generateKeypair();
-        setPublicKey(pk);
-        setPrivateKey(sk);
-        setPrivateKeyReadable(skString);
+        const {secretKey, secretKeyHex, publicKey} = generateRandomKeypair();
+        setPublicKey(publicKey);
+        setPrivateKey(secretKey);
+        setPrivateKeyReadable(secretKeyHex);
         /** Save pk in localstorage */
-        await storePublicKey(pk);
-        const encryptedPk = await encryptAndStorePrivateKey(sk, password, skString);
+        await storePublicKey(publicKey);
+        const encryptedPk = await storePrivateKey(secretKeyHex, password);
 
-        if (encryptedPk) {
-          setStep(LoginStep.ACCOUNT_CREATED);
-        }
+        setAuth(publicKey, secretKey);
+        setStep(LoginStep.ACCOUNT_CREATED);
         alert(JSON.stringify('Biometric authentication failed or credentials not found.'));
       }
     } else {
@@ -159,41 +156,38 @@ export default function Login() {
         /** @TODO comment web mode */
         // let keypairImport = await base64ToUint8Array(privateKeyImport);
         const keypairImport = await utf8StringToUint8Array(privateKeyImport);
-        const publicKey = getPublicKeyByPk(keypairImport);
+        const publicKey = getPublicKeyFromSecret(privateKeyImport);
         setPublicKey(publicKey);
 
         /** Save pk in localstorage */
-        const encryptedPk = await encryptAndStorePrivateKey(
-          keypairImport,
-          password,
-          privateKeyImport,
-        );
+        const encryptedPk = await storePrivateKey(privateKeyImport, password);
 
         if (privateKeyImport && keypairImport) {
           setPrivateKeyReadable(privateKeyImport);
           setIsSkipAvailable(true);
           setStep(LoginStep.EXPORTED_ACCOUNT);
           await storePublicKey(publicKey);
+
+          setAuth(publicKey, keypairImport);
         }
+
         // let storedPk = await storePublicKey(pk);
       } else if (bypassBiometric) {
         /** @TODO comment web mode */
         // let keypairImport = await base64ToUint8Array(privateKeyImport);
         const keypairImport = await utf8StringToUint8Array(privateKeyImport);
-        const publicKey = getPublicKeyByPk(keypairImport);
+        const publicKey = getPublicKeyFromSecret(keypairImport);
         setPublicKey(publicKey);
         /** Save pk in localstorage */
-        const encryptedPk = await encryptAndStorePrivateKey(
-          keypairImport,
-          password,
-          privateKeyImport,
-        );
+        const encryptedPk = await storePrivateKey(privateKeyImport, password);
 
         if (privateKeyImport && keypairImport) {
           setPrivateKeyReadable(privateKeyImport);
           setIsSkipAvailable(true);
           await storePublicKey(publicKey);
           setStep(LoginStep.EXPORTED_ACCOUNT);
+
+          setAuth(publicKey, keypairImport);
         }
 
         alert(JSON.stringify('Biometric authentication failed or credentials not found.'));
@@ -367,7 +361,7 @@ export default function Login() {
       )}
 
       {isSkipAvailable && (
-        <SkipButton onPress={login}>
+        <SkipButton onPress={() => setNavigationStack('app')}>
           <Typography variant="ts19m">Skip</Typography>
         </SkipButton>
       )}
