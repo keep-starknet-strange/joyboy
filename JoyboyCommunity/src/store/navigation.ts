@@ -24,6 +24,4 @@ const navigationStore = createStore<State & Action>((set, get) => ({
   },
 }));
 
-const useNavigationStore = createBoundedUseStore(navigationStore);
-
-export default useNavigationStore;
+export const useNavigationStore = createBoundedUseStore(navigationStore);
