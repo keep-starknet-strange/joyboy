@@ -30,6 +30,7 @@
     "crypto-es": "^2.1.0",
     "expo": "~51.0.8",
     "expo-crypto": "~13.0.2",
+    "expo-secure-store": "~13.0.1",
     "expo-splash-screen": "~0.27.4",
     "expo-status-bar": "~1.12.1",
     "fast-text-encoding": "^1.0.6",

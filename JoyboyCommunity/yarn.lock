@@ -3878,6 +3878,11 @@ expo-modules-core@1.12.11:
   dependencies:
     invariant "^2.2.4"
 
+expo-secure-store@~13.0.1:
+  version "13.0.1"
+  resolved "https://registry.yarnpkg.com/expo-secure-store/-/expo-secure-store-13.0.1.tgz#fc886d3e0ed12890c8dd74e7cc44e35b03f2d79b"
+  integrity sha512-5DTKjbv98X7yPbm+1jER/sOEIlt2Ih7qwabTvkWDXry5bPcQGoulxH5zIX9+JvVH7of8GI4t7NSEbpAO3P7FZA==
+
 expo-splash-screen@~0.27.4:
   version "0.27.4"
   resolved "https://registry.yarnpkg.com/expo-splash-screen/-/expo-splash-screen-0.27.4.tgz#d7a86a2a1a87824ed47388aa8836e91b61268c62"
