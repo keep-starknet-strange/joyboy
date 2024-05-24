@@ -4,7 +4,6 @@ import {Platform, View} from 'react-native';
 import {Typography} from '../../components';
 import useAuth from '../../hooks/useAuth';
 import {useLocalstorage} from '../../hooks/useLocalstorage';
-import {useNostr} from '../../hooks/useNostr';
 import {utf8StringToUint8Array} from '../../utils/format';
 import {
   generatePassword,
@@ -12,6 +11,7 @@ import {
   isBiometrySupported,
   saveCredentialsWithBiometry,
 } from '../../utils/keychain';
+import {generateRandomKeypair, getPublicKeyFromSecret} from '../../utils/keypair';
 import {
   Container,
   CreateAccountButton,
@@ -50,7 +50,6 @@ export default function Login() {
     !password || !privateKeyImport || (password?.length == 0 && privateKeyImport?.length == 0)
       ? true
       : false;
-  const {generateKeypair, getPublicKeyByPk} = useNostr();
   const {
     encryptAndStorePrivateKey,
     storePublicKey,
@@ -90,6 +89,7 @@ export default function Login() {
       alert('Enter password');
       return;
     }
+
     const biometrySupported = await isBiometrySupported();
     // @TODO (biometrySupported) uncomment web mode
     if (biometrySupported || bypassBiometric) {
@@ -100,26 +100,30 @@ export default function Login() {
       const credentials = await getCredentialsWithBiometry();
       if (credentials) {
         /**Generate keypair */
-        const {pk, sk, skString} = generateKeypair();
+        const {secretKey, secretKeyHex, publicKey} = generateRandomKeypair();
 
-        setPublicKey(pk);
-        setPrivateKey(sk);
-        await storePublicKey(pk);
-        setPrivateKeyReadable(skString);
+        setPublicKey(publicKey);
+        setPrivateKey(secretKey);
+        await storePublicKey(publicKey);
+        setPrivateKeyReadable(secretKeyHex);
 
         /** Save pk in localstorage */
-        const encryptedPk = await encryptAndStorePrivateKey(sk, credentials?.password, skString);
-        const storedPk = await storePublicKey(pk);
+        const encryptedPk = await encryptAndStorePrivateKey(
+          secretKey,
+          credentials?.password,
+          secretKeyHex,
+        );
+        const storedPk = await storePublicKey(publicKey);
       } else if (bypassBiometric) {
         /** @TODO comment web mode */
         /**Generate keypair */
-        const {pk, sk, skString} = generateKeypair();
-        setPublicKey(pk);
-        setPrivateKey(sk);
-        setPrivateKeyReadable(skString);
+        const {secretKey, secretKeyHex, publicKey} = generateRandomKeypair();
+        setPublicKey(publicKey);
+        setPrivateKey(secretKey);
+        setPrivateKeyReadable(secretKeyHex);
         /** Save pk in localstorage */
-        await storePublicKey(pk);
-        const encryptedPk = await encryptAndStorePrivateKey(sk, password, skString);
+        await storePublicKey(publicKey);
+        const encryptedPk = await encryptAndStorePrivateKey(secretKey, password, secretKeyHex);
 
         if (encryptedPk) {
           setStep(LoginStep.ACCOUNT_CREATED);
@@ -159,7 +163,7 @@ export default function Login() {
         /** @TODO comment web mode */
         // let keypairImport = await base64ToUint8Array(privateKeyImport);
         const keypairImport = await utf8StringToUint8Array(privateKeyImport);
-        const publicKey = getPublicKeyByPk(keypairImport);
+        const publicKey = getPublicKeyFromSecret(privateKeyImport);
         setPublicKey(publicKey);
 
         /** Save pk in localstorage */
@@ -180,7 +184,7 @@ export default function Login() {
         /** @TODO comment web mode */
         // let keypairImport = await base64ToUint8Array(privateKeyImport);
         const keypairImport = await utf8StringToUint8Array(privateKeyImport);
-        const publicKey = getPublicKeyByPk(keypairImport);
+        const publicKey = getPublicKeyFromSecret(keypairImport);
         setPublicKey(publicKey);
         /** Save pk in localstorage */
         const encryptedPk = await encryptAndStorePrivateKey(
