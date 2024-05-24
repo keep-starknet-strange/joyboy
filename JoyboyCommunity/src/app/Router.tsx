@@ -7,7 +7,7 @@ import {useTheme} from 'styled-components/native';
 
 import useNavigationStore from '../hooks/useNavigationContext';
 import Error from '../modules/error';
-import Feed from '../modules/feed';
+import FeedStackScreen from '../modules/feed/FeedStackScreen';
 import Login from '../modules/login';
 import Notifications from '../modules/notifications';
 import CreatePost from '../modules/post';
@@ -39,7 +39,7 @@ const HomeBottomTabNavigator: React.FC = () => {
     >
       <HomeBottomTabsStack.Screen
         name="Feed"
-        component={Feed}
+        component={FeedStackScreen}
         options={{
           tabBarActiveTintColor: 'white',
           tabBarInactiveTintColor: 'grey',
