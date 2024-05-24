@@ -3,7 +3,6 @@ import {Platform, View} from 'react-native';
 
 import {Typography} from '../../components';
 import useAuth from '../../hooks/useAuth';
-import {useLocalstorage} from '../../hooks/useLocalstorage';
 import {utf8StringToUint8Array} from '../../utils/format';
 import {
   generatePassword,
@@ -12,6 +11,7 @@ import {
   saveCredentialsWithBiometry,
 } from '../../utils/keychain';
 import {generateRandomKeypair, getPublicKeyFromSecret} from '../../utils/keypair';
+import {retrievePublicKey, storePrivateKey, storePublicKey} from '../../utils/storage';
 import {
   Container,
   CreateAccountButton,
@@ -50,12 +50,6 @@ export default function Login() {
     !password || !privateKeyImport || (password?.length == 0 && privateKeyImport?.length == 0)
       ? true
       : false;
-  const {
-    encryptAndStorePrivateKey,
-    storePublicKey,
-    retrieveAndDecryptPrivateKey,
-    retrievePublicKey,
-  } = useLocalstorage();
 
   /** TODO check if user is already connected with a Nostr private key */
   useEffect(() => {
@@ -108,11 +102,7 @@ export default function Login() {
         setPrivateKeyReadable(secretKeyHex);
 
         /** Save pk in localstorage */
-        const encryptedPk = await encryptAndStorePrivateKey(
-          secretKey,
-          credentials?.password,
-          secretKeyHex,
-        );
+        const encryptedPk = await storePrivateKey(secretKeyHex, credentials?.password);
         const storedPk = await storePublicKey(publicKey);
       } else if (bypassBiometric) {
         /** @TODO comment web mode */
@@ -123,11 +113,9 @@ export default function Login() {
         setPrivateKeyReadable(secretKeyHex);
         /** Save pk in localstorage */
         await storePublicKey(publicKey);
-        const encryptedPk = await encryptAndStorePrivateKey(secretKey, password, secretKeyHex);
+        const encryptedPk = await storePrivateKey(secretKeyHex, password);
 
-        if (encryptedPk) {
-          setStep(LoginStep.ACCOUNT_CREATED);
-        }
+        setStep(LoginStep.ACCOUNT_CREATED);
         alert(JSON.stringify('Biometric authentication failed or credentials not found.'));
       }
     } else {
@@ -167,11 +155,7 @@ export default function Login() {
         setPublicKey(publicKey);
 
         /** Save pk in localstorage */
-        const encryptedPk = await encryptAndStorePrivateKey(
-          keypairImport,
-          password,
-          privateKeyImport,
-        );
+        const encryptedPk = await storePrivateKey(privateKeyImport, password);
 
         if (privateKeyImport && keypairImport) {
           setPrivateKeyReadable(privateKeyImport);
@@ -187,11 +171,7 @@ export default function Login() {
         const publicKey = getPublicKeyFromSecret(keypairImport);
         setPublicKey(publicKey);
         /** Save pk in localstorage */
-        const encryptedPk = await encryptAndStorePrivateKey(
-          keypairImport,
-          password,
-          privateKeyImport,
-        );
+        const encryptedPk = await storePrivateKey(privateKeyImport, password);
 
         if (privateKeyImport && keypairImport) {
           setPrivateKeyReadable(privateKeyImport);
