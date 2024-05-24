@@ -4,7 +4,6 @@ import {ActivityIndicator, SafeAreaView, View} from 'react-native';
 import {FlatList, RefreshControl} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
-import {Divider} from '../../components';
 import {useNostr} from '../../hooks/useNostr';
 import {Post} from '../../shared/components/Post';
 import FloatingPostButton from './FloatingPostButton';
@@ -52,7 +51,7 @@ export default function Feed() {
   }, []);
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#f4f7fe'}}>
       <View style={{paddingTop: 12, paddingBottom: 18}}>
         <FlatList
           horizontal={true}
@@ -92,11 +91,6 @@ export default function Feed() {
             />
           );
         }}
-        ItemSeparatorComponent={() => (
-          <View style={{marginVertical: 18}}>
-            <Divider />
-          </View>
-        )}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={handeGetData} />}
       />
 
