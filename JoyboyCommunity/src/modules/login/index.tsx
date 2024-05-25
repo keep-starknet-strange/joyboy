@@ -79,7 +79,6 @@ export default function Login() {
     await storePublicKey(publicKey);
 
     const biometrySupported = await isBiometrySupported();
-
     if (biometrySupported && !bypassBiometric) {
       await saveCredentialsWithBiometry(publicKey, password);
     }
@@ -127,9 +126,18 @@ export default function Login() {
     }
 
     const secretKey = await retrieveAndDecryptPrivateKey(password);
+    if (!secretKey || secretKey.length !== 32) {
+      alert('Invalid password');
+      return;
+    }
+
+    const storedPublicKey = await retrievePublicKey();
     const publicKey = getPublicKeyFromSecret(secretKey);
 
-    console.log(secretKey, publicKey);
+    if (publicKey !== storedPublicKey) {
+      alert('Invalid password');
+      return;
+    }
 
     setAuth(publicKey, secretKey);
     setNavigationStack('app');
