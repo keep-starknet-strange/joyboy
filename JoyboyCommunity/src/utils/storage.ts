@@ -69,3 +69,17 @@ export const retrieveAndDecryptPrivateKey = async (
     throw new Error('Error retrieving and decrypting private key');
   }
 };
+
+export const storePassword = async (password: string) => {
+  if (isSecureStoreAvailable) {
+    return SecureStore.setItemAsync('password', password, {requireAuthentication: true});
+  }
+};
+
+export const retrievePassword = async () => {
+  if (isSecureStoreAvailable) {
+    return SecureStore.getItemAsync('password', {requireAuthentication: true});
+  }
+
+  return null;
+};
