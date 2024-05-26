@@ -122,12 +122,11 @@ mod tests {
 
     #[test]
     fn test_supports_interface() {
-
         let contract_address = deploy_social_account();
         let dispatcher = ISRC5Dispatcher { contract_address };
-        
+
         let supports_src5 = dispatcher.supports_interface(ISRC5_ID);
-        
+
         assert!(supports_src5, "The contract does not support the ISRC5 interface");
     }
 }
