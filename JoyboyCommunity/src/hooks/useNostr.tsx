@@ -8,11 +8,10 @@ import {
   VerifiedEvent,
   verifyEvent,
 } from 'nostr-tools';
-import {generateSecretKey, getPublicKey} from 'nostr-tools';
 import {useMemo, useState} from 'react';
 
-import {uint8ArrayToHex} from '../utils/format';
 import {RELAYS_PROD} from '../utils/relay';
+
 export const useNostr = () => {
   const pool = new SimplePool();
   const relays = RELAYS_PROD;
@@ -27,34 +26,6 @@ export const useNostr = () => {
   const events = useMemo(() => {
     return eventsData;
   }, [eventsData]);
-
-  const generateKeypair = () => {
-    try {
-      const sk = generateSecretKey();
-      const skString = uint8ArrayToHex(sk);
-      console.log('skString', skString);
-
-      const pk = getPublicKey(sk);
-      return {
-        pk,
-        sk,
-        skString,
-      };
-    } catch (e) {
-      console.log('Error generateKeypair', e);
-    }
-  };
-
-  const getPublicKeyByPk = (sk: Uint8Array) => {
-    try {
-      const pk = getPublicKey(sk);
-      return pk;
-    } catch (e) {
-      console.log('Error getPublicKeyByPk', e);
-
-      return undefined;
-    }
-  };
 
   const setEvents = (eventsData?: NostrEvent[]) => {
     setEventsData(eventsData);
@@ -267,10 +238,8 @@ export const useNostr = () => {
     eventsData,
     parsingNip05EventContent,
     getUser,
-    generateKeypair,
     getEventsNotesFromPubkey,
     sendNote,
-    getPublicKeyByPk,
     getUserQuery,
     getEventsFromPubkey,
     getEventsByQuery,

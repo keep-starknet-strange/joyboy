@@ -5,15 +5,15 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useMemo} from 'react';
 import {useTheme} from 'styled-components/native';
 
-import useNavigationStore from '../hooks/useNavigationContext';
 import Error from '../modules/error';
-import Feed from '../modules/feed';
+import FeedStackScreen from '../modules/feed/FeedStackScreen';
 import Login from '../modules/login';
 import Notifications from '../modules/notifications';
 import CreatePost from '../modules/post';
 import Profile from '../modules/profile';
 import {NoteDetail} from '../screens/NoteDetail';
 import {UserDetail} from '../screens/UserDetail';
+import {useNavigationStore} from '../store/navigation';
 import {HomeStackParams, RootStackParams} from '../types';
 
 const RootStack = createNativeStackNavigator<RootStackParams>();
@@ -39,7 +39,7 @@ const HomeBottomTabNavigator: React.FC = () => {
     >
       <HomeBottomTabsStack.Screen
         name="Feed"
-        component={Feed}
+        component={FeedStackScreen}
         options={{
           tabBarActiveTintColor: 'white',
           tabBarInactiveTintColor: 'grey',

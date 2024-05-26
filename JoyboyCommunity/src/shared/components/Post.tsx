@@ -8,20 +8,25 @@ import styled from 'styled-components/native';
 import {Typography} from '../../components';
 import {Post as PostType, RootStackNavigationProps} from '../../types';
 
+const PostCard = styled(View)`
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 8px;
+  margin: 0 20px 18px 20px;
+`;
 const PostLayout = styled(View)`
   flex-direction: row;
-  gap: 18px;
-  padding: 0px 12px;
 `;
 
 export const InteractionContainer = styled(View)`
-  margin-vertical: 10px;
-  margin-horizontal: 20px;
+  margin-top: 30px;
+  width: 100%;
   display: flex;
   gap: 8px;
   flex-direction: row;
   align-content: center;
   align-self: center;
+  justify-content: space-between;
 `;
 
 export const Icon = styled(View)`
@@ -47,16 +52,22 @@ export const Post: React.FC<PostProps> = (props) => {
   /** @TODO comment in Nostr */
   const handleComment = () => {};
 
+  /** @TODO comment in Nostr */
+  const handleLike = () => {};
+
   /** @TODO repost in Nostr */
   const handleRepostNote = () => {
     alert('Handle repost');
   };
 
+  const handleNavigateToPostDetails = () => {
+    navigation.navigate('PostDetails', {post, event, repostedEvent, sourceUser: props.sourceUser});
+  };
   /** @TODO react in Nostr */
   const handleReact = () => {};
 
   return (
-    <View>
+    <PostCard>
       {repostedEvent && (
         <View>
           <Typography>Reposted</Typography>
@@ -64,7 +75,7 @@ export const Post: React.FC<PostProps> = (props) => {
       )}
       {/* TODO different rendering base on kind =1,6,7 and tags for kind = 1 */}
       <PostLayout>
-        <View style={{flex: 0.1}}>
+        <View style={{marginRight: 10}}>
           <Pressable onPress={() => handleProfilePress(event?.pubkey)}>
             <Image
               source={props?.sourceUser ?? require('../../../assets/joyboy-logo.png')}
@@ -73,43 +84,63 @@ export const Post: React.FC<PostProps> = (props) => {
           </Pressable>
         </View>
 
-        <View style={{gap: 4, flex: 0.9}}>
-          <Text style={{color: 'black', fontWeight: '700'}}>{event?.pubkey}</Text>
-          <Text style={{color: 'black'}}>
-            {repostedEvent?.content ? repostedEvent?.content : event?.content}
-          </Text>
+        <View style={{gap: 4, flex: 1}}>
+          <Pressable onPress={handleNavigateToPostDetails}>
+            <Text style={{color: 'black', fontWeight: '700'}}>{event?.pubkey}</Text>
 
-          {post?.source && (
-            <Image
-              source={{uri: post.source}}
-              style={{
-                width: '100%',
+            {post?.source && (
+              <Image
+                source={{uri: post.source}}
+                style={{
+                  width: '100%',
 
-                height: 200,
-                borderRadius: 8,
-                marginTop: 8,
-              }}
-            />
-          )}
+                  height: 200,
+                  borderRadius: 8,
+                  marginTop: 8,
+                }}
+              />
+            )}
+          </Pressable>
         </View>
+
         {/* TODO check tags if it's:
         quote
         repost
         reply  */}
-      </PostLayout>
-
-      <InteractionContainer>
-        <Icon as={Octicons} name="comment" size={24} color="black" onPress={handleComment} />
-        <Icon as={Octicons} name="share" size={24} color="black" onPress={handleRepostNote} />
-
         <Icon
-          as={MaterialIcons}
-          name="add-reaction"
+          as={Octicons}
+          name="heart"
           size={24}
           color="black"
+          onPress={handleLike}
+          style={{alignSelf: 'center'}}
+        />
+      </PostLayout>
+      <Pressable onPress={handleNavigateToPostDetails}>
+        <Text style={{color: 'black', marginTop: 10}}>
+          {repostedEvent?.content ? repostedEvent?.content : event?.content}
+        </Text>
+      </Pressable>
+      <InteractionContainer>
+        <Pressable onPress={handleNavigateToPostDetails} style={{flex: 1}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
+            <Icon as={Octicons} name="comment" size={18} color="#406686" onPress={handleComment} />
+            <Text style={{color: '#406686', fontWeight: '500', fontSize: 11}}>16 comments</Text>
+          </View>
+        </Pressable>
+        <Icon
+          as={MaterialIcons}
+          name="more-horiz"
+          size={18}
+          color="#406686"
           onPress={handleReact}
         />
       </InteractionContainer>
-    </View>
+    </PostCard>
   );
 };

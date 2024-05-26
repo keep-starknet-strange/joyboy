@@ -4,15 +4,15 @@ import {Pressable, View} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 
 import {Divider, KeyboardAvoidingView, Typography} from '../../components';
-import {useLocalstorage} from '../../hooks/useLocalstorage';
 import {useNostr} from '../../hooks/useNostr';
+import {useAuth} from '../../store/auth';
 import {Container, Photo, PostButton, TitleContainer} from './styled';
 
 export default function CreatePost() {
   const navigation = useNavigation();
 
+  const {privateKey} = useAuth();
   const {sendNote} = useNostr();
-  const {retrieveAndDecryptPrivateKey} = useLocalstorage();
   const [note, setNote] = useState<string | undefined>();
 
   const handleGoBack = useCallback(() => {
@@ -28,15 +28,14 @@ export default function CreatePost() {
         return;
       }
       alert('Note sending, please wait.');
-      const {array} = await retrieveAndDecryptPrivateKey();
 
-      if (!array) {
+      if (!privateKey) {
         alert('Please login before send a note');
         return;
       }
 
       /** @TODO handle tags NIP-10  */
-      const noteEvent = sendNote(array, note);
+      const noteEvent = sendNote(privateKey, note);
       console.log('noteEvent', noteEvent);
       if (noteEvent?.isValid) {
         alert('Note send');
