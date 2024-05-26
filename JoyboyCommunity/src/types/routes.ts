@@ -1,11 +1,20 @@
 import {CompositeScreenProps, NavigatorScreenParams} from '@react-navigation/native';
 import {NativeStackNavigationProp, NativeStackScreenProps} from '@react-navigation/native-stack';
+import {Event as EventNostr} from 'nostr-tools';
+
+import {Post} from './post';
 
 export type RootStackParams = {
   Home: NavigatorScreenParams<HomeStackParams>;
   CreatePost: undefined;
   UserDetail: {userId: string};
   NoteDetail: {noteId: string};
+  PostDetails: {
+    post: Post;
+    event: EventNostr;
+    repostedEvent: EventNostr;
+    sourceUser?: string;
+  };
 
   Loading: undefined;
 
