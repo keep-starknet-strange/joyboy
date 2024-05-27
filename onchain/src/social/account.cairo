@@ -67,7 +67,7 @@ pub mod SocialAccount {
     }
 
     #[external(v0)]
-    fn supports_interface_fn(self: @ContractState, interface_id: felt252) -> bool {
+    fn is_supported_interface(self: @ContractState, interface_id: felt252) -> bool {
         self.src5.supports_interface(interface_id)
     }
 }
