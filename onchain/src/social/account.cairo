@@ -1,5 +1,6 @@
 use starknet::{ContractAddress, get_caller_address, get_contract_address, contract_address_const};
 use super::profile::NostrProfile;
+use core::to_byte_array::{AppendFormattedToByteArray, FormatAsByteArray};
 use super::request::SocialRequest;
 use super::transfer::{Transfer};
 use joyboy::utils::{compute_sha256_byte_array};
@@ -20,9 +21,9 @@ pub mod SocialAccount {
 
     use openzeppelin::account::interface;
     use openzeppelin::introspection::interface::ISRC5;
-    use openzeppelin::introspection::interface::ISRC5Camel;
-    use openzeppelin::introspection::src5::SRC5;
-    use openzeppelin::introspection::src5::unsafe_state as src5_state;
+    // use openzeppelin::introspection::interface::ISRC5Camel;
+    // use openzeppelin::introspection::src5::SRC5;
+    // use openzeppelin::introspection::src5::unsafe_state as src5_state;
     use starknet::account::Call;
     use starknet::get_caller_address;
     use starknet::get_contract_address;
@@ -121,30 +122,11 @@ pub mod SocialAccount {
             let valid_length = signature.len() == 2_u32;
 
             let public_key = self.public_key.read();
-            // how do i get the event message in order to use it here
-            let id = @format!(
-                "[0,\"{}\",{},{},{},\"{}\"]",
-                public_key.format_as_byte_array(16),
-                request_event.created_at,
-                request_event.kind,
-                request_event.tags,
-                request_event.content.encode()
-            );
 
-            let [x0, x1, x2, x3, x4, x5, x6, x7] = compute_sha256_byte_array(id);
-
-            let mut ba = Default::default();
-            ba.append_word(x0.into(), 4);
-            ba.append_word(x1.into(), 4);
-            ba.append_word(x2.into(), 4);
-            ba.append_word(x3.into(), 4);
-            ba.append_word(x4.into(), 4);
-            ba.append_word(x5.into(), 4);
-            ba.append_word(x6.into(), 4);
-            ba.append_word(x7.into(), 4);
+            let byte_array = format_as_byte_array(hash, 16);
 
             if valid_length {
-                bip340::verify(public_key, *social_event.sig.r, *social_event.sig.s, ba)
+                bip340::verify(public_key, *signature.at(0_u32), *signature.at(1_u32), byte_array)
             } else {
                 false
             }
