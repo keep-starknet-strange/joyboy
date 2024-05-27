@@ -58,10 +58,16 @@ name = "joyboy"
 version = "0.1.0"
 dependencies = [
  "alexandria_math",
+ "openzeppelin",
  "snforge_std",
 ]
 
 [[package]]
+name = "openzeppelin"
+version = "0.13.0"
+source = "git+https://github.com/openzeppelin/cairo-contracts?branch=main#978b4e75209da355667d8954d2450e32bd71fe49"
+
+[[package]]
 name = "snforge_std"
-version = "0.21.0"
-source = "git+https://github.com/foundry-rs/starknet-foundry?tag=v0.21.0#2996b8c1dd66b2715fc67e69578089f278a46790"
+version = "0.24.0"
+source = "git+https://github.com/foundry-rs/starknet-foundry?tag=v0.24.0#95e9fb09cb91b3c05295915179ee1b55bf923653"
