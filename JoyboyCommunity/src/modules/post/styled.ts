@@ -29,9 +29,7 @@ export const TitleContainer = styled(View)`
   display: flex;
   flex:1;
   align-items: flex-start;
-  padding: 10px;
-  margin-left: 14px;
-  margin-left: 14px;
+  padding: 10px 16px;
 `;
 
 export const Photo = styled(Image)`
