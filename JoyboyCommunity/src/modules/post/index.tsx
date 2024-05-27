@@ -63,7 +63,7 @@ export default function CreatePost() {
       </View>
 
       <TitleContainer>
-        <Photo source={{uri: 'https://picsum.photos/201/300'}} />
+        <Photo source={require('../../../assets/profile.png')} />
         <TextInput
           style={{flex: 1, paddingTop: 10, paddingBottom: 10, fontSize: 16, lineHeight: 20}}
           autoFocus
