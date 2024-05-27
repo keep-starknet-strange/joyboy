@@ -1,12 +1,12 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useState} from 'react';
-import {Pressable, View} from 'react-native';
+import {Image, Pressable, TouchableOpacity, View} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 
 import {Divider, KeyboardAvoidingView, Typography} from '../../components';
 import {useNostr} from '../../hooks/useNostr';
 import {useAuth} from '../../store/auth';
-import {Container, Photo, PostButton, TitleContainer} from './styled';
+import {Container, Photo, PostButton, TitleContainer,Icons, IconContainer, Sendbutton, IconDiv} from './styled';
 
 export default function CreatePost() {
   const navigation = useNavigation();
@@ -50,28 +50,47 @@ export default function CreatePost() {
     <KeyboardAvoidingView>
       <Container>
         <Pressable onPress={handleGoBack}>
-          <Typography variant="ts15r">Cancel</Typography>
+          <Typography  style={{color:'#4B799F', fontSize: 17  }} variant="ts15r">Cancel</Typography>
         </Pressable>
 
         <PostButton onPress={handlePostNote} disabled={isCreateDisabled}>
-          <Typography variant="ts15r">Post</Typography>
+          <Typography  style={{color:'#4B799F', fontSize: 17}} variant="ts15r">Draft</Typography>
         </PostButton>
       </Container>
 
-      <View style={{marginBottom: 12}}>
+      <View style={{marginBottom: 1}}>
         <Divider />
       </View>
 
       <TitleContainer>
         <Photo source={{uri: 'https://picsum.photos/201/300'}} />
         <TextInput
+          style={{flex: 1, paddingTop: 10, paddingBottom: 10, fontSize: 16, lineHeight: 20}}
           autoFocus
           multiline={true}
           value={note}
-          placeholder="Title"
+          placeholder="Make a post"
           onChangeText={setNote}
         />
       </TitleContainer>
+
+      <IconDiv >
+    <Sendbutton source={require('../../../assets/Post1.png')}/>
+      <IconContainer>
+  <TouchableOpacity>
+           <Icons source={require('../../../assets/image-02.png')} />
+       </TouchableOpacity>
+
+          <TouchableOpacity>
+           <Icons source={require('../../../assets/gif-02.png')} />
+       </TouchableOpacity>
+
+          <TouchableOpacity>
+           <Icons source={require('../../../assets/sticky-note-02.png')} />
+       </TouchableOpacity>
+      </IconContainer>
+     
+      </IconDiv>
     </KeyboardAvoidingView>
   );
 }
