@@ -8,9 +8,9 @@ use core::result::ResultTrait;
 use core::starknet::SyscallResultTrait;
 use core::to_byte_array::{AppendFormattedToByteArray, FormatAsByteArray};
 use core::traits::Into;
-use starknet::{secp256k1::{Secp256k1Point}, secp256_trait::{Secp256Trait, Secp256PointTrait}};
 
 use joyboy::utils::{shl, shr, compute_sha256_byte_array};
+use starknet::{secp256k1::{Secp256k1Point}, secp256_trait::{Secp256Trait, Secp256PointTrait}};
 
 const TWO_POW_32: u128 = 0x100000000;
 const TWO_POW_64: u128 = 0x10000000000000000;
@@ -130,9 +130,9 @@ pub fn verify(px: u256, rx: u256, s: u256, m: ByteArray) -> bool {
 
 #[cfg(test)]
 mod tests {
+    use core::byte_array::ByteArrayTrait;
     use core::clone::Clone;
     use core::option::OptionTrait;
-    use core::byte_array::ByteArrayTrait;
     use core::traits::Into;
     use super::verify;
 
