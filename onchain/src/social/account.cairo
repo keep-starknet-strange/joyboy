@@ -38,7 +38,6 @@ pub mod SocialAccount {
     struct Storage {
         #[key]
         public_key: u256,
-        request_event: SocialRequest
     }
 
     #[event]
