@@ -83,17 +83,47 @@ pub mod SocialAccount {
                 assert(version == QUERY_VERSION, 'Account: invalid tx version');
             }
 
-            _execute_calls(calls)
+            let mut res = ArrayTrait::new();
+            loop {
+                match calls.pop_front() {
+                    Option::Some(call) => {
+                        let _res = starknet::call_contract_syscall(to, selector, calldata.span())
+                            .unwrap();
+                        res.append(_res);
+                    },
+                    Option::None(_) => { break (); },
+                };
+            };
+            res
+        //  _execute_calls(calls)
         }
 
         fn __validate__(self: @ContractState, mut calls: Array<Call>) -> felt252 {
-            self.validate_transaction()
+            // self.validate_transaction()
+            let tx_info = get_tx_info().unbox();
+            let tx_hash = tx_info.transaction_hash;
+            let signature = tx_info.signature;
+            if self.is_valid_signature(tx_hash, signature) != starknet::VALIDATED {
+               return 0;
+            }
+           
+            starknet::VALIDATED
         }
 
         fn is_valid_signature(
             self: @ContractState, hash: felt252, signature: Array<felt252>
         ) -> felt252 {
-            if self._is_valid_signature(hash, signature.span()) {
+            assert(signature.len() == 2_u32, 'Invalid Signature Length');
+
+            let public_key = self.public_key.read();
+
+            let byte_array = format_as_byte_array(hash, 16);
+
+            let verify_signature = bip340::verify(
+                public_key, *signature.at(0_u32), *signature.at(1_u32), byte_array
+            );
+
+            if verify_signature {
                 starknet::VALIDATED
             } else {
                 0
