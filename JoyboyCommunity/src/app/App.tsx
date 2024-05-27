@@ -4,7 +4,9 @@ import * as SplashScreen from 'expo-splash-screen';
 import React, {useCallback, useEffect, useState} from 'react';
 import {StatusBar, View} from 'react-native';
 
-import {useNostr} from '../hooks/useNostr';
+import NDKProvider from '../context/NDKContext';
+import NostrProvider from '../context/NostrContext';
+import PoolProvider from '../context/PoolContext';
 import {Router} from './Router';
 
 // Keep the splash screen visible while we fetch resources
@@ -12,8 +14,6 @@ SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
-
-  const {getEvents, getEventsNotes, setEvents, events} = useNostr();
 
   useEffect(() => {
     async function prepare() {
@@ -47,10 +47,16 @@ export default function App() {
   }
 
   return (
-    <View style={{flex: 1}} onLayout={onLayoutRootView}>
-      <StatusBar backgroundColor="#15141A" />
+    <NostrProvider>
+      <PoolProvider>
+        <NDKProvider>
+          <View style={{flex: 1}} onLayout={onLayoutRootView}>
+            <StatusBar backgroundColor="#15141A" />
 
-      <Router />
-    </View>
+            <Router />
+          </View>
+        </NDKProvider>
+      </PoolProvider>
+    </NostrProvider>
   );
 }
