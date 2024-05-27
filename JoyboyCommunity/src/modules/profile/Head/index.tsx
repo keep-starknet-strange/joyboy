@@ -2,7 +2,7 @@ import {Feather} from '@expo/vector-icons';
 import {Image, Pressable, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
-import {IconButton, Typography} from '../../components';
+import {IconButton, Typography} from '../../../components';
 import styles from './styles';
 
 export type ProfileHeadProps = {
