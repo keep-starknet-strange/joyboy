@@ -87,6 +87,7 @@ pub mod SocialAccount {
             loop {
                 match calls.pop_front() {
                     Option::Some(call) => {
+                        let Call{to, selector, calldata } = call;
                         let _res = starknet::call_contract_syscall(to, selector, calldata.span())
                             .unwrap();
                         res.append(_res);
