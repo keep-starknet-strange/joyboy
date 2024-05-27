@@ -49,9 +49,9 @@ pub mod SocialAccount {
         }
         fn handle_transfer(ref self: ContractState, request: SocialRequest<Transfer>) {
             assert!(request.public_key == self.public_key.read(), "wrong public_key");
-            // assert!(request.verify());
-            // let erc20 = IERC20Dispatcher { contract_address: request.content.token_address };
-            // assert_eq!(erc20.symbol(), request.content.token);
+        // assert!(request.verify());
+        // let erc20 = IERC20Dispatcher { contract_address: request.content.token_address };
+        // assert_eq!(erc20.symbol(), request.content.token);
         }
     }
 }
@@ -143,12 +143,10 @@ mod tests {
             relays: array!["wss://relay.joyboy.community.com"]
         };
 
-        let recipient_public_key = 0x5b2b830f2778075ab3befb5a48c9d8138aef017fab2b26b5c31a2742a901afcc_u256;
+        let recipient_public_key =
+            0x5b2b830f2778075ab3befb5a48c9d8138aef017fab2b26b5c31a2742a901afcc_u256;
 
-        let recipient = NostrProfile {
-            public_key: recipient_public_key,
-            relays: array![]
-        };
+        let recipient = NostrProfile { public_key: recipient_public_key, relays: array![] };
 
         let account = deploy_account(recipient_public_key);
         let erc20 = deploy_erc20("USDC token", "USDC", 100, account.contract_address);
