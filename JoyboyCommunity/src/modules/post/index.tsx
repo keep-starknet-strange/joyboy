@@ -6,7 +6,16 @@ import {TextInput} from 'react-native-gesture-handler';
 import {Divider, KeyboardAvoidingView, Typography} from '../../components';
 import {useNostr} from '../../hooks/useNostr';
 import {useAuth} from '../../store/auth';
-import {Container, Photo, PostButton, TitleContainer,Icons, IconContainer, Sendbutton, IconDiv} from './styled';
+import {
+  Container,
+  Photo,
+  PostButton,
+  TitleContainer,
+  Icons,
+  IconContainer,
+  Sendbutton,
+  IconDiv,
+} from './styled';
 
 export default function CreatePost() {
   const navigation = useNavigation();
@@ -50,11 +59,15 @@ export default function CreatePost() {
     <KeyboardAvoidingView>
       <Container>
         <Pressable onPress={handleGoBack}>
-          <Typography  style={{color:'#4B799F', fontSize: 17  }} variant="ts15r">Cancel</Typography>
+          <Typography style={{color: '#4B799F', fontSize: 17}} variant="ts15r">
+            Cancel
+          </Typography>
         </Pressable>
 
         <PostButton onPress={handlePostNote} disabled={isCreateDisabled}>
-          <Typography  style={{color:'#4B799F', fontSize: 17}} variant="ts15r">Draft</Typography>
+          <Typography style={{color: '#4B799F', fontSize: 17}} variant="ts15r">
+            Draft
+          </Typography>
         </PostButton>
       </Container>
 
@@ -74,22 +87,21 @@ export default function CreatePost() {
         />
       </TitleContainer>
 
-      <IconDiv >
-    <Sendbutton source={require('../../../assets/Post1.png')}/>
-      <IconContainer>
-  <TouchableOpacity>
-           <Icons source={require('../../../assets/image-02.png')} />
-       </TouchableOpacity>
+      <IconDiv>
+        <Sendbutton source={require('../../../assets/Post1.png')} />
+        <IconContainer>
+          <TouchableOpacity>
+            <Icons source={require('../../../assets/image-02.png')} />
+          </TouchableOpacity>
 
           <TouchableOpacity>
-           <Icons source={require('../../../assets/gif-02.png')} />
-       </TouchableOpacity>
+            <Icons source={require('../../../assets/gif-02.png')} />
+          </TouchableOpacity>
 
           <TouchableOpacity>
-           <Icons source={require('../../../assets/sticky-note-02.png')} />
-       </TouchableOpacity>
-      </IconContainer>
-     
+            <Icons source={require('../../../assets/sticky-note-02.png')} />
+          </TouchableOpacity>
+        </IconContainer>
       </IconDiv>
     </KeyboardAvoidingView>
   );
