@@ -131,57 +131,6 @@ pub mod SocialAccount {
         }
     }
 
-    //
-    // Internal
-    //
-
-    #[generate_trait]
-    impl InternalImpl of InternalTrait {
-        fn validate_transaction(self: @ContractState) -> felt252 {
-            let tx_info = get_tx_info().unbox();
-            let tx_hash = tx_info.transaction_hash;
-            let signature = tx_info.signature;
-            assert(self._is_valid_signature(tx_hash, signature), 'Account: invalid signature');
-            starknet::VALIDATED
-        }
-
-        fn _is_valid_signature(
-            self: @ContractState, hash: felt252, signature: Span<felt252>,
-        ) -> bool {
-            let valid_length = signature.len() == 2_u32;
-
-            let public_key = self.public_key.read();
-
-            let byte_array = format_as_byte_array(hash, 16);
-
-            if valid_length {
-                bip340::verify(public_key, *signature.at(0_u32), *signature.at(1_u32), byte_array)
-            } else {
-                false
-            }
-        }
-    }
-
-    #[private]
-    fn _execute_calls(mut calls: Array<Call>) -> Array<Span<felt252>> {
-        let mut res = ArrayTrait::new();
-        loop {
-            match calls.pop_front() {
-                Option::Some(call) => {
-                    let _res = _execute_single_call(call);
-                    res.append(_res);
-                },
-                Option::None(_) => { break (); },
-            };
-        };
-        res
-    }
-
-    #[private]
-    fn _execute_single_call(call: Call) -> Span<felt252> {
-        let Call { to, selector, calldata } = call;
-        starknet::call_contract_syscall(to, selector, calldata.span()).unwrap()
-    }
 }
 
 #[cfg(test)]
