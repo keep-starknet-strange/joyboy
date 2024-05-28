@@ -1,5 +1,5 @@
-use core::integer::{u32_wide_mul, u8_wide_mul, BoundedInt};
 use alexandria_math::sha256::sha256;
+use core::integer::{u32_wide_mul, u8_wide_mul, BoundedInt};
 
 trait Pow2<V, N> {
     #[inline]
