@@ -10,7 +10,6 @@ use core::to_byte_array::FormatAsByteArray;
 use core::traits::{Into, TryInto};
 
 use joyboy::utils::{shl, shr};
-
 //! bech32 encoding implementation
 //! Spec: https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki
 //! Sample implementations:
@@ -22,7 +21,6 @@ fn polymod(values: Array<u8>) -> u32 {
         0x3b6a57b2_u32, 0x26508e6d_u32, 0x1ea119fa_u32, 0x3d4233dd_u32, 0x2a1462b3_u32
     ];
     let generator = generator.span();
-
     let mut chk = 1_u32;
 
     let len = values.len();
@@ -81,46 +79,32 @@ fn convert_bytes_to_5bit_chunks(bytes: @Array<u8>) -> Array<u8> {
 
     let len = bytes.len();
     let mut i = 0;
-
     let mut acc = 0_u8;
     let mut missing_bits = 5_u8;
 
-    // println!("bytes = {bytes:?}");
-    loop {
-        if i == len {
-            break ();
-        }
+    while i < len {
         let mut byte: u8 = *bytes.at(i);
         let mut bits_left = 8_u8;
-        loop {
+        while bits_left > 0 {
             let chunk_size = min(missing_bits, bits_left);
             let chunk = shr(byte, 8 - chunk_size);
-            // println!(
-            //     "byte: {}, acc: {}, chunk: {} -> {}",
-            //     byte.format_as_byte_array(2),
-            //     acc.format_as_byte_array(2),
-            //     chunk.format_as_byte_array(2),
-            //     (acc + chunk).format_as_byte_array(2)
-            // );
             r.append(acc + chunk);
             byte = shl(byte, chunk_size);
             bits_left -= chunk_size;
             if bits_left < 5 {
                 acc = shr(byte, 3);
                 missing_bits = 5 - bits_left;
-                break ();
+                break;
             } else {
                 acc = 0;
-                missing_bits = 5
+                missing_bits = 5;
             }
-        };
+        }
         i += 1;
-    };
+    }
     if missing_bits < 5 {
-        // println!("-> {}", acc.format_as_byte_array(2));
         r.append(acc);
     }
-    // println!("r = {r:?}");
     r
 }
 
@@ -161,30 +145,33 @@ fn checksum(hrp: @ByteArray, data: @Array<u8>) -> Array<u8> {
     r
 }
 
+const ALPHABET: ByteArray = "qpzry9x8gf2tvdw0s3jn54khce6mua7l";
 pub fn encode(hrp: @ByteArray, data: @ByteArray, limit: usize) -> ByteArray {
-    // change into an array and a const
-    let alphabet: ByteArray = "qpzry9x8gf2tvdw0s3jn54khce6mua7l";
-
+  
     let data_5bits = convert_bytes_to_5bit_chunks(@data.into());
-
     let cs = checksum(hrp, @data_5bits);
-
     let mut combined = ArrayTrait::new();
     combined.append_span(data_5bits.span());
     combined.append_span(cs.span());
+    let mut encoded: ByteArray = ByteArray::with_capacity(hrp.len() + combined.len() + 1);
 
-    let mut encoded: ByteArray = Default::default();
     let mut i = 0;
-    let len = combined.len();
-    loop {
-        if i == len {
-            break ();
-        }
-        encoded.append_byte(alphabet.at((*combined.at(i)).into()).unwrap());
+    let hrp_len = hrp.len();
+    while i < hrp_len {
+        encoded.append_byte(hrp.at(i).unwrap());
         i += 1;
+    }
+
+    encoded.append_byte(b'1');
+
+    let mut j = 0;
+    let combined_len = combined.len();
+    while j < combined_len {
+        encoded.append_byte(ALPHABET.at((*combined.at(j)).into()).unwrap());
+        j += 1;
     };
 
-    format!("{hrp}1{encoded}")
+    encoded
 }
 
 #[cfg(test)]
