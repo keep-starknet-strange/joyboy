@@ -10,9 +10,9 @@ import FeedStackScreen from '../modules/feed/FeedStackScreen';
 import Login from '../modules/login';
 import Notifications from '../modules/notifications';
 import CreatePost from '../modules/post';
-import Profile from '../modules/profile';
 import {NoteDetail} from '../screens/NoteDetail';
-import {UserDetail} from '../screens/UserDetail';
+import {Profile} from '../screens/Profile';
+import {useAuth} from '../store/auth';
 import {useNavigationStore} from '../store/navigation';
 import {HomeStackParams, RootStackParams} from '../types';
 
@@ -21,6 +21,7 @@ const HomeBottomTabsStack = createBottomTabNavigator<HomeStackParams>();
 
 const HomeBottomTabNavigator: React.FC = () => {
   const theme = useTheme();
+  const {publicKey} = useAuth();
 
   return (
     <HomeBottomTabsStack.Navigator
@@ -48,9 +49,11 @@ const HomeBottomTabNavigator: React.FC = () => {
           ),
         }}
       />
+
       <HomeBottomTabsStack.Screen
-        name="Profile"
+        name="UserProfile"
         component={Profile}
+        initialParams={{publicKey}}
         options={{
           tabBarActiveTintColor: 'white',
           tabBarInactiveTintColor: 'grey',
@@ -86,7 +89,7 @@ const RootNavigator: React.FC = () => {
           <>
             <RootStack.Screen name="Home" component={HomeBottomTabNavigator} />
             <RootStack.Screen name="CreatePost" component={CreatePost} />
-            <RootStack.Screen name="UserDetail" component={UserDetail} />
+            <RootStack.Screen name="Profile" component={Profile} />
             <RootStack.Screen name="NoteDetail" component={NoteDetail} />
           </>
         );

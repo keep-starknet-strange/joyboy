@@ -14,8 +14,9 @@ export const NoteDetail: React.FC<RootStackNoteDetailScreenProps> = ({route, nav
   const contentParsed = parsingEventContent(singlePoolEventData);
 
   const handleProfilePress = (userId: string) => {
-    navigation.navigate('UserDetail', {userId});
+    navigation.navigate('Profile', {userId});
   };
+
   return (
     <Container>
       {/* <Text lineBreakMode="tail" style={styles.text} numberOfLines={2}>

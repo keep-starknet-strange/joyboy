@@ -13,7 +13,7 @@ export const Avatar: React.FC<AvatarProps> = ({source, userId}) => {
   const navigation = useNavigation<RootStackNavigationProps>();
 
   const handleProfilePress = () => {
-    navigation.push('UserDetail', {userId});
+    navigation.push('Profile', {publicKey: userId});
   };
 
   return (

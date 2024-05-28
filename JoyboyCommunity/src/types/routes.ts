@@ -7,7 +7,7 @@ import {Post} from './post';
 export type RootStackParams = {
   Home: NavigatorScreenParams<HomeStackParams>;
   CreatePost: undefined;
-  UserDetail: {userId: string};
+  Profile: {publicKey: string};
   NoteDetail: {noteId: string};
   PostDetails: {
     post: Post;
@@ -23,7 +23,7 @@ export type RootStackParams = {
 
 export type HomeStackParams = {
   Feed: undefined;
-  Profile: undefined;
+  UserProfile: {publicKey: string};
   Notifications: undefined;
 };
 
@@ -40,11 +40,8 @@ export type RootStackCreatePostNavigationProps = NativeStackNavigationProp<
 >;
 export type RootStackCreatePostScreenProps = NativeStackScreenProps<RootStackParams, 'CreatePost'>;
 
-export type RootStackUserDetailNavigationProps = NativeStackNavigationProp<
-  RootStackParams,
-  'UserDetail'
->;
-export type RootStackUserDetailScreenProps = NativeStackScreenProps<RootStackParams, 'UserDetail'>;
+export type RootStackProfileNavigationProps = NativeStackNavigationProp<RootStackParams, 'Profile'>;
+export type RootStackProfileScreenProps = NativeStackScreenProps<RootStackParams, 'Profile'>;
 
 export type RootStackNoteDetailNavigationProps = NativeStackNavigationProp<
   RootStackParams,
@@ -62,8 +59,8 @@ export type FeedScreenProps = CompositeScreenProps<
   NativeStackScreenProps<HomeStackParams, 'Feed'>,
   NativeStackScreenProps<RootStackParams>
 >;
-export type ProfileScreenProps = CompositeScreenProps<
-  NativeStackScreenProps<HomeStackParams, 'Profile'>,
+export type UserProfileScreenProps = CompositeScreenProps<
+  NativeStackScreenProps<HomeStackParams, 'UserProfile'>,
   NativeStackScreenProps<RootStackParams>
 >;
 

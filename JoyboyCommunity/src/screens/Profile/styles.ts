@@ -11,4 +11,7 @@ export default StyleSheet.create({
     backgroundColor: 'rgba(12, 12, 79, 0.1)',
     padding: 12,
   },
+  buttonIcon: {
+    marginRight: 6,
+  },
 });
