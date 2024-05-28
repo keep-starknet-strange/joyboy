@@ -1,5 +1,5 @@
 #[starknet::interface]
-pub trait ISocial<TState> {// TODO: empty for now
+pub trait ISocial<TState> { // TODO: empty for now
 }
 
 #[starknet::component]
@@ -13,13 +13,13 @@ pub mod SocialComponent {
 
     #[event]
     #[derive(Drop, starknet::Event)]
-    pub enum Event {// TODO: empty for now
+    pub enum Event { // TODO: empty for now
     }
 
     #[embeddable_as(SocialImpl)]
     impl Social<
         TContractState, +HasComponent<TContractState>, +Drop<TContractState>
-    > of super::ISocial<ComponentState<TContractState>> {// TODO: empty for now
+    > of super::ISocial<ComponentState<TContractState>> { // TODO: empty for now
     }
 
     #[generate_trait]
@@ -28,7 +28,7 @@ pub mod SocialComponent {
     > of InternalTrait<TContractState> {
         fn handle_transfer(
             ref self: ComponentState<TContractState>, request: SocialRequest<Transfer>
-        ) {// TODO: implement handle transfer logic
+        ) { // TODO: implement handle transfer logic
         }
     }
 }
