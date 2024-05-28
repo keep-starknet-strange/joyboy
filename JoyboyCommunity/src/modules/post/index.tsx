@@ -3,24 +3,22 @@ import React, {useCallback, useState} from 'react';
 import {Pressable, TouchableOpacity, View} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 
+import CopyIcon from '../../../assets/svgs/svgComponents/Copy';
+import Gallery from '../../../assets/svgs/svgComponents/Gallery';
+import GifIcon from '../../../assets/svgs/svgComponents/Gif';
+import ProfileIcon from '../../../assets/svgs/svgComponents/Profile';
+import SendButton from '../../../assets/svgs/svgComponents/SendButton';
 import {Divider, KeyboardAvoidingView, Typography} from '../../components';
 import {useSendNote} from '../../hooks/useNostr';
 import {useAuth} from '../../store/auth';
-import Svg, {G, Path} from 'react-native-svg';
-import Gallery from '../../../assets/svgs/svgComponents/Gallery';
-import SendButton from '../../../assets/svgs/svgComponents/SendButton';
-import GifIcon from '../../../assets/svgs/svgComponents/Gif';
-import CopyIcon from '../../../assets/svgs/svgComponents/Copy';
-import ProfileIcon from '../../../assets/svgs/svgComponents/Profile';
 import {
   Container,
-  Photo,
-  PostButton,
-  TitleContainer,
-  Icons,
   IconContainer,
   IconDiv,
+  Photo,
+  PostButton,
   SendbuttonContainer,
+  TitleContainer,
 } from './styled';
 
 export default function CreatePost() {
@@ -76,7 +74,7 @@ export default function CreatePost() {
           <Typography style={{color: '#4B799F', fontSize: 17}} variant="ts15r">
             Draft
           </Typography>
-          </PostButton>
+        </PostButton>
       </Container>
 
       <View style={{marginBottom: 1}}>
