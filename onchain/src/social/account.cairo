@@ -16,8 +16,8 @@ pub mod SocialAccount {
     use super::super::request::{
         SocialRequest, SocialRequestImpl, SocialRequestTrait, Encode, Signature
     };
-    use super::super::transfer::Transfer;
     use super::super::social::SocialComponent;
+    use super::super::transfer::Transfer;
 
     component!(path: SocialComponent, storage: social, event: SocialEvent);
 
@@ -89,8 +89,8 @@ mod tests {
     use super::super::request::{SocialRequest, Signature, Encode};
     use super::super::transfer::Transfer;
     use super::{
-        ISocialAccountDispatcher, ISocialAccountDispatcherTrait,
-        ISocialAccountSafeDispatcher, ISocialAccountSafeDispatcherTrait
+        ISocialAccountDispatcher, ISocialAccountDispatcherTrait, ISocialAccountSafeDispatcher,
+        ISocialAccountSafeDispatcherTrait
     };
 
     fn deploy_account(public_key: u256) -> ISocialAccountDispatcher {
