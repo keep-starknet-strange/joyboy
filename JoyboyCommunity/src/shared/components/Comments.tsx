@@ -6,12 +6,8 @@ import {Input} from '../../components';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import {useAuth} from '../../store/auth';
 import {Event as EventNostr} from 'nostr-tools';
-import {
-  useGetPoolEventsTagsByQuery,
-  useSendNote,
-} from '../../hooks/useNostr';
+import {useGetPoolEventsTagsByQuery, useSendNote} from '../../hooks/useNostr';
 import {useNostrContext} from '../../context/NostrContext';
-
 
 interface IComments {
   event?: EventNostr;
@@ -110,7 +106,7 @@ function Comments({event}: IComments) {
         </SendComment>
       </ViewSendComment>
 
-      {poolEventNotesDataLoading && <ActivityIndicator/>}
+      {poolEventNotesDataLoading && <ActivityIndicator />}
 
       <FlatList
         horizontal={false}
