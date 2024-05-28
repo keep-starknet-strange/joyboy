@@ -4,7 +4,6 @@ import * as SplashScreen from 'expo-splash-screen';
 import React, {useCallback, useEffect, useState} from 'react';
 import {StatusBar, View} from 'react-native';
 
-import {useNostr} from '../hooks/useNostr';
 import {Router} from './Router';
 
 // Keep the splash screen visible while we fetch resources
@@ -12,8 +11,6 @@ SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
-
-  const {getEvents, getEventsNotes, setEvents, events} = useNostr();
 
   useEffect(() => {
     async function prepare() {

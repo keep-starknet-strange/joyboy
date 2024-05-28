@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "JoyboyCommunity/**"
   pull_request:
     branches:
       - main
@@ -11,11 +13,12 @@ on:
       - "JoyboyCommunity/**"
 
 jobs:
-  compile-with-lint-and-format:
+  check-app:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: ["18.x", "20.x", "22.x"]
+
+    defaults:
+      run:
+        working-directory: ./JoyboyCommunity
 
     steps:
       - name: Checkout Code
@@ -24,19 +27,24 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: "20.x"
+          cache: "yarn"
+          cache-dependency-path: ./JoyboyCommunity/yarn.lock
 
       - name: Install Dependencies
-        run: yarn --cwd JoyboyCommunity install
+        run: yarn install --frozen-lockfile
 
       - name: Dependencies Check
-        run: yarn --cwd JoyboyCommunity check
+        run: yarn check
 
-      - name: Run Prettier Format Check
-        run: yarn --cwd JoyboyCommunity format:check
+      - name: Prettier Format Check
+        run: yarn format:check
 
-      - name: Run ESLint Check
-        run: yarn --cwd JoyboyCommunity lint
+      - name: ESLint Check
+        run: yarn lint
 
-      - name: Run TypeScript Check
-        run: yarn --cwd JoyboyCommunity ts:check
+      - name: TypeScript Check
+        run: yarn ts:check
+
+      - name: Build app bundle
+        run: yarn expo export --platform android
