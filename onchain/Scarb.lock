@@ -71,4 +71,3 @@ source = "git+https://github.com/openzeppelin/cairo-contracts?branch=main#978b4e
 name = "snforge_std"
 version = "0.24.0"
 source = "git+https://github.com/foundry-rs/starknet-foundry?tag=v0.24.0#95e9fb09cb91b3c05295915179ee1b55bf923653"
-

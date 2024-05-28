@@ -1,34 +1,32 @@
+use openzeppelin::account::interface;
+use openzeppelin::introspection::src5::SRC5Component;
 use starknet::{ContractAddress, get_caller_address, get_contract_address, contract_address_const};
 use super::profile::NostrProfile;
 use super::request::SocialRequest;
-use openzeppelin::introspection::src5::SRC5Component;
-use openzeppelin::account::interface;
 use super::transfer::Transfer;
-
-
 
 #[starknet::interface]
 pub trait ISocialAccount<TContractState> {
     fn get_public_key(self: @TContractState) -> u256;
     fn handle_transfer(ref self: TContractState, request: SocialRequest<Transfer>);
+    fn is_supported_interface(self: @TContractState, interface_id: felt252) -> bool;
 }
 
 #[starknet::contract]
 pub mod SocialAccount {
-    use super::SocialRequest;
-    use super::super::transfer::Transfer;
     use openzeppelin::introspection::src5::SRC5Component;
+
+    use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use super::super::request::{
+        SocialRequest, SocialRequestImpl, SocialRequestTrait, Encode, Signature
+    };
+    use super::super::transfer::Transfer;
 
     component!(path: SRC5Component, storage: src5, event: SRC5Event);
 
     #[abi(embed_v0)]
     impl SRC5Impl = SRC5Component::SRC5Impl<ContractState>;
     impl InternalImpl = SRC5Component::InternalImpl<ContractState>;
-    
-    use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
-    use super::super::request::{
-        SocialRequest, SocialRequestImpl, SocialRequestTrait, Encode, Signature
-    };
 
     #[storage]
     struct Storage {
@@ -72,17 +70,20 @@ pub mod SocialAccount {
         // let erc20 = IERC20Dispatcher { contract_address: request.content.token_address };
         // assert_eq!(erc20.symbol(), request.content.token);
         }
-    }
 
-    #[external(v0)]
-    fn is_supported_interface(self: @ContractState, interface_id: felt252) -> bool {
-        self.src5.supports_interface(interface_id)
+        fn is_supported_interface(self: @ContractState, interface_id: felt252) -> bool {
+            self.src5.supports_interface(interface_id)
+        }
     }
 }
 #[cfg(test)]
 mod tests {
     use core::array::ArrayTrait;
     use core::traits::Into;
+
+    use openzeppelin::account::interface;
+    use openzeppelin::introspection::interface::ISRC5Dispatcher;
+    use openzeppelin::introspection::interface::ISRC5DispatcherTrait;
     use openzeppelin::presets::ERC20Upgradeable;
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     use openzeppelin::utils::serde::SerializedAppend;
@@ -103,9 +104,6 @@ mod tests {
         ISocialAccountSafeDispatcherTrait
     };
 
-    use openzeppelin::account::interface;
-    use openzeppelin::introspection::interface::ISRC5Dispatcher;
-    use openzeppelin::introspection::interface::ISRC5DispatcherTrait;
 
     const public_key: u256 = 45;
     const ISRC5_ID: felt252 = 0x123456789abcdef0;
@@ -141,13 +139,13 @@ mod tests {
 
     #[test]
     fn test_supports_interface() {
-        let contract_address = deploy_social_account();
-        let dispatcher = ISRC5Dispatcher { contract_address };
-
-        let supports_src5 = dispatcher.supports_interface(ISRC5_ID);
-
+        let account = deploy_account(public_key);
+        let supports_src5 = ISocialAccountDispatcherTrait::is_supported_interface(
+            account, ISRC5_ID
+        );
         assert!(supports_src5, "The contract does not support the ISRC5 interface");
-      }  
+    }
+
     fn deploy_erc20(
         name: ByteArray, symbol: ByteArray, initial_supply: u256, recipient: ContractAddress
     ) -> IERC20Dispatcher {

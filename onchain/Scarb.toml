@@ -10,7 +10,6 @@ starknet = "2.6.3"
 alexandria_math = { git = "https://github.com/keep-starknet-strange/alexandria.git" }
 openzeppelin = { git = "https://github.com/openzeppelin/cairo-contracts", branch="main" }
 
-
 [dev-dependencies]
 snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry", tag = "v0.24.0" }
 
