@@ -26,7 +26,7 @@ export const TitleContainer = styled(View)`
   padding: 10px 16px;
 `;
 
-export const Photo = styled(Image)`
+export const Photo = styled(View)`
   width: 32px;
   height: 32px;
   border-radius: 25px;
@@ -41,7 +41,7 @@ export const Logo = styled(Image)`
 
 export const IconContainer = styled(View)`
   flex-direction: row;
-  gap: 8px;
+  gap: 24px;
 `;
 
 export const Icons = styled(Image)`
@@ -50,10 +50,7 @@ export const Icons = styled(Image)`
   margin-left: 10px;
 `;
 
-export const Sendbutton = styled(Image)`
-  width: 56;
-  height: 56;
-  resize: 'contain';
+export const SendbuttonContainer = styled(View)`
   margin-left: 10px;
   align-self: flex-end;
   margin: 0 4px;
