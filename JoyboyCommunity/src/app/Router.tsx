@@ -2,7 +2,14 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useMemo} from 'react';
+import {View} from 'react-native';
 import {useTheme} from 'styled-components/native';
+
+import HomeIcon from '../assets/feed/home';
+import IndicatorIcon from '../assets/feed/indicator';
+import MessageIcon from '../assets/feed/message';
+import NotificationIcon from '../assets/feed/notification';
+import SearchIcon from '../assets/feed/search';
 import Error from '../modules/error';
 import FeedStackScreen from '../modules/feed/FeedStackScreen';
 import Login from '../modules/login';
@@ -13,12 +20,6 @@ import {NoteDetail} from '../screens/NoteDetail';
 import {UserDetail} from '../screens/UserDetail';
 import {useNavigationStore} from '../store/navigation';
 import {HomeStackParams, RootStackParams} from '../types';
-import {View} from 'react-native';
-import NotificationIcon from '../assets/feed/notification';
-import IndicatorIcon from '../assets/feed/indicator';
-import MessageIcon from '../assets/feed/message';
-import SearchIcon from '../assets/feed/search';
-import HomeIcon from '../assets/feed/home';
 
 const RootStack = createNativeStackNavigator<RootStackParams>();
 const HomeBottomTabsStack = createBottomTabNavigator<HomeStackParams>();

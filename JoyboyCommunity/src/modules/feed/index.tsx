@@ -1,8 +1,9 @@
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import React from 'react';
-import {ActivityIndicator, SafeAreaView, View, Text, Image, ImageBackground} from 'react-native';
+import {ActivityIndicator, Image, ImageBackground, SafeAreaView, Text, View} from 'react-native';
 import {FlatList, RefreshControl} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
+
 import {useGetPoolEventsNotes} from '../../hooks/useNostr';
 import {Post} from '../../shared/components/Post';
 import FloatingPostButton from './FloatingPostButton';

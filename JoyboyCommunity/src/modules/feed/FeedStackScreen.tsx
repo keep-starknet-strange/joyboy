@@ -1,10 +1,11 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import PostDetails from '../../shared/components/PostDetails';
-import Feed from '.';
-import {View, Image} from 'react-native';
-import {styles} from './style';
+import {Image, View} from 'react-native';
+
 import JoyboyIcon from '../../assets/feed/title';
 import UserIcon from '../../assets/feed/user';
+import PostDetails from '../../shared/components/PostDetails';
+import Feed from '.';
+import {styles} from './style';
 
 const FeedStack = createStackNavigator();
 function FeedStackScreen() {
