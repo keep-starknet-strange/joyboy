@@ -1,13 +1,14 @@
+import {MaterialCommunityIcons} from '@expo/vector-icons';
+import {Event as EventNostr} from 'nostr-tools';
 import React, {useCallback, useEffect, useState} from 'react';
 import {ActivityIndicator, FlatList, View} from 'react-native';
+
+import {Input} from '../../components';
+import {useNostrContext} from '../../context/NostrContext';
+import {useGetPoolEventsTagsByQuery, useSendNote} from '../../hooks/useNostr';
+import {useAuth} from '../../store/auth';
 import PostComment from './PostComment';
 import {SendComment, ViewSendComment} from './styled';
-import {Input} from '../../components';
-import {MaterialCommunityIcons} from '@expo/vector-icons';
-import {useAuth} from '../../store/auth';
-import {Event as EventNostr} from 'nostr-tools';
-import {useGetPoolEventsTagsByQuery, useSendNote} from '../../hooks/useNostr';
-import {useNostrContext} from '../../context/NostrContext';
 
 interface IComments {
   event?: EventNostr;
@@ -31,7 +32,7 @@ function Comments({event}: IComments) {
     filter: {
       '#e': tags[0],
     },
-    pool: pool,
+    pool,
     relaysToUsed: relays,
   });
 
@@ -65,7 +66,7 @@ function Comments({event}: IComments) {
       alert('Note sending, please wait.');
 
       sendNote.mutate(
-        {sk: privateKey, content: text, tags: tags},
+        {sk: privateKey, content: text, tags},
         {
           async onSuccess(data) {
             if (data.isValid) {
