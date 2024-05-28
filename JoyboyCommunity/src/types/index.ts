@@ -1,4 +1,4 @@
-import {Event as EventNostr, Filter} from 'nostr-tools';
+import {Event as EventNostr, Filter, SimplePool} from 'nostr-tools';
 
 export * from './post';
 export * from './routes';
@@ -54,9 +54,11 @@ export interface IPoolEventsFromPubkey {
 }
 
 export interface IPoolEventsByQuery {
-  ids: string[];
+  ids?: string[];
+  kinds?: number[];
   filter?: Filter;
-  relaysProps?: string[];
+  relaysToUsed?: string[];
+  pool?: SimplePool;
 }
 
 export interface IUserQuery {
