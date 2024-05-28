@@ -93,7 +93,7 @@ pub mod SocialAccount {
             loop {
                 match calls.pop_front() {
                     Option::Some(call) => {
-                        let Call{to, selector, calldata } = call;
+                        let Call { to, selector, calldata } = call;
                         let _res = starknet::call_contract_syscall(to, selector, calldata.span())
                             .unwrap();
                         res.append(_res);
@@ -102,19 +102,13 @@ pub mod SocialAccount {
                 };
             };
             res
-        //  _execute_calls(calls)
         }
 
         fn __validate__(self: @ContractState, mut calls: Array<Call>) -> felt252 {
-            // self.validate_transaction()
             let tx_info = get_tx_info().unbox();
             let tx_hash = tx_info.transaction_hash;
             let signature = tx_info.signature;
-            if self.is_valid_signature(tx_hash, signature) != starknet::VALIDATED {
-               return 0;
-            }
-           
-            starknet::VALIDATED
+            return self.is_valid_signature(tx_hash, signature);
         }
 
         fn is_valid_signature(
@@ -137,7 +131,6 @@ pub mod SocialAccount {
             }
         }
     }
-
 }
 
 #[cfg(test)]
