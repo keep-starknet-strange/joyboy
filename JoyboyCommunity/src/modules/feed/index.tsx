@@ -1,10 +1,10 @@
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
-import React, {useCallback, useEffect, useState} from 'react';
+import React from 'react';
 import {ActivityIndicator, SafeAreaView, View} from 'react-native';
 import {FlatList, RefreshControl} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
-import {useNostr} from '../../hooks/useNostr';
+import {useGetPoolEventsNotes} from '../../hooks/useNostr';
 import {Post} from '../../shared/components/Post';
 import FloatingPostButton from './FloatingPostButton';
 
@@ -16,39 +16,12 @@ const FixedPostButton = styled(View)`
 
 export default function Feed() {
   const bottomBarHeight = useBottomTabBarHeight();
-  const [loading, setLoading] = useState(false);
-  const [isReady, setIsReady] = useState(true);
-  const {getEvents, setEvents, events, getEventsNotes, eventsData} = useNostr();
 
-  const [eventsDataFeed, setEventsData] = useState(events ?? []);
-
-  const handeGetData = useCallback(async () => {
-    setLoading(true);
-
-    // run a promise for two seconds
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    // add additional data to previous data
-    const events = await getEventsNotes(true);
-    setEvents(events);
-    setEventsData(events);
-    setLoading(false);
-  }, []);
-
-  const fetchPageData = useCallback(async () => {
-    setIsReady(false);
-    setLoading(true);
-    const events = await getEventsNotes(true);
-    console.log('events', events);
-    setEvents(events);
-    setEventsData(events);
-    setLoading(false);
-    setIsReady(true);
-  }, []);
-
-  useEffect(() => {
-    fetchPageData();
-  }, []);
+  const {
+    data: poolEventNotesData,
+    isLoading: poolEventNotesDataLoading,
+    refetch,
+  } = useGetPoolEventsNotes();
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#f4f7fe'}}>
@@ -74,14 +47,14 @@ export default function Feed() {
         />
       </View>
 
-      {loading && <ActivityIndicator></ActivityIndicator>}
+      {poolEventNotesDataLoading && <ActivityIndicator />}
 
       <FlatList
         contentContainerStyle={{
           paddingTop: 16,
           paddingBottom: bottomBarHeight,
         }}
-        data={eventsDataFeed}
+        data={poolEventNotesData}
         keyExtractor={(item) => item?.id}
         renderItem={({item}) => {
           return (
@@ -91,7 +64,9 @@ export default function Feed() {
             />
           );
         }}
-        refreshControl={<RefreshControl refreshing={loading} onRefresh={handeGetData} />}
+        refreshControl={
+          <RefreshControl refreshing={poolEventNotesDataLoading} onRefresh={() => refetch()} />
+        }
       />
 
       <FixedPostButton>

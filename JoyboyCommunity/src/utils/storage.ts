@@ -1,7 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import CryptoES from 'crypto-es';
 import * as SecureStore from 'expo-secure-store';
 import {Platform} from 'react-native';
+
+import {pbkdf2Decrypt, pbkdf2Encrypt, PBKDF2EncryptedObject} from './encryption';
 
 const isSecureStoreAvailable = Platform.OS === 'android' || Platform.OS === 'ios';
 
@@ -23,7 +24,7 @@ export const retrievePublicKey = async (): Promise<string | null> => {
 
 export const storePrivateKey = async (privateKeyHex: string, password: string) => {
   try {
-    const encryptedPrivateKey = CryptoES.AES.encrypt(privateKeyHex, password).toString();
+    const encryptedPrivateKey = JSON.stringify(pbkdf2Encrypt(privateKeyHex, password));
 
     if (isSecureStoreAvailable) {
       await SecureStore.setItemAsync('encryptedPrivateKey', encryptedPrivateKey);
@@ -38,21 +39,47 @@ export const storePrivateKey = async (privateKeyHex: string, password: string) =
   }
 };
 
-export const retrieveAndDecryptPrivateKey = async (password: string): Promise<Uint8Array> => {
+export const retrieveAndDecryptPrivateKey = async (
+  password: string,
+): Promise<false | Uint8Array> => {
   try {
     const encryptedPrivateKey = isSecureStoreAvailable
       ? await SecureStore.getItemAsync('encryptedPrivateKey')
       : await AsyncStorage.getItem('encryptedPrivateKey');
-    if (!encryptedPrivateKey) throw new Error('Encrypted private key not found');
 
-    const decryptedPrivateKey = CryptoES.AES.decrypt(encryptedPrivateKey, password)?.toString(
-      CryptoES.enc.Utf8,
-    );
-    const privateKey = new Uint8Array(Buffer.from(decryptedPrivateKey, 'base64'));
+    if (!encryptedPrivateKey) return false;
+
+    let parsedEncryptedPrivateKey: PBKDF2EncryptedObject;
+    try {
+      parsedEncryptedPrivateKey = JSON.parse(encryptedPrivateKey);
+
+      if (!('data' in parsedEncryptedPrivateKey)) throw new Error();
+    } catch (e) {
+      // If the encrypted private key is not in the expected format, we should remove it
+      await AsyncStorage.removeItem('encryptedPrivateKey');
+      return false;
+    }
+
+    const decryptedPrivateKey = pbkdf2Decrypt(parsedEncryptedPrivateKey, password);
+    const privateKey = new Uint8Array(decryptedPrivateKey);
 
     return privateKey;
   } catch (e) {
     // We shouldn't throw the original error for security reasons
     throw new Error('Error retrieving and decrypting private key');
   }
+};
+
+export const storePassword = async (password: string) => {
+  if (isSecureStoreAvailable) {
+    return SecureStore.setItemAsync('password', password, {requireAuthentication: true});
+  }
+};
+
+export const retrievePassword = async () => {
+  if (isSecureStoreAvailable) {
+    return SecureStore.getItemAsync('password', {requireAuthentication: true});
+  }
+
+  return null;
 };
