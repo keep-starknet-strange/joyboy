@@ -1,10 +1,8 @@
-import {Ionicons, Octicons} from '@expo/vector-icons';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useMemo} from 'react';
 import {useTheme} from 'styled-components/native';
-
 import Error from '../modules/error';
 import FeedStackScreen from '../modules/feed/FeedStackScreen';
 import Login from '../modules/login';
@@ -15,6 +13,13 @@ import {NoteDetail} from '../screens/NoteDetail';
 import {UserDetail} from '../screens/UserDetail';
 import {useNavigationStore} from '../store/navigation';
 import {HomeStackParams, RootStackParams} from '../types';
+import {View} from 'react-native';
+import NotificationIcon from '../assets/feed/notification';
+import IndicatorIcon from '../assets/feed/indicator';
+import MessageIcon from '../assets/feed/message';
+import SearchIcon from '../assets/feed/search';
+import HomeIcon from '../assets/feed/home';
+
 
 const RootStack = createNativeStackNavigator<RootStackParams>();
 const HomeBottomTabsStack = createBottomTabNavigator<HomeStackParams>();
@@ -42,21 +47,32 @@ const HomeBottomTabNavigator: React.FC = () => {
         component={FeedStackScreen}
         options={{
           tabBarActiveTintColor: 'white',
-          tabBarInactiveTintColor: 'grey',
-          tabBarIcon: ({focused}) => (
-            <Ionicons name={focused ? 'home' : 'home-outline'} size={24} color="black" />
-          ),
+          tabBarInactiveTintColor: '',
+          tabBarIcon: ({focused}) => {
+            return (
+              <View style={{flex: 1, alignItems: 'center', gap: 2, justifyContent: 'center'}}>
+                <HomeIcon fill={focused ? '#14142C' : '#1E2F3D80'} />
+                {focused && <IndicatorIcon />}
+              </View>
+            );
+          },
         }}
       />
+
       <HomeBottomTabsStack.Screen
-        name="Profile"
+        name="Search"
         component={Profile}
         options={{
           tabBarActiveTintColor: 'white',
-          tabBarInactiveTintColor: 'grey',
-          tabBarIcon: ({focused}) => (
-            <Octicons name={focused ? 'person-fill' : 'person'} size={24} color="black" />
-          ),
+          tabBarInactiveTintColor: '',
+          tabBarIcon: ({focused}) => {
+            return (
+              <View style={{flex: 1, alignItems: 'center', gap: 1, justifyContent: 'center'}}>
+                <SearchIcon stroke={focused ? '#14142C' : '#1E2F3D80'}  />
+                {focused && <IndicatorIcon />}
+              </View>
+            );
+          },
         }}
       />
 
@@ -66,9 +82,31 @@ const HomeBottomTabNavigator: React.FC = () => {
         options={{
           tabBarActiveTintColor: 'white',
           tabBarInactiveTintColor: 'grey',
-          tabBarIcon: ({focused}) => (
-            <Octicons name={focused ? 'bell-fill' : 'bell'} size={24} color="black" />
-          ),
+          tabBarIcon: ({focused}) => {
+            return (
+              <View style={{flex: 1, alignItems: 'center', gap: 1, justifyContent: 'center'}}>
+                <NotificationIcon stroke={focused ? '#14142C' : '#1E2F3D80'}  />
+                {focused && <IndicatorIcon />}
+              </View>
+            );
+          },
+        }}
+      />
+
+      <HomeBottomTabsStack.Screen
+        name="Messages"
+        component={Profile}
+        options={{
+          tabBarActiveTintColor: 'white',
+          tabBarInactiveTintColor: 'grey',
+          tabBarIcon: ({focused}) => {
+            return (
+              <View style={{flex: 1, alignItems: 'center', gap: 4, justifyContent: 'center'}}>
+                <MessageIcon stroke={focused ? '#14142C' : '#1E2F3D80'} />
+                {focused && <IndicatorIcon />}
+              </View>
+            );
+          },
         }}
       />
     </HomeBottomTabsStack.Navigator>

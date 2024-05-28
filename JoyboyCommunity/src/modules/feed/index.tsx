@@ -1,17 +1,17 @@
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import React, {useCallback, useEffect, useState} from 'react';
-import {ActivityIndicator, SafeAreaView, View} from 'react-native';
+import {ActivityIndicator, SafeAreaView, View, Text, Image, ImageBackground} from 'react-native';
 import {FlatList, RefreshControl} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
-
 import {useNostr} from '../../hooks/useNostr';
 import {Post} from '../../shared/components/Post';
 import FloatingPostButton from './FloatingPostButton';
+import {styles} from './style';
 
 const FixedPostButton = styled(View)`
   position: absolute;
-  bottom: 20px;
-  right: 20px;
+  bottom: 40px;
+  right: 15px;
 `;
 
 export default function Feed() {
@@ -19,9 +19,7 @@ export default function Feed() {
   const [loading, setLoading] = useState(false);
   const [isReady, setIsReady] = useState(true);
   const {getEvents, setEvents, events, getEventsNotes, eventsData} = useNostr();
-
   const [eventsDataFeed, setEventsData] = useState(events ?? []);
-
   const handeGetData = useCallback(async () => {
     setLoading(true);
 
@@ -50,50 +48,70 @@ export default function Feed() {
     fetchPageData();
   }, []);
 
+  const stories = [
+  {name: 'Luffy', img: require('../../assets/feed/images/story-1.png')},
+  {name: 'Usopp', img: require('../../assets/feed/images/story-2.png')},
+  {name: 'Steph', img: require('../../assets/feed/images/story-3.png')},
+  {name: 'Roronoa Z', img: require('../../assets/feed/images/story-4.png')},
+  {name: 'Franky', img: require('../../assets/feed/images/story-5.png')},
+  {name: 'Franky', img: require('../../assets/feed/images/story-5.png')},
+  {name: 'Franky', img: require('../../assets/feed/images/story-5.png')},
+  {name: 'Franky', img: require('../../assets/feed/images/story-5.png')},
+
+
+];
+
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#f4f7fe'}}>
-      <View style={{paddingTop: 12, paddingBottom: 18}}>
+    <SafeAreaView style={{flex: 1}}>
+      <ImageBackground
+        source={require('../../assets/feed/feed-bg.png')}       
+        style={styles.linearGradient}
+      >
+        <View style={{paddingTop: 30, paddingBottom: 18}}>
+          <FlatList 
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            data={stories}
+            ListHeaderComponent={() => <View style={{width: 18}} />}
+            ItemSeparatorComponent={() => <View style={{width: 18}} />}
+            renderItem={({item}) => {
+              return (
+                <View style={styles.stories}>
+                  <View style={{position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                    <Image source={require('../../assets/feed/images/story-bg.png')} resizeMode="cover" />
+                    <Image
+                      style={{position: 'absolute', }}
+                      source={item.img}
+                      resizeMode="cover"
+                    />
+                  </View>
+                  <Text style={styles.storyText}>{item.name}</Text>
+                </View>
+              );
+            }}
+          />
+        </View>
+
+        {loading && <ActivityIndicator></ActivityIndicator>}
+
         <FlatList
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
-          ListHeaderComponent={() => <View style={{width: 18}} />}
-          ItemSeparatorComponent={() => <View style={{width: 18}} />}
-          renderItem={() => {
+          contentContainerStyle={{
+            paddingTop: 16,
+            paddingBottom: bottomBarHeight,
+          }}
+          data={eventsDataFeed}
+          keyExtractor={(item) => item?.id}
+          renderItem={({item}) => {
             return (
-              <View
-                style={{
-                  backgroundColor: '#e4e4e7',
-                  height: 64,
-                  width: 64,
-                  borderRadius: 32,
-                }}
+              <Post
+                // post={item}
+                event={item}
               />
             );
           }}
+          refreshControl={<RefreshControl refreshing={loading} onRefresh={handeGetData} />}
         />
-      </View>
-
-      {loading && <ActivityIndicator></ActivityIndicator>}
-
-      <FlatList
-        contentContainerStyle={{
-          paddingTop: 16,
-          paddingBottom: bottomBarHeight,
-        }}
-        data={eventsDataFeed}
-        keyExtractor={(item) => item?.id}
-        renderItem={({item}) => {
-          return (
-            <Post
-              // post={item}
-              event={item}
-            />
-          );
-        }}
-        refreshControl={<RefreshControl refreshing={loading} onRefresh={handeGetData} />}
-      />
-
+      </ImageBackground>
       <FixedPostButton>
         <FloatingPostButton />
       </FixedPostButton>
