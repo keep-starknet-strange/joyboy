@@ -50,7 +50,7 @@ pub mod SocialAccount {
         public_key: u256
     }
 
-    const ISRC5_ID: felt252 = 0x123456789abcdef0;
+    const ISRC5_ID: felt252 = 0x2717e95370c20103b33f13a20ed0f89783312fd08860f522ef8f6177fedc5e0;
 
     #[constructor]
     fn constructor(ref self: ContractState, public_key: u256,) {
@@ -106,7 +106,7 @@ mod tests {
 
 
     const public_key: u256 = 45;
-    const ISRC5_ID: felt252 = 0x123456789abcdef0;
+    const ISRC5_ID: felt252 = 0x2717e95370c20103b33f13a20ed0f89783312fd08860f522ef8f6177fedc5e0;
 
     fn deploy_account(public_key: u256) -> ISocialAccountDispatcher {
         let contract = declare("SocialAccount").unwrap();
