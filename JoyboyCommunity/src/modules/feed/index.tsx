@@ -1,7 +1,8 @@
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import React from 'react';
-import {ActivityIndicator, Image, ImageBackground, SafeAreaView, Text, View} from 'react-native';
+import {ActivityIndicator, Image, ImageBackground, Text, View} from 'react-native';
 import {FlatList, RefreshControl} from 'react-native-gesture-handler';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
 
 import {useGetPoolEventsNotes} from '../../hooks/useNostr';
