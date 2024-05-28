@@ -145,33 +145,29 @@ fn checksum(hrp: @ByteArray, data: @Array<u8>) -> Array<u8> {
     r
 }
 
-const ALPHABET: ByteArray = "qpzry9x8gf2tvdw0s3jn54khce6mua7l";
 pub fn encode(hrp: @ByteArray, data: @ByteArray, limit: usize) -> ByteArray {
-  
+    
+    const ALPHABET: ByteArray = "qpzry9x8gf2tvdw0s3jn54khce6mua7l";
     let data_5bits = convert_bytes_to_5bit_chunks(@data.into());
     let cs = checksum(hrp, @data_5bits);
+
     let mut combined = ArrayTrait::new();
     combined.append_span(data_5bits.span());
     combined.append_span(cs.span());
-    let mut encoded: ByteArray = ByteArray::with_capacity(hrp.len() + combined.len() + 1);
 
-    let mut i = 0;
-    let hrp_len = hrp.len();
-    while i < hrp_len {
-        encoded.append_byte(hrp.at(i).unwrap());
-        i += 1;
-    }
-
+    let mut encoded: ByteArray = Default::default();
     encoded.append_byte(b'1');
-
-    let mut j = 0;
-    let combined_len = combined.len();
-    while j < combined_len {
-        encoded.append_byte(ALPHABET.at((*combined.at(j)).into()).unwrap());
-        j += 1;
+    let mut i = 0;
+    let len = combined.len();
+    loop {
+        if i == len {
+            break;
+        }
+        encoded.append_byte(ALPHABET.at((*combined.at(i)).into()).unwrap());
+        i += 1;
     };
 
-    encoded
+    format!("{hrp}1{encoded}")
 }
 
 #[cfg(test)]
