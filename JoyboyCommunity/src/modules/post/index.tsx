@@ -6,7 +6,7 @@ import {TextInput} from 'react-native-gesture-handler';
 import {Divider, KeyboardAvoidingView, Typography} from '../../components';
 import {useNostr} from '../../hooks/useNostr';
 import {useAuth} from '../../store/auth';
-import Svg, { G, Path } from 'react-native-svg';
+import Svg, {G, Path} from 'react-native-svg';
 import Gallery from '../../../assets/svgs/svgComponents/Gallery';
 import SendButton from '../../../assets/svgs/svgComponents/SendButton';
 import GifIcon from '../../../assets/svgs/svgComponents/Gif';
@@ -22,9 +22,6 @@ import {
   IconDiv,
   SendbuttonContainer,
 } from './styled';
-
-
-
 
 export default function CreatePost() {
   const navigation = useNavigation();
@@ -85,7 +82,9 @@ export default function CreatePost() {
       </View>
 
       <TitleContainer>
-        <Photo><ProfileIcon /></Photo>
+        <Photo>
+          <ProfileIcon />
+        </Photo>
         <TextInput
           style={{flex: 1, paddingTop: 10, paddingBottom: 10, fontSize: 16, lineHeight: 20}}
           autoFocus
@@ -98,7 +97,7 @@ export default function CreatePost() {
 
       <IconDiv>
         <SendbuttonContainer>
-        <SendButton width="56" height="56" />
+          <SendButton width="56" height="56" />
         </SendbuttonContainer>
         <IconContainer>
           <TouchableOpacity>
@@ -106,11 +105,11 @@ export default function CreatePost() {
           </TouchableOpacity>
 
           <TouchableOpacity>
-          <GifIcon width="24" height="24" strokeWidth={1.5} stroke="#4B799F" />
+            <GifIcon width="24" height="24" strokeWidth={1.5} stroke="#4B799F" />
           </TouchableOpacity>
 
           <TouchableOpacity>
-          <CopyIcon width="24" height="24" strokeWidth={1.5} stroke="#4B799F" />
+            <CopyIcon width="24" height="24" strokeWidth={1.5} stroke="#4B799F" />
           </TouchableOpacity>
         </IconContainer>
       </IconDiv>
