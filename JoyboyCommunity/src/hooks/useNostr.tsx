@@ -149,13 +149,7 @@ export const useSendNote = () => {
       });
       const event = data?.event;
       /** @TODO add option to send note on different relays and add list of relays */
-      let eventPublish = await pool.publish(JOYBOY_RELAYS, event);
-
-      /**  */
-      const relayJoyboy = await connectRelayJoyboy();
-      let publish = await relayJoyboy.publish(event);
-      await relayJoyboy.close();
-
+      await pool.publish(JOYBOY_RELAYS, event);
       return data;
     },
   });
