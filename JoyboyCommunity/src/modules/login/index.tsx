@@ -1,18 +1,16 @@
+import * as SecureStore from 'expo-secure-store';
 import React, {useEffect, useState} from 'react';
-import {Platform} from 'react-native';
+import {Alert} from 'react-native';
 
 import {Typography} from '../../components';
 import {useAuth} from '../../store/auth';
 import {useNavigationStore} from '../../store/navigation';
-import {
-  getCredentialsWithBiometry,
-  isBiometrySupported,
-  saveCredentialsWithBiometry,
-} from '../../utils/keychain';
 import {generateRandomKeypair, getPublicKeyFromSecret} from '../../utils/keypair';
 import {
   retrieveAndDecryptPrivateKey,
+  retrievePassword,
   retrievePublicKey,
+  storePassword,
   storePrivateKey,
   storePublicKey,
 } from '../../utils/storage';
@@ -34,8 +32,6 @@ enum LoginStep {
 }
 
 export default function Login() {
-  const bypassBiometric = Platform.OS == 'web' ? true : false;
-
   const setNavigationStack = useNavigationStore((state) => state.setStack);
   const setAuth = useAuth((state) => state.setAuth);
 
@@ -52,12 +48,11 @@ export default function Login() {
 
   useEffect(() => {
     (async () => {
-      const biometrySupported = await isBiometrySupported();
+      const biometrySupported = SecureStore.canUseBiometricAuthentication();
+      if (biometrySupported) {
+        const storedPassword = await retrievePassword();
 
-      if (biometrySupported && !bypassBiometric) {
-        const credentials = await getCredentialsWithBiometry();
-
-        if (credentials) setPassword(credentials.password);
+        if (storedPassword) setPassword(storedPassword);
       }
     })();
   }, []);
@@ -78,9 +73,21 @@ export default function Login() {
     await storePrivateKey(secretKeyHex, password);
     await storePublicKey(publicKey);
 
-    const biometrySupported = await isBiometrySupported();
-    if (biometrySupported && !bypassBiometric) {
-      await saveCredentialsWithBiometry(publicKey, password);
+    const biometySupported = SecureStore.canUseBiometricAuthentication();
+    if (biometySupported) {
+      Alert.alert('Easy login', 'Would you like to use biometrics to login?', [
+        {
+          text: 'No',
+          style: 'cancel',
+        },
+        {
+          text: 'Yes',
+          style: 'default',
+          onPress: async () => {
+            storePassword(password);
+          },
+        },
+      ]);
     }
 
     setAuth(publicKey, secretKey);
@@ -108,12 +115,6 @@ export default function Login() {
 
     await storePrivateKey(secretKeyHex, password);
     await storePublicKey(publicKey);
-
-    const biometrySupported = await isBiometrySupported();
-
-    if (biometrySupported && !bypassBiometric) {
-      await saveCredentialsWithBiometry(publicKey, password);
-    }
 
     setAuth(publicKey, secretKey);
     setNavigationStack('app');

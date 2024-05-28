@@ -1,62 +1,39 @@
-import {Event as EventNostr} from 'nostr-tools';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 
-import {useNostr} from '../../hooks/useNostr';
+import {parsingEventContent, useGetPoolEventById} from '../../hooks/useNostr';
 import {RootStackNoteDetailScreenProps} from '../../types';
 import {Container, ContentContainer, ProfileImage, Text, Timestamp} from './styled';
 
 export const NoteDetail: React.FC<RootStackNoteDetailScreenProps> = ({route, navigation}) => {
   const {noteId} = route.params;
-  // console.log("noteId", noteId);
+  const {data: singlePoolEventData} = useGetPoolEventById(noteId);
 
-  // Fetch note details based on postId or use any other logic
-  const [eventNote, setEventNote] = useState<EventNostr | undefined>();
-  const [contentParsed, setContentParsed] = useState<string | undefined>();
   const [imgUser, setImageUser] = useState<string | undefined>();
-  const {parsingEventContent, events, getEvent} = useNostr();
 
-  const event = events?.find((e) => e?.id == noteId);
-  // console.log("event", event);
-
-  const handleGetEventById = async () => {
-    // console.log("handleGetEventById try get event");
-    const event = await getEvent(noteId);
-    console.log('event note', event);
-    setEventNote(event);
-    return event;
-  };
-
-  useEffect(() => {
-    if ((!eventNote && noteId) || eventNote?.id != noteId) {
-      handleGetEventById();
-    } else if (eventNote) {
-      const parseEvent = parsingEventContent(eventNote);
-      // console.log("parseEvent", parseEvent);
-      setContentParsed(parseEvent);
-    }
-  }, [event, eventNote, noteId]);
+  const contentParsed = parsingEventContent(singlePoolEventData);
 
   const handleProfilePress = (userId: string) => {
     navigation.navigate('UserDetail', {userId});
   };
-
   return (
     <Container>
       {/* <Text lineBreakMode="tail" style={styles.text} numberOfLines={2}>
         {noteId}
       </Text> */}
 
-      {eventNote && eventNote?.created_at && (
-        <Timestamp>{new Date(Number(eventNote?.created_at) * 1000)?.toISOString()}</Timestamp>
+      {singlePoolEventData && singlePoolEventData?.created_at && (
+        <Timestamp>
+          {new Date(Number(singlePoolEventData?.created_at) * 1000)?.toISOString()}
+        </Timestamp>
       )}
 
-      <TouchableOpacity onPress={() => handleProfilePress(eventNote?.pubkey)}>
+      <TouchableOpacity onPress={() => handleProfilePress(singlePoolEventData?.pubkey)}>
         <ProfileImage source={imgUser ?? require('../../../assets/joyboy-logo.png')} />
       </TouchableOpacity>
 
       <ContentContainer>
-        {eventNote?.id == noteId && contentParsed && (
+        {singlePoolEventData?.id == noteId && contentParsed && (
           <Text lineBreakMode="tail">{contentParsed}</Text>
         )}
       </ContentContainer>

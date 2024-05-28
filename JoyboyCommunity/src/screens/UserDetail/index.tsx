@@ -1,12 +1,11 @@
 import {NDKUser} from '@nostr-dev-kit/ndk';
 import {useNavigation} from '@react-navigation/native';
-import {Event as EventNostr} from 'nostr-tools';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {ActivityIndicator, Image, ScrollView, View} from 'react-native';
 import {SceneMap, TabView} from 'react-native-tab-view';
 
 import {Typography} from '../../components';
-import {useNostr} from '../../hooks/useNostr';
+import {useGetPoolEventsNotesFromPubkey, useGetPoolUserQuery} from '../../hooks/useNostr';
 import {INoteRepostParsed, IUserEvent, RootStackUserDetailScreenProps} from '../../types';
 import {filterRepliesOnEvents} from '../../utils/filter';
 import {NotesRoute, ReactionsRoute, RepliesRoute, RepostsRoute} from './routes';
@@ -24,23 +23,22 @@ import {
 export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({route}) => {
   const {userId: userQuery} = route.params;
 
-  const {getEvent, getUser, getEventsNotesFromPubkey, getUserQuery} = useNostr();
+  const {data: poolUserQueryData, isLoading: poolUserQueryDataLoading} = useGetPoolUserQuery({
+    pubkey: userQuery,
+  });
+  const {data: poolEventsNotesDataFromPubkey} = useGetPoolEventsNotesFromPubkey({
+    pubkey: userQuery,
+    kinds: [
+      1, // note
+      6, // repost
+      //  + replies if NIP-10 with tags p and e t
+      7, // reactions
+    ],
+  });
 
-  const [eventProfile, setEventProfile] = useState<NDKUser | undefined>();
-  const [eventsTool, setEventsTool] = useState<EventNostr[] | undefined>();
-  const [events, setEvents] = useState<EventNostr[] | undefined>();
-  const [replies, setReplies] = useState<EventNostr[] | undefined>();
-  const [reposts, setReposts] = useState<INoteRepostParsed[] | undefined>();
-  const [reactions, setReactions] = useState<EventNostr[] | undefined>();
-  const [imgUser, setImageUser] = useState<string | undefined>();
-  const [isLoading, setIsLoading] = useState<boolean | undefined>(false);
-  const [isFirstLoadDone, setIsFirstLoadDone] = useState<boolean | undefined>(false);
-  const [profile, setProfile] = useState<IUserEvent | undefined>();
   const navigation = useNavigation();
   const [index, setIndex] = React.useState(0);
-  const [contentParsed, setContentParsed] = useState<string | undefined>();
-  // const layout = useWindowDimensions();
-  // const theme = useTheme();
+  const [eventProfile, setEventProfile] = useState<NDKUser | undefined>();
   const [routes] = React.useState([
     {key: 'posts', title: 'Posts'},
     {key: 'replies', title: 'Replies'},
@@ -48,86 +46,30 @@ export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({route}) =>
     {key: 'reposts', title: 'Reposts'},
   ]);
 
-  // Fetch user based on userId pubkey
-  useEffect(() => {
-    if (!eventProfile && userQuery && !isLoading) {
-      handleGetUserEventById();
-    }
-  }, [eventProfile, userQuery, isLoading]);
-  const handleGetUserEventById = async () => {
-    try {
-      console.log('handleGetEventById try get event');
-      if (isLoading || profile || isFirstLoadDone) {
-        return;
-      }
-      setIsLoading(true);
+  const profile: IUserEvent = poolUserQueryData?.content
+    ? JSON.parse(poolUserQueryData?.content)
+    : null;
 
-      if (userQuery) {
-        const userQueryReq = await getUserQuery(userQuery);
-        /** NIP-05 Metadata is in string
-         * kind:0
-         * Parsed content to UserMetadata
-         */
+  const notesAllTags = poolEventsNotesDataFromPubkey?.filter((e) => e?.kind == 1);
 
-        try {
-          /** Metadata can be undefined */
-          const contentParsed = JSON.parse(userQueryReq?.content);
-          const profile: IUserEvent = contentParsed;
-          setProfile(profile);
-        } catch (e) {}
+  /** Parse content note as anoter event to repost */
+  const reposts: INoteRepostParsed[] = useMemo(
+    () =>
+      (poolEventsNotesDataFromPubkey ?? [])
+        ?.filter((e) => e.kind === 6)
+        .map((e) => {
+          const parsedNote = JSON.parse(e?.content);
 
-        const events = await getEventsNotesFromPubkey(userQuery, [
-          1, // note
-          //  + replies if NIP-10 with tags p and e t
-          6, // repost
-          7, // reactions
-        ]);
-
-        const notesAllTags = events?.filter((e) => e?.kind == 1);
-        console.log('notesAllTags', notesAllTags);
-
-        const reposts: INoteRepostParsed[] = [];
-
-        /** Parse content note as anoter event to repost */
-        events?.filter((e) => {
-          if (e?.kind == 6) {
-            const parsedNote = JSON.parse(e?.content);
-            const repost = {
-              event: e,
-              repost: parsedNote,
-            };
-            reposts?.push(repost);
-            return {
-              event: e,
-              repost: parsedNote,
-            };
-          }
-        });
-        const reactions = events?.filter((e) => e?.kind == 7);
-
-        /** TODO fix multi reply */
-        // let repliesFilter = filterRepliesOnEvents(events)
-        const repliesFilter = filterRepliesOnEvents(notesAllTags);
-        console.log('repliesFilter', repliesFilter);
-        setReplies(repliesFilter);
-        setReactions(reactions);
-        setReposts(reposts);
-
-        const notes = notesAllTags?.filter((n) => n?.tags?.length == 0);
-        // let notes = notesAllTags?.filter((n) => n?.tags?.length == 0 || !n?.tags?.find(e => e?.includes("e")))
-        console.log('notes', notes);
-        // console.log("reposts", reposts);
-        // console.log("reactions", reactions);
-        setEvents(notes);
-        return events;
-      }
-    } catch (e) {
-      console.log('Error handle event user by id', e);
-    } finally {
-      setIsLoading(false);
-      setIsFirstLoadDone(true);
-    }
-  };
+          return {
+            event: e,
+            repost: parsedNote,
+          };
+        }),
+    [],
+  );
+  const reactions = poolEventsNotesDataFromPubkey?.filter((e) => e?.kind == 7);
+  const repliesFilter = filterRepliesOnEvents(notesAllTags);
+  const noteEvents = notesAllTags?.filter((n) => n?.tags?.length == 0);
 
   const handleGoBack = (userId?: string) => {
     navigation.goBack();
@@ -135,12 +77,12 @@ export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({route}) =>
 
   const renderScene = useMemo(() => {
     return SceneMap({
-      posts: () => <NotesRoute events={events} profile={profile} />,
+      posts: () => <NotesRoute events={noteEvents} profile={profile} />,
       reactions: () => <ReactionsRoute reactions={reactions} profile={profile} />,
       reposts: () => <RepostsRoute reposts={reposts} profile={profile} />,
-      replies: () => <RepliesRoute replies={replies} profile={profile} />,
+      replies: () => <RepliesRoute replies={repliesFilter} profile={profile} />,
     });
-  }, [profile, events, reactions, reposts, replies]);
+  }, [profile, noteEvents, reactions, reposts, repliesFilter]);
 
   const renderTabBar = (props) => {
     return (
@@ -222,7 +164,7 @@ export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({route}) =>
       </View>
 
       <ProfileContainer>
-        {isLoading && <ActivityIndicator></ActivityIndicator>}
+        {poolUserQueryDataLoading && <ActivityIndicator></ActivityIndicator>}
         <Text
         // numberOfLines={1}
         // lineBreakMode="tail"
