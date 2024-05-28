@@ -1,11 +1,10 @@
+use core::to_byte_array::{AppendFormattedToByteArray, FormatAsByteArray};
+use joyboy::bip340;
+use joyboy::utils::{compute_sha256_byte_array};
 use starknet::{ContractAddress, get_caller_address, get_contract_address, contract_address_const};
 use super::profile::NostrProfile;
-use core::to_byte_array::{AppendFormattedToByteArray, FormatAsByteArray};
 use super::request::SocialRequest;
-use joyboy::utils::{compute_sha256_byte_array};
-use joyboy::bip340;
 use super::transfer::Transfer;
-
 
 
 #[starknet::interface]
@@ -17,14 +16,9 @@ pub trait ISocialAccount<TContractState> {
 
 #[starknet::contract]
 pub mod SocialAccount {
-    use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
-    use super::super::request::{
-        SocialRequest, SocialRequestImpl, SocialRequestTrait, Encode, Signature
-    };
-    use super::super::transfer::Transfer;
-
     use openzeppelin::account::interface;
     use openzeppelin::introspection::interface::ISRC5;
+    use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     // use openzeppelin::introspection::interface::ISRC5Camel;
     // use openzeppelin::introspection::src5::SRC5;
     // use openzeppelin::introspection::src5::unsafe_state as src5_state;
@@ -32,6 +26,10 @@ pub mod SocialAccount {
     use starknet::get_caller_address;
     use starknet::get_contract_address;
     use starknet::get_tx_info;
+    use super::super::request::{
+        SocialRequest, SocialRequestImpl, SocialRequestTrait, Encode, Signature
+    };
+    use super::super::transfer::Transfer;
 
     const TRANSACTION_VERSION: felt252 = 1;
     // 2**128 + TRANSACTION_VERSION
