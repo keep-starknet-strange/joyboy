@@ -1,8 +1,8 @@
-use core::to_byte_array::FormatAsByteArray;
 use core::fmt::Display;
+use core::to_byte_array::FormatAsByteArray;
 use core::traits::Into;
-use joyboy::utils::{compute_sha256_byte_array};
 use joyboy::bip340;
+use joyboy::utils::{compute_sha256_byte_array};
 
 const TWO_POW_32: u128 = 0x100000000;
 const TWO_POW_64: u128 = 0x10000000000000000;
@@ -10,24 +10,23 @@ const TWO_POW_96: u128 = 0x1000000000000000000000000;
 
 #[derive(Copy, Drop, Debug, Serde)]
 pub struct Signature {
-    r: u256,
-    s: u256
+    pub r: u256,
+    pub s: u256
 }
 
 #[derive(Drop, Serde)]
 pub struct SocialRequest<C> {
-    public_key: u256,
-    created_at: u64,
-    kind: u16,
-    tags: ByteArray, // we don't need to look inside the tags(at least for now)
-    content: C,
-    sig: Signature
+    pub public_key: u256,
+    pub created_at: u64,
+    pub kind: u16,
+    pub tags: ByteArray, // we don't need to look inside the tags(at least for now)
+    pub content: C,
+    pub sig: Signature
 }
 
 pub trait Encode<T> {
     fn encode(self: @T) -> @ByteArray;
 }
-
 
 #[generate_trait]
 pub impl SocialRequestImpl<C, +Encode<C>> of SocialRequestTrait<C> {
