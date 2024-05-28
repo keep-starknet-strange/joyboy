@@ -3,6 +3,7 @@ export {Button} from './button';
 export {Divider} from './divider';
 export {IconButton} from './iconbutton';
 export {Input} from './input';
+export {Menu} from './menu';
 export {PostPage} from './note/PostPage';
 export {CreateNote} from './profile/CreateNote';
 export {EditProfile} from './profile/EditProfile';

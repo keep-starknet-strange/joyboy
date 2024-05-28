@@ -1,7 +1,8 @@
 import {Feather} from '@expo/vector-icons';
+import {useState} from 'react';
 import {Pressable, ScrollView, Text, View} from 'react-native';
 
-import {Button, IconButton, Typography} from '../../components';
+import {Button, IconButton, Menu, Typography} from '../../components';
 import {useAuth} from '../../store/auth';
 import {RootStackProfileScreenProps} from '../../types';
 import {ProfileHead} from './Head';
@@ -10,12 +11,13 @@ import styles from './styles';
 export const Profile: React.FC<RootStackProfileScreenProps> = ({route}) => {
   const {publicKey: userPublicKey} = route.params;
 
+  const [menuOpen, setMenuOpen] = useState(false);
   const publicKey = useAuth((state) => state.publicKey);
 
   const isSelf = publicKey === userPublicKey;
 
   return (
-    <ScrollView>
+    <ScrollView style={styles.container}>
       <ProfileHead
         showSettingsButton={isSelf}
         buttons={
@@ -25,12 +27,22 @@ export const Profile: React.FC<RootStackProfileScreenProps> = ({route}) => {
                 Edit profile
               </Button>
 
-              <IconButton
-                icon="more-vertical"
-                size={20}
-                color="#14142c"
-                style={styles.iconButton}
-              />
+              <Menu
+                open={menuOpen}
+                onClose={() => setMenuOpen(false)}
+                handle={
+                  <IconButton
+                    icon="more-vertical"
+                    size={20}
+                    color="#14142c"
+                    style={styles.iconButton}
+                    onPress={() => setMenuOpen(true)}
+                  />
+                }
+              >
+                <Menu.Item label="Share @ayushtom" icon="dollar-sign" />
+                <Menu.Item label="About" icon="info" />
+              </Menu>
             </>
           ) : (
             <>
@@ -50,12 +62,24 @@ export const Profile: React.FC<RootStackProfileScreenProps> = ({route}) => {
                 color="#14142c"
               />
 
-              <IconButton
-                icon="more-vertical"
-                size={20}
-                style={styles.iconButton}
-                color="#14142c"
-              />
+              <Menu
+                open={menuOpen}
+                onClose={() => setMenuOpen(false)}
+                handle={
+                  <IconButton
+                    icon="more-vertical"
+                    size={20}
+                    color="#14142c"
+                    style={styles.iconButton}
+                    onPress={() => setMenuOpen(true)}
+                  />
+                }
+              >
+                <Menu.Item label="Tip @ayushtom" icon="dollar-sign" />
+                <Menu.Item label="Share @ayushtom" icon="share" />
+                <Menu.Item label="About" icon="info" />
+                <Menu.Item label="Report user" icon="flag" />
+              </Menu>
             </>
           )
         }

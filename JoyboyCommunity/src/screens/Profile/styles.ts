@@ -1,6 +1,10 @@
 import {StyleSheet} from 'react-native';
 
 export default StyleSheet.create({
+  container: {
+    backgroundColor: '#F4F9FF',
+  },
+
   secondaryButton: {
     backgroundColor: 'rgba(12, 12, 79, 0.1)',
   },
