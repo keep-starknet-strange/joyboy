@@ -1,4 +1,5 @@
 import {Feather} from '@expo/vector-icons';
+import {useNavigation} from '@react-navigation/native';
 import {Image, Pressable, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
@@ -16,15 +17,28 @@ export const ProfileHead: React.FC<ProfileHeadProps> = ({
   showSettingsButton,
   buttons,
 }) => {
+  const navigation = useNavigation();
+
+  const goToSettings = () => {
+    // navigation.navigate('Settings');
+  };
+
   return (
     <View style={styles.container}>
       <SafeAreaView edges={['top', 'left', 'right']} style={styles.coverContainer}>
         <Image source={{uri: 'https://picsum.photos/200/300'}} style={styles.coverImage} />
 
-        {showBackButton && <IconButton icon="chevron-left" size={20} style={styles.backButton} />}
+        {showBackButton && (
+          <IconButton
+            icon="chevron-left"
+            size={20}
+            style={styles.backButton}
+            onPress={navigation.goBack}
+          />
+        )}
 
         {showSettingsButton && (
-          <Pressable style={styles.settingsButton}>
+          <Pressable style={styles.settingsButton} onPress={goToSettings}>
             <Feather name="settings" size={20} />
             <Typography style={styles.settingsButtonText}>Settings</Typography>
           </Pressable>
