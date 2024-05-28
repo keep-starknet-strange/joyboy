@@ -206,6 +206,8 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Oshioke-Salaki"><img src="https://avatars.githubusercontent.com/u/105825121?v=4?s=100" width="100px;" alt="Oshioke Salaki"/><br /><sub><b>Oshioke Salaki</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=Oshioke-Salaki" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/bhavyagosai"><img src="https://avatars.githubusercontent.com/u/64588227?v=4?s=100" width="100px;" alt="Bhavya Gosai"/><br /><sub><b>Bhavya Gosai</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=bhavyagosai" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/BlackStarkGoku"><img src="https://avatars.githubusercontent.com/u/165695008?v=4?s=100" width="100px;" alt="BlackStarkGoku"/><br /><sub><b>BlackStarkGoku</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=BlackStarkGoku" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Israelrex9"><img src="https://avatars.githubusercontent.com/u/46507005?v=4?s=100" width="100px;" alt="IsraelRex"/><br /><sub><b>IsraelRex</b></sub></a><br /><a href="#design-Israelrex9" title="Design">🎨</a></td>
     </tr>
   </tbody>
 </table>
