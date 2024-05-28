@@ -1,33 +1,34 @@
-import React from 'react';
-import Svg, { Path } from 'react-native-svg';
-
-function Gallery(props) {
-  return (
-    <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" {...props}>
-      <Path 
-        d="M2.5 12C2.5 7.52166 2.5 5.28249 3.89124 3.89124C5.28249 2.5 7.52166 2.5 12 2.5C16.4783 2.5 18.7175 2.5 20.1088 3.89124C21.5 5.28249 21.5 7.52166 21.5 12C21.5 16.4783 21.5 18.7175 20.1088 20.1088C18.7175 21.5 16.4783 21.5 12 21.5C7.52166 21.5 5.28249 21.5 3.89124 20.1088C2.5 18.7175 2.5 16.4783 2.5 12Z" 
-        stroke="#4B799F" 
-        strokeWidth="1.5" 
-      />
-      <Path 
-        d="M16.5 9C17.3284 9 18 8.32843 18 7.5C18 6.67157 17.3284 6 16.5 6C15.6716 6 15 6.67157 15 7.5C15 8.32843 15.6716 9 16.5 9Z" 
-        stroke="#4B799F" 
-        strokeWidth="1.5" 
-      />
-      <Path 
-        d="M16 22C15.3805 19.7749 13.9345 17.7821 11.8765 16.3342C9.65761 14.7729 6.87163 13.9466 4.01569 14.0027C3.67658 14.0019 3.33776 14.0127 3 14.0351" 
-        stroke="#4B799F" 
-        strokeWidth="1.5" 
-        strokeLinejoin="round" 
-      />
-      <Path 
-        d="M13 18C14.7015 16.6733 16.5345 15.9928 18.3862 16.0001C19.4362 15.999 20.4812 16.2216 21.5 16.6617" 
-        stroke="#4B799F" 
-        strokeWidth="1.5" 
-        strokeLinejoin="round" 
-      />
-    </Svg>
-  );
-}
-
-export default Gallery;
+import * as React from "react"
+import Svg, { SvgProps, Path } from "react-native-svg"
+const Gallery = (props: SvgProps) => (
+  <Svg
+    width={24}
+    height={24}
+    fill="none"
+    {...props}
+  >
+    <Path
+      stroke="#4B799F"
+      strokeWidth={1.5}
+      d="M2.5 12c0-4.478 0-6.718 1.391-8.109S7.521 2.5 12 2.5c4.478 0 6.718 0 8.109 1.391S21.5 7.521 21.5 12c0 4.478 0 6.718-1.391 8.109C18.717 21.5 16.479 21.5 12 21.5c-4.478 0-6.718 0-8.109-1.391C2.5 18.717 2.5 16.479 2.5 12Z"
+    />
+    <Path
+      stroke="#4B799F"
+      strokeWidth={1.5}
+      d="M16.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"
+    />
+    <Path
+      stroke="#4B799F"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+      d="M16 22c-.62-2.225-2.066-4.218-4.123-5.666-2.22-1.561-5.005-2.387-7.861-2.331-.34-.001-.678.01-1.016.032"
+    />
+    <Path
+      stroke="#4B799F"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+      d="M13 18c1.701-1.327 3.535-2.007 5.386-2a7.792 7.792 0 0 1 3.114.662"
+    />
+  </Svg>
+)
+export default Gallery

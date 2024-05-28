@@ -76,6 +76,7 @@ export default function CreatePost() {
           <Typography style={{color: '#4B799F', fontSize: 17}} variant="ts15r">
             Draft
           </Typography>
+          </PostButton>
       </Container>
 
       <View style={{marginBottom: 1}}>

@@ -1,11 +1,24 @@
-import React from 'react';
-import Svg, { Path } from 'react-native-svg';
-
-const ProfileIcon = () => (
-  <Svg width="32" height="32" viewBox="0 0 32 32" fill="none" >
-    <Path d="M16 29.3333C23.3638 29.3333 29.3333 23.3638 29.3333 16C29.3333 8.63621 23.3638 2.66667 16 2.66667C8.63616 2.66667 2.66663 8.63621 2.66663 16C2.66663 23.3638 8.63616 29.3333 16 29.3333Z" stroke="#1E2F3D" strokeWidth="2" strokeLinejoin="round"/>
-    <Path d="M10 22.6667C13.1089 19.4104 18.8576 19.2571 22 22.6667M19.3268 12.6667C19.3268 14.5076 17.8323 16 15.9887 16C14.1452 16 12.6506 14.5076 12.6506 12.6667C12.6506 10.8257 14.1452 9.33333 15.9887 9.33333C17.8323 9.33333 19.3268 10.8257 19.3268 12.6667Z" stroke="#1E2F3D" strokeWidth="2" strokeLinejoin="round"/>
+import * as React from "react"
+import Svg, { SvgProps, Path } from "react-native-svg"
+const ProfileIcon = (props: SvgProps) => (
+  <Svg
+    width={32}
+    height={32}
+    fill="none"
+    {...props}
+  >
+    <Path
+      stroke="#1E2F3D"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M16 29.333c7.364 0 13.333-5.97 13.333-13.333 0-7.364-5.97-13.333-13.333-13.333C8.636 2.667 2.667 8.637 2.667 16c0 7.364 5.97 13.333 13.333 13.333Z"
+    />
+    <Path
+      stroke="#1E2F3D"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M10 22.667c3.109-3.257 8.858-3.41 12 0m-2.673-10A3.336 3.336 0 0 1 15.989 16a3.336 3.336 0 0 1-3.338-3.333 3.336 3.336 0 0 1 3.338-3.334 3.336 3.336 0 0 1 3.338 3.334Z"
+    />
   </Svg>
-);
-
-export default ProfileIcon;
+)
+export default ProfileIcon
