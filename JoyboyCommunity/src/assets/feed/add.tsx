@@ -1,12 +1,6 @@
-import * as React from "react"
+import * as React from 'react';
 const AddPostIcon = (props) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={72}
-    height={72}
-    fill="none"
-    {...props}
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width={72} height={72} fill="none" {...props}>
     <path
       fill="#EC796B"
       d="M30 3.464a12 12 0 0 1 12 0l19.177 11.072a12 12 0 0 1 6 10.392v22.144a12 12 0 0 1-6 10.392L42 68.536a12 12 0 0 1-12 0L10.823 57.464a12 12 0 0 1-6-10.392V24.928a12 12 0 0 1 6-10.392L30 3.464Z"
@@ -18,5 +12,5 @@ const AddPostIcon = (props) => (
       clipRule="evenodd"
     />
   </svg>
-)
-export default AddPostIcon
+);
+export default AddPostIcon;

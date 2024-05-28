@@ -1,12 +1,6 @@
-import * as React from "react"
+import * as React from 'react';
 const UserIcon = (props) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={32}
-    height={32}
-    fill="none"
-    {...props}
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width={32} height={32} fill="none" {...props}>
     <path
       stroke="#1E2F3D"
       strokeLinejoin="round"
@@ -20,5 +14,5 @@ const UserIcon = (props) => (
       d="M10 22.667c3.109-3.257 8.858-3.41 12 0m-2.673-10A3.336 3.336 0 0 1 15.989 16a3.336 3.336 0 0 1-3.338-3.333 3.336 3.336 0 0 1 3.338-3.334 3.336 3.336 0 0 1 3.338 3.334Z"
     />
   </svg>
-)
-export default UserIcon
+);
+export default UserIcon;

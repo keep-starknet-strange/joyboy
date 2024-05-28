@@ -20,7 +20,6 @@ import MessageIcon from '../assets/feed/message';
 import SearchIcon from '../assets/feed/search';
 import HomeIcon from '../assets/feed/home';
 
-
 const RootStack = createNativeStackNavigator<RootStackParams>();
 const HomeBottomTabsStack = createBottomTabNavigator<HomeStackParams>();
 
@@ -68,7 +67,7 @@ const HomeBottomTabNavigator: React.FC = () => {
           tabBarIcon: ({focused}) => {
             return (
               <View style={{flex: 1, alignItems: 'center', gap: 1, justifyContent: 'center'}}>
-                <SearchIcon stroke={focused ? '#14142C' : '#1E2F3D80'}  />
+                <SearchIcon stroke={focused ? '#14142C' : '#1E2F3D80'} />
                 {focused && <IndicatorIcon />}
               </View>
             );
@@ -85,7 +84,7 @@ const HomeBottomTabNavigator: React.FC = () => {
           tabBarIcon: ({focused}) => {
             return (
               <View style={{flex: 1, alignItems: 'center', gap: 1, justifyContent: 'center'}}>
-                <NotificationIcon stroke={focused ? '#14142C' : '#1E2F3D80'}  />
+                <NotificationIcon stroke={focused ? '#14142C' : '#1E2F3D80'} />
                 {focused && <IndicatorIcon />}
               </View>
             );

@@ -6,7 +6,6 @@ import {styles} from './style';
 import JoyboyIcon from '../../assets/feed/title';
 import UserIcon from '../../assets/feed/user';
 
-
 const FeedStack = createStackNavigator();
 function FeedStackScreen() {
   return (

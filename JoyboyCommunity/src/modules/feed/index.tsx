@@ -16,34 +16,32 @@ const FixedPostButton = styled(View)`
 
 export default function Feed() {
   const bottomBarHeight = useBottomTabBarHeight();
- 
+
   const {
     data: poolEventNotesData,
     isLoading: poolEventNotesDataLoading,
     refetch,
   } = useGetPoolEventsNotes();
 
-
   const stories = [
-  {name: 'Luffy', img: require('../../assets/feed/images/story-1.png')},
-  {name: 'Usopp', img: require('../../assets/feed/images/story-2.png')},
-  {name: 'Steph', img: require('../../assets/feed/images/story-3.png')},
-  {name: 'Roronoa Z', img: require('../../assets/feed/images/story-4.png')},
-  {name: 'Franky', img: require('../../assets/feed/images/story-5.png')},
-  {name: 'Franky', img: require('../../assets/feed/images/story-5.png')},
-  {name: 'Franky', img: require('../../assets/feed/images/story-5.png')},
-  {name: 'Franky', img: require('../../assets/feed/images/story-5.png')},
-
-];
+    {name: 'Luffy', img: require('../../assets/feed/images/story-1.png')},
+    {name: 'Usopp', img: require('../../assets/feed/images/story-2.png')},
+    {name: 'Steph', img: require('../../assets/feed/images/story-3.png')},
+    {name: 'Roronoa Z', img: require('../../assets/feed/images/story-4.png')},
+    {name: 'Franky', img: require('../../assets/feed/images/story-5.png')},
+    {name: 'Franky', img: require('../../assets/feed/images/story-5.png')},
+    {name: 'Franky', img: require('../../assets/feed/images/story-5.png')},
+    {name: 'Franky', img: require('../../assets/feed/images/story-5.png')},
+  ];
 
   return (
     <SafeAreaView style={{flex: 1}}>
       <ImageBackground
-        source={require('../../assets/feed/feed-bg.png')}       
+        source={require('../../assets/feed/feed-bg.png')}
         style={styles.linearGradient}
       >
         <View style={{paddingTop: 30, paddingBottom: 18}}>
-          <FlatList 
+          <FlatList
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             data={stories}
@@ -52,13 +50,19 @@ export default function Feed() {
             renderItem={({item}) => {
               return (
                 <View style={styles.stories}>
-                  <View style={{position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                    <Image source={require('../../assets/feed/images/story-bg.png')} resizeMode="cover" />
+                  <View
+                    style={{
+                      position: 'relative',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
                     <Image
-                      style={{position: 'absolute', }}
-                      source={item.img}
+                      source={require('../../assets/feed/images/story-bg.png')}
                       resizeMode="cover"
                     />
+                    <Image style={{position: 'absolute'}} source={item.img} resizeMode="cover" />
                   </View>
                   <Text style={styles.storyText}>{item.name}</Text>
                 </View>
@@ -84,7 +88,9 @@ export default function Feed() {
               />
             );
           }}
-          refreshControl={<RefreshControl refreshing={poolEventNotesDataLoading} onRefresh={() => refetch()} />}
+          refreshControl={
+            <RefreshControl refreshing={poolEventNotesDataLoading} onRefresh={() => refetch()} />
+          }
         />
       </ImageBackground>
       <FixedPostButton>

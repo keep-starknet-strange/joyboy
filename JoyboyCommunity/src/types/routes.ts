@@ -25,7 +25,7 @@ export type HomeStackParams = {
   Feed: undefined;
   Search: undefined;
   Notifications: undefined;
-  Messages: undefined
+  Messages: undefined;
 };
 
 // Root Stack
@@ -72,7 +72,6 @@ export type NotificationsScreenProps = CompositeScreenProps<
   NativeStackScreenProps<HomeStackParams, 'Notifications'>,
   NativeStackScreenProps<RootStackParams>
 >;
-
 
 export type MessagesScreenProps = CompositeScreenProps<
   NativeStackScreenProps<HomeStackParams, 'Messages'>,

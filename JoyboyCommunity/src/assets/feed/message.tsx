@@ -1,12 +1,6 @@
-import * as React from "react"
+import * as React from 'react';
 const MessageIcon = (props) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    fill="none"
-    {...props}
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} fill="none" {...props}>
     <path
       stroke="#1E2F3D"
       strokeOpacity={0.5}
@@ -20,5 +14,5 @@ const MessageIcon = (props) => (
       d="M21.583 18.122c1.32-2.878-.691-6.121-3.452-6.901-2.62-.879-5.99.662-6.874 3.279-.885 2.617.45 5.846 3.596 6.662 1.621.544 2.892.165 3.32 0 .68.213 2.182.524 2.692.835.11.067-.071-.75-.222-2.48.26-.42.83-.818.94-1.395Z"
     />
   </svg>
-)
-export default MessageIcon
+);
+export default MessageIcon;
