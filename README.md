@@ -156,7 +156,6 @@ Here are some work already merge and available for test:
 
 1. Home page: 
 
-[Home page onboard](../resources/screens/onboard.png)
 <img src="/resources/screens/onboard.png" alt="onboard" height="300"/>
 
 2. Create Nostr account

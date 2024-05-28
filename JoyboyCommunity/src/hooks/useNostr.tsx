@@ -1,9 +1,10 @@
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {Event as EventNostr} from 'nostr-tools';
+import {Event as EventNostr, SimplePool} from 'nostr-tools';
 import {finalizeEvent, NostrEvent, parseReferences, VerifiedEvent, verifyEvent} from 'nostr-tools';
 
 import {useNostrContext} from '../context/NostrContext';
 import {IPoolEventsByQuery, IPoolEventsFromPubkey, ISendNotePayload, IUserQuery} from '../types';
+import {JOYBOY_RELAYS} from '../utils/relay';
 
 export const useGetPoolEventById = (id: string) => {
   const {pool, relays} = useNostrContext();
@@ -73,16 +74,41 @@ export const useGetPoolUserQuery = ({id = '0', ...query}: IUserQuery) => {
   });
 };
 
-export const useGetPoolEventsByQuery = ({ids = ['1', '3'], ...query}: IPoolEventsByQuery) => {
-  const {pool, relays} = useNostrContext();
-
+export const useGetPoolEventsByQuery = ({
+  ids = ['1', '3'],
+  kinds = [1],
+  filter,
+  pool = new SimplePool(),
+  relaysToUsed,
+}: IPoolEventsByQuery) => {
   return useQuery({
     queryFn: () =>
-      pool.querySync(query.relaysProps ?? relays, {
+      pool?.querySync(relaysToUsed, {
         ids,
-        ...query.filter,
+        kinds,
+        ...filter,
       }),
-    queryKey: ['getPoolEventsByQuery', query.relaysProps, query.filter, ids],
+    queryKey: ['getPoolEventsByQuery', ids, kinds, filter, relaysToUsed, pool],
+    placeholderData: [],
+  });
+};
+
+export const useGetPoolEventsTagsByQuery = ({
+  ids,
+  kinds = [1],
+  filter,
+  pool = new SimplePool(),
+  relaysToUsed,
+}: IPoolEventsByQuery) => {
+  return useQuery({
+    queryFn: () =>
+      pool?.querySync(relaysToUsed, {
+        ids,
+        kinds,
+        ...filter,
+      }),
+    enabled: !!filter?.search,
+    queryKey: ['getPoolEventsByQuery', ids, kinds, filter, pool, relaysToUsed],
     placeholderData: [],
   });
 };
@@ -110,22 +136,34 @@ export const useGetUser = (pubkey: string) => {
   });
 };
 
+/** Check if a note is valid and publish not on relayer if event valid */
 export const useSendNote = () => {
   const queryClient = useQueryClient();
+  const {pool, relays, connectRelayJoyboy} = useNostrContext();
 
   return useMutation({
-    mutationFn: sendNote,
-    onSuccess(data) {
+    mutationFn: isValidSendNote,
+    async onSuccess(data) {
       queryClient.invalidateQueries({
         queryKey: [''],
       });
+      const event = data?.event;
+      /** @TODO add option to send note on different relays and add list of relays */
+      let eventPublish = await pool.publish(JOYBOY_RELAYS, event);
+
+      /**  */
+      const relayJoyboy = await connectRelayJoyboy();
+      let publish = await relayJoyboy.publish(event);
+      await relayJoyboy.close();
+
+      return data;
     },
   });
 };
 
 // FUNCTIONS
 
-export const sendNote = async ({
+export const isValidSendNote = async ({
   content,
   sk,
   tags,
@@ -147,17 +185,17 @@ export const sendNote = async ({
 
     const isGood = verifyEvent(event);
 
-    if (isGood) {
-      return {
-        event,
-        isValid: true,
-      };
-    } else {
+    if (!isGood) {
       return {
         event,
         isValid: false,
       };
     }
+
+    return {
+      event,
+      isValid: true,
+    };
   } catch (e) {
     console.log('issue sendNote', e);
     return {
