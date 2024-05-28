@@ -5,11 +5,7 @@ import {useMemo} from 'react';
 import {View} from 'react-native';
 import {useTheme} from 'styled-components/native';
 
-import HomeIcon from '../assets/feed/home';
-import IndicatorIcon from '../assets/feed/indicator';
-import MessageIcon from '../assets/feed/message';
-import NotificationIcon from '../assets/feed/notification';
-import SearchIcon from '../assets/feed/search';
+import {HomeIcon, IndicatorIcon, MessageIcon, NotificationIcon, SearchIcon} from '../assets/icons';
 import Error from '../modules/error';
 import FeedStackScreen from '../modules/feed/FeedStackScreen';
 import Login from '../modules/login';
@@ -51,8 +47,8 @@ const HomeBottomTabNavigator: React.FC = () => {
           tabBarIcon: ({focused}) => {
             return (
               <View style={{flex: 1, alignItems: 'center', gap: 2, justifyContent: 'center'}}>
-                <HomeIcon fill={focused ? '#14142C' : '#1E2F3D80'} />
-                {focused && <IndicatorIcon />}
+                <HomeIcon width={24} height={24} fill={focused ? '#14142C' : '#1E2F3D80'} />
+                {focused && <IndicatorIcon color="#EC796B" width={6} height={6} />}
               </View>
             );
           },
@@ -68,8 +64,8 @@ const HomeBottomTabNavigator: React.FC = () => {
           tabBarIcon: ({focused}) => {
             return (
               <View style={{flex: 1, alignItems: 'center', gap: 1, justifyContent: 'center'}}>
-                <SearchIcon stroke={focused ? '#14142C' : '#1E2F3D80'} />
-                {focused && <IndicatorIcon />}
+                <SearchIcon width={24} height={24} color={focused ? '#14142C' : '#1E2F3D80'} />
+                {focused && <IndicatorIcon color="#EC796B" width={6} height={6} />}
               </View>
             );
           },
@@ -85,8 +81,12 @@ const HomeBottomTabNavigator: React.FC = () => {
           tabBarIcon: ({focused}) => {
             return (
               <View style={{flex: 1, alignItems: 'center', gap: 1, justifyContent: 'center'}}>
-                <NotificationIcon stroke={focused ? '#14142C' : '#1E2F3D80'} />
-                {focused && <IndicatorIcon />}
+                <NotificationIcon
+                  width={24}
+                  height={24}
+                  color={focused ? '#14142C' : '#1E2F3D80'}
+                />
+                {focused && <IndicatorIcon color="#EC796B" width={6} height={6} />}
               </View>
             );
           },
@@ -102,8 +102,8 @@ const HomeBottomTabNavigator: React.FC = () => {
           tabBarIcon: ({focused}) => {
             return (
               <View style={{flex: 1, alignItems: 'center', gap: 4, justifyContent: 'center'}}>
-                <MessageIcon stroke={focused ? '#14142C' : '#1E2F3D80'} />
-                {focused && <IndicatorIcon />}
+                <MessageIcon width={24} height={24} color={focused ? '#14142C' : '#1E2F3D80'} />
+                {focused && <IndicatorIcon color="#EC796B" width={6} height={6} />}
               </View>
             );
           },

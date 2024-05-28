@@ -3,7 +3,7 @@ import React from 'react';
 import {Pressable} from 'react-native';
 import styled from 'styled-components/native';
 
-import AddPostIcon from '../../../assets/feed/add';
+import {AddPostIcon} from '../../../assets/icons';
 import {RootStackNavigationProps} from '../../../types';
 
 const Button = styled(Pressable)`
@@ -22,7 +22,7 @@ export default function FloatingPostButton() {
 
   return (
     <Button onPress={handleNavigation}>
-      <AddPostIcon />
+      <AddPostIcon width={72} height={72} color="#EC796B" />
     </Button>
   );
 }
