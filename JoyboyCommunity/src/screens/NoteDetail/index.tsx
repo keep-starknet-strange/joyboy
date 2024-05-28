@@ -1,18 +1,15 @@
 import React, {useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 
-import {parsingEventContent, useGetPoolEventById, useGetPoolEvents} from '../../hooks/useNostr';
+import {parsingEventContent, useGetPoolEventById} from '../../hooks/useNostr';
 import {RootStackNoteDetailScreenProps} from '../../types';
 import {Container, ContentContainer, ProfileImage, Text, Timestamp} from './styled';
 
 export const NoteDetail: React.FC<RootStackNoteDetailScreenProps> = ({route, navigation}) => {
   const {noteId} = route.params;
-  const {singlePoolEventData} = useGetPoolEventById(noteId);
-  const {poolEventsData} = useGetPoolEvents();
+  const {data: singlePoolEventData} = useGetPoolEventById(noteId);
 
   const [imgUser, setImageUser] = useState<string | undefined>();
-
-  const event = poolEventsData?.find((e) => e?.id == noteId);
 
   const contentParsed = parsingEventContent(singlePoolEventData);
 

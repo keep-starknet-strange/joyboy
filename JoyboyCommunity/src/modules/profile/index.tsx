@@ -5,11 +5,8 @@ import {SceneMap, TabView} from 'react-native-tab-view';
 import {useTheme} from 'styled-components/native';
 
 import {Typography} from '../../components';
-import {
-  useGetPoolEventsNotesFromPubkey,
-  useGetPoolUserQuery,
-  useRetrievePublicKey,
-} from '../../hooks/useNostr';
+import {useGetPoolEventsNotesFromPubkey, useGetPoolUserQuery} from '../../hooks/useNostr';
+import {useAuth} from '../../store/auth';
 import {INoteRepostParsed, IUserEvent} from '../../types';
 import {filterRepliesOnEvents} from '../../utils/filter';
 import {NotesRoute, ReactionsRoute, RepliesRoute, RepostsRoute} from './routes';
@@ -26,10 +23,11 @@ import {
 export default function Profile() {
   const theme = useTheme();
   const layout = useWindowDimensions();
-  const {publicKeyData, isConnected} = useRetrievePublicKey();
-  const {poolUserQueryData} = useGetPoolUserQuery({pubkey: publicKeyData});
-  const {poolEventsNotesDataFromPubkey} = useGetPoolEventsNotesFromPubkey({
-    pubkey: publicKeyData,
+
+  const {publicKey} = useAuth();
+  const {data: poolUserQueryData} = useGetPoolUserQuery({pubkey: publicKey});
+  const {data: poolEventsNotesDataFromPubkey} = useGetPoolEventsNotesFromPubkey({
+    pubkey: publicKey,
     kinds: [
       1, // note
       6, // repost
@@ -52,16 +50,20 @@ export default function Profile() {
   const notesAllTags = poolEventsNotesDataFromPubkey?.filter((e) => e?.kind == 1);
 
   /** Parse content note as anoter event to repost */
-  const reposts: INoteRepostParsed[] = poolEventsNotesDataFromPubkey?.filter((e) => {
-    if (e?.kind == 6) {
-      const parsedNote = JSON.parse(e?.content);
+  const reposts: INoteRepostParsed[] = useMemo(
+    () =>
+      (poolEventsNotesDataFromPubkey ?? [])
+        .filter((e) => e?.kind === 6)
+        .map((e) => {
+          const parsedNote = JSON.parse(e?.content);
 
-      return {
-        event: e,
-        repost: parsedNote,
-      };
-    }
-  });
+          return {
+            event: e,
+            repost: parsedNote,
+          };
+        }),
+    [poolEventsNotesDataFromPubkey],
+  );
   const reactions = poolEventsNotesDataFromPubkey?.filter((e) => e?.kind == 7);
   const repliesFilter = filterRepliesOnEvents(notesAllTags);
   const noteEvents = notesAllTags?.filter((n) => n?.tags?.length == 0);
@@ -115,7 +117,7 @@ export default function Profile() {
 
       <AboutContainer>
         <Typography variant="ts19m" colorCode={theme.black[10]}>
-          {publicKeyData ?? ''}
+          {publicKey ?? ''}
         </Typography>
 
         <Typography variant="ts19m" colorCode={theme.black[10]}>

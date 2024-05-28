@@ -1,27 +1,14 @@
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {Event as EventNostr} from 'nostr-tools';
 import {finalizeEvent, NostrEvent, parseReferences, VerifiedEvent, verifyEvent} from 'nostr-tools';
-import {useContext} from 'react';
 
-import {NDKContext} from '../context/NDKContext';
-import {PoolContext} from '../context/PoolContext';
+import {useNostrContext} from '../context/NostrContext';
 import {IPoolEventsByQuery, IPoolEventsFromPubkey, ISendNotePayload, IUserQuery} from '../types';
-import {RELAYS_PROD} from '../utils/relay';
-import {retrievePublicKey} from '../utils/storage';
-
-interface IIsEventBool {
-  isSetEvents: boolean;
-}
 
 export const useGetPoolEventById = (id: string) => {
-  const pool = useContext(PoolContext);
-  const relays = RELAYS_PROD;
+  const {pool, relays} = useNostrContext();
 
-  const {
-    data: singlePoolEventData,
-    isPending: singlePoolEventDataLoading,
-    error: singlePoolEventDataError,
-  } = useQuery({
+  return useQuery({
     queryFn: async () => {
       const data = await pool.get(relays, {ids: [id]}, {});
 
@@ -30,107 +17,53 @@ export const useGetPoolEventById = (id: string) => {
     },
     queryKey: ['getPoolEventById', id],
   });
-
-  return {
-    singlePoolEventData,
-    singlePoolEventDataLoading,
-    singlePoolEventDataError,
-  };
 };
 
 export const useGetPoolEvents = () => {
-  const pool = useContext(PoolContext);
-  const relays = RELAYS_PROD;
+  const {pool, relays} = useNostrContext();
 
-  const {
-    data: poolEventsData,
-    isPending: poolEventsDataLoading,
-    error: poolEventsDataError,
-  } = useQuery({
+  return useQuery({
     queryFn: () => pool.querySync(relays, {kinds: [0, 1]}, {}),
     queryKey: ['getPoolEvents'],
   });
-
-  return {
-    poolEventsData,
-    poolEventsDataLoading,
-    poolEventsDataError,
-  };
 };
 
 export const useGetPoolEventsNotes = () => {
-  const pool = useContext(PoolContext);
-  const relays = RELAYS_PROD;
+  const {pool, relays} = useNostrContext();
 
-  const {
-    data: poolEventNotesData,
-    isPending: poolEventNotesDataLoading,
-    error: poolEventNotesDataError,
-  } = useQuery({
+  return useQuery({
     queryFn: () => pool.querySync(relays, {kinds: [1]}, {}),
     queryKey: ['getPoolEventsNotes'],
   });
-
-  return {
-    poolEventNotesData,
-    poolEventNotesDataLoading,
-    poolEventNotesDataError,
-  };
 };
 
 export const useGetPoolEventUser = () => {
-  const pool = useContext(PoolContext);
-  const relays = RELAYS_PROD;
+  const {pool, relays} = useNostrContext();
 
-  const {
-    data: poolEventsUser,
-    isPending: poolEventsUserLoading,
-    error: poolEventsUserError,
-  } = useQuery({
+  return useQuery({
     queryFn: () => pool.querySync(relays, {kinds: [0]}, {}),
     queryKey: ['getPoolEventUser'],
   });
-
-  return {
-    poolEventsUser,
-    poolEventsUserLoading,
-    poolEventsUserError,
-  };
 };
 
 export const useGetPoolEventsFromPubkey = (query: IPoolEventsFromPubkey) => {
-  const pool = useContext(PoolContext);
-  const relays = RELAYS_PROD;
+  const {pool, relays} = useNostrContext();
 
-  const {
-    data: poolEventsDataFromPubkey,
-    isPending: poolEventsFromPubkeyLoading,
-    error: poolEventsErrorFromPubkey,
-  } = useQuery({
+  return useQuery({
     queryFn: () =>
       pool.querySync(query.relaysUser ?? relays, {
         kinds: query.kinds ?? [1, 3],
         authors: [query.pubkey],
       }),
     queryKey: ['getPoolEventsFromPubkey', query.relaysUser, query.kinds],
+    placeholderData: [],
   });
-
-  return {
-    poolEventsDataFromPubkey,
-    poolEventsFromPubkeyLoading,
-    poolEventsErrorFromPubkey,
-  };
 };
 
 export const useGetPoolUserQuery = ({id = '0', ...query}: IUserQuery) => {
-  const pool = useContext(PoolContext);
-  const relays = RELAYS_PROD;
+  const {pool, relays} = useNostrContext();
 
-  const {
-    data: poolUserQueryData,
-    isPending: poolUserQueryDataLoading,
-    error: poolUserQueryDataError,
-  } = useQuery({
+  return useQuery({
     queryFn: () =>
       pool.get(relays, {
         kinds: [Number(id)],
@@ -138,84 +71,49 @@ export const useGetPoolUserQuery = ({id = '0', ...query}: IUserQuery) => {
       }),
     queryKey: ['getPoolUserQuery', id, query.pubkey],
   });
-
-  return {
-    poolUserQueryData,
-    poolUserQueryDataLoading,
-    poolUserQueryDataError,
-  };
 };
 
 export const useGetPoolEventsByQuery = ({ids = ['1', '3'], ...query}: IPoolEventsByQuery) => {
-  const pool = useContext(PoolContext);
-  const relays = RELAYS_PROD;
+  const {pool, relays} = useNostrContext();
 
-  const {
-    data: poolEventsDataByQuery,
-    isPending: poolEventsByQueryLoading,
-    error: poolEventsErrorByQuery,
-  } = useQuery({
+  return useQuery({
     queryFn: () =>
       pool.querySync(query.relaysProps ?? relays, {
         ids,
         ...query.filter,
       }),
     queryKey: ['getPoolEventsByQuery', query.relaysProps, query.filter, ids],
+    placeholderData: [],
   });
-
-  return {
-    poolEventsDataByQuery,
-    poolEventsByQueryLoading,
-    poolEventsErrorByQuery,
-  };
 };
 
 export const useGetPoolEventsNotesFromPubkey = (query: IPoolEventsFromPubkey) => {
-  const pool = useContext(PoolContext);
-  const relays = RELAYS_PROD;
+  const {pool, relays} = useNostrContext();
 
-  const {
-    data: poolEventsNotesDataFromPubkey,
-    isPending: poolEventsNotesFromPubkeyLoading,
-    error: poolEventsNotesErrorFromPubkey,
-  } = useQuery({
+  return useQuery({
     queryFn: () =>
       pool.querySync(query.relaysUser ?? relays, {
         kinds: query.kinds ?? [1],
         authors: [query.pubkey],
       }),
     queryKey: ['getPoolEventsNotesFromPubkey', query.relaysUser, query.kinds],
+    placeholderData: [],
   });
-
-  return {
-    poolEventsNotesDataFromPubkey,
-    poolEventsNotesFromPubkeyLoading,
-    poolEventsNotesErrorFromPubkey,
-  };
 };
 
 export const useGetUser = (pubkey: string) => {
-  const ndk = useContext(NDKContext);
+  const {ndk} = useNostrContext();
 
-  const {
-    data: userData,
-    isPending: userDataLoading,
-    error: userDataError,
-  } = useQuery({
+  return useQuery({
     queryFn: () => ndk.getUser({pubkey}),
     queryKey: ['getUser', pubkey],
   });
-
-  return {
-    userData,
-    userDataLoading,
-    userDataError,
-  };
 };
 
 export const useSendNote = () => {
   const queryClient = useQueryClient();
-  const {isPending: sendNoteLoading, mutate: mutateSendNote} = useMutation({
+
+  return useMutation({
     mutationFn: sendNote,
     onSuccess(data) {
       queryClient.invalidateQueries({
@@ -223,35 +121,6 @@ export const useSendNote = () => {
       });
     },
   });
-
-  return {
-    sendNoteLoading,
-    mutateSendNote,
-  };
-};
-
-export const useRetrievePublicKey = () => {
-  // const [isConnected, setIsConnected] = useState(false);
-  const {
-    data: publicKeyData,
-    isPending: publicKeyDataLoading,
-    error: publicKeyDataError,
-  } = useQuery({
-    queryFn: () => retrievePublicKey(),
-    queryKey: ['getPublicKey'],
-  });
-
-  // if (!publicKeyDataLoading && publicKeyData) {
-  //   setIsConnected(true);
-  // }
-  const isConnected = !publicKeyDataLoading && publicKeyData ? true : false;
-
-  return {
-    publicKeyData,
-    publicKeyDataLoading,
-    publicKeyDataError,
-    isConnected,
-  };
 };
 
 // FUNCTIONS

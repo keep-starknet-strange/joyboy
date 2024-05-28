@@ -1,16 +1,35 @@
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import {createContext} from 'react';
+import NDK, {NDKNip07Signer} from '@nostr-dev-kit/ndk';
+import {SimplePool} from 'nostr-tools';
+import {createContext, useContext, useMemo} from 'react';
 
-export const NostrContext = createContext<any>(null);
+import {RELAYS_PROD} from '../utils/relay';
 
-const queryClient = new QueryClient({
-  defaultOptions: {queries: {retry: 2}},
-});
+export type NostrContextType = {
+  pool: SimplePool;
+  relays: string[];
+  ndk: NDK;
+};
 
-export default function NostrProvider({children}: {children: React.ReactNode}) {
-  return (
-    <NostrContext.Provider value="">
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </NostrContext.Provider>
-  );
-}
+export const NostrContext = createContext<NostrContextType | null>(null);
+
+export const NostrProvider: React.FC<React.PropsWithChildren> = ({children}) => {
+  const pool = useMemo(() => new SimplePool(), []);
+  const relays = RELAYS_PROD;
+
+  const ndk = useMemo(() => {
+    const nip07signer = new NDKNip07Signer();
+    return new NDK({signer: nip07signer});
+  }, []);
+
+  return <NostrContext.Provider value={{pool, relays, ndk}}>{children}</NostrContext.Provider>;
+};
+
+export const useNostrContext = () => {
+  const nostr = useContext(NostrContext);
+
+  if (!nostr) {
+    throw new Error('NostrContext must be used within a NostrProvider');
+  }
+
+  return nostr;
+};

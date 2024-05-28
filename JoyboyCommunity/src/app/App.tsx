@@ -4,9 +4,6 @@ import * as SplashScreen from 'expo-splash-screen';
 import React, {useCallback, useEffect, useState} from 'react';
 import {StatusBar, View} from 'react-native';
 
-import NDKProvider from '../context/NDKContext';
-import NostrProvider from '../context/NostrContext';
-import PoolProvider from '../context/PoolContext';
 import {Router} from './Router';
 
 // Keep the splash screen visible while we fetch resources
@@ -47,16 +44,10 @@ export default function App() {
   }
 
   return (
-    <NostrProvider>
-      <PoolProvider>
-        <NDKProvider>
-          <View style={{flex: 1}} onLayout={onLayoutRootView}>
-            <StatusBar backgroundColor="#15141A" />
+    <View style={{flex: 1}} onLayout={onLayoutRootView}>
+      <StatusBar backgroundColor="#15141A" />
 
-            <Router />
-          </View>
-        </NDKProvider>
-      </PoolProvider>
-    </NostrProvider>
+      <Router />
+    </View>
   );
 }

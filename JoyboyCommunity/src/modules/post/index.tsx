@@ -11,7 +11,7 @@ import {Container, Photo, PostButton, TitleContainer} from './styled';
 export default function CreatePost() {
   const navigation = useNavigation();
 
-  const {mutateSendNote} = useSendNote();
+  const sendNote = useSendNote();
   const {privateKey} = useAuth();
   const [note, setNote] = useState<string | undefined>();
 
@@ -30,12 +30,13 @@ export default function CreatePost() {
       alert('Please login before send a note');
       return;
     }
-    mutateSendNote(
+
+    sendNote.mutate(
       {sk: privateKey, content: note},
       {
         onSuccess(data) {
           if (data.isValid) {
-            alert('Note send');
+            alert('Note sent');
           }
         },
         onError(error) {

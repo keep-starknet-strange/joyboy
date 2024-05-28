@@ -23,8 +23,10 @@ import {
 export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({route}) => {
   const {userId: userQuery} = route.params;
 
-  const {poolUserQueryData, poolUserQueryDataLoading} = useGetPoolUserQuery({pubkey: userQuery});
-  const {poolEventsNotesDataFromPubkey} = useGetPoolEventsNotesFromPubkey({
+  const {data: poolUserQueryData, isLoading: poolUserQueryDataLoading} = useGetPoolUserQuery({
+    pubkey: userQuery,
+  });
+  const {data: poolEventsNotesDataFromPubkey} = useGetPoolEventsNotesFromPubkey({
     pubkey: userQuery,
     kinds: [
       1, // note
@@ -51,16 +53,20 @@ export const UserDetail: React.FC<RootStackUserDetailScreenProps> = ({route}) =>
   const notesAllTags = poolEventsNotesDataFromPubkey?.filter((e) => e?.kind == 1);
 
   /** Parse content note as anoter event to repost */
-  const reposts: INoteRepostParsed[] = poolEventsNotesDataFromPubkey?.filter((e) => {
-    if (e?.kind == 6) {
-      const parsedNote = JSON.parse(e?.content);
+  const reposts: INoteRepostParsed[] = useMemo(
+    () =>
+      (poolEventsNotesDataFromPubkey ?? [])
+        ?.filter((e) => e.kind === 6)
+        .map((e) => {
+          const parsedNote = JSON.parse(e?.content);
 
-      return {
-        event: e,
-        repost: parsedNote,
-      };
-    }
-  });
+          return {
+            event: e,
+            repost: parsedNote,
+          };
+        }),
+    [],
+  );
   const reactions = poolEventsNotesDataFromPubkey?.filter((e) => e?.kind == 7);
   const repliesFilter = filterRepliesOnEvents(notesAllTags);
   const noteEvents = notesAllTags?.filter((n) => n?.tags?.length == 0);
