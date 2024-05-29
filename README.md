@@ -209,6 +209,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Israelrex9"><img src="https://avatars.githubusercontent.com/u/46507005?v=4?s=100" width="100px;" alt="IsraelRex"/><br /><sub><b>IsraelRex</b></sub></a><br /><a href="#design-Israelrex9" title="Design">🎨</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/EjembiEmmanuel"><img src="https://avatars.githubusercontent.com/u/83036156?v=4?s=100" width="100px;" alt="Emmaunuel Ejembi"/><br /><sub><b>Emmaunuel Ejembi</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=EjembiEmmanuel" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Ayoazeez26"><img src="https://avatars.githubusercontent.com/u/44169294?v=4?s=100" width="100px;" alt="Abdulhakeem Abdulazeez Ayodeji"/><br /><sub><b>Abdulhakeem Abdulazeez Ayodeji</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=Ayoazeez26" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/josephchimebuka"><img src="https://avatars.githubusercontent.com/u/87217051?v=4?s=100" width="100px;" alt="Joseph Chimebuka"/><br /><sub><b>Joseph Chimebuka</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=josephchimebuka" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
