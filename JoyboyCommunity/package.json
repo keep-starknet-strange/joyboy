@@ -56,6 +56,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
     "@types/pbkdf2": "^3.1.2",
     "@types/react": "~18.2.79",
     "@uniswap/eslint-config": "^1.2.0",
