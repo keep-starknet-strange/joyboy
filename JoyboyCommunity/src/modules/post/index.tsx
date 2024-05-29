@@ -1,12 +1,25 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useState} from 'react';
-import {Pressable, View} from 'react-native';
+import {Pressable, TouchableOpacity, View} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 
+import CopyIcon from '../../../assets/svgs/svgComponents/Copy';
+import Gallery from '../../../assets/svgs/svgComponents/Gallery';
+import GifIcon from '../../../assets/svgs/svgComponents/Gif';
+import ProfileIcon from '../../../assets/svgs/svgComponents/Profile';
+import SendButton from '../../../assets/svgs/svgComponents/SendButton';
 import {Divider, KeyboardAvoidingView, Typography} from '../../components';
 import {useSendNote} from '../../hooks/useNostr';
 import {useAuth} from '../../store/auth';
-import {Container, Photo, PostButton, TitleContainer} from './styled';
+import {
+  Container,
+  IconContainer,
+  IconDiv,
+  Photo,
+  PostButton,
+  SendbuttonContainer,
+  TitleContainer,
+} from './styled';
 
 export default function CreatePost() {
   const navigation = useNavigation();
@@ -52,28 +65,54 @@ export default function CreatePost() {
     <KeyboardAvoidingView>
       <Container>
         <Pressable onPress={handleGoBack}>
-          <Typography variant="ts15r">Cancel</Typography>
+          <Typography style={{color: '#4B799F', fontSize: 17}} variant="ts15r">
+            Cancel
+          </Typography>
         </Pressable>
 
         <PostButton onPress={handlePostNoteFn} disabled={isCreateDisabled}>
-          <Typography variant="ts15r">Post</Typography>
+          <Typography style={{color: '#4B799F', fontSize: 17}} variant="ts15r">
+            Draft
+          </Typography>
         </PostButton>
       </Container>
 
-      <View style={{marginBottom: 12}}>
+      <View style={{marginBottom: 1}}>
         <Divider />
       </View>
 
       <TitleContainer>
-        <Photo source={{uri: 'https://picsum.photos/201/300'}} />
+        <Photo>
+          <ProfileIcon />
+        </Photo>
         <TextInput
+          style={{flex: 1, paddingTop: 10, paddingBottom: 10, fontSize: 16, lineHeight: 20}}
           autoFocus
           multiline={true}
           value={note}
-          placeholder="Title"
+          placeholder="Make a post"
           onChangeText={setNote}
         />
       </TitleContainer>
+
+      <IconDiv>
+        <SendbuttonContainer>
+          <SendButton width="56" height="56" />
+        </SendbuttonContainer>
+        <IconContainer>
+          <TouchableOpacity>
+            <Gallery width="24" height="24" strokeWidth={1.5} stroke="#4B799F" />
+          </TouchableOpacity>
+
+          <TouchableOpacity>
+            <GifIcon width="24" height="24" strokeWidth={1.5} stroke="#4B799F" />
+          </TouchableOpacity>
+
+          <TouchableOpacity>
+            <CopyIcon width="24" height="24" strokeWidth={1.5} stroke="#4B799F" />
+          </TouchableOpacity>
+        </IconContainer>
+      </IconDiv>
     </KeyboardAvoidingView>
   );
 }
