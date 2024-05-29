@@ -9,18 +9,18 @@ import { themes as prismThemes } from "prism-react-renderer";
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Joyboy",
-  tagline: "Dinosaurs are cool",
+  tagline: "Decentralized social built with Nostr and powered bu Starknet account abstraction",
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here
-  url: "https://your-docusaurus-site.example.com",
+  url: "https://docs.joyboycommunity",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: "/",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "joyboy", // Usually your GitHub org/user name.
+  organizationName: "keep-starknet-strange", // Usually your GitHub org/user name.
   projectName: "Joyboy", // Usually your repo name.
 
   onBrokenLinks: "throw",
@@ -44,14 +44,14 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
+            "",//Should be added after merging
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
+            "",//Should be added after merging
         },
         theme: {
           customCss: "./src/css/custom.css",
@@ -125,7 +125,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} JoyBoy.`,
       },
       prism: {
         theme: prismThemes.github,
