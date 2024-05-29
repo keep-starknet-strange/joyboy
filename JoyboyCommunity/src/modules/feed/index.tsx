@@ -5,7 +5,7 @@ import {FlatList, RefreshControl} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
 
-import {useGetPoolEventsNotes} from '../../hooks/useNostr';
+import {useRootNotes} from '../../hooks';
 import {Post} from '../../shared/components/Post';
 import FloatingPostButton from './FloatingPostButton';
 import {styles} from './style';
@@ -19,11 +19,7 @@ const FixedPostButton = styled(View)`
 export default function Feed() {
   const bottomBarHeight = useBottomTabBarHeight();
 
-  const {
-    data: poolEventNotesData,
-    isLoading: poolEventNotesDataLoading,
-    refetch,
-  } = useGetPoolEventsNotes();
+  const notes = useRootNotes();
 
   const stories = [
     {name: 'Luffy', img: require('../../assets/feed/images/story-1.png')},
@@ -73,14 +69,14 @@ export default function Feed() {
           />
         </View>
 
-        {poolEventNotesDataLoading && <ActivityIndicator />}
+        {notes.isLoading && <ActivityIndicator />}
 
         <FlatList
           contentContainerStyle={{
             paddingTop: 16,
             paddingBottom: bottomBarHeight,
           }}
-          data={poolEventNotesData}
+          data={notes.data.pages.flat()}
           keyExtractor={(item) => item?.id}
           renderItem={({item}) => {
             return (
@@ -91,10 +87,11 @@ export default function Feed() {
             );
           }}
           refreshControl={
-            <RefreshControl refreshing={poolEventNotesDataLoading} onRefresh={() => refetch()} />
+            <RefreshControl refreshing={notes.isFetching} onRefresh={() => notes.refetch()} />
           }
         />
       </ImageBackground>
+
       <FixedPostButton>
         <FloatingPostButton />
       </FixedPostButton>
