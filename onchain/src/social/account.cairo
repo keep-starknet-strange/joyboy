@@ -12,16 +12,18 @@ pub trait ISocialAccount<TContractState> {
 
 #[starknet::contract]
 pub mod SocialAccount {
-    use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
     use super::super::request::{
         SocialRequest, SocialRequestImpl, SocialRequestTrait, Encode, Signature
     };
     use super::super::transfer::Transfer;
+    use super::{ISocialAccountDispatcher, ISocialAccountDispatcherTrait};
 
     #[storage]
     struct Storage {
         #[key]
-        public_key: u256
+        public_key: u256,
+        transfers: LegacyMap<u256, bool>,
     }
 
     #[event]
@@ -49,24 +51,37 @@ pub mod SocialAccount {
         }
         fn handle_transfer(ref self: ContractState, request: SocialRequest<Transfer>) {
             assert!(request.public_key == self.public_key.read(), "wrong public_key");
-        // assert!(request.verify());
-        // let erc20 = IERC20Dispatcher { contract_address: request.content.token_address };
-        // assert_eq!(erc20.symbol(), request.content.token);
+
+            let erc20 = ERC20ABIDispatcher { contract_address: request.content.token_address };
+            assert!(erc20.symbol() == request.content.token, "wrong token symbol");
+
+            let recipient = ISocialAccountDispatcher {
+                contract_address: request.content.recipient_address
+            };
+
+            assert!(
+                recipient.get_public_key() == request.content.recipient.public_key,
+                "wrong public_key"
+            );
+
+            assert!(request.verify());
+
+            // check uniqueness
+
+            erc20.transfer(request.content.recipient_address, request.content.amount);
         }
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use core::array::ArrayTrait;
     use core::traits::Into;
     use openzeppelin::presets::ERC20Upgradeable;
-    use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
     use openzeppelin::utils::serde::SerializedAppend;
-    use snforge_std as snf;
     use snforge_std::{
-        declare, ContractClassTrait, spy_events, SpyOn, EventSpy, EventFetcher, Event,
-        EventAssertions
+        declare, ContractClass, ContractClassTrait, spy_events, SpyOn, EventSpy, EventFetcher,
+        Event, EventAssertions
     };
     use starknet::{
         ContractAddress, get_caller_address, get_contract_address, contract_address_const
@@ -80,22 +95,29 @@ mod tests {
         ISocialAccountSafeDispatcherTrait
     };
 
-    fn deploy_account(public_key: u256) -> ISocialAccountDispatcher {
-        let contract = declare("SocialAccount").unwrap();
+    fn declare_account() -> ContractClass {
+        declare("SocialAccount").unwrap()
+    }
 
+    fn declare_erc20() -> ContractClass {
+        declare("ERC20Upgradeable").unwrap()
+    }
+
+    fn deploy_account(class: ContractClass, public_key: u256) -> ISocialAccountDispatcher {
         let mut calldata = array![];
         public_key.serialize(ref calldata);
 
-        let address = contract.precalculate_address(@calldata);
+        let address = class.precalculate_address(@calldata);
 
         let mut spy = spy_events(SpyOn::One(address));
 
-        let (contract_address, _) = contract.deploy(@calldata).unwrap();
+        let (contract_address, _) = class.deploy(@calldata).unwrap();
 
         spy.fetch_events();
 
         assert(spy.events.len() == 1, 'there should be one event');
 
+        // TODO: deserialize event instead of manual decoding
         let (_, event) = spy.events.at(0);
         assert(event.keys.at(0) == @selector!("AccountCreated"), 'Wrong event name');
 
@@ -110,10 +132,12 @@ mod tests {
     }
 
     fn deploy_erc20(
-        name: ByteArray, symbol: ByteArray, initial_supply: u256, recipient: ContractAddress
-    ) -> IERC20Dispatcher {
-        let contract = declare("ERC20Upgradeable").unwrap();
-
+        class: ContractClass,
+        name: ByteArray,
+        symbol: ByteArray,
+        initial_supply: u256,
+        recipient: ContractAddress
+    ) -> ERC20ABIDispatcher {
         let mut calldata = array![];
 
         name.serialize(ref calldata);
@@ -124,55 +148,65 @@ mod tests {
         calldata.append_serde(recipient);
         calldata.append_serde(recipient);
 
-        let (contract_address, _) = contract.deploy(@calldata).unwrap();
+        let (contract_address, _) = class.deploy(@calldata).unwrap();
 
-        IERC20Dispatcher { contract_address }
+        ERC20ABIDispatcher { contract_address }
     }
 
     #[test]
     fn get_public_key() {
         let public_key: u256 = 45;
-        let account = deploy_account(public_key);
+        let account = deploy_account(declare_account(), public_key);
         assert!(account.get_public_key() == public_key, "wrong public_key");
     }
 
     #[test]
     fn handle_transfer() {
-        let joyboy = NostrProfile {
-            public_key: 0x84603b4e300840036ca8cc812befcc8e240c09b73812639d5cdd8ece7d6eba40,
-            relays: array!["wss://relay.joyboy.community.com"]
-        };
+        // sender private key: 70aca2a9ab722bd56a9a1aadae7f39bc747c7d6735a04d677e0bc5dbefa71d47
+        // just for testing, do not use for anything else
+        let sender_public_key =
+            0xd6f1cf53f9f52d876505164103b1e25811ec4226a17c7449576ea48b00578171_u256;
 
+        let account_class = declare_account();
+
+        let sender = deploy_account(account_class, sender_public_key);
+
+        // recipient private key: 59a772c0e643e4e2be5b8bac31b2ab5c5582b03a84444c81d6e2eec34a5e6c35
+        // just for testing, do not use for anything else
         let recipient_public_key =
             0x5b2b830f2778075ab3befb5a48c9d8138aef017fab2b26b5c31a2742a901afcc_u256;
+        let recipient = deploy_account(account_class, recipient_public_key);
 
-        let recipient = NostrProfile { public_key: recipient_public_key, relays: array![] };
-
-        let account = deploy_account(recipient_public_key);
-        let erc20 = deploy_erc20("USDC token", "USDC", 100, account.contract_address);
+        let erc20 = deploy_erc20(
+            declare_erc20(), "USDC token", "USDC", 100, sender.contract_address
+        );
 
         let transfer = Transfer {
             amount: 1,
-            token: "USDC", // TODO: replace with erc20.symbol(), 
+            token: erc20.symbol(),
             token_address: erc20.contract_address,
-            joyboy,
-            recipient
+            joyboy: NostrProfile {
+                public_key: 0x84603b4e300840036ca8cc812befcc8e240c09b73812639d5cdd8ece7d6eba40,
+                relays: array!["wss://relay.joyboy.community.com"]
+            },
+            recipient: NostrProfile { public_key: recipient_public_key, relays: array![] },
+            recipient_address: recipient.contract_address
         };
 
         // for test data see: https://replit.com/@maciejka/WanIndolentKilobyte-2
 
         let request = SocialRequest {
-            public_key: recipient_public_key,
+            public_key: sender_public_key,
             created_at: 1716285235_u64,
             kind: 1_u16,
             tags: "[]",
             content: transfer,
             sig: Signature {
-                r: 0x27e3728a7053522998d46a810d6c82a4c6167c84f4fee68125aba6628f98a1de_u256,
-                s: 0x2311ab674f0dfcc0473e943e749c72fb330d40be11bc01296db5714f06221dde_u256
+                r: 0x3570a9a0c92c180bd4ac826c887e63844b043e3b65da71a857d2aa29e7cd3a4e_u256,
+                s: 0x1c0c0a8b7a8330b6b8915985c9cd498a407587213c2e7608e7479b4ef966605f_u256,
             }
         };
 
-        account.handle_transfer(request);
+        sender.handle_transfer(request);
     }
 }
