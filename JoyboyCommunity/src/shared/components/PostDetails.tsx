@@ -128,7 +128,7 @@ function PostDetails({route}) {
             <Icon as={MaterialIcons} name="more-horiz" size={18} color="#406686" />
           </InteractionContainer>
         </View>
-        <Comments />
+        <Comments event={event} />
       </PostDetailsCard>
     </ScrollView>
   );
