@@ -16,18 +16,18 @@ pub trait ISocialAccount<TContractState> {
 
 #[starknet::contract]
 pub mod SocialAccount {
-    use openzeppelin::account::interface;
-     use openzeppelin::account::AccountComponent;
+    use openzeppelin::account::AccountComponent;
     use openzeppelin::account::interface::ISRC6;
+    use openzeppelin::account::interface;
+    use openzeppelin::account::utils::{execute_calls, is_valid_stark_signature};
     use openzeppelin::introspection::interface::ISRC5;
+
+    use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     use starknet::account::Call;
-     use openzeppelin::account::utils::{execute_calls, is_valid_stark_signature};
     use starknet::get_caller_address;
     use starknet::get_contract_address;
     use starknet::get_tx_info;
-
-    use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
 
     use super::super::request::{
         SocialRequest, SocialRequestImpl, SocialRequestTrait, Encode, Signature
@@ -38,16 +38,12 @@ pub mod SocialAccount {
     component!(path: AccountComponent, storage: account, event: AccountEvent);
 
 
-
     #[storage]
     struct Storage {
         #[key]
         public_key: u256,
-
-
         #[substorage(v0)]
         account: AccountComponent::Storage,
-
         transfers: LegacyMap<u256, bool>,
     }
 
@@ -55,7 +51,6 @@ pub mod SocialAccount {
     #[derive(Drop, starknet::Event)]
     enum Event {
         AccountCreated: AccountCreated,
-
         #[flat]
         AccountEvent: AccountComponent::Event,
     }
@@ -104,7 +99,7 @@ pub mod SocialAccount {
     #[abi(embed_v0)]
     impl SRC6Impl of ISRC6<ContractState> {
         fn __execute__(self: @ContractState, mut calls: Array<Call>) -> Array<Span<felt252>> {
-           execute_calls(calls)
+            execute_calls(calls)
         }
 
         fn __validate__(self: @ContractState, mut calls: Array<Call>) -> felt252 {
