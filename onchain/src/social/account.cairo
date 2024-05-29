@@ -1,5 +1,3 @@
-use starknet::{ContractAddress, get_caller_address, get_contract_address, contract_address_const};
-use super::profile::NostrProfile;
 use super::request::SocialRequest;
 use super::transfer::Transfer;
 
@@ -7,18 +5,21 @@ use super::transfer::Transfer;
 #[starknet::interface]
 pub trait ISocialAccount<TContractState> {
     fn get_public_key(self: @TContractState) -> u256;
+}
+
+#[starknet::interface]
+pub trait ISocialAccountMixin<TContractState> {
+    fn get_public_key(self: @TContractState) -> u256;
     fn handle_transfer(ref self: TContractState, request: SocialRequest<Transfer>);
 }
 
 #[starknet::contract]
 pub mod SocialAccount {
-    use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
     use super::super::request::{
         SocialRequest, SocialRequestImpl, SocialRequestTrait, Encode, Signature
     };
     use super::super::social::SocialComponent;
     use super::super::transfer::Transfer;
-    use super::{ISocialAccountDispatcher, ISocialAccountDispatcherTrait};
 
     component!(path: SocialComponent, storage: social, event: SocialEvent);
 
@@ -31,7 +32,6 @@ pub mod SocialAccount {
     struct Storage {
         #[key]
         public_key: u256,
-        transfers: LegacyMap<u256, bool>,
         #[substorage(v0)]
         social: SocialComponent::Storage,
     }
@@ -53,6 +53,7 @@ pub mod SocialAccount {
     #[constructor]
     fn constructor(ref self: ContractState, public_key: u256) {
         self.public_key.write(public_key);
+        self.social.initializer(public_key);
         self.emit(AccountCreated { public_key: public_key });
     }
 
@@ -60,27 +61,6 @@ pub mod SocialAccount {
     impl SocialAccount of super::ISocialAccount<ContractState> {
         fn get_public_key(self: @ContractState) -> u256 {
             self.public_key.read()
-        }
-        fn handle_transfer(ref self: ContractState, request: SocialRequest<Transfer>) {
-            assert!(request.public_key == self.public_key.read(), "wrong public_key");
-
-            let erc20 = ERC20ABIDispatcher { contract_address: request.content.token_address };
-            assert!(erc20.symbol() == request.content.token, "wrong token symbol");
-
-            let recipient = ISocialAccountDispatcher {
-                contract_address: request.content.recipient_address
-            };
-
-            assert!(
-                recipient.get_public_key() == request.content.recipient.public_key,
-                "wrong public_key"
-            );
-
-            assert!(request.verify());
-
-            // check uniqueness
-
-            erc20.transfer(request.content.recipient_address, request.content.amount);
         }
     }
 }
@@ -103,8 +83,8 @@ mod tests {
     use super::super::request::{SocialRequest, Signature, Encode};
     use super::super::transfer::Transfer;
     use super::{
-        ISocialAccountDispatcher, ISocialAccountDispatcherTrait, ISocialAccountSafeDispatcher,
-        ISocialAccountSafeDispatcherTrait
+        ISocialAccountMixinDispatcher, ISocialAccountMixinDispatcherTrait,
+        ISocialAccountMixinSafeDispatcher, ISocialAccountMixinSafeDispatcherTrait
     };
 
     fn declare_account() -> ContractClass {
@@ -115,7 +95,7 @@ mod tests {
         declare("ERC20Upgradeable").unwrap()
     }
 
-    fn deploy_account(class: ContractClass, public_key: u256) -> ISocialAccountDispatcher {
+    fn deploy_account(class: ContractClass, public_key: u256) -> ISocialAccountMixinDispatcher {
         let mut calldata = array![];
         public_key.serialize(ref calldata);
 
@@ -140,7 +120,7 @@ mod tests {
 
         assert(event_key == public_key, 'Wrong Public Key');
 
-        ISocialAccountDispatcher { contract_address }
+        ISocialAccountMixinDispatcher { contract_address }
     }
 
     fn deploy_erc20(
