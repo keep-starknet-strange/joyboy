@@ -6,7 +6,7 @@ import {useTheme} from 'styled-components/native';
 
 import {HomeIcon, IndicatorIcon, MessageIcon, NotificationIcon, SearchIcon} from '../assets/icons';
 import Login from '../modules/login';
-import CreatePost from '../modules/post';
+import {CreatePost} from '../screens/CreatePost';
 import {Feed} from '../screens/Feed';
 import {Notifications} from '../screens/Notifications';
 import {PostDetail} from '../screens/PostDetail';

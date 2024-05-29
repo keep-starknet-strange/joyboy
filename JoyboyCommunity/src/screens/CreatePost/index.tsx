@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useCallback, useState} from 'react';
+import {useState} from 'react';
 import {Pressable, TouchableOpacity, View} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 
@@ -21,16 +21,12 @@ import {
   TitleContainer,
 } from './styled';
 
-export default function CreatePost() {
+export const CreatePost: React.FC = () => {
   const navigation = useNavigation();
 
   const sendNote = useSendNote();
   const {privateKey} = useAuth();
   const [note, setNote] = useState<string | undefined>();
-
-  const handleGoBack = useCallback(() => {
-    navigation.goBack();
-  }, []);
 
   const handlePostNoteFn = () => {
     if (!note || note?.length == 0) {
@@ -64,7 +60,7 @@ export default function CreatePost() {
   return (
     <KeyboardAvoidingView>
       <Container>
-        <Pressable onPress={handleGoBack}>
+        <Pressable onPress={navigation.goBack}>
           <Typography style={{color: '#4B799F', fontSize: 17}} variant="ts15r">
             Cancel
           </Typography>
@@ -115,4 +111,4 @@ export default function CreatePost() {
       </IconDiv>
     </KeyboardAvoidingView>
   );
-}
+};
