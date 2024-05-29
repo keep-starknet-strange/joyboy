@@ -51,7 +51,7 @@ export default function Feed() {
             ItemSeparatorComponent={() => <View style={{width: 18}} />}
             renderItem={({item}) => {
               return (
-                <View style={styles.stories}>
+                <View>
                   <View
                     style={{
                       position: 'relative',

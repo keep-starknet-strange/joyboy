@@ -4,14 +4,6 @@ export const styles = StyleSheet.create({
   linearGradient: {
     flex: 1,
     resizeMode: 'cover',
-    width: '100%',
-  },
-  stories: {
-    width: '100%',
-    height: 100,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 
   storyText: {
@@ -30,6 +22,7 @@ export const styles = StyleSheet.create({
   },
 
   headerInner: {
+    paddingLeft: 20,
     flex: 1,
     flexDirection: 'row',
     gap: 5,
