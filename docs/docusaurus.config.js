@@ -9,11 +9,12 @@ import { themes as prismThemes } from "prism-react-renderer";
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Joyboy",
-  tagline: "Decentralized social built with Nostr and powered bu Starknet account abstraction",
+  tagline:
+    "Decentralized social built with Nostr and powered by Starknet Account Abstraction",
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here
-  url: "https://docs.joyboycommunity",
+  url: "https://docs.joyboy.community",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: "/",
@@ -21,7 +22,7 @@ const config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: "keep-starknet-strange", // Usually your GitHub org/user name.
-  projectName: "Joyboy", // Usually your repo name.
+  projectName: "joyboy", // Usually your repo name.
 
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
@@ -44,14 +45,14 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "",//Should be added after merging
+            "https://github.com/keep-starknet-strange/joyboy/blob/main/docs/",
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "",//Should be added after merging
+            "https://github.com/keep-starknet-strange/joyboy/blob/main/docs/",
         },
         theme: {
           customCss: "./src/css/custom.css",
@@ -64,7 +65,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       // Replace with your project's social card
-      image: "img/docusaurus-social-card.jpg",
+      image: "img/joyboy.png",
       navbar: {
         title: "Joyboy",
         logo: {
@@ -125,7 +126,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} JoyBoy.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Joyboy.`,
       },
       prism: {
         theme: prismThemes.github,
