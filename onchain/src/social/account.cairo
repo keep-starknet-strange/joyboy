@@ -33,7 +33,6 @@ pub mod SocialAccount {
         #[key]
         public_key: u256,
         transfers: LegacyMap<u256, bool>,
-        
         #[substorage(v0)]
         src5: SRC5Component::Storage,
     }
@@ -158,15 +157,6 @@ mod tests {
         ISocialAccountDispatcher { contract_address }
     }
 
-    #[test]
-    fn test_supports_interface() {
-        let account = deploy_account(public_key);
-        let supports_src5 = ISocialAccountDispatcherTrait::is_supported_interface(
-            account, ISRC5_ID
-        );
-        assert!(supports_src5, "The contract does not support the ISRC5 interface");
-    }
-
     fn deploy_erc20(
         class: ContractClass,
         name: ByteArray,
@@ -187,6 +177,17 @@ mod tests {
         let (contract_address, _) = class.deploy(@calldata).unwrap();
 
         ERC20ABIDispatcher { contract_address }
+    }
+
+
+    #[test]
+    fn test_supports_interface() {
+        let account_class = declare_account();
+        let account = deploy_account(account_class, public_key);
+        let supports_src5 = ISocialAccountDispatcherTrait::is_supported_interface(
+            account, ISRC5_ID
+        );
+        assert!(supports_src5, "The contract does not support the ISRC5 interface");
     }
 
     #[test]
