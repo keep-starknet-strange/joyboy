@@ -10,7 +10,7 @@ export type UseReplyNotesOptions = {
 };
 
 export const useReplyNotes = (options?: UseReplyNotesOptions) => {
-  const {pool, othersRelays} = useNostrContext();
+  const {pool, relays} = useNostrContext();
 
   return useInfiniteQuery({
     initialPageParam: Math.round(Date.now() / 1000),
@@ -24,7 +24,7 @@ export const useReplyNotes = (options?: UseReplyNotesOptions) => {
       return pageParam;
     },
     queryFn: async ({pageParam}) => {
-      const notes = await pool.querySync(othersRelays, {
+      const notes = await pool.querySync(relays, {
         kinds: [EventKind.Note],
         authors: options?.authors,
         search: options?.search,

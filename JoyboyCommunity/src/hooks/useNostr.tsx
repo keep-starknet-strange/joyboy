@@ -127,19 +127,10 @@ export const useGetPoolEventsNotesFromPubkey = (query: IPoolEventsFromPubkey) =>
   });
 };
 
-export const useGetUser = (pubkey: string) => {
-  const {ndk} = useNostrContext();
-
-  return useQuery({
-    queryFn: () => ndk.getUser({pubkey}),
-    queryKey: ['getUser', pubkey],
-  });
-};
-
 /** Check if a note is valid and publish not on relayer if event valid */
 export const useSendNote = () => {
   const queryClient = useQueryClient();
-  const {pool, relays, connectRelayJoyboy} = useNostrContext();
+  const {pool} = useNostrContext();
 
   return useMutation({
     mutationFn: isValidSendNote,
