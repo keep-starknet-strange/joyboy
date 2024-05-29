@@ -1,5 +1,6 @@
 import {Event as EventNostr, Filter, SimplePool} from 'nostr-tools';
 
+export * from './nostr';
 export * from './post';
 export * from './routes';
 

@@ -4,7 +4,7 @@ import {ActivityIndicator, SafeAreaView, View} from 'react-native';
 import {FlatList, RefreshControl} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
-import {useGetPoolEventsNotes} from '../../hooks/useNostr';
+import {useRootNotes} from '../../hooks/useRootNotes';
 import {Post} from '../../shared/components/Post';
 import FloatingPostButton from './FloatingPostButton';
 
@@ -17,11 +17,7 @@ const FixedPostButton = styled(View)`
 export default function Feed() {
   const bottomBarHeight = useBottomTabBarHeight();
 
-  const {
-    data: poolEventNotesData,
-    isLoading: poolEventNotesDataLoading,
-    refetch,
-  } = useGetPoolEventsNotes();
+  const notes = useRootNotes();
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#f4f7fe'}}>
@@ -47,14 +43,14 @@ export default function Feed() {
         />
       </View>
 
-      {poolEventNotesDataLoading && <ActivityIndicator />}
+      {notes.isLoading && <ActivityIndicator />}
 
       <FlatList
         contentContainerStyle={{
           paddingTop: 16,
           paddingBottom: bottomBarHeight,
         }}
-        data={poolEventNotesData}
+        data={notes.data?.pages.flat()}
         keyExtractor={(item) => item?.id}
         renderItem={({item}) => {
           return (
@@ -65,7 +61,7 @@ export default function Feed() {
           );
         }}
         refreshControl={
-          <RefreshControl refreshing={poolEventNotesDataLoading} onRefresh={() => refetch()} />
+          <RefreshControl refreshing={notes.isFetching} onRefresh={() => notes.refetch()} />
         }
       />
 
