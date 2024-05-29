@@ -25,6 +25,8 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
   return (
     <View>
       <ProfileHead
+        profilePhoto={profile?.picture && {uri: profile.picture}}
+        coverPhoto={profile?.banner && {uri: profile.banner}}
         showSettingsButton={isSelf}
         buttons={
           isSelf ? (

@@ -1,18 +1,22 @@
 import {Feather} from '@expo/vector-icons';
 import {useNavigation} from '@react-navigation/native';
-import {Image, Pressable, View} from 'react-native';
+import {Image, ImageSourcePropType, Pressable, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {IconButton, Typography} from '../../../components';
 import styles from './styles';
 
 export type ProfileHeadProps = {
+  profilePhoto?: ImageSourcePropType;
+  coverPhoto?: ImageSourcePropType;
   showBackButton?: boolean;
   showSettingsButton?: boolean;
   buttons?: React.ReactNode;
 };
 
 export const ProfileHead: React.FC<ProfileHeadProps> = ({
+  profilePhoto,
+  coverPhoto,
   showBackButton = true,
   showSettingsButton,
   buttons,
@@ -26,7 +30,10 @@ export const ProfileHead: React.FC<ProfileHeadProps> = ({
   return (
     <View style={styles.container}>
       <SafeAreaView edges={['top', 'left', 'right']} style={styles.coverContainer}>
-        <Image source={{uri: 'https://picsum.photos/200/300'}} style={styles.coverImage} />
+        <Image
+          source={coverPhoto ?? require('../../../assets/joyboy-logo.png')}
+          style={styles.coverImage}
+        />
 
         {showBackButton && (
           <IconButton
@@ -47,7 +54,10 @@ export const ProfileHead: React.FC<ProfileHeadProps> = ({
 
       <View style={styles.avatarContainer}>
         <View style={styles.avatar}>
-          <Image source={{uri: 'https://picsum.photos/200'}} style={styles.avatarImage} />
+          <Image
+            source={profilePhoto ?? require('../../../assets/joyboy-logo.png')}
+            style={styles.avatarImage}
+          />
         </View>
 
         <View style={styles.buttons}>{buttons}</View>
