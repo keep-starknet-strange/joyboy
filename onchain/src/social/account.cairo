@@ -17,12 +17,12 @@ pub trait ISocialAccount<TContractState> {
 #[starknet::contract]
 pub mod SocialAccount {
     use openzeppelin::account::interface;
+     use openzeppelin::account::AccountComponent;
+    use openzeppelin::account::interface::ISRC6;
     use openzeppelin::introspection::interface::ISRC5;
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
-    // use openzeppelin::introspection::interface::ISRC5Camel;
-    // use openzeppelin::introspection::src5::SRC5;
-    // use openzeppelin::introspection::src5::unsafe_state as src5_state;
     use starknet::account::Call;
+     use openzeppelin::account::utils::{execute_calls, is_valid_stark_signature};
     use starknet::get_caller_address;
     use starknet::get_contract_address;
     use starknet::get_tx_info;
@@ -31,21 +31,26 @@ pub mod SocialAccount {
     };
     use super::super::transfer::Transfer;
 
-    const TRANSACTION_VERSION: felt252 = 1;
-    // 2**128 + TRANSACTION_VERSION
-    const QUERY_VERSION: felt252 = 0x100000000000000000000000000000001;
+    component!(path: AccountComponent, storage: account, event: AccountEvent);
+
 
 
     #[storage]
     struct Storage {
         #[key]
         public_key: u256,
+
+        #[substorage(v0)]
+        account: AccountComponent::Storage,
     }
 
     #[event]
     #[derive(Drop, starknet::Event)]
     enum Event {
         AccountCreated: AccountCreated,
+
+        #[flat]
+        AccountEvent: AccountComponent::Event,
     }
 
     #[derive(Drop, starknet::Event)]
@@ -74,32 +79,10 @@ pub mod SocialAccount {
         }
     }
 
-    #[external(v0)]
-    impl SRC6Impl of interface::ISRC6<ContractState> {
+    #[abi(embed_v0)]
+    impl SRC6Impl of ISRC6<ContractState> {
         fn __execute__(self: @ContractState, mut calls: Array<Call>) -> Array<Span<felt252>> {
-            let sender = get_caller_address();
-            assert(sender.is_zero(), 'Account: invalid caller');
-
-            // Check tx version
-            let tx_info = get_tx_info().unbox();
-            let version = tx_info.version;
-            if version != TRANSACTION_VERSION {
-                assert(version == QUERY_VERSION, 'Account: invalid tx version');
-            }
-
-            let mut res = ArrayTrait::new();
-            loop {
-                match calls.pop_front() {
-                    Option::Some(call) => {
-                        let Call { to, selector, calldata } = call;
-                        let _res = starknet::call_contract_syscall(to, selector, calldata.span())
-                            .unwrap();
-                        res.append(_res);
-                    },
-                    Option::None(_) => { break (); },
-                };
-            };
-            res
+           execute_calls(calls)
         }
 
         fn __validate__(self: @ContractState, mut calls: Array<Call>) -> felt252 {
@@ -119,7 +102,7 @@ pub mod SocialAccount {
             let byte_array = format_as_byte_array(hash, 16);
 
             let verify_signature = bip340::verify(
-                public_key, *signature.at(0_u32), *signature.at(1_u32), byte_array
+                public_key, *signature.at(0_u32).into(), *signature.at(1_u32).into, byte_array
             );
 
             if verify_signature {
