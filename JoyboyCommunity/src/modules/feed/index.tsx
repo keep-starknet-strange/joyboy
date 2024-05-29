@@ -76,7 +76,7 @@ export default function Feed() {
             paddingTop: 16,
             paddingBottom: bottomBarHeight,
           }}
-          data={poolEventNotesData}
+          data={notes.data.pages.flat()}
           keyExtractor={(item) => item?.id}
           renderItem={({item}) => {
             return (
@@ -87,7 +87,7 @@ export default function Feed() {
             );
           }}
           refreshControl={
-            <RefreshControl refreshing={poolEventNotesDataLoading} onRefresh={() => refetch()} />
+            <RefreshControl refreshing={notes.isFetching} onRefresh={() => notes.refetch()} />
           }
         />
       </ImageBackground>

@@ -11,7 +11,7 @@ export const useProfile = (options: UseProfileOptions) => {
   const {pool, othersRelays} = useNostrContext();
 
   return useQuery({
-    queryKey: ['profile', options],
+    queryKey: ['profile', options.publicKey],
     queryFn: async () => {
       const profileEvent = await pool.get(othersRelays, {
         kinds: [EventKind.Metadata],
