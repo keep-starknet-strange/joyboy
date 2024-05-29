@@ -29,6 +29,6 @@ export const useProfile = (options: UseProfileOptions) => {
         picture: profile.picture,
       };
     },
-    placeholderData: {},
+    placeholderData: {} as any,
   });
 };
