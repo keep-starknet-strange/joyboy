@@ -9,7 +9,7 @@ export type UseRepostsOptions = {
 };
 
 export const useReposts = (options?: UseRepostsOptions) => {
-  const {pool, othersRelays} = useNostrContext();
+  const {pool, relays} = useNostrContext();
 
   return useInfiniteQuery({
     initialPageParam: Math.round(Date.now() / 1000),
@@ -23,7 +23,7 @@ export const useReposts = (options?: UseRepostsOptions) => {
       return pageParam;
     },
     queryFn: async ({pageParam}) => {
-      const reposts = await pool.querySync(othersRelays, {
+      const reposts = await pool.querySync(relays, {
         kinds: [EventKind.Repost],
         authors: options?.authors,
         search: options?.search,

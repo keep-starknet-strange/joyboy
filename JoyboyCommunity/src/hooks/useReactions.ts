@@ -9,7 +9,7 @@ export type UseReactionsOptions = {
 };
 
 export const useReactions = (options?: UseReactionsOptions) => {
-  const {pool, othersRelays} = useNostrContext();
+  const {pool, relays} = useNostrContext();
 
   return useInfiniteQuery({
     initialPageParam: Math.round(Date.now() / 1000),
@@ -23,7 +23,7 @@ export const useReactions = (options?: UseReactionsOptions) => {
       return pageParam;
     },
     queryFn: async ({pageParam}) => {
-      const notes = await pool.querySync(othersRelays, {
+      const notes = await pool.querySync(relays, {
         kinds: [EventKind.Reaction],
         authors: options?.authors,
         search: options?.search,

@@ -53,7 +53,7 @@ function PostDetails({route}) {
 
   const handleProfilePress = (userId?: string) => {
     if (userId) {
-      navigation.navigate('UserDetail', {userId});
+      navigation.navigate('Profile', {publicKey: userId});
     }
   };
 

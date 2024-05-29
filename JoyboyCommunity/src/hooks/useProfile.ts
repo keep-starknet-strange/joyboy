@@ -8,15 +8,17 @@ export type UseProfileOptions = {
 };
 
 export const useProfile = (options: UseProfileOptions) => {
-  const {pool, othersRelays} = useNostrContext();
+  const {pool, relays} = useNostrContext();
 
   return useQuery({
     queryKey: ['profile', options.publicKey],
     queryFn: async () => {
-      const profileEvent = await pool.get(othersRelays, {
+      const profileEvent = await pool.get(relays, {
         kinds: [EventKind.Metadata],
-        authors: [options?.publicKey],
+        authors: [options.publicKey],
       });
+
+      console.log('profileEvent', profileEvent);
 
       const profile = JSON.parse(profileEvent.content) as Record<string, string | undefined>;
 

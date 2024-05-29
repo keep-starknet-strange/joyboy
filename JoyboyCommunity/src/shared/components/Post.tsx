@@ -45,7 +45,7 @@ export const Post: React.FC<PostProps> = (props) => {
   const navigation = useNavigation<RootStackNavigationProps>();
   const handleProfilePress = (userId?: string) => {
     if (userId) {
-      navigation.navigate('UserDetail', {userId});
+      navigation.navigate('Profile', {publicKey: userId});
     }
   };
 
