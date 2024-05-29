@@ -68,7 +68,7 @@ const config = {
       navbar: {
         title: "Joyboy",
         logo: {
-          alt: "My Site Logo",
+          alt: "Joyboy Logo",
           src: "img/joyboy.png",
         },
         items: [
