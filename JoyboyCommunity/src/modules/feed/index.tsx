@@ -4,7 +4,7 @@ import {ActivityIndicator, SafeAreaView, View} from 'react-native';
 import {FlatList, RefreshControl} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
-import {useRootNotes} from '../../hooks/useRootNotes';
+import {useRootNotes} from '../../hooks';
 import {Post} from '../../shared/components/Post';
 import FloatingPostButton from './FloatingPostButton';
 

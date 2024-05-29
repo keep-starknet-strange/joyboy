@@ -3,12 +3,12 @@ import {useInfiniteQuery} from '@tanstack/react-query';
 import {useNostrContext} from '../context/NostrContext';
 import {EventKind} from '../types';
 
-export type UseNotesOptions = {
+export type UseRootNotesOptions = {
   authors?: string[];
   search?: string;
 };
 
-export const useRootNotes = (options?: UseNotesOptions) => {
+export const useRootNotes = (options?: UseRootNotesOptions) => {
   const {pool, othersRelays} = useNostrContext();
 
   return useInfiniteQuery({
