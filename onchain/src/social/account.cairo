@@ -50,7 +50,9 @@ pub mod SocialAccount {
         #[key]
         public_key: u256
     }
-
+    // Generate interface using src5.rs
+    // -> Copy interface into a file and run `src5_rs parse <PATH_TO_CAIRO_FILE>`
+    // -> Note: You would need to define custom Structs and Enums in the file. 
     const ISRC5_ID: felt252 = 0x2717e95370c20103b33f13a20ed0f89783312fd08860f522ef8f6177fedc5e0;
 
     #[constructor]
