@@ -1,0 +1,17 @@
+export enum EventKind {
+  Metadata = 0,
+  Note = 1,
+  Follow = 3,
+  EncryptedDM = 4,
+  EventDeletion = 5,
+  Repost = 6,
+  Reaction = 7,
+  BadgeAward = 8,
+  GroupChatMessage = 9,
+  GroupChatThreadedReply = 10,
+  GroupThread = 11,
+  GroupThreadReply = 12,
+  Seal = 13,
+  DirectMessage = 14,
+  GenericRepost = 16,
+}

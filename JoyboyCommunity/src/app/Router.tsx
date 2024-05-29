@@ -1,27 +1,28 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {useMemo} from 'react';
 import {View} from 'react-native';
 import {useTheme} from 'styled-components/native';
 
 import {HomeIcon, IndicatorIcon, MessageIcon, NotificationIcon, SearchIcon} from '../assets/icons';
-import Error from '../modules/error';
-import FeedStackScreen from '../modules/feed/FeedStackScreen';
 import Login from '../modules/login';
-import Notifications from '../modules/notifications';
-import CreatePost from '../modules/post';
-import Profile from '../modules/profile';
-import {NoteDetail} from '../screens/NoteDetail';
-import {UserDetail} from '../screens/UserDetail';
+import {CreatePost} from '../screens/CreatePost';
+import {Feed} from '../screens/Feed';
+import {Notifications} from '../screens/Notifications';
+import {PostDetail} from '../screens/PostDetail';
+import {Profile} from '../screens/Profile';
+import {useAuth} from '../store/auth';
 import {useNavigationStore} from '../store/navigation';
-import {HomeStackParams, RootStackParams} from '../types';
+import {AuthStackParams, HomeBottomStackParams, MainStackParams, RootStackParams} from '../types';
 
 const RootStack = createNativeStackNavigator<RootStackParams>();
-const HomeBottomTabsStack = createBottomTabNavigator<HomeStackParams>();
+const AuthStack = createNativeStackNavigator<AuthStackParams>();
+const MainStack = createNativeStackNavigator<MainStackParams>();
+const HomeBottomTabsStack = createBottomTabNavigator<HomeBottomStackParams>();
 
 const HomeBottomTabNavigator: React.FC = () => {
   const theme = useTheme();
+  const {publicKey} = useAuth();
 
   return (
     <HomeBottomTabsStack.Navigator
@@ -40,7 +41,7 @@ const HomeBottomTabNavigator: React.FC = () => {
     >
       <HomeBottomTabsStack.Screen
         name="Feed"
-        component={FeedStackScreen}
+        component={Feed}
         options={{
           tabBarActiveTintColor: 'white',
           tabBarInactiveTintColor: '',
@@ -56,8 +57,9 @@ const HomeBottomTabNavigator: React.FC = () => {
       />
 
       <HomeBottomTabsStack.Screen
-        name="Profile"
+        name="UserProfile"
         component={Profile}
+        initialParams={{publicKey}}
         options={{
           tabBarActiveTintColor: 'white',
           tabBarInactiveTintColor: '',
@@ -113,39 +115,28 @@ const HomeBottomTabNavigator: React.FC = () => {
   );
 };
 
+const AuthNavigator: React.FC = () => {
+  return (
+    <AuthStack.Navigator screenOptions={{headerShown: false}}>
+      <AuthStack.Screen name="Login" component={Login} />
+    </AuthStack.Navigator>
+  );
+};
+
+const MainNavigator: React.FC = () => {
+  return (
+    <MainStack.Navigator screenOptions={{headerShown: false}}>
+      <MainStack.Screen name="Home" component={HomeBottomTabNavigator} />
+      <MainStack.Screen name="Profile" component={Profile} />
+      <MainStack.Screen name="CreatePost" component={CreatePost} />
+      <MainStack.Screen name="PostDetail" component={PostDetail} />
+    </MainStack.Navigator>
+  );
+};
+
 const RootNavigator: React.FC = () => {
   const stack = useNavigationStore((state) => state.stack);
   const theme = useTheme();
-
-  const currentStack = useMemo((): React.ReactNode => {
-    switch (stack) {
-      case 'app':
-        return (
-          <>
-            <RootStack.Screen name="Home" component={HomeBottomTabNavigator} />
-            <RootStack.Screen name="CreatePost" component={CreatePost} />
-            <RootStack.Screen name="UserDetail" component={UserDetail} />
-            <RootStack.Screen name="NoteDetail" component={NoteDetail} />
-          </>
-        );
-
-      case 'loading':
-        return (
-          <>
-            <RootStack.Screen name="Loading" component={Error} />
-          </>
-        );
-
-      case 'login':
-        return (
-          <>
-            <RootStack.Screen name="Login" component={Login} />
-          </>
-        );
-      default:
-        return null;
-    }
-  }, [stack]);
 
   return (
     <RootStack.Navigator
@@ -156,7 +147,9 @@ const RootNavigator: React.FC = () => {
         },
       }}
     >
-      {currentStack}
+      {stack === 'login' && <RootStack.Screen name="AuthStack" component={AuthNavigator} />}
+
+      {stack === 'app' && <RootStack.Screen name="MainStack" component={MainNavigator} />}
     </RootStack.Navigator>
   );
 };

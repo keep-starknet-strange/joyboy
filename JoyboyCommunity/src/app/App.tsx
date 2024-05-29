@@ -1,7 +1,7 @@
 import Entypo from '@expo/vector-icons/Entypo';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import React, {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {StatusBar, View} from 'react-native';
 
 import {Router} from './Router';

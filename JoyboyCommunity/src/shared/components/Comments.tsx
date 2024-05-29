@@ -1,6 +1,6 @@
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import {Event as EventNostr} from 'nostr-tools';
-import React, {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {ActivityIndicator, FlatList, View} from 'react-native';
 
 import {Input} from '../../components';
