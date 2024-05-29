@@ -14,7 +14,7 @@ export const NoteDetail: React.FC<RootStackNoteDetailScreenProps> = ({route, nav
   const contentParsed = parsingEventContent(singlePoolEventData);
 
   const handleProfilePress = (userId: string) => {
-    navigation.navigate('Profile', {userId});
+    navigation.navigate('Profile', {publicKey: userId});
   };
 
   return (

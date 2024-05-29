@@ -11,8 +11,6 @@ export const Profile: React.FC<RootStackProfileScreenProps> = ({route}) => {
 
   const notes = useRootNotes({authors: [publicKey]});
 
-  console.log(notes.data);
-
   return (
     <View style={styles.container}>
       <FlatList
