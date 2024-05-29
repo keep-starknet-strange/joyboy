@@ -61,7 +61,7 @@ export const Post: React.FC<PostProps> = (props) => {
   };
 
   const handleNavigateToPostDetails = () => {
-    navigation.navigate('PostDetail', {postId: event?.id});
+    navigation.navigate('PostDetail', {postId: event?.id, post: event});
   };
   /** @TODO react in Nostr */
   const handleReact = () => {};

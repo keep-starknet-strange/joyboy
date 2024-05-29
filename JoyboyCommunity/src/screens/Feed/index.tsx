@@ -1,8 +1,7 @@
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import React from 'react';
-import {ActivityIndicator, Image, ImageBackground, Text, View} from 'react-native';
+import {ActivityIndicator, Image, Text, View} from 'react-native';
 import {FlatList, RefreshControl} from 'react-native-gesture-handler';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
 
 import {useRootNotes} from '../../hooks';
@@ -33,68 +32,65 @@ export const Feed: React.FC = () => {
   ];
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <ImageBackground
-        source={require('../../assets/feed/feed-bg.png')}
-        style={styles.linearGradient}
-      >
-        <View style={{paddingTop: 30, paddingBottom: 18}}>
-          <FlatList
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            data={stories}
-            ListHeaderComponent={() => <View style={{width: 18}} />}
-            ItemSeparatorComponent={() => <View style={{width: 18}} />}
-            renderItem={({item}) => {
-              return (
-                <View>
-                  <View
-                    style={{
-                      position: 'relative',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <Image
-                      source={require('../../assets/feed/images/story-bg.png')}
-                      resizeMode="cover"
-                    />
-                    <Image style={{position: 'absolute'}} source={item.img} resizeMode="cover" />
-                  </View>
-                  <Text style={styles.storyText}>{item.name}</Text>
-                </View>
-              );
-            }}
-          />
-        </View>
+    <View style={{flex: 1}}>
+      <Image source={require('../../assets/feed/feed-bg.png')} style={styles.backgroundImage} />
 
-        {notes.isLoading && <ActivityIndicator />}
-
+      <View style={{paddingTop: 30, paddingBottom: 18}}>
         <FlatList
-          contentContainerStyle={{
-            paddingTop: 16,
-            paddingBottom: bottomBarHeight,
-          }}
-          data={notes.data.pages.flat()}
-          keyExtractor={(item) => item?.id}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          data={stories}
+          ListHeaderComponent={() => <View style={{width: 18}} />}
+          ItemSeparatorComponent={() => <View style={{width: 18}} />}
           renderItem={({item}) => {
             return (
-              <Post
-                // post={item}
-                event={item}
-              />
+              <View>
+                <View
+                  style={{
+                    position: 'relative',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Image
+                    source={require('../../assets/feed/images/story-bg.png')}
+                    resizeMode="cover"
+                  />
+                  <Image style={{position: 'absolute'}} source={item.img} resizeMode="cover" />
+                </View>
+                <Text style={styles.storyText}>{item.name}</Text>
+              </View>
             );
           }}
-          refreshControl={
-            <RefreshControl refreshing={notes.isFetching} onRefresh={() => notes.refetch()} />
-          }
         />
-      </ImageBackground>
+      </View>
+
+      {notes.isLoading && <ActivityIndicator />}
+
+      <FlatList
+        contentContainerStyle={{
+          paddingTop: 16,
+          paddingBottom: bottomBarHeight,
+        }}
+        data={notes.data.pages.flat()}
+        keyExtractor={(item) => item?.id}
+        renderItem={({item}) => {
+          return (
+            <Post
+              // post={item}
+              event={item}
+            />
+          );
+        }}
+        refreshControl={
+          <RefreshControl refreshing={notes.isFetching} onRefresh={() => notes.refetch()} />
+        }
+      />
 
       <FixedPostButton>
         <FloatingPostButton />
       </FixedPostButton>
-    </SafeAreaView>
+    </View>
   );
 };

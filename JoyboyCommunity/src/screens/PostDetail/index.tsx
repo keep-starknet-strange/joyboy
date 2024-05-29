@@ -44,9 +44,9 @@ export const InteractionContainer = styled(View)`
 `;
 
 export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route}) => {
-  const {postId} = route.params;
+  const {postId, post} = route.params;
 
-  const {data: note} = useNote({noteId: postId});
+  const {data: note = post} = useNote({noteId: postId});
 
   const handleGoBack = () => {
     navigation.goBack();
