@@ -4,13 +4,14 @@ use super::request::Encode;
 
 type NostrKey = u256;
 
-#[derive(Drop, Serde)]
+#[derive(Debug, Drop, Serde)]
 pub struct Transfer {
     pub amount: u256,
     pub token: ByteArray,
     pub token_address: ContractAddress,
     pub joyboy: NostrProfile,
-    pub recipient: NostrProfile
+    pub recipient: NostrProfile,
+    pub recipient_address: ContractAddress
 }
 
 impl TransferEncodeImpl of Encode<Transfer> {
@@ -46,7 +47,12 @@ mod tests {
         };
 
         let request = Transfer {
-            amount: 1, token: "USDC", token_address: 1.try_into().unwrap(), joyboy, recipient
+            amount: 1,
+            token: "USDC",
+            token_address: 1.try_into().unwrap(),
+            joyboy,
+            recipient,
+            recipient_address: 1.try_into().unwrap(),
         };
 
         let expected =
