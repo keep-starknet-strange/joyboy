@@ -14,7 +14,7 @@ pub struct Signature {
     pub s: u256
 }
 
-#[derive(Drop, Serde)]
+#[derive(Debug, Drop, Serde)]
 pub struct SocialRequest<C> {
     pub public_key: u256,
     pub created_at: u64,
