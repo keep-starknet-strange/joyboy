@@ -18,8 +18,6 @@ export const useProfile = (options: UseProfileOptions) => {
         authors: [options.publicKey],
       });
 
-      console.log('profileEvent', profileEvent);
-
       const profile = JSON.parse(profileEvent.content) as Record<string, string | undefined>;
 
       return {

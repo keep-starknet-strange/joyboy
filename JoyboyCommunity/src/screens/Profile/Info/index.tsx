@@ -15,8 +15,6 @@ export type ProfileInfoProps = {
 export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKey}) => {
   const {data: profile} = useProfile({publicKey: userPublicKey});
 
-  console.log(profile);
-
   const [menuOpen, setMenuOpen] = useState(false);
   const publicKey = useAuth((state) => state.publicKey);
 
