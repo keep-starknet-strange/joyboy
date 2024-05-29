@@ -4,7 +4,7 @@ import {Pressable} from 'react-native';
 import styled from 'styled-components/native';
 
 import {AddPostIcon} from '../../../assets/icons';
-import {RootStackNavigationProps} from '../../../types';
+import {MainStackNavigationProps} from '../../../types';
 
 const Button = styled(Pressable)`
   display: flex;
@@ -14,7 +14,7 @@ const Button = styled(Pressable)`
 `;
 
 export default function FloatingPostButton() {
-  const navigation = useNavigation<RootStackNavigationProps>();
+  const navigation = useNavigation<MainStackNavigationProps>();
 
   const handleNavigation = () => {
     navigation.push('CreatePost');

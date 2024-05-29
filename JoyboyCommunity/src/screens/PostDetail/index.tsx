@@ -3,6 +3,7 @@ import React from 'react';
 import {Image, Pressable, ScrollView, Text, View} from 'react-native';
 import styled from 'styled-components/native';
 
+import {useNote} from '../../hooks';
 import Comments from '../../shared/components/Comments';
 import {Icon} from '../../shared/components/Post';
 import {PostDetailScreenProps} from '../../types';
@@ -43,15 +44,17 @@ export const InteractionContainer = styled(View)`
 `;
 
 export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route}) => {
-  const {event} = route.params;
+  const {postId} = route.params;
+
+  const {data: note} = useNote({noteId: postId});
 
   const handleGoBack = () => {
     navigation.goBack();
   };
 
-  const handleProfilePress = (userId?: string) => {
-    if (userId) {
-      navigation.navigate('Profile', {publicKey: userId});
+  const handleProfilePress = () => {
+    if (note?.pubkey) {
+      navigation.navigate('Profile', {publicKey: note.pubkey});
     }
   };
 
@@ -72,7 +75,7 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
         <View style={{padding: 10}}>
           <PostLayout>
             <View style={{marginRight: 10}}>
-              <Pressable onPress={() => handleProfilePress(event?.pubkey)}>
+              <Pressable onPress={handleProfilePress}>
                 <Image
                   source={require('../../../assets/joyboy-logo.png')}
                   style={{width: 44, height: 44}}
@@ -81,7 +84,7 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
             </View>
 
             <View style={{gap: 4, flex: 1}}>
-              <Text style={{color: 'black', fontWeight: '700'}}>{event?.pubkey}</Text>
+              <Text style={{color: 'black', fontWeight: '700'}}>{note?.pubkey}</Text>
             </View>
 
             {/* TODO check tags if it's:
@@ -96,7 +99,7 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
               style={{alignSelf: 'center'}}
             />
           </PostLayout>
-          <Text style={{color: 'black', marginTop: 10}}>{event?.content}</Text>
+          <Text style={{color: 'black', marginTop: 10}}>{note?.content}</Text>
           <InteractionContainer>
             <View
               style={{
@@ -111,7 +114,8 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
             <Icon as={MaterialIcons} name="more-horiz" size={18} color="#406686" />
           </InteractionContainer>
         </View>
-        <Comments event={event} />
+
+        <Comments event={note} />
       </PostDetailsCard>
     </ScrollView>
   );

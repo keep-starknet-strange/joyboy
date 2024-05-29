@@ -6,7 +6,7 @@ import {Image, Pressable, Text, View} from 'react-native';
 import styled from 'styled-components/native';
 
 import {Typography} from '../../components';
-import {Post as PostType, RootStackNavigationProps} from '../../types';
+import {MainStackNavigationProps, Post as PostType} from '../../types';
 
 const PostCard = styled(View)`
   background-color: #ffffff;
@@ -42,7 +42,7 @@ interface PostProps {
 
 export const Post: React.FC<PostProps> = (props) => {
   const {post, event, repostedEvent} = props;
-  const navigation = useNavigation<RootStackNavigationProps>();
+  const navigation = useNavigation<MainStackNavigationProps>();
   const handleProfilePress = (userId?: string) => {
     if (userId) {
       navigation.navigate('Profile', {publicKey: userId});
@@ -61,7 +61,7 @@ export const Post: React.FC<PostProps> = (props) => {
   };
 
   const handleNavigateToPostDetails = () => {
-    navigation.navigate('PostDetails', {post, event, repostedEvent, sourceUser: props.sourceUser});
+    navigation.navigate('PostDetail', {postId: event?.id});
   };
   /** @TODO react in Nostr */
   const handleReact = () => {};
