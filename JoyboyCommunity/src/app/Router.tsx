@@ -56,7 +56,7 @@ const HomeBottomTabNavigator: React.FC = () => {
       />
 
       <HomeBottomTabsStack.Screen
-        name="Search"
+        name="Profile"
         component={Profile}
         options={{
           tabBarActiveTintColor: 'white',
