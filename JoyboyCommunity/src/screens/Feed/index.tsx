@@ -16,7 +16,7 @@ const FixedPostButton = styled(View)`
   right: 15px;
 `;
 
-export default function Feed() {
+export const Feed: React.FC = () => {
   const bottomBarHeight = useBottomTabBarHeight();
 
   const notes = useRootNotes();
@@ -97,4 +97,4 @@ export default function Feed() {
       </FixedPostButton>
     </SafeAreaView>
   );
-}
+};
