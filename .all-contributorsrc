@@ -108,6 +108,33 @@
       "contributions": [
         "design"
       ]
+    },
+    {
+      "login": "EjembiEmmanuel",
+      "name": "Emmaunuel Ejembi",
+      "avatar_url": "https://avatars.githubusercontent.com/u/83036156?v=4",
+      "profile": "https://github.com/EjembiEmmanuel",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Ayoazeez26",
+      "name": "Abdulhakeem Abdulazeez Ayodeji",
+      "avatar_url": "https://avatars.githubusercontent.com/u/44169294?v=4",
+      "profile": "https://github.com/Ayoazeez26",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "josephchimebuka",
+      "name": "Joseph Chimebuka",
+      "avatar_url": "https://avatars.githubusercontent.com/u/87217051?v=4",
+      "profile": "https://github.com/josephchimebuka",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
