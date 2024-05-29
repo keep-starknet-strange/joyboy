@@ -23,8 +23,9 @@ export type RootStackParams = {
 
 export type HomeStackParams = {
   Feed: undefined;
-  Profile: undefined;
+  Search: undefined;
   Notifications: undefined;
+  Messages: undefined;
 };
 
 // Root Stack
@@ -62,12 +63,17 @@ export type FeedScreenProps = CompositeScreenProps<
   NativeStackScreenProps<HomeStackParams, 'Feed'>,
   NativeStackScreenProps<RootStackParams>
 >;
-export type ProfileScreenProps = CompositeScreenProps<
-  NativeStackScreenProps<HomeStackParams, 'Profile'>,
+export type SearchScreenProps = CompositeScreenProps<
+  NativeStackScreenProps<HomeStackParams, 'Search'>,
   NativeStackScreenProps<RootStackParams>
 >;
 
 export type NotificationsScreenProps = CompositeScreenProps<
   NativeStackScreenProps<HomeStackParams, 'Notifications'>,
+  NativeStackScreenProps<RootStackParams>
+>;
+
+export type MessagesScreenProps = CompositeScreenProps<
+  NativeStackScreenProps<HomeStackParams, 'Messages'>,
   NativeStackScreenProps<RootStackParams>
 >;

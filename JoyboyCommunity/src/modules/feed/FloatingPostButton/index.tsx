@@ -1,19 +1,16 @@
-import {Feather} from '@expo/vector-icons';
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {Pressable} from 'react-native';
 import styled from 'styled-components/native';
 
+import {AddPostIcon} from '../../../assets/icons';
 import {RootStackNavigationProps} from '../../../types';
 
-const CircleButton = styled(Pressable)`
-  width: 56px;
-  height: 56px;
-  background-color: black;
-  border-radius: 28px;
+const Button = styled(Pressable)`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 `;
 
 export default function FloatingPostButton() {
@@ -24,8 +21,8 @@ export default function FloatingPostButton() {
   };
 
   return (
-    <CircleButton onPress={handleNavigation}>
-      <Feather name="plus" size={24} color="white" />
-    </CircleButton>
+    <Button onPress={handleNavigation}>
+      <AddPostIcon width={72} height={72} color="#EC796B" />
+    </Button>
   );
 }
