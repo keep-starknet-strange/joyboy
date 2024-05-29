@@ -1,5 +1,4 @@
 import {MaterialIcons, Octicons} from '@expo/vector-icons';
-import React from 'react';
 import {Image, Pressable, ScrollView, Text, View} from 'react-native';
 import styled from 'styled-components/native';
 

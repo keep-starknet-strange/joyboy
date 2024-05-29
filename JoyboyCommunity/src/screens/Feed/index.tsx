@@ -1,5 +1,4 @@
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
-import React from 'react';
 import {ActivityIndicator, Image, Text, View} from 'react-native';
 import {FlatList, RefreshControl} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';

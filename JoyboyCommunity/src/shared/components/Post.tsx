@@ -1,7 +1,6 @@
 import {MaterialIcons, Octicons} from '@expo/vector-icons';
 import {useNavigation} from '@react-navigation/native';
 import {Event as EventNostr} from 'nostr-tools';
-import React from 'react';
 import {Image, Pressable, Text, View} from 'react-native';
 import styled from 'styled-components/native';
 

@@ -1,6 +1,5 @@
 import {Octicons} from '@expo/vector-icons';
 import {Event as EventNostr} from 'nostr-tools';
-import React from 'react';
 import {Image, Text, View} from 'react-native';
 import styled from 'styled-components/native';
 
