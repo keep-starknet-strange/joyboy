@@ -47,38 +47,34 @@ const Menu: React.FC<MenuProps> & MenuSubComponents = ({handle, open, onClose, c
   }, [animation, open]);
 
   const animatedMenuStyles = useAnimatedStyle(() => {
-    if (_WORKLET) {
-      const menuWidth = width / 1.6;
+    const menuWidth = Math.min(width / 1.6, 320);
 
-      const menuStyle = {
-        ...styles.menu,
-        width: menuWidth,
-        opacity: animation.value,
+    const menuStyle = {
+      ...styles.menu,
+      width: menuWidth,
+      opacity: animation.value,
+    };
+
+    const handleBounds = measure(handleRef);
+
+    if (!handleBounds) return {};
+
+    const X = handleBounds.pageX;
+    const Y = handleBounds.pageY + handleBounds.height + 8;
+
+    if (X + menuWidth > width) {
+      return {
+        ...menuStyle,
+        top: Y,
+        left: width - menuWidth - 8,
       };
-
-      const handleBounds = measure(handleRef);
-
-      if (!handleBounds) return {};
-
-      const X = handleBounds.pageX;
-      const Y = handleBounds.pageY + handleBounds.height + 8;
-
-      if (X + menuWidth > width) {
-        return {
-          ...menuStyle,
-          top: Y,
-          left: width - menuWidth - 8,
-        };
-      } else {
-        return {
-          ...menuStyle,
-          top: Y,
-          left: X,
-        };
-      }
+    } else {
+      return {
+        ...menuStyle,
+        top: Y,
+        left: X,
+      };
     }
-
-    return {};
   }, [width, animation]);
 
   return (

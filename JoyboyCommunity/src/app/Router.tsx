@@ -125,7 +125,7 @@ const AuthNavigator: React.FC = () => {
 
 const MainNavigator: React.FC = () => {
   return (
-    <MainStack.Navigator>
+    <MainStack.Navigator screenOptions={{headerShown: false}}>
       <MainStack.Screen name="Home" component={HomeBottomTabNavigator} />
       <MainStack.Screen name="Profile" component={Profile} />
       <MainStack.Screen name="CreatePost" component={CreatePost} />
