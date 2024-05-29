@@ -15,8 +15,10 @@ export const useProfile = (options: UseProfileOptions) => {
     queryFn: async () => {
       const profileEvent = await pool.get(othersRelays, {
         kinds: [EventKind.Metadata],
-        authors: [options?.publicKey],
+        authors: [options.publicKey],
       });
+
+      console.log('profileEvent', profileEvent);
 
       const profile = JSON.parse(profileEvent.content) as Record<string, string | undefined>;
 
