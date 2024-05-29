@@ -25,7 +25,7 @@ export const EditProfile: React.FC = () => {
 
   return (
     <View>
-      <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+      <TouchableOpacity onPress={() => navigation.navigate('Messages')}>
         <Input value={text} onChangeText={handleChangeText} placeholder="Enter your handle..." />
 
         <Input value={text} onChangeText={handleChangeText} placeholder="Bio of your profile" />
