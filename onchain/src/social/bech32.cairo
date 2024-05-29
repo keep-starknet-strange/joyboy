@@ -27,17 +27,11 @@ fn polymod(values: Array<u8>) -> u32 {
 
     let len = values.len();
     let mut p: usize = 0;
-    loop {
-        if p == len {
-            break ();
-        }
+    while p != len {
         let top = shr(chk, 25);
         chk = shl((chk & 0x1ffffff_u32), 5) ^ (*values.at(p)).into();
         let mut i = 0_usize;
-        loop {
-            if i == 5 {
-                break ();
-            }
+        while i != 5 {
             if shr(top, i) & 1_u32 != 0 {
                 chk = chk ^ *generator.at(i.into());
             }
@@ -54,10 +48,7 @@ fn hrp_expand(hrp: @Array<u8>) -> Array<u8> {
 
     let len = hrp.len();
     let mut i = 0;
-    loop {
-        if i == len {
-            break ();
-        }
+    while i != len {
         r.append(shr(*hrp.at(i), 5));
         i += 1;
     };
@@ -65,10 +56,7 @@ fn hrp_expand(hrp: @Array<u8>) -> Array<u8> {
 
     let len = hrp.len();
     let mut i = 0;
-    loop {
-        if i == len {
-            break ();
-        }
+    while i != len {
         r.append(*hrp.at(i) & 31);
         i += 1;
     };
@@ -85,10 +73,7 @@ fn convert_bytes_to_5bit_chunks(bytes: @Array<u8>) -> Array<u8> {
     let mut acc = 0_u8;
     let mut missing_bits = 5_u8;
 
-    loop {
-        if i == len {
-            break ();
-        }
+    while i != len {
         let mut byte: u8 = *bytes.at(i);
         let mut bits_left = 8_u8;
         loop {
@@ -119,10 +104,7 @@ impl ByteArrayTraitIntoArray of Into<@ByteArray, Array<u8>> {
         let mut r = ArrayTrait::new();
         let len = self.len();
         let mut i = 0;
-        loop {
-            if i == len {
-                break ();
-            }
+        while i != len {
             r.append(self.at(i).unwrap());
             i += 1;
         };
@@ -166,10 +148,7 @@ pub fn encode(hrp: @ByteArray, data: @ByteArray, limit: usize) -> ByteArray {
     let mut encoded: ByteArray = Default::default();
     let mut i = 0;
     let len = combined.len();
-    loop {
-        if i == len {
-            break ();
-        }
+    while i != len {
         encoded.append_byte(alphabet.at((*combined.at(i)).into()).unwrap());
         i += 1;
     };
