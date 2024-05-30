@@ -44,6 +44,8 @@ export const LightTheme = {
 
     buttonBackground: '#e7e7ed',
     buttonText: '#7d7d8c',
+    buttonDisabledBackground: 'rgba(12, 12, 79, 0.1)',
+    buttonDisabledText: 'rgba(20, 20, 44, 0.5)',
 
     successLight: '#E4E9FA',
     successDark: '#6B87EC',

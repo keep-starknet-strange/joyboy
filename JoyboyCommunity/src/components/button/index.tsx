@@ -1,9 +1,11 @@
 import {Pressable, PressableProps, StyleProp, TextStyle} from 'react-native';
 
-import {Typography} from '../typography';
-import styles from './styles';
+import {useStyles} from '../../hooks';
+import {Text} from '../text';
+import stylesheet from './styles';
 
 export type ButtonProps = PressableProps & {
+  variant?: 'default' | 'primary' | 'secondary';
   left?: React.ReactNode;
   right?: React.ReactNode;
   small?: boolean;
@@ -13,6 +15,7 @@ export type ButtonProps = PressableProps & {
 };
 
 export const Button: React.FC<ButtonProps> = ({
+  variant = 'default',
   left,
   right,
   small,
@@ -23,29 +26,22 @@ export const Button: React.FC<ButtonProps> = ({
   style: styleProp,
   ...pressableProps
 }) => {
-  const containerStyle = [
-    styles.container,
-    small && styles.small,
-    block && styles.block,
-    disabled && styles.disabled,
-  ];
+  const styles = useStyles(stylesheet, variant, block, disabled, small);
 
   return (
     <Pressable
       disabled={disabled}
       style={
         typeof styleProp === 'function'
-          ? (state) => [...containerStyle, styleProp(state)]
-          : [...containerStyle, styleProp]
+          ? (state) => [styles.container, styleProp(state)]
+          : [styles.container, styleProp]
       }
       {...pressableProps}
     >
       {left}
-      <Typography
-        style={[styles.text, small && styles.smallText, disabled && styles.disabledText, textStyle]}
-      >
+      <Text weight="semiBold" style={[styles.text, textStyle]}>
         {children}
-      </Typography>
+      </Text>
       {right}
     </Pressable>
   );

@@ -1,36 +1,65 @@
-import {StyleSheet} from 'react-native';
+import {Spacing} from '../../styles';
+import {ThemedStyleSheet} from '../../styles/ThemedStyleSheet';
 
-export default StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#0C0C4F',
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    borderRadius: 999,
-  },
-  small: {
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-  },
-  block: {
-    width: '100%',
-  },
-  disabled: {
-    backgroundColor: 'rgba(12, 12, 79, 0.1)',
-  },
+export default ThemedStyleSheet(
+  (
+    theme,
+    variant: 'default' | 'primary' | 'secondary',
+    block: boolean,
+    disabled: boolean,
+    small: boolean,
+  ) => ({
+    container: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: theme.colors.buttonBackground,
+      paddingVertical: Spacing.medium,
+      paddingHorizontal: Spacing.xlarge,
+      borderRadius: 999,
 
-  text: {
-    color: '#fff',
-    fontSize: 15,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  smallText: {
-    fontSize: 14,
-  },
-  disabledText: {
-    color: 'rgba(20, 20, 44, 0.5)',
-  },
-});
+      ...(block && {
+        width: '100%',
+      }),
+
+      ...(small && {
+        paddingVertical: Spacing.small,
+        paddingHorizontal: Spacing.large,
+      }),
+
+      ...(disabled && {
+        backgroundColor: theme.colors.buttonDisabledBackground,
+      }),
+
+      ...(variant === 'primary' && {
+        backgroundColor: theme.colors.primary,
+      }),
+
+      ...(variant === 'secondary' && {
+        backgroundColor: theme.colors.secondary,
+      }),
+    },
+
+    text: {
+      color: theme.colors.buttonText,
+      fontSize: 15,
+      textAlign: 'center',
+
+      ...(small && {
+        fontSize: 14,
+      }),
+
+      ...(disabled && {
+        color: theme.colors.buttonDisabledText,
+      }),
+
+      ...(variant === 'primary' && {
+        color: theme.colors.onPrimary,
+      }),
+
+      ...(variant === 'secondary' && {
+        color: theme.colors.onSecondary,
+      }),
+    },
+  }),
+);
