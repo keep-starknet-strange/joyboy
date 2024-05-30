@@ -1,6 +1,11 @@
 import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F4F9FF',
+  },
+
   backgroundImage: {
     position: 'absolute',
     top: 0,
@@ -12,8 +17,8 @@ export const styles = StyleSheet.create({
   },
 
   storyText: {
-    fontWeight: '400',
-    fontSize: 16,
+    fontWeight: '500',
+    fontSize: 13,
     paddingTop: 5,
     lineHeight: 20,
   },

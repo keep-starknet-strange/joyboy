@@ -1,20 +1,24 @@
-import {SimplePool} from 'nostr-tools';
+import NDK from '@nostr-dev-kit/ndk';
 import {createContext, useContext, useMemo} from 'react';
 
 import {JOYBOY_RELAYS} from '../utils/relay';
 
 export type NostrContextType = {
-  pool: SimplePool;
+  ndk: NDK;
   relays: string[];
 };
 
 export const NostrContext = createContext<NostrContextType | null>(null);
 
 export const NostrProvider: React.FC<React.PropsWithChildren> = ({children}) => {
-  const pool = useMemo(() => new SimplePool(), []);
   const relays = JOYBOY_RELAYS;
+  const ndk = useMemo(() => {
+    return new NDK({
+      explicitRelayUrls: relays,
+    });
+  }, [relays]);
 
-  return <NostrContext.Provider value={{pool, relays}}>{children}</NostrContext.Provider>;
+  return <NostrContext.Provider value={{ndk, relays}}>{children}</NostrContext.Provider>;
 };
 
 export const useNostrContext = () => {

@@ -3,13 +3,9 @@ import {useState} from 'react';
 import {Pressable, TouchableOpacity, View} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 
-import CopyIcon from '../../../assets/svgs/svgComponents/Copy';
-import Gallery from '../../../assets/svgs/svgComponents/Gallery';
-import GifIcon from '../../../assets/svgs/svgComponents/Gif';
-import ProfileIcon from '../../../assets/svgs/svgComponents/Profile';
-import SendButton from '../../../assets/svgs/svgComponents/SendButton';
+import {CopyIcon, GalleryIcon, GifIcon, SendIcon, UserIcon} from '../../assets/icons';
 import {Divider, KeyboardAvoidingView, Typography} from '../../components';
-import {useSendNote} from '../../hooks/useNostr';
+import {useSendNote} from '../../hooks';
 import {useAuth} from '../../store/auth';
 import {
   Container,
@@ -41,10 +37,10 @@ export const CreatePost: React.FC = () => {
     }
 
     sendNote.mutate(
-      {sk: privateKey, content: note},
+      {content: note},
       {
         onSuccess(data) {
-          if (data.isValid) {
+          if (data) {
             alert('Note sent');
           }
         },
@@ -79,8 +75,9 @@ export const CreatePost: React.FC = () => {
 
       <TitleContainer>
         <Photo>
-          <ProfileIcon />
+          <UserIcon width={32} height={32} color="#1E2F3D" />
         </Photo>
+
         <TextInput
           style={{flex: 1, paddingTop: 10, paddingBottom: 10, fontSize: 16, lineHeight: 20}}
           autoFocus
@@ -93,19 +90,19 @@ export const CreatePost: React.FC = () => {
 
       <IconDiv>
         <SendbuttonContainer>
-          <SendButton width="56" height="56" />
+          <SendIcon width="56" height="56" color="#EC796B" />
         </SendbuttonContainer>
         <IconContainer>
           <TouchableOpacity>
-            <Gallery width="24" height="24" strokeWidth={1.5} stroke="#4B799F" />
+            <GalleryIcon width="24" height="24" color="#4B799F" />
           </TouchableOpacity>
 
           <TouchableOpacity>
-            <GifIcon width="24" height="24" strokeWidth={1.5} stroke="#4B799F" />
+            <GifIcon width="24" height="24" color="#4B799F" />
           </TouchableOpacity>
 
           <TouchableOpacity>
-            <CopyIcon width="24" height="24" strokeWidth={1.5} stroke="#4B799F" />
+            <CopyIcon width="24" height="24" color="#4B799F" />
           </TouchableOpacity>
         </IconContainer>
       </IconDiv>

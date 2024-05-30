@@ -1,20 +1,20 @@
+import {NDKKind} from '@nostr-dev-kit/ndk';
 import {useQuery} from '@tanstack/react-query';
 
 import {useNostrContext} from '../context/NostrContext';
-import {EventKind} from '../types';
 
 export type UseProfileOptions = {
   publicKey: string;
 };
 
 export const useProfile = (options: UseProfileOptions) => {
-  const {pool, relays} = useNostrContext();
+  const {ndk} = useNostrContext();
 
   return useQuery({
     queryKey: ['profile', options.publicKey],
     queryFn: async () => {
-      const profileEvent = await pool.get(relays, {
-        kinds: [EventKind.Metadata],
+      const profileEvent = await ndk.fetchEvent({
+        kinds: [NDKKind.Metadata],
         authors: [options.publicKey],
       });
 

@@ -20,7 +20,8 @@
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.2.1",
-    "@nostr-dev-kit/ndk": "^2.8.1",
+    "@noble/curves": "^1.4.0",
+    "@nostr-dev-kit/ndk": "^2.8.2",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-navigation/bottom-tabs": "^6.5.20",
     "@react-navigation/native": "^6.1.17",
@@ -36,7 +37,6 @@
     "expo-splash-screen": "~0.27.4",
     "expo-status-bar": "~1.12.1",
     "fast-text-encoding": "^1.0.6",
-    "nostr-tools": "^2.5.2",
     "pbkdf2": "^3.1.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",

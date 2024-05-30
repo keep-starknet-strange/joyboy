@@ -4,11 +4,10 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {View} from 'react-native';
 import {useTheme} from 'styled-components/native';
 
-import {HomeIcon, IndicatorIcon, MessageIcon, NotificationIcon, SearchIcon} from '../assets/icons';
+import {HomeIcon, IndicatorIcon, MessageIcon, SearchIcon, UserIcon} from '../assets/icons';
 import Login from '../modules/login';
 import {CreatePost} from '../screens/CreatePost';
 import {Feed} from '../screens/Feed';
-import {Notifications} from '../screens/Notifications';
 import {PostDetail} from '../screens/PostDetail';
 import {Profile} from '../screens/Profile';
 import {useAuth} from '../store/auth';
@@ -57,7 +56,7 @@ const HomeBottomTabNavigator: React.FC = () => {
       />
 
       <HomeBottomTabsStack.Screen
-        name="UserProfile"
+        name="Notifications"
         component={Profile}
         initialParams={{publicKey}}
         options={{
@@ -75,27 +74,6 @@ const HomeBottomTabNavigator: React.FC = () => {
       />
 
       <HomeBottomTabsStack.Screen
-        name="Notifications"
-        component={Notifications}
-        options={{
-          tabBarActiveTintColor: 'white',
-          tabBarInactiveTintColor: 'grey',
-          tabBarIcon: ({focused}) => {
-            return (
-              <View style={{flex: 1, alignItems: 'center', gap: 1, justifyContent: 'center'}}>
-                <NotificationIcon
-                  width={24}
-                  height={24}
-                  color={focused ? '#14142C' : '#1E2F3D80'}
-                />
-                {focused && <IndicatorIcon color="#EC796B" width={6} height={6} />}
-              </View>
-            );
-          },
-        }}
-      />
-
-      <HomeBottomTabsStack.Screen
         name="Messages"
         component={Profile}
         options={{
@@ -105,6 +83,24 @@ const HomeBottomTabNavigator: React.FC = () => {
             return (
               <View style={{flex: 1, alignItems: 'center', gap: 4, justifyContent: 'center'}}>
                 <MessageIcon width={24} height={24} color={focused ? '#14142C' : '#1E2F3D80'} />
+                {focused && <IndicatorIcon color="#EC796B" width={6} height={6} />}
+              </View>
+            );
+          },
+        }}
+      />
+
+      <HomeBottomTabsStack.Screen
+        name="UserProfile"
+        component={Profile}
+        initialParams={{publicKey}}
+        options={{
+          tabBarActiveTintColor: 'white',
+          tabBarInactiveTintColor: 'grey',
+          tabBarIcon: ({focused}) => {
+            return (
+              <View style={{flex: 1, alignItems: 'center', gap: 1, justifyContent: 'center'}}>
+                <UserIcon width={24} height={24} color={focused ? '#14142C' : '#1E2F3D80'} />
                 {focused && <IndicatorIcon color="#EC796B" width={6} height={6} />}
               </View>
             );
