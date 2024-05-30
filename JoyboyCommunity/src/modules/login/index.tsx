@@ -1,5 +1,5 @@
 import * as SecureStore from 'expo-secure-store';
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Alert} from 'react-native';
 
 import {Typography} from '../../components';

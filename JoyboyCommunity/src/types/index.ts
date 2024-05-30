@@ -1,5 +1,6 @@
-import {Event as EventNostr} from 'nostr-tools';
+import {Event as EventNostr, Filter, SimplePool} from 'nostr-tools';
 
+export * from './nostr';
 export * from './post';
 export * from './routes';
 
@@ -45,4 +46,29 @@ export interface IUserEvent {
   nip05?: string;
   banner?: string;
   name?: string;
+}
+
+export interface IPoolEventsFromPubkey {
+  pubkey: string;
+  relaysUser?: string[];
+  kinds: number[];
+}
+
+export interface IPoolEventsByQuery {
+  ids?: string[];
+  kinds?: number[];
+  filter?: Filter;
+  relaysToUsed?: string[];
+  pool?: SimplePool;
+}
+
+export interface IUserQuery {
+  pubkey: string;
+  id?: string;
+}
+
+export interface ISendNotePayload {
+  sk: Uint8Array;
+  content: string;
+  tags?: string[][];
 }
