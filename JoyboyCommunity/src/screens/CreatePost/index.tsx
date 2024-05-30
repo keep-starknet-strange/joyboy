@@ -108,7 +108,7 @@ export const CreatePost: React.FC = () => {
             <CopyIcon width="24" height="24" strokeWidth={1.5} stroke="#4B799F" />
           </TouchableOpacity>
         </IconContainer>
-      </IconDiv>
+      </IconDiv> 
     </KeyboardAvoidingView>
   );
 };

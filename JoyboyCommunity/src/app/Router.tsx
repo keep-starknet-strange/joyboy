@@ -40,7 +40,7 @@ const HomeBottomTabNavigator: React.FC = () => {
       }}
     >
       <HomeBottomTabsStack.Screen
-        name="Feed"
+        name="Feed" 
         component={Feed}
         options={{
           tabBarActiveTintColor: 'white',
