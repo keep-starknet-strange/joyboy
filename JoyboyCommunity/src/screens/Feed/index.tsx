@@ -3,6 +3,7 @@ import {ActivityIndicator, Image, Text, View} from 'react-native';
 import {FlatList, RefreshControl} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
+import {Header} from '../../components';
 import {useRootNotes} from '../../hooks';
 import {Post} from '../../shared/components/Post';
 import FloatingPostButton from './FloatingPostButton';
@@ -31,8 +32,10 @@ export const Feed: React.FC = () => {
   ];
 
   return (
-    <View style={{flex: 1}}>
+    <View style={styles.container}>
       <Image source={require('../../assets/feed/feed-bg.png')} style={styles.backgroundImage} />
+
+      <Header />
 
       <View style={{paddingTop: 30, paddingBottom: 18}}>
         <FlatList

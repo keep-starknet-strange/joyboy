@@ -1,6 +1,11 @@
 import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F4F9FF',
+  },
+
   backgroundImage: {
     position: 'absolute',
     top: 0,
