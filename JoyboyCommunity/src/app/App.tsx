@@ -4,6 +4,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import {useCallback, useEffect, useState} from 'react';
 import {StatusBar, View} from 'react-native';
 
+import {useNostrContext} from '../context/NostrContext';
 import {Router} from './Router';
 
 // Keep the splash screen visible while we fetch resources
@@ -11,12 +12,14 @@ SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
+  const {ndk} = useNostrContext();
 
   useEffect(() => {
     async function prepare() {
       try {
         // Pre-load fonts, make any API calls you need to do here
         await Font.loadAsync(Entypo.font);
+        await ndk.connect();
       } catch (e) {
         console.warn(e);
       } finally {

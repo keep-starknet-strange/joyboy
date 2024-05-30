@@ -5,7 +5,7 @@ import {TextInput} from 'react-native-gesture-handler';
 
 import {CopyIcon, GalleryIcon, GifIcon, SendIcon, UserIcon} from '../../assets/icons';
 import {Divider, KeyboardAvoidingView, Typography} from '../../components';
-import {useSendNote} from '../../hooks/useNostr';
+import {useSendNote} from '../../hooks';
 import {useAuth} from '../../store/auth';
 import {
   Container,
@@ -37,10 +37,10 @@ export const CreatePost: React.FC = () => {
     }
 
     sendNote.mutate(
-      {sk: privateKey, content: note},
+      {content: note},
       {
         onSuccess(data) {
-          if (data.isValid) {
+          if (data) {
             alert('Note sent');
           }
         },
