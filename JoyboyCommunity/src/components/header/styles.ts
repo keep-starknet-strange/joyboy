@@ -1,5 +1,7 @@
 import {StyleSheet} from 'react-native';
 
+import {Spacing} from '../../styles';
+
 export default StyleSheet.create({
   container: {
     backgroundColor: 'white',
@@ -9,8 +11,8 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 6,
-    paddingHorizontal: 16,
+    paddingVertical: Spacing.xxsmall,
+    paddingHorizontal: Spacing.medium,
   },
 
   logoContainer: {
@@ -20,7 +22,7 @@ export default StyleSheet.create({
   logo: {
     width: 40,
     height: 40,
-    marginRight: 8,
+    marginRight: Spacing.xsmall,
   },
 
   buttons: {

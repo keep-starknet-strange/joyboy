@@ -1,9 +1,11 @@
 import {Pressable, PressableProps} from 'react-native';
 
-import {Typography} from '../typography';
+import {ThemeColorNames} from '../../styles';
+import {Text} from '../text';
 import styles from './styles';
 
 export type TextButtonProps = PressableProps & {
+  color?: ThemeColorNames;
   left?: React.ReactNode;
   right?: React.ReactNode;
   block?: boolean;
@@ -11,6 +13,7 @@ export type TextButtonProps = PressableProps & {
 };
 
 export const TextButton: React.FC<TextButtonProps> = ({
+  color = 'text',
   left,
   right,
   block,
@@ -32,7 +35,14 @@ export const TextButton: React.FC<TextButtonProps> = ({
       {...pressableProps}
     >
       {left}
-      <Typography style={[styles.text, disabled && styles.disabledText]}>{children}</Typography>
+      <Text
+        weight="semiBold"
+        fontSize={17}
+        align="center"
+        color={disabled ? 'buttonDisabledText' : color}
+      >
+        {children}
+      </Text>
       {right}
     </Pressable>
   );

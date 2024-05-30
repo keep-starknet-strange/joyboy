@@ -1,6 +1,8 @@
 import {StyleSheet} from 'react-native';
 
-export default StyleSheet.create({
+import {Spacing, ThemedStyleSheet} from '../../styles';
+
+export default ThemedStyleSheet((theme) => ({
   container: {},
 
   outsideContainer: {
@@ -26,7 +28,7 @@ export default StyleSheet.create({
     position: 'absolute',
     height: 'auto',
     gap: StyleSheet.hairlineWidth,
-    backgroundColor: '#c3c3c3',
+    backgroundColor: theme.colors.background,
     borderRadius: 16,
     overflow: 'hidden',
   },
@@ -35,10 +37,10 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    backgroundColor: 'white',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    gap: Spacing.xxsmall,
+    backgroundColor: theme.colors.surface,
+    paddingHorizontal: Spacing.medium,
+    paddingVertical: Spacing.small,
   },
   menuItemLabel: {
     flex: 1,
@@ -46,4 +48,4 @@ export default StyleSheet.create({
     lineHeight: 22,
     color: '#14142c',
   },
-});
+}));

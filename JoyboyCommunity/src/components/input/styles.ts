@@ -1,6 +1,6 @@
-import {StyleSheet} from 'react-native';
+import {Spacing, ThemedStyleSheet} from '../../styles';
 
-export default StyleSheet.create({
+export default ThemedStyleSheet((theme, error: boolean) => ({
   container: {
     width: '100%',
   },
@@ -9,29 +9,34 @@ export default StyleSheet.create({
     borderRadius: 999,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    backgroundColor: '#FCFCFF',
-    borderColor: '#DDDDEE',
+    gap: Spacing.small,
+    backgroundColor: theme.colors.inputBackground,
+    borderColor: theme.colors.inputBorder,
     height: 56,
+
+    ...(error && {
+      backgroundColor: theme.colors.errorLight,
+      borderColor: theme.colors.errorDark,
+    }),
   },
 
   input: {
     flex: 1,
     height: '100%',
-    paddingHorizontal: 24,
-    color: '#14142C',
+    paddingHorizontal: Spacing.large,
+    color: theme.colors.inputText,
     fontSize: 15,
     fontWeight: '600',
   },
   inputWithLeft: {
-    paddingLeft: 12,
+    paddingLeft: Spacing.small,
   },
   inputWithRight: {
-    paddingRight: 12,
+    paddingRight: Spacing.small,
   },
 
   errorText: {
     marginTop: 3,
-    color: '#EC796B',
+    color: theme.colors.errorDark,
   },
-});
+}));

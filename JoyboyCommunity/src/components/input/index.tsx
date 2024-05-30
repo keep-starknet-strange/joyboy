@@ -1,7 +1,8 @@
 import {StyleProp, TextInput, TextInputProps, TextStyle, View, ViewStyle} from 'react-native';
 
-import {Typography} from '../typography';
-import styles from './styles';
+import {useStyles, useTheme} from '../../hooks';
+import {Text} from '../text';
+import stylesheet from './styles';
 
 export type InputProps = TextInputProps & {
   /**
@@ -31,6 +32,9 @@ export const Input: React.FC<InputProps> = (props) => {
     ...inputProps
   } = props;
 
+  const theme = useTheme();
+  const styles = useStyles(stylesheet, !!error);
+
   return (
     <View style={[styles.container, containerStyleProp]}>
       <View style={[styles.content, styleProp]}>
@@ -45,7 +49,7 @@ export const Input: React.FC<InputProps> = (props) => {
             right && styles.inputWithRight,
             inputStyleProp,
           ]}
-          placeholderTextColor="#A1A1C7"
+          placeholderTextColor={theme.colors.inputPlaceholder}
           underlineColorAndroid="transparent"
           {...inputProps}
         />
@@ -53,7 +57,7 @@ export const Input: React.FC<InputProps> = (props) => {
         {right}
       </View>
 
-      {error ? <Typography style={styles.errorText}>{error}</Typography> : null}
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
     </View>
   );
 };

@@ -1,5 +1,4 @@
-import {Spacing} from '../../styles';
-import {ThemedStyleSheet} from '../../styles/ThemedStyleSheet';
+import {Spacing, ThemedStyleSheet} from '../../styles';
 
 export default ThemedStyleSheet(
   (

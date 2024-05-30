@@ -1,12 +1,13 @@
-import {StyleSheet} from 'react-native';
+import {Spacing, ThemedStyleSheet} from '../../styles';
 
-export default StyleSheet.create({
+export default ThemedStyleSheet((theme, disabled: boolean) => ({
   container: {
-    padding: 8,
-    backgroundColor: 'white',
+    padding: Spacing.xsmall,
+    backgroundColor: theme.colors.surface,
     borderRadius: 99,
+
+    ...(disabled && {
+      backgroundColor: theme.colors.buttonDisabledBackground,
+    }),
   },
-  disabled: {
-    backgroundColor: 'rgba(12, 12, 79, 0.1)',
-  },
-});
+}));

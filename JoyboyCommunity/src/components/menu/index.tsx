@@ -16,8 +16,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import {Typography} from '../typography';
-import styles from './styles';
+import {useStyles} from '../../hooks';
+import {Text} from '../text';
+import stylesheet from './styles';
 
 export type MenuProps = {
   handle: React.ReactNode;
@@ -37,6 +38,8 @@ export type MenuItemProps = PressableProps & {
 };
 
 const Menu: React.FC<MenuProps> & MenuSubComponents = ({handle, open, onClose, children}) => {
+  const styles = useStyles(stylesheet);
+
   const handleRef = useAnimatedRef<Animated.View>();
   const animation = useSharedValue(0);
 
@@ -97,9 +100,11 @@ const Menu: React.FC<MenuProps> & MenuSubComponents = ({handle, open, onClose, c
 };
 
 export const MenuItem: React.FC<MenuItemProps> = ({label, icon, color, ...pressableProps}) => {
+  const styles = useStyles(stylesheet);
+
   return (
     <Pressable style={styles.menuItem} {...pressableProps}>
-      <Typography style={styles.menuItemLabel}>{label}</Typography>
+      <Text style={styles.menuItemLabel}>{label}</Text>
 
       {icon ? <Feather name={icon} color={color} size={24} /> : null}
     </Pressable>
