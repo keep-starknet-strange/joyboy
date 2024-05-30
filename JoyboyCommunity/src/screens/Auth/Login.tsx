@@ -1,12 +1,15 @@
+import {useState} from 'react';
 import {Button, Input, TextButton} from '../../components';
 import {Auth} from '../../modules/auth';
 
 export const Login: React.FC = () => {
+  const [loginKey, setLoginKey] = useState(null);
+
   return (
     <Auth title="Login">
-      <Input placeholder="Enter your login key" />
+      <Input placeholder="Enter your login key" value={loginKey} onChangeText={setLoginKey} />
 
-      <Button block disabled>
+      <Button block disabled={!loginKey.length}>
         Login
       </Button>
 

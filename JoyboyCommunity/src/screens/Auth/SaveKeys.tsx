@@ -33,9 +33,7 @@ export const SaveKeys: React.FC = () => {
         </Text>
       </View>
 
-      <Button block disabled>
-        Create account
-      </Button>
+      <Button block>Create account</Button>
     </Auth>
   );
 };
