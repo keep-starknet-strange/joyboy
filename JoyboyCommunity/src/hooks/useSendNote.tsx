@@ -8,13 +8,14 @@ import {useAuth} from '../store/auth';
 export const useSendNote = () => {
   const {ndk} = useNostrContext();
   const {privateKey} = useAuth();
-  const privateKeyString = Buffer.from(privateKey).toString('hex');
 
   return useMutation({
     mutationFn: async (data: {content: string; tags?: string[][]}) => {
-      if (!privateKeyString) {
+      if (!privateKey) {
         throw new Error('Private key is required');
       }
+
+      const privateKeyString = Buffer.from(privateKey).toString('hex');
 
       const signer = new NDKPrivateKeySigner(privateKeyString);
 
