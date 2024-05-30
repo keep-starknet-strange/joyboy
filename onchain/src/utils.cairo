@@ -1,5 +1,5 @@
-use core::integer::{u32_wide_mul, u8_wide_mul, BoundedInt};
 use alexandria_math::sha256::sha256;
+use core::integer::{u32_wide_mul, u8_wide_mul, BoundedInt};
 
 trait Pow2<V, N> {
     #[inline]
@@ -107,10 +107,7 @@ pub fn compute_sha256_byte_array(m: @ByteArray) -> [u32; 8] {
     let mut ba = ArrayTrait::new();
     let len = m.len();
     let mut i = 0;
-    loop {
-        if i == len {
-            break ();
-        }
+    while i != len {
         ba.append(m.at(i).unwrap());
         i += 1;
     };

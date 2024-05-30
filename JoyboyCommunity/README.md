@@ -59,3 +59,41 @@ User feed with notes:
 My profile page: WIP
 
 <img src="../resources/screens/my-profile.png" alt="my-profile" height="300"/>
+
+
+## How Nostr work
+
+- [Nostr Implementation Possibilities](https://github.com/nostr-protocol/nips)
+- [JoinStr: Decentralized CoinJoin Implementation Using Nostr](https://www.nobsbitcoin.com/joinstr-decentralized-coinjoin-implementation-using-nostr/)
+
+### NIP-1
+Nostr event are described like this on NIP-1:
+
+```ts
+export interface Event {
+  kind: number; // 1 for note, 0 for profile,
+  tags: string[][]; // NIP-10 for comment root and reply
+  //
+  content: string;
+  created_at: number;
+  pubkey: string;
+  id: string;
+  sig: string;
+  [verifiedSymbol]?: boolean;
+}
+```
+
+### NIP-10
+- [NIP-10](https://github.com/nostr-protocol/nips/blob/master/10.md)
+
+```ts
+/** On the Tags string[][] of the note, you can check if the note are:
+ *  repost, quote, reply root, reply comment, or a simple note. 
+ * 
+ * filter for tags :
+ * ["e", "note_pubkey", "relay_url", "marker as reply | root | mention", "pubkey_author"]
+ * ["p", "id_note","p1_note_reply"]
+ * 
+ */
+```
+

@@ -10,6 +10,10 @@ export default StyleSheet.create({
     paddingHorizontal: 32,
     borderRadius: 999,
   },
+  small: {
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+  },
   block: {
     width: '100%',
   },
@@ -22,6 +26,9 @@ export default StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
     textAlign: 'center',
+  },
+  smallText: {
+    fontSize: 14,
   },
   disabledText: {
     color: 'rgba(20, 20, 44, 0.5)',

@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native';
 
-import {RootStackNavigationProps} from '../../types';
+import {MainStackNavigationProps} from '../../types';
 import {AvatarImage} from './styled';
 
 export type AvatarProps = {
@@ -10,10 +10,10 @@ export type AvatarProps = {
 };
 
 export const Avatar: React.FC<AvatarProps> = ({source, userId}) => {
-  const navigation = useNavigation<RootStackNavigationProps>();
+  const navigation = useNavigation<MainStackNavigationProps>();
 
   const handleProfilePress = () => {
-    navigation.push('UserDetail', {userId});
+    navigation.push('Profile', {publicKey: userId});
   };
 
   return (
