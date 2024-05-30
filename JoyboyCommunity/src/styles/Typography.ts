@@ -30,3 +30,5 @@ export const Typography = {
     includeFontPadding: false,
   },
 };
+
+export type TypographyNames = keyof typeof Typography;

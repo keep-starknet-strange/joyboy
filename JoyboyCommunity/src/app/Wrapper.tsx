@@ -3,10 +3,11 @@ import {useEffect, useState} from 'react';
 import {useColorScheme} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Host as PortalizeProvider} from 'react-native-portalize';
-import {ThemeProvider} from 'styled-components/native';
+import {ThemeProvider as StyledThemeProvider} from 'styled-components/native';
 
 import {RootScreenContainer} from '../components';
 import {NostrProvider} from '../context/NostrContext';
+import {ThemeProvider} from '../context/Theme';
 import {darkModeColors, lightModeColors} from '../tokens/colors';
 import App from './App';
 
@@ -28,17 +29,19 @@ export const Wrapper: React.FC = () => {
 
   return (
     <GestureHandlerRootView style={{flex: 1}}>
-      <ThemeProvider theme={theme}>
-        <PortalizeProvider>
+      <StyledThemeProvider theme={theme}>
+        <ThemeProvider>
           <NostrProvider>
             <QueryClientProvider client={queryClient}>
-              <RootScreenContainer>
-                <App />
-              </RootScreenContainer>
+              <PortalizeProvider>
+                <RootScreenContainer>
+                  <App />
+                </RootScreenContainer>
+              </PortalizeProvider>
             </QueryClientProvider>
           </NostrProvider>
-        </PortalizeProvider>
-      </ThemeProvider>
+        </ThemeProvider>
+      </StyledThemeProvider>
     </GestureHandlerRootView>
   );
 };

@@ -12,7 +12,7 @@ export const CommonColors = {
   blue: '#0000FF',
 };
 
-export const LightThemeColors = {
+export const LightTheme = {
   dark: false,
   colors: {
     ...CommonColors,
@@ -54,7 +54,7 @@ export const LightThemeColors = {
   },
 };
 
-export const DarkThemeColors = {
+export const DarkTheme = {
   dark: true,
   colors: {
     ...CommonColors,
@@ -95,3 +95,6 @@ export const DarkThemeColors = {
     infoDark: '#6B6B8C',
   },
 };
+
+export type Theme = typeof LightTheme;
+export type ThemeColorNames = keyof Theme['colors'];

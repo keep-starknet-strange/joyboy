@@ -5,3 +5,5 @@ export {useReplyNotes} from './useReplyNotes';
 export {useReposts} from './useReposts';
 export {useRootNotes} from './useRootNotes';
 export {useSendNote} from './useSendNote';
+export {useStyles} from './useStyles';
+export {useTheme} from './useTheme';
