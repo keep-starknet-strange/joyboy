@@ -15,10 +15,20 @@ export default function App() {
   const {ndk} = useNostrContext();
 
   useEffect(() => {
-    async function prepare() {
+    (async () => {
       try {
         // Pre-load fonts, make any API calls you need to do here
         await Font.loadAsync(Entypo.font);
+
+        await Font.loadAsync({
+          'Poppins-Light': require('../../assets/fonts/Poppins/Poppins-Light.ttf'),
+          'Poppins-Regular': require('../../assets/fonts/Poppins/Poppins-Regular.ttf'),
+          'Poppins-Italic': require('../../assets/fonts/Poppins/Poppins-Italic.ttf'),
+          'Poppins-Medium': require('../../assets/fonts/Poppins/Poppins-Medium.ttf'),
+          'Poppins-SemiBold': require('../../assets/fonts/Poppins/Poppins-SemiBold.ttf'),
+          'Poppins-Bold': require('../../assets/fonts/Poppins/Poppins-Bold.ttf'),
+        });
+
         await ndk.connect();
       } catch (e) {
         console.warn(e);
@@ -26,9 +36,7 @@ export default function App() {
         // Tell the application to render
         setAppIsReady(true);
       }
-    }
-
-    prepare();
+    })();
   }, []);
 
   const onLayoutRootView = useCallback(async () => {
