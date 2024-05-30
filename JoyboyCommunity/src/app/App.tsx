@@ -3,6 +3,7 @@ import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import {useCallback, useEffect, useState} from 'react';
 import {StatusBar, View} from 'react-native';
+import {SaveKeys} from '../screens/Auth/SaveKeys';
 
 import {Router} from './Router';
 
@@ -47,7 +48,7 @@ export default function App() {
     <View style={{flex: 1}} onLayout={onLayoutRootView}>
       <StatusBar backgroundColor="#15141A" />
 
-      <Router />
+      <SaveKeys />
     </View>
   );
 }

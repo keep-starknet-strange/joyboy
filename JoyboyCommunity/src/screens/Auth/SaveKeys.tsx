@@ -1,31 +1,80 @@
+import {useState} from 'react';
 import {View} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Button, Input} from '../../components';
 import {Auth} from '../../modules/auth';
 import {Text} from '../../modules/login/styled';
+import CopyIcon from '../../../assets/svgs/svgComponents/Copy';
+import InfoIcon from '../../../assets/svgs/svgComponents/Info';
+import DoubleCopyIcon from '../../../assets/svgs/svgComponents/DoubleCopy';
 
 export const SaveKeys: React.FC = () => {
+  const [secretKey, setSecretKey] = useState('nsec65fefewfweehfhewbhvbwehbewhfbewbfhewbfhew');
+  const [publicKey, setPublicKey] = useState('nsec65fefewfweehfhewbhvbwehbewhfbewbfhewbfhew');
+
+  const handleCopy = () => {
+    // Add your copy functionality here
+    console.log('Copied to clipboard:', 'Copied value');
+  };
+
   return (
     <Auth title="Save your keys">
-      <Input placeholder="Enter your secret key" />
-      <Input placeholder="Enter your public key" />
+      <Text style={{color: 'rgba(107, 107, 140, 1)', fontWeight: 600, marginLeft: 5}}>
+        Your secret key
+      </Text>
+      <Input
+        value={secretKey}
+        editable={false}
+        right={
+          <TouchableOpacity
+            onPress={handleCopy}
+            style={{
+              marginRight: 10,
+            }}
+          >
+            <DoubleCopyIcon />
+          </TouchableOpacity>
+        }
+      />
+
+      <Text style={{color: 'rgba(107, 107, 140, 1)', fontWeight: 600, marginLeft: 5}}>
+        Your public key
+      </Text>
+      <Input
+        value={publicKey}
+        editable={false}
+        right={
+          <TouchableOpacity
+            onPress={handleCopy}
+            style={{
+              marginRight: 10,
+            }}
+          >
+            <DoubleCopyIcon />
+          </TouchableOpacity>
+        }
+      />
 
       <View
         style={{
           width: 361,
-          height: 56,
-          //   opacity: 100,
-          backgroundColor: '#EC796B',
+          backgroundColor: 'rgba(236, 121, 107, 0.1)',
           borderRadius: 40,
-          paddingTop: 8,
-          paddingEnd: 16,
-          paddingStart: 16,
-          paddingBottom: 16,
+          paddingHorizontal: 20,
+          paddingVertical: 15,
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: 5,
         }}
       >
+        <InfoIcon />
         <Text
           style={{
             fontSize: 13,
-            color: 'white',
+            color: 'rgba(236, 121, 107, 1)',
+            fontWeight: 500,
           }}
         >
           Your private key is your password, if you lose this key, you will lose access to your
