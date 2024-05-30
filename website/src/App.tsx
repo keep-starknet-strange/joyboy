@@ -1,3 +1,4 @@
+import {Helmet} from "react-helmet";
 import "./App.css";
 import About from "./components/About";
 import ContributeSection from "./components/ContributeSection";
@@ -12,6 +13,12 @@ import RetroLandingPage from "./components/RetroLandingPage";
 function App() {
   return (
     <div className="min-h-screen w-full relative bg-black">
+       <Helmet>
+          <meta charSet="utf-8" />
+          <title>Joyboy</title>
+          <link rel="canonical" href="" />
+          <meta name="description" content="Decentralized social built with Nostr and powered by Starknet account abstraction." />
+      </Helmet>
       <Navbar />
       <HeroSection />
       <About />
