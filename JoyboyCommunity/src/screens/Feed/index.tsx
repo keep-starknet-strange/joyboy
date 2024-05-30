@@ -37,40 +37,41 @@ export const Feed: React.FC = () => {
 
       <Header />
 
-      <View style={{paddingTop: 30, paddingBottom: 18}}>
-        <FlatList
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          data={stories}
-          ListHeaderComponent={() => <View style={{width: 18}} />}
-          ItemSeparatorComponent={() => <View style={{width: 18}} />}
-          renderItem={({item}) => {
-            return (
-              <View>
-                <View
-                  style={{
-                    position: 'relative',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Image
-                    source={require('../../assets/feed/images/story-bg.png')}
-                    resizeMode="cover"
-                  />
-                  <Image style={{position: 'absolute'}} source={item.img} resizeMode="cover" />
-                </View>
-                <Text style={styles.storyText}>{item.name}</Text>
-              </View>
-            );
-          }}
-        />
-      </View>
-
       {notes.isLoading && <ActivityIndicator />}
 
       <FlatList
+        ListHeaderComponent={
+          <View style={{paddingBottom: 18}}>
+            <FlatList
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              data={stories}
+              ListHeaderComponent={() => <View style={{width: 18}} />}
+              ItemSeparatorComponent={() => <View style={{width: 18}} />}
+              renderItem={({item}) => {
+                return (
+                  <View style={{alignItems: 'center'}}>
+                    <View
+                      style={{
+                        position: 'relative',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Image
+                        source={require('../../assets/feed/images/story-bg.png')}
+                        resizeMode="cover"
+                      />
+                      <Image style={{position: 'absolute'}} source={item.img} resizeMode="cover" />
+                    </View>
+                    <Text style={styles.storyText}>{item.name}</Text>
+                  </View>
+                );
+              }}
+            />
+          </View>
+        }
         contentContainerStyle={{
           paddingTop: 16,
           paddingBottom: bottomBarHeight,

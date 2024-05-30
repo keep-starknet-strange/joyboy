@@ -17,8 +17,8 @@ export const styles = StyleSheet.create({
   },
 
   storyText: {
-    fontWeight: '400',
-    fontSize: 16,
+    fontWeight: '500',
+    fontSize: 13,
     paddingTop: 5,
     lineHeight: 20,
   },

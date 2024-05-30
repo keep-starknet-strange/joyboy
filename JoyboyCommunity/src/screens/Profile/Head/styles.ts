@@ -5,11 +5,20 @@ export default StyleSheet.create({
 
   coverContainer: {
     position: 'relative',
+    width: '100%',
+    height: Platform.OS === 'android' ? 175 : 220,
   },
   coverImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
     width: '100%',
-    height: Platform.OS === 'android' ? 175 : 200,
+    height: '100%',
   },
+  coverButtons: {
+    position: 'relative',
+  },
+
   backButton: {
     position: 'absolute',
     top: 16,
