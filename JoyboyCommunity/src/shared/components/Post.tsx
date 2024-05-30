@@ -1,6 +1,6 @@
 import {MaterialIcons, Octicons} from '@expo/vector-icons';
+import {NDKEvent} from '@nostr-dev-kit/ndk';
 import {useNavigation} from '@react-navigation/native';
-import {Event as EventNostr} from 'nostr-tools';
 import {Image, Pressable, Text, View} from 'react-native';
 import styled from 'styled-components/native';
 
@@ -34,9 +34,9 @@ export const Icon = styled(View)`
 
 interface PostProps {
   post?: PostType; // TODO FIX and use only typed event
-  event?: EventNostr;
+  event?: NDKEvent;
   sourceUser?: string;
-  repostedEvent?: EventNostr;
+  repostedEvent?: NDKEvent;
 }
 
 export const Post: React.FC<PostProps> = (props) => {

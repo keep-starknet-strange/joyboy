@@ -1,7 +1,7 @@
+import {NDKKind} from '@nostr-dev-kit/ndk';
 import {useInfiniteQuery} from '@tanstack/react-query';
 
 import {useNostrContext} from '../context/NostrContext';
-import {EventKind} from '../types';
 
 export type UseReplyNotesOptions = {
   noteId?: string;
@@ -10,7 +10,7 @@ export type UseReplyNotesOptions = {
 };
 
 export const useReplyNotes = (options?: UseReplyNotesOptions) => {
-  const {pool, relays} = useNostrContext();
+  const {ndk} = useNostrContext();
 
   return useInfiniteQuery({
     initialPageParam: Math.round(Date.now() / 1000),
@@ -24,8 +24,8 @@ export const useReplyNotes = (options?: UseReplyNotesOptions) => {
       return pageParam;
     },
     queryFn: async ({pageParam}) => {
-      const notes = await pool.querySync(relays, {
-        kinds: [EventKind.Note],
+      const notes = await ndk.fetchEvents({
+        kinds: [NDKKind.Text],
         authors: options?.authors,
         search: options?.search,
         until: pageParam,
@@ -34,7 +34,7 @@ export const useReplyNotes = (options?: UseReplyNotesOptions) => {
         '#e': options?.noteId ? [options.noteId] : undefined,
       });
 
-      return notes.filter((note) => note.tags.every((tag) => tag[0] === 'e'));
+      return [...notes].filter((note) => note.tags.every((tag) => tag[0] === 'e'));
     },
     placeholderData: {pages: [], pageParams: []},
   });
