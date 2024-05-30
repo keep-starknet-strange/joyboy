@@ -11,6 +11,7 @@ import {Feed} from '../screens/Feed';
 import {Notifications} from '../screens/Notifications';
 import {PostDetail} from '../screens/PostDetail';
 import {Profile} from '../screens/Profile';
+import { DialogPage } from '../screens/DialogPage';
 import {useAuth} from '../store/auth';
 import {useNavigationStore} from '../store/navigation';
 import {AuthStackParams, HomeBottomStackParams, MainStackParams, RootStackParams} from '../types';
@@ -20,7 +21,7 @@ const AuthStack = createNativeStackNavigator<AuthStackParams>();
 const MainStack = createNativeStackNavigator<MainStackParams>();
 const HomeBottomTabsStack = createBottomTabNavigator<HomeBottomStackParams>();
 
-const HomeBottomTabNavigator: React.FC = () => {
+export const HomeBottomTabNavigator: React.FC = () => {
   const theme = useTheme();
   const {publicKey} = useAuth();
 
@@ -130,6 +131,7 @@ const MainNavigator: React.FC = () => {
       <MainStack.Screen name="Profile" component={Profile} />
       <MainStack.Screen name="CreatePost" component={CreatePost} />
       <MainStack.Screen name="PostDetail" component={PostDetail} />
+      <MainStack.Screen name="DialogPage" component={DialogPage} />
     </MainStack.Navigator>
   );
 };

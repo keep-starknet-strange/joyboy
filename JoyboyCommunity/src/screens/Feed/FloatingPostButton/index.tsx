@@ -8,7 +8,7 @@ import {MainStackNavigationProps} from '../../../types';
 const Button = styled(Pressable)`
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; 
   position: relative;
 `;
 

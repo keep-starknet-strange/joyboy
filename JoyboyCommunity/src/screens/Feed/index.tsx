@@ -50,7 +50,7 @@ export const Feed: React.FC = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                  }}
+                  }} 
                 >
                   <Image
                     source={require('../../assets/feed/images/story-bg.png')}
