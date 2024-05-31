@@ -1,11 +1,11 @@
+import {useNavigation} from '@react-navigation/native';
 import {Button, View} from 'react-native';
 
 import {Divider, LayoutContainer, ScrollableContainer} from '../../components';
 import {testPostData} from '../../shared/data/testData';
+import {MainStackNavigationProps} from '../../types';
 import {Notification} from './Notification';
 import {Container} from './styled';
-import {useNavigation} from '@react-navigation/native';
-import {MainStackNavigationProps} from '../../types';
 
 export const Notifications: React.FC = () => {
   const navigator = useNavigation<MainStackNavigationProps>();
@@ -35,7 +35,7 @@ export const Notifications: React.FC = () => {
               <Divider />
             </View>
           ))}
-          <Button title={'Click to go to Dialog page'} onPress={Dialogpage} />
+          <Button title="Click to go to Dialog page" onPress={Dialogpage} />
         </Container>
       </ScrollableContainer>
     </LayoutContainer>

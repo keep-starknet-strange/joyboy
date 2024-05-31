@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
-import {Button, Pressable, StyleSheet, View} from 'react-native';
-import {Container, Logo} from './styled';
+import {Button, Pressable, View} from 'react-native';
+
+import Exit from '../../../assets/svgs/svgComponents/Exit';
+import Update from '../../../assets/svgs/svgComponents/Update';
+import Warning from '../../../assets/svgs/svgComponents/Warning';
 import {NotificationIcon} from '../../assets/icons';
 import {Divider} from '../../components';
 import Modal from '../../components/modal';
-import Warning from '../../../assets/svgs/svgComponents/Warning';
-import Exit from '../../../assets/svgs/svgComponents/Exit';
-import Update from '../../../assets/svgs/svgComponents/Update';
+import {Container, Logo} from './styled';
 
 export const DialogPage: React.FC = () => {
   const [isModalVisible, setModalVisible] = useState(false);

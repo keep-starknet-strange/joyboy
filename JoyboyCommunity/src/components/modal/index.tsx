@@ -1,18 +1,18 @@
 import React from 'react';
-import {View, Text, Button, StyleSheet, TouchableOpacity} from 'react-native';
 import {Portal} from 'react-native-portalize';
+
 import Line from '../../../assets/svgs/svgComponents/Line';
 import {
-  Overlay,
-  ModalContainer,
-  Title,
-  IconContainer,
-  Content,
   Container,
+  Content,
   FirstButton,
   FirstButtonText,
-  SecondButtonText,
+  IconContainer,
+  ModalContainer,
+  Overlay,
   SecondButton,
+  SecondButtonText,
+  Title,
 } from './styled';
 
 interface CustomModalProps {
