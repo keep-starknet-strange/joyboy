@@ -224,7 +224,11 @@ export const Post: React.FC<PostProps> = (props) => {
         <Pressable onPress={toggleLike}>
           <LikeWrapper>
             <AnimatedIcon style={animatedIconStyle}>
-              {isLiked ? <LikeFillIcon height={26} /> : <LikeIcon height={26} />}
+              {isLiked ? (
+                <LikeFillIcon height={26} color="#FF7463" />
+              ) : (
+                <LikeIcon height={26} color="#14142C" />
+              )}
             </AnimatedIcon>
             {likes > 0 && (
               <LikeText style={animatedTextStyle}>
@@ -261,7 +265,7 @@ export const Post: React.FC<PostProps> = (props) => {
       <PostFooter>
         <Pressable onPress={handleNavigateToPostDetails}>
           <CommentWrapper>
-            <CommentIcon height={26} onPress={handleComment} />
+            <CommentIcon height={26} color="#6B6B8C" onPress={handleComment} />
             <CommentsText>16 comments</CommentsText>
           </CommentWrapper>
         </Pressable>
