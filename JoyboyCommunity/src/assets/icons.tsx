@@ -195,10 +195,10 @@ export const RepostIcon: React.FC<SvgProps> = (props) => {
     <Svg width="32" height="32" viewBox="0 0 21 21" {...props}>
       <G
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
         stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       >
         <Path d="m13.5 13.5l3 3l3-3" />
         <Path d="M9.5 4.5h3a4 4 0 0 1 4 4v8m-9-9l-3-3l-3 3" />
@@ -214,7 +214,7 @@ export const LikeIcon: React.FC<SvgProps> = (props) => {
       <Path
         d="M15.7141 3.12058C12.3877 1.33653 9.99929 3.96642 9.99929 3.96642C9.99929 3.96642 7.61073 1.33652 4.28431 3.12057C0.255387 5.2814 -0.0339221 13.7433 9.99929 17.5C20.0325 13.7433 19.743 5.28141 15.7141 3.12058Z"
         stroke="#14142C"
-        stroke-linecap="round"
+        strokeLinecap="round"
       />
     </Svg>
   );
@@ -237,15 +237,15 @@ export const CommentIcon: React.FC<SvgProps> = (props) => {
       <Path
         d="M6.66663 11.25H13.3333M6.66663 7.08331H9.99996"
         stroke="#6B6B8C"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <Path
         d="M5.0823 15.8333C3.99888 15.7267 3.18725 15.4013 2.64293 14.857C1.66663 13.8807 1.66663 12.3093 1.66663 9.16665V8.74998C1.66663 5.60728 1.66663 4.03594 2.64293 3.05962C3.61925 2.08331 5.19059 2.08331 8.33329 2.08331H11.6666C14.8093 2.08331 16.3807 2.08331 17.357 3.05962C18.3333 4.03594 18.3333 5.60728 18.3333 8.74998V9.16665C18.3333 12.3093 18.3333 13.8807 17.357 14.857C16.3807 15.8333 14.8093 15.8333 11.6666 15.8333C11.1995 15.8437 10.8275 15.8792 10.4621 15.9625C9.46346 16.1924 8.53871 16.7034 7.62485 17.1491C6.3227 17.784 5.67163 18.1015 5.26303 17.8042C4.48137 17.2221 5.24541 15.4182 5.41663 14.5833"
         stroke="#6B6B8C"
-        stroke-width="1.5"
-        stroke-linecap="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
       />
     </Svg>
   );
