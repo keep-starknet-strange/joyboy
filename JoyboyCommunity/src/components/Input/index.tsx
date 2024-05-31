@@ -1,7 +1,7 @@
 import {StyleProp, TextInput, TextInputProps, TextStyle, View, ViewStyle} from 'react-native';
 
 import {useStyles, useTheme} from '../../hooks';
-import {Text} from '../_Text';
+import {Text} from '../Text';
 import stylesheet from './styles';
 
 export type InputProps = TextInputProps & {

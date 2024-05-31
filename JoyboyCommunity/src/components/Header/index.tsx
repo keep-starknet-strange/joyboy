@@ -3,7 +3,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {JoyboyIcon} from '../../assets/icons';
 import {useTheme} from '../../hooks';
-import {IconButton} from '../_IconButton';
+import {IconButton} from '../IconButton';
 import styles from './styles';
 
 export const Header: React.FC = () => {

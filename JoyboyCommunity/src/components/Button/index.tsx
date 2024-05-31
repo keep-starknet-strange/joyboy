@@ -1,7 +1,7 @@
 import {Pressable, PressableProps, StyleProp, TextStyle} from 'react-native';
 
 import {useStyles} from '../../hooks';
-import {Text} from '../_Text';
+import {Text} from '../Text';
 import stylesheet from './styles';
 
 export type ButtonProps = PressableProps & {
