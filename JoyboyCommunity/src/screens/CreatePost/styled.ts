@@ -17,7 +17,7 @@ export const PostButton = styled(Pressable)`
 export const TitleContainer = styled(View)`
   flex-direction: row;
   gap: 8px;
-  background: #f4f9ff;
+  background: #f4f9ff; 
   width: 100%;
   height: 50%;
   display: flex;

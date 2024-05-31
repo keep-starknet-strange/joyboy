@@ -5,11 +5,14 @@ import { NotificationIcon } from '../../assets/icons'
 import { Divider } from '../../components'
 import Modal from '../../components/modal';
 import Warning from '../../../assets/svgs/svgComponents/Warning';
+import Exit from '../../../assets/svgs/svgComponents/Exit';
+import Update from '../../../assets/svgs/svgComponents/Update';
 
 
 export const DialogPage: React.FC=()=> {
   const [isModalVisible, setModalVisible] = useState(false);
-
+  const [logOut, setisLogoutModal] = useState(false);
+  const [updateModal, setUpdateModal] = useState(false);
 
   const openModal = () => {
     setModalVisible(true);
@@ -18,6 +21,22 @@ export const DialogPage: React.FC=()=> {
   const closeModal = () => {
     setModalVisible(false);
   };
+
+  const openLogoutModal=()=>{
+    setisLogoutModal(true)
+  }
+
+  const closeLogoutModal=()=>{
+    setisLogoutModal(false)
+  }
+
+  const openUpdateModal=()=>{
+    setUpdateModal(true)
+  }
+
+  const closeUpdateModal=()=>{
+    setUpdateModal(false)
+  }
   return (
     <View>
 <Container>
@@ -36,14 +55,44 @@ export const DialogPage: React.FC=()=> {
         <Divider />
       </View>
 
-      <Button title="Open Modal" onPress={openModal} />
+      <View style={{ gap: 8}}>
+      <Button title="Open delete Modal" onPress={openModal} />
+      <Button title="Open Log out Modal" onPress={openLogoutModal} />
+      <Button title="Open update Modal" onPress={openUpdateModal} />
+      </View>
+    
         <Modal
-          name="Custom Modal"
-          buttonText="Close"
-          icon={<Warning />} // Replace with your actual icon component
-          text="This is the modal content"
+          name="Delete account?"
+          buttonText1="Delete"
+          buttonText2='No, thanks'
+          icon={<Warning />} 
+          description="If you delete your account, you will not be 
+          able to log in again. Would you like to continue?"
           visible={isModalVisible}
           onClose={closeModal}
+          color='#EC796B'
+        />
+
+        <Modal
+          name="Leaving so soon?"
+          buttonText1="Logout"
+          buttonText2='Cancel'
+          icon={<Exit />} 
+          description="Are you sure you want to logout?"
+          visible={logOut}
+          onClose={closeLogoutModal}
+           color='#EC796B'
+        />
+
+        <Modal
+          name="Update profile"
+          buttonText1="Save"
+          buttonText2='Cancel'
+          icon={<Update />} 
+          description="Would you like to save this update to your profile."
+          visible={updateModal}
+          onClose={closeUpdateModal}
+          color='#0C0C4F'
         />
     </View>
    
@@ -51,16 +100,3 @@ export const DialogPage: React.FC=()=> {
 }
 
 
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 16,
-  },
-});
