@@ -1,22 +1,15 @@
-import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
-import {ActivityIndicator, Image, View} from 'react-native';
-import {FlatList, RefreshControl} from 'react-native-gesture-handler';
-import styled from 'styled-components/native';
+import {FlatList, Image, Pressable, RefreshControl, View} from 'react-native';
 
-import {Header, Text} from '../../components';
-import {useRootNotes} from '../../hooks';
+import {AddPostIcon} from '../../assets/icons';
+import {Header, Story} from '../../components';
+import {useRootNotes, useStyles, useTheme} from '../../hooks';
 import {Post} from '../../shared/components/Post';
-import FloatingPostButton from './FloatingPostButton';
-import {styles} from './style';
+import {FeedScreenProps} from '../../types';
+import stylesheet from './styles';
 
-const FixedPostButton = styled(View)`
-  position: absolute;
-  bottom: 40px;
-  right: 15px;
-`;
-
-export const Feed: React.FC = () => {
-  const bottomBarHeight = useBottomTabBarHeight();
+export const Feed: React.FC<FeedScreenProps> = ({navigation}) => {
+  const theme = useTheme();
+  const styles = useStyles(stylesheet);
 
   const notes = useRootNotes();
 
@@ -33,69 +26,36 @@ export const Feed: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../../assets/feed/feed-bg.png')} style={styles.backgroundImage} />
+      <Image
+        style={styles.backgroundImage}
+        source={require('../../assets/feed/feed-bg.png')}
+        resizeMode="cover"
+      />
 
       <Header />
 
-      {notes.isLoading && <ActivityIndicator />}
-
       <FlatList
         ListHeaderComponent={
-          <View style={{paddingBottom: 18}}>
-            <FlatList
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-              data={stories}
-              ListHeaderComponent={() => <View style={{width: 18}} />}
-              ItemSeparatorComponent={() => <View style={{width: 18}} />}
-              renderItem={({item}) => {
-                return (
-                  <View style={{alignItems: 'center'}}>
-                    <View
-                      style={{
-                        position: 'relative',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <Image
-                        source={require('../../assets/feed/images/story-bg.png')}
-                        resizeMode="cover"
-                      />
-                      <Image style={{position: 'absolute'}} source={item.img} resizeMode="cover" />
-                    </View>
-                    <Text weight="medium" style={styles.storyText}>
-                      {item.name}
-                    </Text>
-                  </View>
-                );
-              }}
-            />
-          </View>
+          <FlatList
+            contentContainerStyle={styles.stories}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={stories}
+            ItemSeparatorComponent={() => <View style={styles.storySeparator} />}
+            renderItem={({item}) => <Story name={item.name} image={item.img} />}
+          />
         }
-        contentContainerStyle={{
-          paddingTop: 16,
-          paddingBottom: bottomBarHeight,
-        }}
         data={notes.data.pages.flat()}
         keyExtractor={(item) => item?.id}
-        renderItem={({item}) => {
-          return (
-            <Post
-              // post={item}
-              event={item}
-            />
-          );
-        }}
+        renderItem={({item}) => <Post event={item} />}
         refreshControl={
           <RefreshControl refreshing={notes.isFetching} onRefresh={() => notes.refetch()} />
         }
       />
 
-      <FixedPostButton>
-        <FloatingPostButton />
-      </FixedPostButton>
+      <Pressable style={styles.createPostButton} onPress={navigation.goBack}>
+        <AddPostIcon width={72} height={72} color={theme.colors.primary} />
+      </Pressable>
     </View>
   );
 };
