@@ -1,28 +1,25 @@
 import {useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
-import {Pressable, TextInput, TouchableOpacity, View} from 'react-native';
+import {Pressable, TextInput, View} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
-import {CopyIcon, GalleryIcon, GifIcon, SendIcon, UserIcon} from '../../assets/icons';
-import {Divider, KeyboardAvoidingView, Text} from '../../components';
-import {useSendNote} from '../../hooks';
+import {CopyIcon, GalleryIcon, GifIcon, SendIcon} from '../../assets/icons';
+import {KeyboardAvoidingView, TextButton} from '../../components';
+import {useSendNote, useStyles, useTheme} from '../../hooks';
 import {useAuth} from '../../store/auth';
-import {
-  Container,
-  IconContainer,
-  IconDiv,
-  Photo,
-  SendbuttonContainer,
-  TitleContainer,
-} from './styled';
+import stylesheet from './styles';
 
 export const CreatePost: React.FC = () => {
   const navigation = useNavigation();
+
+  const theme = useTheme();
+  const styles = useStyles(stylesheet);
 
   const sendNote = useSendNote();
   const {privateKey} = useAuth();
   const [note, setNote] = useState<string | undefined>();
 
-  const handlePostNoteFn = () => {
+  const handleSendNote = () => {
     if (!note || note?.length == 0) {
       alert('Write your note');
       return;
@@ -50,52 +47,46 @@ export const CreatePost: React.FC = () => {
   };
 
   return (
-    <KeyboardAvoidingView>
-      <Container>
-        <Pressable onPress={navigation.goBack}>
-          <Text color="textLight" fontSize={17}>
-            Cancel
-          </Text>
-        </Pressable>
-      </Container>
+    <View style={styles.container}>
+      <SafeAreaView edges={['top', 'left', 'right']} style={styles.header}>
+        <TextButton style={styles.cancelButton} onPress={navigation.goBack}>
+          Cancel
+        </TextButton>
+      </SafeAreaView>
 
-      <View style={{marginBottom: 1}}>
-        <Divider />
+      <View style={styles.content}>
+        <KeyboardAvoidingView>
+          <TextInput
+            style={styles.input}
+            value={note}
+            onChangeText={setNote}
+            autoFocus
+            multiline={true}
+            placeholder="Make a post"
+            placeholderTextColor={theme.colors.inputPlaceholder}
+          />
+
+          <View style={styles.buttons}>
+            <View style={styles.mediaButtons}>
+              <Pressable>
+                <GalleryIcon width="24" height="24" color={theme.colors.primary} />
+              </Pressable>
+
+              <Pressable>
+                <GifIcon width="24" height="24" color={theme.colors.primary} />
+              </Pressable>
+
+              <Pressable>
+                <CopyIcon width="24" height="24" color={theme.colors.primary} />
+              </Pressable>
+            </View>
+
+            <Pressable style={styles.sendButton} onPress={handleSendNote}>
+              <SendIcon width="56" height="56" color={theme.colors.primary} />
+            </Pressable>
+          </View>
+        </KeyboardAvoidingView>
       </View>
-
-      <TitleContainer>
-        <Photo>
-          <UserIcon width={32} height={32} color="#1E2F3D" />
-        </Photo>
-
-        <TextInput
-          style={{flex: 1, paddingTop: 10, paddingBottom: 10, fontSize: 16, lineHeight: 20}}
-          autoFocus
-          multiline={true}
-          value={note}
-          placeholder="Make a post"
-          onChangeText={setNote}
-        />
-      </TitleContainer>
-
-      <IconDiv>
-        <SendbuttonContainer>
-          <SendIcon width="56" height="56" color="#EC796B" />
-        </SendbuttonContainer>
-        <IconContainer>
-          <TouchableOpacity>
-            <GalleryIcon width="24" height="24" color="#4B799F" />
-          </TouchableOpacity>
-
-          <TouchableOpacity>
-            <GifIcon width="24" height="24" color="#4B799F" />
-          </TouchableOpacity>
-
-          <TouchableOpacity>
-            <CopyIcon width="24" height="24" color="#4B799F" />
-          </TouchableOpacity>
-        </IconContainer>
-      </IconDiv>
-    </KeyboardAvoidingView>
+    </View>
   );
 };

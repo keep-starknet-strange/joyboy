@@ -9,7 +9,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: Spacing.medium,
     paddingHorizontal: Spacing.xlarge,
-    borderRadius: 999,
+    borderRadius: 6,
   },
   block: {
     width: '100%',
