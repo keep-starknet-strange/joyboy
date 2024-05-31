@@ -1,6 +1,6 @@
-import {View} from 'react-native';
+import {Image, View} from 'react-native';
 
-import {AvatarImage, Text} from '../../../components';
+import {Text} from '../../../components';
 import {NotificationImage, NotificationLayout} from './styled';
 
 export type NotificationProps = {
@@ -17,7 +17,10 @@ export const Notification: React.FC<NotificationProps> = ({post}) => {
   return (
     <NotificationLayout>
       <View style={{flex: 1}}>
-        <AvatarImage source={require('../../../../assets/joyboy-logo.png')} />
+        <Image
+          style={{width: 44, height: 44}}
+          source={require('../../../../assets/joyboy-logo.png')}
+        />
       </View>
 
       <View style={{gap: 4, flex: 9}}>
