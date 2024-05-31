@@ -30,7 +30,7 @@ export const Feed: React.FC = () => {
     {name: 'Franky', img: require('../../assets/feed/images/story-5.png')},
   ];
 
-  return ( 
+  return (
     <View style={{flex: 1}}>
       <Image source={require('../../assets/feed/feed-bg.png')} style={styles.backgroundImage} />
 
@@ -50,7 +50,7 @@ export const Feed: React.FC = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                  }} 
+                  }}
                 >
                   <Image
                     source={require('../../assets/feed/images/story-bg.png')}

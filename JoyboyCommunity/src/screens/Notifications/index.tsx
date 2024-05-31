@@ -4,14 +4,14 @@ import {Divider, LayoutContainer, ScrollableContainer} from '../../components';
 import {testPostData} from '../../shared/data/testData';
 import {Notification} from './Notification';
 import {Container} from './styled';
-import { useNavigation } from '@react-navigation/native';
-import { MainStackNavigationProps } from '../../types';
+import {useNavigation} from '@react-navigation/native';
+import {MainStackNavigationProps} from '../../types';
 
 export const Notifications: React.FC = () => {
-  const navigator =  useNavigation<MainStackNavigationProps>()
-  const Dialogpage=()=>{
-    navigator.push('DialogPage')
-  }
+  const navigator = useNavigation<MainStackNavigationProps>();
+  const Dialogpage = () => {
+    navigator.push('DialogPage');
+  };
   return (
     <LayoutContainer title="Notifications">
       <ScrollableContainer
@@ -33,11 +33,9 @@ export const Notifications: React.FC = () => {
                 }}
               />
               <Divider />
-            
             </View>
           ))}
-            <Button title={'Click to go to Dialog page'}
-              onPress={Dialogpage}/>
+          <Button title={'Click to go to Dialog page'} onPress={Dialogpage} />
         </Container>
       </ScrollableContainer>
     </LayoutContainer>

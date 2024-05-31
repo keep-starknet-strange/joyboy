@@ -16,10 +16,10 @@ export type MainStackParams = {
   CreatePost: undefined;
   Profile: {publicKey: string};
   PostDetail: {postId: string; post?: Event};
-  DialogPage: undefined
+  DialogPage: undefined;
 };
 
-export type HomeBottomStackParams = { 
+export type HomeBottomStackParams = {
   Feed: undefined;
   UserProfile: {publicKey: string};
   Notifications: undefined;

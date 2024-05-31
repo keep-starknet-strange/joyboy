@@ -74,7 +74,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
               <Menu
                 open={menuOpen}
                 onClose={() => setMenuOpen(false)}
-                handle={ 
+                handle={
                   <IconButton
                     icon="more-vertical"
                     size={20}

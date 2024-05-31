@@ -11,7 +11,7 @@ import {Feed} from '../screens/Feed';
 import {Notifications} from '../screens/Notifications';
 import {PostDetail} from '../screens/PostDetail';
 import {Profile} from '../screens/Profile';
-import { DialogPage } from '../screens/DialogPage';
+import {DialogPage} from '../screens/DialogPage';
 import {useAuth} from '../store/auth';
 import {useNavigationStore} from '../store/navigation';
 import {AuthStackParams, HomeBottomStackParams, MainStackParams, RootStackParams} from '../types';
@@ -41,7 +41,7 @@ export const HomeBottomTabNavigator: React.FC = () => {
       }}
     >
       <HomeBottomTabsStack.Screen
-        name="Feed" 
+        name="Feed"
         component={Feed}
         options={{
           tabBarActiveTintColor: 'white',

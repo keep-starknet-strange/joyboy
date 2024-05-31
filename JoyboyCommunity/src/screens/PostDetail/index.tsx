@@ -111,7 +111,7 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
             </View>
 
             <Icon as={MaterialIcons} name="more-horiz" size={18} color="#406686" />
-          </InteractionContainer> 
+          </InteractionContainer>
         </View>
 
         <Comments event={note} />
