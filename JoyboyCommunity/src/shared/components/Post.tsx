@@ -1,10 +1,10 @@
 import {MaterialIcons, Octicons} from '@expo/vector-icons';
 import {NDKEvent} from '@nostr-dev-kit/ndk';
 import {useNavigation} from '@react-navigation/native';
-import {Image, Pressable, Text, View} from 'react-native';
+import {Image, Pressable, View} from 'react-native';
 import styled from 'styled-components/native';
 
-import {Typography} from '../../components';
+import {Text} from '../../components';
 import {MainStackNavigationProps, Post as PostType} from '../../types';
 
 const PostCard = styled(View)`
@@ -69,7 +69,7 @@ export const Post: React.FC<PostProps> = (props) => {
     <PostCard>
       {repostedEvent && (
         <View>
-          <Typography>Reposted</Typography>
+          <Text>Reposted</Text>
         </View>
       )}
       {/* TODO different rendering base on kind =1,6,7 and tags for kind = 1 */}

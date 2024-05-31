@@ -2,7 +2,7 @@ import {Feather} from '@expo/vector-icons';
 import {useState} from 'react';
 import {Pressable, View} from 'react-native';
 
-import {Button, IconButton, Menu, Text, Typography} from '../../../components';
+import {Button, IconButton, Menu, Text} from '../../../components';
 import {useProfile} from '../../../hooks';
 import {useAuth} from '../../../store/auth';
 import {ProfileHead} from '../Head';
@@ -101,11 +101,15 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
       />
 
       <View style={styles.info}>
-        <Typography style={styles.displayName}>{profile?.displayName}</Typography>
+        <Text weight="bold" style={styles.displayName}>
+          {profile?.displayName}
+        </Text>
 
         <View style={styles.usernameContainer}>
           {profile?.username ? (
-            <Typography style={styles.username}>@{profile.username}</Typography>
+            <Text weight="medium" style={styles.username}>
+              @{profile.username}
+            </Text>
           ) : null}
 
           <Pressable style={styles.publicKey}>
@@ -122,12 +126,18 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
           </Pressable>
         </View>
 
-        {profile?.about ? <Typography style={styles.bio}>{profile.about}</Typography> : null}
+        {profile?.about ? (
+          <Text weight="medium" style={styles.bio}>
+            {profile.about}
+          </Text>
+        ) : null}
 
         <View style={styles.connections}>
           <Feather name="user-plus" size={16} color="#14142C" />
 
-          <Typography style={styles.connectionsText}>13 Connections</Typography>
+          <Text weight="semiBold" style={styles.connectionsText}>
+            13 Connections
+          </Text>
         </View>
       </View>
     </View>

@@ -2,7 +2,7 @@ import * as SecureStore from 'expo-secure-store';
 import {useEffect, useState} from 'react';
 import {Alert} from 'react-native';
 
-import {Typography} from '../../components';
+import {Text} from '../../components';
 import {useAuth} from '../../store/auth';
 import {useNavigationStore} from '../../store/navigation';
 import {generateRandomKeypair, getPublicKeyFromSecret} from '../../utils/keypair';
@@ -166,7 +166,9 @@ export default function Login() {
               backgroundColor: 'gray',
             }}
           >
-            <Typography variant="ts19m">Login</Typography>
+            <Text weight="medium" fontSize={19}>
+              Login
+            </Text>
           </ImportButton>
 
           <CreateAccountButton
@@ -177,7 +179,9 @@ export default function Login() {
               width: '100%',
             }}
           >
-            <Typography variant="ts19m">Create an account</Typography>
+            <Text weight="medium" fontSize={19}>
+              Create an account
+            </Text>
           </CreateAccountButton>
 
           <CreateAccountButton
@@ -188,7 +192,9 @@ export default function Login() {
               width: '100%',
             }}
           >
-            <Typography variant="ts19m">Import private key</Typography>
+            <Text weight="medium" fontSize={19}>
+              Import private key
+            </Text>
           </CreateAccountButton>
         </InputContainer>
       )}
@@ -218,7 +224,9 @@ export default function Login() {
               backgroundColor: 'gray',
             }}
           >
-            <Typography variant="ts19m">Import</Typography>
+            <Text weight="medium" fontSize={19}>
+              Import
+            </Text>
           </ImportButton>
 
           <CreateAccountButton
@@ -229,7 +237,9 @@ export default function Login() {
               width: '100%',
             }}
           >
-            <Typography variant="ts19m">Create an account</Typography>
+            <Text weight="medium" fontSize={19}>
+              Create an account
+            </Text>
           </CreateAccountButton>
 
           <CreateAccountButton
@@ -240,7 +250,9 @@ export default function Login() {
               width: '100%',
             }}
           >
-            <Typography variant="ts19m">Login</Typography>
+            <Text weight="medium" fontSize={19}>
+              Login
+            </Text>
           </CreateAccountButton>
         </InputContainer>
       )}
@@ -261,7 +273,9 @@ export default function Login() {
               marginVertical: 8,
             }}
           >
-            <Typography variant="ts19m">Create</Typography>
+            <Text weight="medium" fontSize={19}>
+              Create
+            </Text>
           </LoginButton>
 
           <CreateAccountButton
@@ -273,13 +287,17 @@ export default function Login() {
             }}
             disabled={privateKeyImport?.length == 0}
           >
-            <Typography variant="ts19m">Try login with an account</Typography>
+            <Text weight="medium" fontSize={19}>
+              Try login with an account
+            </Text>
           </CreateAccountButton>
         </InputContainer>
       )}
 
       <SkipButton onPress={() => setNavigationStack('app')}>
-        <Typography variant="ts19m">Skip</Typography>
+        <Text weight="medium" fontSize={19}>
+          Skip
+        </Text>
       </SkipButton>
     </Container>
   );

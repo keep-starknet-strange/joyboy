@@ -36,9 +36,7 @@ export default StyleSheet.create({
     borderRadius: 99,
   },
   settingsButtonText: {
-    fontSize: 14,
     lineHeight: 16,
-    fontWeight: '600',
     marginLeft: 8,
   },
 

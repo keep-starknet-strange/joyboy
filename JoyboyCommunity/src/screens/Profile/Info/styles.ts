@@ -22,7 +22,6 @@ export default StyleSheet.create({
   displayName: {
     fontSize: 20,
     lineHeight: 24,
-    fontWeight: '700',
     color: '#14142c',
   },
 
@@ -34,7 +33,6 @@ export default StyleSheet.create({
   username: {
     maxWidth: '50%',
     fontSize: 16,
-    fontWeight: '500',
     color: '#6B6B8C',
     marginRight: 16,
   },
@@ -54,7 +52,6 @@ export default StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     color: '#6B6B8C',
-    fontWeight: '500',
     marginBottom: 16,
   },
 
@@ -65,7 +62,6 @@ export default StyleSheet.create({
   },
   connectionsText: {
     fontSize: 14,
-    fontWeight: '600',
     color: '#14142C',
   },
 });

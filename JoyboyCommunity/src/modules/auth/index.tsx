@@ -1,6 +1,6 @@
 import {Image, View} from 'react-native';
 
-import {Typography} from '../../components';
+import {Text} from '../../components';
 import styles from './styles';
 
 export type AuthProps = {
@@ -24,7 +24,9 @@ export const Auth: React.FC<AuthProps> = ({title, children}) => {
             <Image style={styles.logoImage} source={require('../../../assets/joyboy-logo.png')} />
           </View>
 
-          <Typography style={styles.title}>{title}</Typography>
+          <Text weight="bold" fontSize={22} style={styles.title}>
+            {title}
+          </Text>
         </View>
       </View>
 

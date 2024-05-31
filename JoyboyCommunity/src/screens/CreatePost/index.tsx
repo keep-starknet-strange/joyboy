@@ -4,7 +4,7 @@ import {Pressable, TouchableOpacity, View} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 
 import {CopyIcon, GalleryIcon, GifIcon, SendIcon, UserIcon} from '../../assets/icons';
-import {Divider, KeyboardAvoidingView, Typography} from '../../components';
+import {Divider, KeyboardAvoidingView, Text} from '../../components';
 import {useSendNote} from '../../hooks';
 import {useAuth} from '../../store/auth';
 import {
@@ -57,15 +57,15 @@ export const CreatePost: React.FC = () => {
     <KeyboardAvoidingView>
       <Container>
         <Pressable onPress={navigation.goBack}>
-          <Typography style={{color: '#4B799F', fontSize: 17}} variant="ts15r">
+          <Text fontSize={17} style={{color: '#4B799F', fontSize: 17}}>
             Cancel
-          </Typography>
+          </Text>
         </Pressable>
 
         <PostButton onPress={handlePostNoteFn} disabled={isCreateDisabled}>
-          <Typography style={{color: '#4B799F', fontSize: 17}} variant="ts15r">
+          <Text fontSize={17} style={{color: '#4B799F', fontSize: 17}}>
             Draft
-          </Typography>
+          </Text>
         </PostButton>
       </Container>
 

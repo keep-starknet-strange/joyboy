@@ -46,8 +46,6 @@ export default StyleSheet.create({
     borderRadius: 999,
   },
   title: {
-    fontSize: 22,
-    fontWeight: 'bold',
     marginVertical: 24,
   },
 
