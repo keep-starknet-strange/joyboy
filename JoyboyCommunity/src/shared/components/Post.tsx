@@ -1,22 +1,22 @@
 import {MaterialIcons} from '@expo/vector-icons';
 import {NDKEvent} from '@nostr-dev-kit/ndk';
 import {useNavigation} from '@react-navigation/native';
+import {useEffect, useState} from 'react';
 import {Image, Pressable, Text, View} from 'react-native';
-import styled from 'styled-components/native';
-
-import {Typography} from '../../components';
-import {CommentIcon, LikeFillIcon, LikeIcon, RepostIcon} from '../../assets/icons';
-import {timestampToHumanReadable} from '../../utils/common-utils';
-import {MainStackNavigationProps, Post as PostType} from '../../types';
 import Animated, {
   Easing,
-  useSharedValue,
   useAnimatedStyle,
-  withTiming,
+  useSharedValue,
   withSequence,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
-import {useEffect, useState} from 'react';
+import styled from 'styled-components/native';
+
+import {CommentIcon, LikeFillIcon, LikeIcon, RepostIcon} from '../../assets/icons';
+import {Typography} from '../../components';
+import {MainStackNavigationProps, Post as PostType} from '../../types';
+import {timestampToHumanReadable} from '../../utils/common-utils';
 
 export const Icon = styled(View)`
   padding-horizontal: 4px;

@@ -1,4 +1,4 @@
-import Svg, {Path, Rect, SvgProps, G} from 'react-native-svg';
+import Svg, {G, Path, Rect, SvgProps} from 'react-native-svg';
 
 export const AddPostIcon: React.FC<SvgProps> = (props) => (
   <Svg viewBox="0 0 72 72" fill="none" {...props}>
