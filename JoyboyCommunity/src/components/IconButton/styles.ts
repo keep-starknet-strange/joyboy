@@ -1,9 +1,9 @@
 import {Spacing, ThemedStyleSheet} from '../../styles';
 
-export default ThemedStyleSheet((theme, disabled: boolean) => ({
+export default ThemedStyleSheet((theme, disabled: boolean, backgroundColor: string) => ({
   container: {
     padding: Spacing.xsmall,
-    backgroundColor: theme.colors.surface,
+    backgroundColor,
     borderRadius: 99,
 
     ...(disabled && {

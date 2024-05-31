@@ -1,4 +1,4 @@
-import {Spacing, ThemedStyleSheet} from '../../styles';
+import {Spacing, ThemedStyleSheet, Typography} from '../../styles';
 
 export default ThemedStyleSheet((theme, error: boolean) => ({
   container: {
@@ -26,7 +26,7 @@ export default ThemedStyleSheet((theme, error: boolean) => ({
     paddingHorizontal: Spacing.large,
     color: theme.colors.inputText,
     fontSize: 15,
-    fontWeight: '600',
+    ...Typography.semiBold,
   },
   inputWithLeft: {
     paddingLeft: Spacing.small,

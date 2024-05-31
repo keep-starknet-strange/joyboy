@@ -40,7 +40,6 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                   <IconButton
                     icon="more-vertical"
                     size={20}
-                    color="#14142c"
                     style={styles.iconButton}
                     onPress={() => setMenuOpen(true)}
                   />
@@ -64,12 +63,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                 Connect
               </Button>
 
-              <IconButton
-                icon="message-square"
-                size={20}
-                style={styles.iconButton}
-                color="#14142c"
-              />
+              <IconButton icon="message-square" size={20} style={styles.iconButton} />
 
               <Menu
                 open={menuOpen}
@@ -78,7 +72,6 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                   <IconButton
                     icon="more-vertical"
                     size={20}
-                    color="#14142c"
                     style={styles.iconButton}
                     onPress={() => setMenuOpen(true)}
                   />
@@ -122,7 +115,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
               {userPublicKey}
             </Text>
 
-            <IconButton size={16} icon="copy" color="#EC796B" />
+            <IconButton size={16} icon="copy" color="primary" />
           </Pressable>
         </View>
 

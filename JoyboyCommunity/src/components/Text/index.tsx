@@ -1,10 +1,10 @@
 import {Text as NativeText, TextProps as NativeTextProps, TextStyle} from 'react-native';
 
-import {useTheme} from '../../hooks';
-import {ThemeColorNames, Typography, TypographyNames} from '../../styles';
+import {useColor} from '../../hooks';
+import {ColorProp, Typography, TypographyNames} from '../../styles';
 
 export type TextProps = NativeTextProps & {
-  color?: ThemeColorNames;
+  color?: ColorProp;
   weight?: TypographyNames;
   fontSize?: number;
   lineHeight?: number;
@@ -14,7 +14,7 @@ export type TextProps = NativeTextProps & {
 export const Text: React.FC<TextProps> = (props) => {
   const {
     children,
-    color = 'text',
+    color: colorProp = 'text',
     weight = 'regular',
     align = 'auto',
     fontSize = 14,
@@ -23,12 +23,12 @@ export const Text: React.FC<TextProps> = (props) => {
     ...restProps
   } = props;
 
-  const theme = useTheme();
+  const color = useColor(colorProp);
 
   const textStyles: TextStyle = {
     fontSize,
     lineHeight,
-    color: theme.colors[color],
+    color,
     textAlign: align,
 
     ...Typography[weight],

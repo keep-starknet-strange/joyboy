@@ -1,3 +1,4 @@
+export {useColor} from './useColor';
 export {useNote} from './useNote';
 export {useProfile} from './useProfile';
 export {useReactions} from './useReactions';

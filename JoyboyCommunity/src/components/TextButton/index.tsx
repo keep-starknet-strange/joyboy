@@ -1,11 +1,11 @@
 import {Pressable, PressableProps} from 'react-native';
 
-import {ThemeColorNames} from '../../styles';
+import {ColorProp} from '../../styles';
 import {Text} from '../Text';
 import styles from './styles';
 
 export type TextButtonProps = PressableProps & {
-  color?: ThemeColorNames;
+  color?: ColorProp;
   left?: React.ReactNode;
   right?: React.ReactNode;
   block?: boolean;

@@ -34,6 +34,8 @@ export const LightTheme = {
     onPrimary: '#FFFFFF',
     onSecondary: '#FFFFFF',
 
+    divider: '#e4e4e7',
+
     bottomBarActive: '#14142C',
     bottomBarInactive: 'rgba(30, 47, 61, 0.5)',
 
@@ -78,6 +80,8 @@ export const DarkTheme = {
     onPrimary: '#FFFFFF',
     onSecondary: '#FFFFFF',
 
+    divider: '#e4e4e7',
+
     bottomBarActive: '#14142C',
     bottomBarInactive: 'rgba(30, 47, 61, 0.5)',
 
@@ -102,3 +106,5 @@ export const DarkTheme = {
 
 export type Theme = typeof LightTheme;
 export type ThemeColorNames = keyof Theme['colors'];
+
+export type ColorProp = ThemeColorNames | 'transparent' | `#${string}` | `rgb${string}`;

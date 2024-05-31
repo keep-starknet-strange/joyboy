@@ -16,7 +16,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import {useStyles} from '../../hooks';
+import {useColor, useStyles} from '../../hooks';
+import {ColorProp} from '../../styles';
 import {Text} from '../Text';
 import stylesheet from './styles';
 
@@ -34,7 +35,7 @@ export type MenuSubComponents = {
 export type MenuItemProps = PressableProps & {
   label: string;
   icon?: React.ComponentProps<typeof Feather>['name'];
-  color?: string;
+  color?: ColorProp;
 };
 
 const Menu: React.FC<MenuProps> & MenuSubComponents = ({handle, open, onClose, children}) => {
@@ -99,7 +100,14 @@ const Menu: React.FC<MenuProps> & MenuSubComponents = ({handle, open, onClose, c
   );
 };
 
-export const MenuItem: React.FC<MenuItemProps> = ({label, icon, color, ...pressableProps}) => {
+export const MenuItem: React.FC<MenuItemProps> = ({
+  label,
+  icon,
+  color: colorProp = 'text',
+  ...pressableProps
+}) => {
+  const color = useColor(colorProp);
+
   const styles = useStyles(stylesheet);
 
   return (

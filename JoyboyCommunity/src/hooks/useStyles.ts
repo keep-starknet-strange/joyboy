@@ -1,3 +1,4 @@
+import {useMemo} from 'react';
 import {StyleSheet} from 'react-native';
 
 import {Theme} from '../styles';
@@ -9,5 +10,6 @@ export const useStyles = <TStyle extends StyleSheet.NamedStyles<TStyle>, TArgs e
 ): TStyle => {
   const theme = useTheme();
 
-  return stylesheet(theme, ...args);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  return useMemo(() => stylesheet(theme, ...args), [stylesheet, theme, ...args]);
 };

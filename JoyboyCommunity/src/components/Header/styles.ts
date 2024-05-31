@@ -1,10 +1,8 @@
-import {StyleSheet} from 'react-native';
+import {Spacing, ThemedStyleSheet} from '../../styles';
 
-import {Spacing} from '../../styles';
-
-export default StyleSheet.create({
+export default ThemedStyleSheet((theme) => ({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: theme.colors.surface,
   },
   content: {
     width: '100%',
@@ -29,4 +27,4 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-});
+}));
