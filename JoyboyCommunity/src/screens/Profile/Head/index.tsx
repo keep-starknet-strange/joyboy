@@ -4,7 +4,8 @@ import {Image, ImageSourcePropType, Pressable, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {IconButton, Text} from '../../../components';
-import styles from './styles';
+import {useStyles} from '../../../hooks';
+import stylesheet from './styles';
 
 export type ProfileHeadProps = {
   profilePhoto?: ImageSourcePropType;
@@ -21,6 +22,8 @@ export const ProfileHead: React.FC<ProfileHeadProps> = ({
   showSettingsButton,
   buttons,
 }) => {
+  const styles = useStyles(stylesheet);
+
   const navigation = useNavigation();
 
   const goToSettings = () => {

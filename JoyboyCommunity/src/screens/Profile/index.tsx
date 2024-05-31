@@ -1,13 +1,15 @@
 import {FlatList, RefreshControl, View} from 'react-native';
 
-import {useRootNotes} from '../../hooks';
+import {useRootNotes, useStyles} from '../../hooks';
 import {Post} from '../../shared/components/Post';
 import {ProfileScreenProps} from '../../types';
 import {ProfileInfo} from './Info';
-import styles from './styles';
+import stylesheet from './styles';
 
 export const Profile: React.FC<ProfileScreenProps> = ({route}) => {
   const {publicKey} = route.params ?? {};
+
+  const styles = useStyles(stylesheet);
 
   const notes = useRootNotes({authors: [publicKey]});
 

@@ -3,16 +3,19 @@ import {useState} from 'react';
 import {Pressable, View} from 'react-native';
 
 import {Button, IconButton, Menu, Text} from '../../../components';
-import {useProfile} from '../../../hooks';
+import {useProfile, useStyles, useTheme} from '../../../hooks';
 import {useAuth} from '../../../store/auth';
 import {ProfileHead} from '../Head';
-import styles from './styles';
+import stylesheet from './styles';
 
 export type ProfileInfoProps = {
   publicKey: string;
 };
 
 export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKey}) => {
+  const theme = useTheme();
+  const styles = useStyles(stylesheet);
+
   const {data: profile} = useProfile({publicKey: userPublicKey});
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -94,13 +97,13 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
       />
 
       <View style={styles.info}>
-        <Text weight="bold" style={styles.displayName}>
+        <Text weight="bold" fontSize={20} lineHeight={24}>
           {profile?.displayName}
         </Text>
 
         <View style={styles.usernameContainer}>
           {profile?.username ? (
-            <Text weight="medium" style={styles.username}>
+            <Text weight="medium" color="textSecondary" fontSize={16} style={styles.username}>
               @{profile.username}
             </Text>
           ) : null}
@@ -120,17 +123,15 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
         </View>
 
         {profile?.about ? (
-          <Text weight="medium" style={styles.bio}>
+          <Text weight="medium" color="textSecondary" lineHeight={20} style={styles.bio}>
             {profile.about}
           </Text>
         ) : null}
 
         <View style={styles.connections}>
-          <Feather name="user-plus" size={16} color="#14142C" />
+          <Feather name="user-plus" size={16} color={theme.colors.text} />
 
-          <Text weight="semiBold" style={styles.connectionsText}>
-            13 Connections
-          </Text>
+          <Text weight="semiBold">13 Connections</Text>
         </View>
       </View>
     </View>
