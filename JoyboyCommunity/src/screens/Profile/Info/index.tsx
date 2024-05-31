@@ -1,8 +1,8 @@
 import {Feather} from '@expo/vector-icons';
 import {useState} from 'react';
-import {Pressable, Text, View} from 'react-native';
+import {Pressable, View} from 'react-native';
 
-import {Button, IconButton, Menu, Typography} from '../../../components';
+import {Button, IconButton, Menu, Text, Typography} from '../../../components';
 import {useProfile} from '../../../hooks';
 import {useAuth} from '../../../store/auth';
 import {ProfileHead} from '../Head';
@@ -109,7 +109,12 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
           ) : null}
 
           <Pressable style={styles.publicKey}>
-            <Text style={styles.publicKeyText} numberOfLines={1} ellipsizeMode="middle">
+            <Text
+              weight="medium"
+              style={styles.publicKeyText}
+              numberOfLines={1}
+              ellipsizeMode="middle"
+            >
               {userPublicKey}
             </Text>
 

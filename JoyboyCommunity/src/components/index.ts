@@ -11,5 +11,6 @@ export {RootScreenContainer} from './skeleton/RootScreenContainer';
 export {RowContainer} from './skeleton/RowContainer';
 export {ScreenContainer} from './skeleton/ScreenContainer';
 export {ScrollableContainer} from './skeleton/ScrollableContainer';
+export {Text} from './text';
 export {TextButton} from './textbutton';
 export {StyledTypography, Typography} from './typography';

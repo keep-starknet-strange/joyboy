@@ -47,7 +47,6 @@ export default StyleSheet.create({
   publicKeyText: {
     flex: 1,
     fontSize: 14,
-    fontWeight: '500',
     color: '#EC796B',
   },
 

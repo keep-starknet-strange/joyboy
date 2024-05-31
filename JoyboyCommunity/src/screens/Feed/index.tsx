@@ -1,9 +1,9 @@
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
-import {ActivityIndicator, Image, Text, View} from 'react-native';
+import {ActivityIndicator, Image, View} from 'react-native';
 import {FlatList, RefreshControl} from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
-import {Header} from '../../components';
+import {Header, Text} from '../../components';
 import {useRootNotes} from '../../hooks';
 import {Post} from '../../shared/components/Post';
 import FloatingPostButton from './FloatingPostButton';
@@ -65,7 +65,9 @@ export const Feed: React.FC = () => {
                       />
                       <Image style={{position: 'absolute'}} source={item.img} resizeMode="cover" />
                     </View>
-                    <Text style={styles.storyText}>{item.name}</Text>
+                    <Text weight="medium" style={styles.storyText}>
+                      {item.name}
+                    </Text>
                   </View>
                 );
               }}

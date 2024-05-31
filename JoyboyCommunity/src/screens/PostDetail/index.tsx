@@ -1,7 +1,8 @@
 import {MaterialIcons, Octicons} from '@expo/vector-icons';
-import {Image, Pressable, ScrollView, Text, View} from 'react-native';
+import {Image, Pressable, ScrollView, View} from 'react-native';
 import styled from 'styled-components/native';
 
+import {Text} from '../../components';
 import {useNote} from '../../hooks';
 import Comments from '../../shared/components/Comments';
 import {Icon} from '../../shared/components/Post';
@@ -68,7 +69,9 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
             color="#406686"
             onPress={handleGoBack}
           />
-          <Text style={{color: '#406686', fontWeight: '700', fontSize: 15}}>Conversation</Text>
+          <Text weight="bold" style={{color: '#406686', fontSize: 15}}>
+            Conversation
+          </Text>
           <Icon as={MaterialIcons} name="more-horiz" size={25} color="#406686" />
         </PostDetailsHeader>
         <View style={{padding: 10}}>
@@ -83,7 +86,9 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
             </View>
 
             <View style={{gap: 4, flex: 1}}>
-              <Text style={{color: 'black', fontWeight: '700'}}>{note?.pubkey}</Text>
+              <Text weight="bold" style={{color: 'black'}}>
+                {note?.pubkey}
+              </Text>
             </View>
 
             {/* TODO check tags if it's:
@@ -107,7 +112,9 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
               }}
             >
               <Icon as={Octicons} name="comment" size={18} color="#406686" />
-              <Text style={{color: '#406686', fontWeight: '500', fontSize: 11}}>16 comments</Text>
+              <Text weight="medium" style={{color: '#406686', fontSize: 11}}>
+                16 comments
+              </Text>
             </View>
 
             <Icon as={MaterialIcons} name="more-horiz" size={18} color="#406686" />

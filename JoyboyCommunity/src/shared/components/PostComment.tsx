@@ -1,8 +1,9 @@
 import {Octicons} from '@expo/vector-icons';
 import {NDKEvent} from '@nostr-dev-kit/ndk';
-import {Image, Text, View} from 'react-native';
+import {Image, View} from 'react-native';
 import styled from 'styled-components/native';
 
+import {Text} from '../../components';
 import {Post as PostType} from '../../types';
 import {Icon} from './Post';
 
@@ -35,7 +36,9 @@ export const PostComment: React.FC<PostCommentProps> = (props) => {
         </View>
 
         <View style={{gap: 4, flex: 1}}>
-          <Text style={{color: 'black', fontWeight: '700'}}>{event?.pubkey}</Text>
+          <Text weight="bold" style={{color: 'black'}}>
+            {event?.pubkey}
+          </Text>
 
           {post?.source && (
             <Image
