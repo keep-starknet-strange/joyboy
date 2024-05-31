@@ -17,7 +17,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import {useStyles} from '../../hooks';
-import {Text} from '../text';
+import {Text} from '../_Text';
 import stylesheet from './styles';
 
 export type MenuProps = {
