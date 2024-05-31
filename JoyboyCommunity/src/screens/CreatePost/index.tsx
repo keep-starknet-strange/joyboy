@@ -1,7 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
-import {Pressable, TouchableOpacity, View} from 'react-native';
-import {TextInput} from 'react-native-gesture-handler';
+import {Pressable, TextInput, TouchableOpacity, View} from 'react-native';
 
 import {CopyIcon, GalleryIcon, GifIcon, SendIcon, UserIcon} from '../../assets/icons';
 import {Divider, KeyboardAvoidingView, Text} from '../../components';
@@ -12,7 +11,6 @@ import {
   IconContainer,
   IconDiv,
   Photo,
-  PostButton,
   SendbuttonContainer,
   TitleContainer,
 } from './styled';
@@ -51,22 +49,14 @@ export const CreatePost: React.FC = () => {
     );
   };
 
-  const isCreateDisabled = note && note?.length > 0 ? false : true;
-
   return (
     <KeyboardAvoidingView>
       <Container>
         <Pressable onPress={navigation.goBack}>
-          <Text fontSize={17} style={{color: '#4B799F', fontSize: 17}}>
+          <Text color="textLight" fontSize={17}>
             Cancel
           </Text>
         </Pressable>
-
-        <PostButton onPress={handlePostNoteFn} disabled={isCreateDisabled}>
-          <Text fontSize={17} style={{color: '#4B799F', fontSize: 17}}>
-            Draft
-          </Text>
-        </PostButton>
       </Container>
 
       <View style={{marginBottom: 1}}>
