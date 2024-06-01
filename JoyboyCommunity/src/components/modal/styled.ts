@@ -14,7 +14,7 @@ export const Overlay = styled(View)`
 `;
 
 export const ModalContainer = styled(View)`
-  width: 80%;
+  width: 85%;
   display: flex;
   flex-direction: column;
   padding: 0 20px;
@@ -74,36 +74,9 @@ export const StyledButton = styled(TouchableOpacity)<{type: string}>`
   border-radius: 40px;
 `;
 
-export const FirstButton = styled(TouchableOpacity)<{color: string}>`
-  font-size: 16px;
-  width: 281px;
-  height: 54px;
-  border-radius: 40px;
-  background-color: ${({color}) => color};
-  padding: 16px 52px;
-`;
-export const FirstButtonText = styled(Text)`
-  font-size: 16px;
-  color: white;
-  text-align: center;
-`;
 
-export const SecondButton = styled(TouchableOpacity)`
-  font-size: 16px;
-  width: 281px;
-  height: 54px;
-  border-radius: 40px;
-  background: #0c0c4f1a;
-  padding: 16px 52px;
-  margin-top: 8px;
-`;
 
-export const SecondButtonText = styled(Text)`
-  font-size: 16px;
-  color: #14142c80;
 
-  text-align: center;
-`;
 
 const getTextColor = (type: string) => {
   switch (type) {
