@@ -1,7 +1,7 @@
 import {MaterialIcons} from '@expo/vector-icons';
 import {NDKEvent} from '@nostr-dev-kit/ndk';
 import {useNavigation} from '@react-navigation/native';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {Image, Pressable, Text, View} from 'react-native';
 import Animated, {
   Easing,
@@ -186,10 +186,6 @@ export const Post: React.FC<PostProps> = (props) => {
     });
   };
 
-  useEffect(() => {
-    if (likes > 0) setIsLiked(true);
-  }, []);
-
   return (
     <PostCard>
       {/* to show reposted message */}
@@ -240,7 +236,7 @@ export const Post: React.FC<PostProps> = (props) => {
 
       <PostContent>
         <Pressable onPress={handleNavigateToPostDetails}>
-          <Text>{repostedEvent?.content ? repostedEvent?.content : event?.content}</Text>
+          <Text>{repostedEvent?.content ?? event?.content}</Text>
 
           {post?.source && (
             <Image
