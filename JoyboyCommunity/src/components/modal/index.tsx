@@ -1,7 +1,7 @@
 import React from 'react';
 import {Portal} from 'react-native-portalize';
 
-import Line from '../../../assets/svgs/svgComponents/Line';
+import { Line } from '../../assets/icons';
 import {
   ButtonText,
   Container,
@@ -24,17 +24,15 @@ interface CustomModalProps {
   icon: React.ReactNode;
   description: string;
   visible: boolean;
-  // onClose: () => void;
-  color?: string;
 }
-const Modal: React.FC<CustomModalProps> = ({name, buttons, icon, description, visible, color}) => {
+const Modal: React.FC<CustomModalProps> = ({name, buttons, icon, description, visible}) => {
   if (!visible) return null;
   return (
     <Portal>
       <Overlay>
         <ModalContainer>
           <Container>
-            <Line />
+            <Line color='#3C3C43'/>
             <IconContainer>{icon}</IconContainer>
             <Title>{name}</Title>
             <Content>{description}</Content>

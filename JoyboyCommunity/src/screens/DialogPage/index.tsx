@@ -1,10 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Pressable, View} from 'react-native';
-
-import Exit from '../../../assets/svgs/svgComponents/Exit';
-import Update from '../../../assets/svgs/svgComponents/Update';
-import Warning from '../../../assets/svgs/svgComponents/Warning';
-import {NotificationIcon} from '../../assets/icons';
+import {Exit, NotificationIcon, Update, Warning} from '../../assets/icons';
 import {Divider} from '../../components';
 import Modal from '../../components/modal';
 import {Container, Logo} from './styled';
@@ -51,7 +47,6 @@ export const DialogPage: React.FC = () => {
           description="If you delete your account, you will not be 
             able to log in again. Would you like to continue?"
           visible={true}
-          color="#EC796B"
         />
       )}
 
@@ -62,10 +57,9 @@ export const DialogPage: React.FC = () => {
             {label: 'Logout', type: 'primary', onPress: () => toggleModal(null)},
             {label: 'Cancel', type: 'secondary', onPress: () => toggleModal(null)},
           ]}
-          icon={<Exit />}
+          icon={<Exit color='#EC796B'/>}
           description="Are you sure you want to logout?"
           visible={true}
-          color="#EC796B"
         />
       )}
 
@@ -76,10 +70,9 @@ export const DialogPage: React.FC = () => {
             {label: 'Save', type: 'dangerous', onPress: () => toggleModal(null)},
             {label: 'Cancel', type: 'secondary', onPress: () => toggleModal(null)},
           ]}
-          icon={<Update />}
+          icon={<Update color='#0C0C4F' />}
           description="Would you like to save this update to your profile."
           visible={true}
-          color="#0C0C4F"
         />
       )}
     </View>
