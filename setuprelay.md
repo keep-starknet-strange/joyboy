@@ -14,7 +14,7 @@
 
 - ./scripts/run.sh
 
-# set up enviroment variable
+# set up environment variable
 
 - DATABASE_URL
 
