@@ -38,8 +38,8 @@ const RepostMessage = styled(Typography)`
 const PostCard = styled(View)`
   background-color: #ffffff;
   border-radius: 16px;
-  padding: 10px;
-  margin: 0 20px 18px 20px;
+  padding: 8px;
+  margin: 0 16px 24px 16px;
 `;
 
 const PostHeader = styled(View)`
@@ -47,31 +47,32 @@ const PostHeader = styled(View)`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 `;
 
 const PostTitle = styled(Text)`
   color: #121212;
-  font-weight: 500;
-  font-size: 17px;
-  letter-spacing: 0.5px;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 20px;
 `;
 
 const PostSubtitleWrapper = styled(View)`
   display: flex;
   flex-direction: row;
-  margin-top: 4px;
+  margin-top: 2px;
   align-items: center;
 `;
 
 const PostSubtitle = styled(Text)`
   color: #8f979d;
   font-size: 11px;
-  letter-spacing: 0.5px;
+  line-height: 16px;
 `;
 
 const PostSubtitleCenterElement = styled(View)`
-  margin-horizontal: 8px;
+  margin-left: 16px;
+  margin-right: 7px;
   height: 3px;
   width: 3px;
   border-radius: 1.5px;
@@ -83,28 +84,34 @@ const PostContent = styled(View)`
   margin-bottom: 16px;
 `;
 
+const PostContentText = styled(Text)`
+  font-size: 13px;
+  line-height: 20px;
+  color: #000;
+`;
+
 const LikeWrapper = styled(View)`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
+  padding: 2px;
 `;
 
 const LikeText = styled(Animated.Text)`
-  font-size: 14px;
+  font-size: 11px;
   color: #406686;
-  letter-spacing: 0.5px;
+  line-height: 16px;
 `;
 
 const AnimatedIcon = styled(Animated.View)`
-  height: 26px;
+  height: 20px;
 `;
 
 const PostFooter = styled(View)`
   display: flex;
   flex-direction: row;
   width: 100%;
-  gap: 8px;
   justify-content: space-between;
   align-items: center;
 `;
@@ -113,14 +120,13 @@ const CommentWrapper = styled(View)`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 `;
 
 const CommentsText = styled(Text)`
   color: #6b6b8c;
-  font-weight: 400;
-  font-size: 12px;
-  letter-spacing: 0.5px;
+  font-size: 11px;
+  line-height: 16px;
 `;
 
 interface PostProps {
@@ -220,9 +226,9 @@ export const Post: React.FC<PostProps> = (props) => {
           <LikeWrapper>
             <AnimatedIcon style={animatedIconStyle}>
               {isLiked ? (
-                <LikeFillIcon height={26} color="#FF7463" />
+                <LikeFillIcon height={20} color="#FF7463" />
               ) : (
-                <LikeIcon height={26} color="#14142C" />
+                <LikeIcon height={20} color="#14142C" />
               )}
             </AnimatedIcon>
             {likes > 0 && (
@@ -236,7 +242,7 @@ export const Post: React.FC<PostProps> = (props) => {
 
       <PostContent>
         <Pressable onPress={handleNavigateToPostDetails}>
-          <Text>{repostedEvent?.content ?? event?.content}</Text>
+          <PostContentText>{repostedEvent?.content ?? event?.content}</PostContentText>
 
           {post?.source && (
             <Image
@@ -245,7 +251,7 @@ export const Post: React.FC<PostProps> = (props) => {
                 width: '100%',
                 height: 160,
                 borderRadius: 8,
-                marginTop: 14,
+                marginTop: 12,
                 objectFit: 'cover',
               }}
             />
@@ -260,14 +266,14 @@ export const Post: React.FC<PostProps> = (props) => {
       <PostFooter>
         <Pressable onPress={handleNavigateToPostDetails}>
           <CommentWrapper>
-            <CommentIcon height={26} color="#6B6B8C" onPress={handleComment} />
+            <CommentIcon height={20} color="#6B6B8C" onPress={handleComment} />
             <CommentsText>16 comments</CommentsText>
           </CommentWrapper>
         </Pressable>
         <Icon
           as={MaterialIcons}
           name="more-horiz"
-          size={26}
+          size={24}
           color="#6b6b8c"
           onPress={handleReact}
         />
