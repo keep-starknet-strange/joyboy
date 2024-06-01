@@ -135,20 +135,13 @@ export const Post: React.FC<PostProps> = (props) => {
   const navigation = useNavigation<MainStackNavigationProps>();
 
   const [isLiked, setIsLiked] = useState(false);
-  const [likes, setLikes] = useState(2);
+  const [likes, setLikes] = useState(12); // static value for now
 
-  const scale = useSharedValue(1);
-  const textOpacity = useSharedValue(likes > 0 ? 1 : 0);
-  const iconPosition = useSharedValue(likes > 0 ? 0 : 6); // Adjusted to account for the gap
+  const scale = useSharedValue(1); // Control scale for icon animation
 
+  // Animated style for the icon
   const animatedIconStyle = useAnimatedStyle(() => ({
-    transform: [{scale: withTiming(scale.value, {duration: 25, easing: Easing.out(Easing.ease)})}],
-    marginLeft: withTiming(iconPosition.value, {duration: 25}), // Animation for moving the icon
-  }));
-
-  const animatedTextStyle = useAnimatedStyle(() => ({
-    opacity: withTiming(textOpacity.value, {duration: 25}),
-    transform: [{scale: withTiming(textOpacity.value, {duration: 25})}],
+    transform: [{scale: scale.value}],
   }));
 
   const handleProfilePress = (userId?: string) => {
@@ -174,17 +167,23 @@ export const Post: React.FC<PostProps> = (props) => {
 
   /** @TODO comment in Nostr */
   const toggleLike = () => {
-    setIsLiked((prev) => !prev);
-    setLikes((prev) => {
-      const newLikes = isLiked ? prev - 1 : prev + 1;
-      textOpacity.value = newLikes > 0 ? 1 : 0;
-      iconPosition.value = newLikes > 0 ? 0 : 6;
-      return newLikes;
+    setIsLiked((prevIsLiked) => {
+      const newIsLiked = !prevIsLiked;
+      setLikes((prevLikes) => {
+        const newLikes = newIsLiked ? prevLikes + 1 : prevLikes - 1;
+
+        // Only trigger the animation if not unliking from 1 like to zero
+        if (!(prevLikes === 1 && !newIsLiked)) {
+          scale.value = withSequence(
+            withTiming(1.5, {duration: 100, easing: Easing.out(Easing.ease)}), // Scale up
+            withSpring(1, {damping: 6, stiffness: 200}), // Bounce back
+          );
+        }
+
+        return newLikes;
+      });
+      return newIsLiked;
     });
-    scale.value = withSequence(
-      withTiming(1.5, {duration: 25, easing: Easing.out(Easing.ease)}),
-      withSpring(1, {damping: 6, stiffness: 200}), // Small rebound effect
-    );
   };
 
   useEffect(() => {
@@ -231,7 +230,7 @@ export const Post: React.FC<PostProps> = (props) => {
               )}
             </AnimatedIcon>
             {likes > 0 && (
-              <LikeText style={animatedTextStyle}>
+              <LikeText>
                 {likes} {likes === 1 ? 'like' : 'likes'}
               </LikeText>
             )}
