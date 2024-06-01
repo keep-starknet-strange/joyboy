@@ -3,38 +3,31 @@ import {Portal} from 'react-native-portalize';
 
 import Line from '../../../assets/svgs/svgComponents/Line';
 import {
+  ButtonText,
   Container,
   Content,
-  FirstButton,
-  FirstButtonText,
   IconContainer,
   ModalContainer,
   Overlay,
-  SecondButton,
-  SecondButtonText,
+  StyledButton,
   Title,
 } from './styled';
 
+interface Button {
+  label: string;
+  type: 'dangerous' | 'primary' | 'secondary';
+  onPress: () => void;
+}
 interface CustomModalProps {
   name: string;
-  buttonText1: string;
-  buttonText2: string;
+  buttons: Button[];
   icon: React.ReactNode;
   description: string;
   visible: boolean;
-  onClose: () => void;
+  // onClose: () => void;
   color?: string;
 }
-const Modal: React.FC<CustomModalProps> = ({
-  name,
-  buttonText1,
-  buttonText2,
-  icon,
-  description,
-  visible,
-  onClose,
-  color,
-}) => {
+const Modal: React.FC<CustomModalProps> = ({name, buttons, icon, description, visible, color}) => {
   if (!visible) return null;
   return (
     <Portal>
@@ -47,12 +40,11 @@ const Modal: React.FC<CustomModalProps> = ({
             <Content>{description}</Content>
           </Container>
           <Container>
-            <FirstButton color={color} onPress={onClose}>
-              <FirstButtonText>{buttonText1}</FirstButtonText>
-            </FirstButton>
-            <SecondButton onPress={onClose}>
-              <SecondButtonText>{buttonText2}</SecondButtonText>
-            </SecondButton>
+            {buttons.map((button, index) => (
+              <StyledButton key={index} type={button.type} onPress={button.onPress}>
+                <ButtonText type={button.type}>{button.label}</ButtonText>
+              </StyledButton>
+            ))}
           </Container>
         </ModalContainer>
       </Overlay>

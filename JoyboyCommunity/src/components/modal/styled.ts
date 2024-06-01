@@ -50,6 +50,30 @@ export const Content = styled(Text)`
   color: #8f979e;
 `;
 
+const getButtonColor = (type: string) => {
+  switch (type) {
+    case 'dangerous':
+      return '#0C0C4F';
+    case 'primary':
+      return '#EC796B';
+    case 'secondary':
+      return '#0c0c4f1a';
+    default:
+      return '#ccc';
+  }
+};
+
+export const StyledButton = styled(TouchableOpacity)<{type: string}>`
+  padding: 16px 52px;
+  background-color: ${({type}) => getButtonColor(type)};
+  border-radius: 5px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  width: 281px;
+  height: 54px;
+  border-radius: 40px;
+`;
+
 export const FirstButton = styled(TouchableOpacity)<{color: string}>`
   font-size: 16px;
   width: 281px;
@@ -78,5 +102,21 @@ export const SecondButtonText = styled(Text)`
   font-size: 16px;
   color: #14142c80;
 
+  text-align: center;
+`;
+
+const getTextColor = (type: string) => {
+  switch (type) {
+    case 'dangerous':
+      return '#ffff';
+    case 'primary':
+      return '#fff';
+    case 'secondary':
+      return '#14142C';
+  }
+};
+export const ButtonText = styled(Text)<{type: string}>`
+  font-size: 16px;
+  color: ${({type}) => getTextColor(type)};
   text-align: center;
 `;
