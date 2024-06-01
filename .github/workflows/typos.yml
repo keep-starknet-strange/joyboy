@@ -1,0 +1,17 @@
+name: Typo Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  typos:
+    name: Spell Check with Typos
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use typos with config file
+        uses: crate-ci/typos@v1.21.0
+        with:
+          config: .github/workflows/config/typos.toml

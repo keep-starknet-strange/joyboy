@@ -11,6 +11,7 @@ export type AuthStackParams = {
   Login: undefined;
 };
 
+
 export type MainStackParams = {
   Home: NavigatorScreenParams<HomeBottomStackParams>;
   CreatePost: undefined;
@@ -18,6 +19,7 @@ export type MainStackParams = {
   PostDetail: {postId: string; post?: Event};
   DialogPage: undefined;
 };
+
 
 export type HomeBottomStackParams = {
   Feed: undefined;

@@ -1,50 +1,25 @@
 import {MaterialCommunityIcons} from '@expo/vector-icons';
-import {Event as EventNostr} from 'nostr-tools';
-import {useCallback, useEffect, useState} from 'react';
+import {NDKEvent} from '@nostr-dev-kit/ndk';
+import {useCallback, useState} from 'react';
 import {ActivityIndicator, FlatList, View} from 'react-native';
 
 import {Input} from '../../components';
-import {useNostrContext} from '../../context/NostrContext';
-import {useGetPoolEventsTagsByQuery, useSendNote} from '../../hooks/useNostr';
+import {useReplyNotes, useSendNote} from '../../hooks';
 import {useAuth} from '../../store/auth';
 import PostComment from './PostComment';
 import {SendComment, ViewSendComment} from './styled';
 
 interface IComments {
-  event?: EventNostr;
+  event?: NDKEvent;
 }
 function Comments({event}: IComments) {
   const [text, setText] = useState<string | undefined>();
   const {privateKey, publicKey} = useAuth();
-  const {pool, relays} = useNostrContext();
-  const [tags, setTags] = useState<string[][] | undefined>([['e', event?.id]]);
 
-  const [comments, setComments] = useState<EventNostr[] | undefined>([]);
   const sendNote = useSendNote();
 
-  const {
-    data: poolEventNotesData,
-    isLoading: poolEventNotesDataLoading,
-    refetch,
-  } = useGetPoolEventsTagsByQuery({
-    // ids: ['1'],
-    kinds: [1],
-    filter: {
-      '#e': tags[0],
-    },
-    pool,
-    relaysToUsed: relays,
-  });
+  const comments = useReplyNotes({noteId: event.id});
 
-  useEffect(() => {
-    const fetchReplies = async () => {
-      if (event?.id) {
-        setTags([['e', event?.id]]);
-        setComments(poolEventNotesData);
-      }
-    };
-    fetchReplies();
-  }, [event, poolEventNotesData]);
   /** @TODO handle send comment */
 
   const handleSendComment = useCallback(async () => {
@@ -66,14 +41,14 @@ function Comments({event}: IComments) {
       alert('Note sending, please wait.');
 
       sendNote.mutate(
-        {sk: privateKey, content: text, tags},
+        {content: text, tags},
         {
           async onSuccess(data) {
-            if (data.isValid) {
+            if (data) {
               alert('Note sent');
             }
             /** Refetch comment */
-            await refetch();
+            await comments.refetch();
           },
           onError(error) {
             console.log('Error send note', error);
@@ -84,7 +59,9 @@ function Comments({event}: IComments) {
       console.log('Error send note', e);
     }
   }, [text, privateKey]);
+
   const isCreateDisabled = text && text?.length > 0 ? false : true;
+
   return (
     <View>
       <ViewSendComment>
@@ -107,13 +84,13 @@ function Comments({event}: IComments) {
         </SendComment>
       </ViewSendComment>
 
-      {poolEventNotesDataLoading && <ActivityIndicator />}
+      {comments.isFetching && <ActivityIndicator />}
 
       <FlatList
         horizontal={false}
         scrollEnabled={false}
         showsHorizontalScrollIndicator={false}
-        data={[...comments]}
+        data={comments.data.pages.flat()}
         ItemSeparatorComponent={() => <View style={{height: 18}} />}
         renderItem={({item}) => {
           return <PostComment event={item} />;

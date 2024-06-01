@@ -1,17 +1,18 @@
+import {secp256k1} from '@noble/curves/secp256k1';
 import {getRandomBytes} from 'expo-crypto';
-import {getPublicKey} from 'nostr-tools';
 
 export const generateRandomKeypair = () => {
   try {
     const secretKey = getRandomBytes(32);
     const secretKeyHex = Buffer.from(secretKey).toString('hex');
 
-    const publicKey = getPublicKey(secretKey);
+    const publicKey = secp256k1.getPublicKey(secretKeyHex);
+    const publicKeyHex = Buffer.from(publicKey).toString('hex');
 
     return {
       secretKey,
       secretKeyHex,
-      publicKey,
+      publicKey: publicKeyHex,
     };
   } catch (error) {
     // We shouldn't throw the original error for security reasons
@@ -21,10 +22,11 @@ export const generateRandomKeypair = () => {
 
 export const getPublicKeyFromSecret = (secretKey: Uint8Array | string) => {
   try {
-    const secretKeyBuffer =
-      typeof secretKey === 'string' ? new Uint8Array(Buffer.from(secretKey, 'hex')) : secretKey;
+    const secretKeyHex =
+      typeof secretKey === 'string' ? secretKey : Buffer.from(secretKey).toString('hex');
 
-    return getPublicKey(secretKeyBuffer);
+    const publicKey = secp256k1.getPublicKey(secretKeyHex);
+    return Buffer.from(publicKey).toString('hex');
   } catch (error) {
     // We shouldn't throw the original error for security reasons
     throw new Error('Failed to get public key from secret key');

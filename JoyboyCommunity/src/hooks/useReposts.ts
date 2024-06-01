@@ -1,7 +1,7 @@
+import {NDKKind} from '@nostr-dev-kit/ndk';
 import {useInfiniteQuery} from '@tanstack/react-query';
 
 import {useNostrContext} from '../context/NostrContext';
-import {EventKind} from '../types';
 
 export type UseRepostsOptions = {
   authors?: string[];
@@ -9,7 +9,7 @@ export type UseRepostsOptions = {
 };
 
 export const useReposts = (options?: UseRepostsOptions) => {
-  const {pool, relays} = useNostrContext();
+  const {ndk} = useNostrContext();
 
   return useInfiniteQuery({
     initialPageParam: Math.round(Date.now() / 1000),
@@ -23,15 +23,15 @@ export const useReposts = (options?: UseRepostsOptions) => {
       return pageParam;
     },
     queryFn: async ({pageParam}) => {
-      const reposts = await pool.querySync(relays, {
-        kinds: [EventKind.Repost],
+      const reposts = await ndk.fetchEvents({
+        kinds: [NDKKind.Repost],
         authors: options?.authors,
         search: options?.search,
         until: pageParam,
         limit: 20,
       });
 
-      return reposts;
+      return [...reposts];
     },
     placeholderData: {pages: [], pageParams: []},
   });
