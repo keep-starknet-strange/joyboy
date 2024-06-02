@@ -1,15 +1,16 @@
 import React from 'react';
 import {Portal} from 'react-native-portalize';
-import {Button} from '../button';
+
 import {LineIcon} from '../../assets/icons';
+import {Button} from '../button';
 import {
   ButtonText,
   Container,
   Content,
+  getButtonColor,
   IconContainer,
   ModalContainer,
   Overlay,
-  getButtonColor,
   Title,
 } from './styled';
 
