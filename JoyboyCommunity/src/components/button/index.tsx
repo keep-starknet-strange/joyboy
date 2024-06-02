@@ -19,7 +19,7 @@ export const Button: React.FC<ButtonProps> = ({
   block,
   textStyle,
   children,
-  disabled, 
+  disabled,
   style: styleProp,
   ...pressableProps
 }) => {

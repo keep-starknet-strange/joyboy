@@ -107,25 +107,9 @@ export const UserIcon: React.FC<SvgProps> = (props) => (
   </Svg>
 );
 
-
-
-
 export const ExitIcon: React.FC<SvgProps> = (props) => (
-  <Svg
-    width={57}
-    height={56}
-    fill="none"
-    {...props}
-  >
-    <Rect
-      width={56}
-      height={56}
-      x={0.5}
-
-      fill="currentColor"
-      fillOpacity={0.1}
-      rx={28}
-    />
+  <Svg width={57} height={56} fill="none" {...props}>
+    <Rect width={56} height={56} x={0.5} fill="currentColor" fillOpacity={0.1} rx={28} />
     <Path
       fill="currentColor"
       fillRule="evenodd"
@@ -139,34 +123,14 @@ export const ExitIcon: React.FC<SvgProps> = (props) => (
   </Svg>
 );
 
-
-
-
 export const LineIcon: React.FC<SvgProps> = (props) => (
-  <Svg
-    width={37}
-    height={5}
-    fill="none"
-    {...props}
-  >
-    <Rect
-      width={36}
-      height={5}
-      x={0.5}
-      fill="currentColor"
-      fillOpacity={0.3}
-      rx={2.5}
-    />
+  <Svg width={37} height={5} fill="none" {...props}>
+    <Rect width={36} height={5} x={0.5} fill="currentColor" fillOpacity={0.3} rx={2.5} />
   </Svg>
 );
 
-export const ProfileIcon: React.FC<SvgProps> = (props)=> (
-  <Svg
-    width={32}
-    height={32}
-    fill="none"
-    {...props}
-  >
+export const ProfileIcon: React.FC<SvgProps> = (props) => (
+  <Svg width={32} height={32} fill="none" {...props}>
     <Path
       stroke="#1E2F3D"
       strokeLinejoin="round"
@@ -200,22 +164,9 @@ export const ProfileIcon: React.FC<SvgProps> = (props)=> (
 //   </Svg>
 // );
 
-
 export const Update: React.FC<SvgProps> = (props) => (
-  <Svg
-    width={57}
-    height={56}
-    fill="none"
-    {...props}
-  >
-    <Rect
-      width={56}
-      height={56}
-      x={0.5}
-      fill="#14142C"
-      fillOpacity={0.1}
-      rx={28}
-    />
+  <Svg width={57} height={56} fill="none" {...props}>
+    <Rect width={56} height={56} x={0.5} fill="#14142C" fillOpacity={0.1} rx={28} />
     <Path
       fill="currentColor"
       fillRule="evenodd"
@@ -227,24 +178,11 @@ export const Update: React.FC<SvgProps> = (props) => (
       d="M26.248 17.25h-.055c-1.541 0-2.774 0-3.757.103-1.009.105-1.87.328-2.615.855-.39.276-.739.605-1.034.977-.57.72-.813 1.557-.927 2.53-.11.938-.11 2.11-.11 3.559v2.583c0 1.419 0 2.531.06 3.432.06.917.184 1.681.465 2.393.844 2.136 2.617 3.8 4.837 4.581 1.383.488 3.07.487 5.909.487h.44c1.555 0 2.587 0 3.446-.302 1.376-.485 2.485-1.519 3.014-2.858.183-.465.258-.95.294-1.495.035-.528.035-1.176.035-1.975v-.7a.976.976 0 0 0-.974-.977.976.976 0 0 0-.973.977v.667c0 .84 0 1.423-.03 1.88-.03.447-.085.706-.163.903-.31.785-.976 1.427-1.848 1.734-.504.177-1.17.191-3.005.191-.604 0-1.141 0-1.622-.004-.4-.002-.806-.114-1.07-.414a2.573 2.573 0 0 1-.648-1.71l.037-1.04c.008-.38-.005-.824-.12-1.253a2.417 2.417 0 0 0-1.708-1.708c-.428-.115-.872-.127-1.252-.12l-1.04.037a2.574 2.574 0 0 1-1.732-.666c-.295-.266-.402-.67-.404-1.068V25.335c0-1.524 0-2.581.096-3.39.092-.788.262-1.22.517-1.543.178-.224.39-.425.632-.596.358-.253.841-.42 1.695-.51.87-.09 2.001-.091 3.61-.091a.975.975 0 0 0 .973-.978.975.975 0 0 0-.973-.977Z"
     />
   </Svg>
-)
-
+);
 
 export const Warning: React.FC<SvgProps> = (props) => (
-  <Svg
-    width={57}
-    height={56}
-    fill="none"
-    {...props}
-  >
-    <Rect
-      width={56}
-      height={56}
-      x={0.5}
-      fill="#EC796B"
-      fillOpacity={0.1}
-      rx={28}
-    />
+  <Svg width={57} height={56} fill="none" {...props}>
+    <Rect width={56} height={56} x={0.5} fill="#EC796B" fillOpacity={0.1} rx={28} />
     <Path
       fill="#EC796B"
       fillRule="evenodd"
@@ -252,8 +190,7 @@ export const Warning: React.FC<SvgProps> = (props) => (
       clipRule="evenodd"
     />
   </Svg>
-)
-;
+);
 export const CopyIcon: React.FC<SvgProps> = (props) => {
   return (
     <Svg viewBox="0 0 24 24" fill="none" {...props}>

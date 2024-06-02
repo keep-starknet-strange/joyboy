@@ -2,8 +2,10 @@ import {useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
 import {Pressable, TouchableOpacity, View} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
+
+import {CopyIcon, GalleryIcon, GifIcon, ProfileIcon, SendIcon} from '../../assets/icons';
 import {Divider, KeyboardAvoidingView, Typography} from '../../components';
-import {useSendNote} from '../../hooks/useNostr';
+import { useSendNote } from '../../hooks';
 import {useAuth} from '../../store/auth';
 import {
   Container,
@@ -14,7 +16,6 @@ import {
   SendbuttonContainer,
   TitleContainer,
 } from './styled';
-import { CopyIcon, GalleryIcon, GifIcon, ProfileIcon, SendIcon } from '../../assets/icons';
 
 export const CreatePost: React.FC = () => {
   const navigation = useNavigation();
@@ -36,10 +37,10 @@ export const CreatePost: React.FC = () => {
     }
 
     sendNote.mutate(
-      {sk: privateKey, content: note},
+      {content: note},
       {
         onSuccess(data) {
-          if (data.isValid) {
+          if (data) {
             alert('Note sent');
           }
         },
@@ -88,11 +89,11 @@ export const CreatePost: React.FC = () => {
 
       <IconDiv>
         <SendbuttonContainer>
-          <SendIcon color='#EC796B' width="56" height="56" />
+          <SendIcon color="#EC796B" width="56" height="56" />
         </SendbuttonContainer>
         <IconContainer>
           <TouchableOpacity>
-            <GalleryIcon  width="24" height="24" strokeWidth={1.5} stroke="#4B799F" />
+            <GalleryIcon width="24" height="24" strokeWidth={1.5} stroke="#4B799F" />
           </TouchableOpacity>
 
           <TouchableOpacity>

@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {Text, View} from 'react-native';
 
-import {AvatarImage} from '../../../components';
+import {AvatarImage, Button, Typography} from '../../../components';
 import {MainStackNavigationProps} from '../../../types';
 import {NotificationImage, NotificationLayout} from './styled';
 export type NotificationProps = {
@@ -15,10 +15,10 @@ export type NotificationProps = {
 };
 
 export const Notification: React.FC<NotificationProps> = ({post}) => {
-  const navigator = useNavigation<MainStackNavigationProps>();
-  const Dialogpage = () => {
-    navigator.push('DialogPage');
-  };
+  // const navigator = useNavigation<MainStackNavigationProps>();
+  // const Dialogpage = () => {
+  //   navigator.push('DialogPage');
+  // };
   return (
     <NotificationLayout>
       <View style={{flex: 1}}>
@@ -30,9 +30,9 @@ export const Notification: React.FC<NotificationProps> = ({post}) => {
 
         <Text style={{color: 'black'}}>{post.content}</Text>
 
-        {post.image && <NotificationImage source={{uri: post.image}} />}
+        {post.image && <NotificationImage  source={{uri: post.image}} />}
       </View>
-      <View></View>
+   
     </NotificationLayout>
   );
 };

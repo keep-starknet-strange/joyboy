@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Pressable, View} from 'react-native';
+
 import {ExitIcon, NotificationIcon, Update, Warning} from '../../assets/icons';
 import {Divider} from '../../components';
 import Modal from '../../components/modal';
@@ -57,7 +58,7 @@ export const DialogPage: React.FC = () => {
             {label: 'Logout', type: 'primary', onPress: () => toggleModal(null)},
             {label: 'Cancel', type: 'secondary', onPress: () => toggleModal(null)},
           ]}
-          icon={<ExitIcon color='#EC796B'/>}
+          icon={<ExitIcon color="#EC796B" />}
           description="Are you sure you want to logout?"
           visible={true}
         />
@@ -70,7 +71,7 @@ export const DialogPage: React.FC = () => {
             {label: 'Save', type: 'dangerous', onPress: () => toggleModal(null)},
             {label: 'Cancel', type: 'secondary', onPress: () => toggleModal(null)},
           ]}
-          icon={<Update color='#0C0C4F' />}
+          icon={<Update color="#0C0C4F" />}
           description="Would you like to save this update to your profile."
           visible={true}
         />

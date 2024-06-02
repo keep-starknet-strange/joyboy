@@ -74,10 +74,6 @@ export const StyledButton = styled(TouchableOpacity)<{type: string}>`
   border-radius: 40px;
 `;
 
-
-
-
-
 const getTextColor = (type: string) => {
   switch (type) {
     case 'dangerous':

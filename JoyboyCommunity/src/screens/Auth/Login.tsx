@@ -14,4 +14,3 @@ export const Login: React.FC = () => {
     </Auth>
   );
 };
- 
