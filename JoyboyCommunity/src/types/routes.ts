@@ -9,6 +9,11 @@ export type RootStackParams = {
 
 export type AuthStackParams = {
   Login: undefined;
+  CreateAccount: undefined;
+  SaveKeys: {
+    privateKey: string;
+    publicKey: string;
+  };
 };
 
 export type MainStackParams = {
@@ -32,6 +37,14 @@ export type RootStackScreenProps = NativeStackScreenProps<RootStackParams>;
 // Auth
 export type AuthLoginScreenProps = CompositeScreenProps<
   NativeStackScreenProps<AuthStackParams, 'Login'>,
+  NativeStackScreenProps<RootStackParams>
+>;
+export type AuthCreateAccountScreenProps = CompositeScreenProps<
+  NativeStackScreenProps<AuthStackParams, 'CreateAccount'>,
+  NativeStackScreenProps<RootStackParams>
+>;
+export type AuthSaveKeysScreenProps = CompositeScreenProps<
+  NativeStackScreenProps<AuthStackParams, 'SaveKeys'>,
   NativeStackScreenProps<RootStackParams>
 >;
 

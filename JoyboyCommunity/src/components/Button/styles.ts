@@ -26,16 +26,16 @@ export default ThemedStyleSheet(
         paddingHorizontal: Spacing.large,
       }),
 
-      ...(disabled && {
-        backgroundColor: theme.colors.buttonDisabledBackground,
-      }),
-
       ...(variant === 'primary' && {
         backgroundColor: theme.colors.primary,
       }),
 
       ...(variant === 'secondary' && {
         backgroundColor: theme.colors.secondary,
+      }),
+
+      ...(disabled && {
+        backgroundColor: theme.colors.buttonDisabledBackground,
       }),
     },
 
@@ -48,16 +48,16 @@ export default ThemedStyleSheet(
         fontSize: 14,
       }),
 
-      ...(disabled && {
-        color: theme.colors.buttonDisabledText,
-      }),
-
       ...(variant === 'primary' && {
         color: theme.colors.onPrimary,
       }),
 
       ...(variant === 'secondary' && {
         color: theme.colors.onSecondary,
+      }),
+
+      ...(disabled && {
+        color: theme.colors.buttonDisabledText,
       }),
     },
   }),

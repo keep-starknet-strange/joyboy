@@ -1,7 +1,8 @@
 import {Image, View} from 'react-native';
 
 import {Text} from '../../components';
-import styles from './styles';
+import {useStyles} from '../../hooks';
+import stylesheet from './styles';
 
 export type AuthProps = {
   title: string;
@@ -9,6 +10,8 @@ export type AuthProps = {
 };
 
 export const Auth: React.FC<AuthProps> = ({title, children}) => {
+  const styles = useStyles(stylesheet);
+
   return (
     <View style={styles.container}>
       <View style={styles.background}>

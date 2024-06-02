@@ -1,88 +1,85 @@
-import {useState} from 'react';
-import {View} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import * as Clipboard from 'expo-clipboard';
+import {TouchableOpacity, View} from 'react-native';
 
 import {CopyIconStack} from '../../assets/icons';
 import {InfoIcon} from '../../assets/icons';
-import {Button, Input} from '../../components';
-import {Auth} from '../../modules/auth';
-import {Text} from '../../modules/login/styled';
+import {Button, Input, Text} from '../../components';
+import {useStyles, useTheme} from '../../hooks';
+import {Auth} from '../../modules/Auth';
+import {useAuth} from '../../store/auth';
+import {AuthSaveKeysScreenProps} from '../../types';
+import stylesheet from './styles';
 
-export const SaveKeys: React.FC = () => {
-  const [secretKey, setSecretKey] = useState('nsec65fefewfweehfhewbhvbwehbewhfbewbfhewbfhew');
-  const [publicKey, setPublicKey] = useState('nsec65fefewfweehfhewbhvbwehbewhfbewbfhewbfhew');
+export const SaveKeys: React.FC<AuthSaveKeysScreenProps> = ({route}) => {
+  const {privateKey, publicKey} = route.params;
 
-  const handleCopy = () => {
-    // Add your copy functionality here
-    console.log('Copied to clipboard:', 'Copied value');
+  const theme = useTheme();
+  const styles = useStyles(stylesheet);
+  const setAuth = useAuth((state) => state.setAuth);
+
+  const handleCopy = async (type: 'privateKey' | 'publicKey') => {
+    await Clipboard.setStringAsync(type === 'privateKey' ? privateKey : publicKey);
+    alert('Copied to clipboard');
+  };
+
+  const handleContinue = () => {
+    setAuth(publicKey, new Uint8Array(Buffer.from(privateKey, 'hex')));
   };
 
   return (
     <Auth title="Save your keys">
-      <Text style={{color: 'rgba(107, 107, 140, 1)', fontWeight: 600, marginLeft: 5}}>
-        Your secret key
-      </Text>
-      <Input
-        value={secretKey}
-        editable={false}
-        right={
-          <TouchableOpacity
-            onPress={handleCopy}
-            style={{
-              marginRight: 10,
-            }}
-          >
-            <CopyIconStack color="#EC796B" />
-          </TouchableOpacity>
-        }
-      />
+      <View style={styles.inputWithLabel}>
+        <Text weight="semiBold" color="textSecondary">
+          Your secret key
+        </Text>
+        <Input
+          value={privateKey}
+          editable={false}
+          right={
+            <TouchableOpacity
+              onPress={() => handleCopy('privateKey')}
+              style={{
+                marginRight: 10,
+              }}
+            >
+              <CopyIconStack color={theme.colors.primary} />
+            </TouchableOpacity>
+          }
+        />
+      </View>
 
-      <Text style={{color: 'rgba(107, 107, 140, 1)', fontWeight: 600, marginLeft: 5}}>
-        Your public key
-      </Text>
-      <Input
-        value={publicKey}
-        editable={false}
-        right={
-          <TouchableOpacity
-            onPress={handleCopy}
-            style={{
-              marginRight: 10,
-            }}
-          >
-            <CopyIconStack color="#EC796B" />
-          </TouchableOpacity>
-        }
-      />
+      <View style={styles.inputWithLabel}>
+        <Text weight="semiBold" color="textSecondary">
+          Your public key
+        </Text>
+        <Input
+          value={publicKey}
+          editable={false}
+          right={
+            <TouchableOpacity
+              onPress={() => handleCopy('publicKey')}
+              style={{
+                marginRight: 10,
+              }}
+            >
+              <CopyIconStack color={theme.colors.primary} />
+            </TouchableOpacity>
+          }
+        />
+      </View>
 
-      <View
-        style={{
-          width: 361,
-          backgroundColor: 'rgba(236, 121, 107, 0.1)',
-          borderRadius: 40,
-          paddingHorizontal: 20,
-          paddingVertical: 15,
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: 5,
-        }}
-      >
-        <InfoIcon color="#EC796B" />
-        <Text
-          style={{
-            fontSize: 13,
-            color: 'rgba(236, 121, 107, 1)',
-            fontWeight: 500,
-          }}
-        >
+      <View style={styles.warning}>
+        <InfoIcon color={theme.colors.primary} />
+
+        <Text color="primary" weight="medium" fontSize={13}>
           Your private key is your password, if you lose this key, you will lose access to your
           account.
         </Text>
       </View>
 
-      <Button block>Create account</Button>
+      <Button block variant="secondary" onPress={handleContinue}>
+        Continue
+      </Button>
     </Auth>
   );
 };

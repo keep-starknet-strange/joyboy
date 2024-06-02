@@ -33,6 +33,7 @@
     "dayjs": "^1.11.11",
     "events": "^3.3.0",
     "expo": "~51.0.8",
+    "expo-clipboard": "~6.0.3",
     "expo-crypto": "~13.0.2",
     "expo-secure-store": "~13.0.1",
     "expo-splash-screen": "~0.27.4",

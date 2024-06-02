@@ -5,13 +5,14 @@ import {View} from 'react-native';
 import {useTheme} from 'styled-components/native';
 
 import {HomeIcon, IndicatorIcon, MessageIcon, SearchIcon, UserIcon} from '../assets/icons';
-import Login from '../modules/login';
+import {CreateAccount} from '../screens/Auth/CreateAccount';
+import {Login} from '../screens/Auth/Login';
+import {SaveKeys} from '../screens/Auth/SaveKeys';
 import {CreatePost} from '../screens/CreatePost';
 import {Feed} from '../screens/Feed';
 import {PostDetail} from '../screens/PostDetail';
 import {Profile} from '../screens/Profile';
 import {useAuth} from '../store/auth';
-import {useNavigationStore} from '../store/navigation';
 import {AuthStackParams, HomeBottomStackParams, MainStackParams, RootStackParams} from '../types';
 
 const RootStack = createNativeStackNavigator<RootStackParams>();
@@ -115,6 +116,8 @@ const AuthNavigator: React.FC = () => {
   return (
     <AuthStack.Navigator screenOptions={{headerShown: false}}>
       <AuthStack.Screen name="Login" component={Login} />
+      <AuthStack.Screen name="CreateAccount" component={CreateAccount} />
+      <AuthStack.Screen name="SaveKeys" component={SaveKeys} />
     </AuthStack.Navigator>
   );
 };
@@ -131,7 +134,7 @@ const MainNavigator: React.FC = () => {
 };
 
 const RootNavigator: React.FC = () => {
-  const stack = useNavigationStore((state) => state.stack);
+  const {publicKey} = useAuth();
   const theme = useTheme();
 
   return (
@@ -143,9 +146,11 @@ const RootNavigator: React.FC = () => {
         },
       }}
     >
-      {stack === 'login' && <RootStack.Screen name="AuthStack" component={AuthNavigator} />}
-
-      {stack === 'app' && <RootStack.Screen name="MainStack" component={MainNavigator} />}
+      {publicKey ? (
+        <RootStack.Screen name="MainStack" component={MainNavigator} />
+      ) : (
+        <RootStack.Screen name="AuthStack" component={AuthNavigator} />
+      )}
     </RootStack.Navigator>
   );
 };

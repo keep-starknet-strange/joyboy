@@ -1,6 +1,6 @@
 import {Spacing, ThemedStyleSheet, Typography} from '../../styles';
 
-export default ThemedStyleSheet((theme, error: boolean) => ({
+export default ThemedStyleSheet((theme, error: boolean, left: boolean, right: boolean) => ({
   container: {
     width: '100%',
   },
@@ -18,6 +18,14 @@ export default ThemedStyleSheet((theme, error: boolean) => ({
       backgroundColor: theme.colors.errorLight,
       borderColor: theme.colors.errorDark,
     }),
+
+    ...(left && {
+      paddingLeft: Spacing.small,
+    }),
+
+    ...(right && {
+      paddingRight: Spacing.small,
+    }),
   },
 
   input: {
@@ -27,12 +35,14 @@ export default ThemedStyleSheet((theme, error: boolean) => ({
     color: theme.colors.inputText,
     fontSize: 15,
     ...Typography.semiBold,
-  },
-  inputWithLeft: {
-    paddingLeft: Spacing.small,
-  },
-  inputWithRight: {
-    paddingRight: Spacing.small,
+
+    ...(left && {
+      paddingLeft: Spacing.none,
+    }),
+
+    ...(right && {
+      paddingRight: Spacing.none,
+    }),
   },
 
   errorText: {

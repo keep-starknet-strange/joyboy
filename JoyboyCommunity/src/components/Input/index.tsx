@@ -33,7 +33,7 @@ export const Input: React.FC<InputProps> = (props) => {
   } = props;
 
   const theme = useTheme();
-  const styles = useStyles(stylesheet, !!error);
+  const styles = useStyles(stylesheet, !!error, !!left, !!right);
 
   return (
     <View style={[styles.container, containerStyleProp]}>
@@ -43,12 +43,7 @@ export const Input: React.FC<InputProps> = (props) => {
         <TextInput
           value={value}
           placeholder={placeholder}
-          style={[
-            styles.input,
-            left && styles.inputWithLeft,
-            right && styles.inputWithRight,
-            inputStyleProp,
-          ]}
+          style={[styles.input, inputStyleProp]}
           placeholderTextColor={theme.colors.inputPlaceholder}
           underlineColorAndroid="transparent"
           {...inputProps}

@@ -1,8 +1,8 @@
-import {StyleSheet} from 'react-native';
+import {Spacing, ThemedStyleSheet} from '../../styles';
 
 const LOGO_SIZE = 170;
 
-export default StyleSheet.create({
+export default ThemedStyleSheet((theme) => ({
   container: {
     flex: 1,
   },
@@ -27,7 +27,7 @@ export default StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'white',
+    backgroundColor: theme.colors.surface,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
   },
@@ -42,18 +42,18 @@ export default StyleSheet.create({
     width: LOGO_SIZE,
     height: LOGO_SIZE,
     borderWidth: 5,
-    borderColor: 'white',
+    borderColor: theme.colors.surface,
     borderRadius: 999,
   },
   title: {
-    marginVertical: 24,
+    marginVertical: Spacing.large,
   },
 
   content: {
     flex: 1,
     alignItems: 'center',
-    gap: 16,
-    paddingHorizontal: 16,
-    backgroundColor: 'white',
+    gap: Spacing.medium,
+    paddingHorizontal: Spacing.medium,
+    backgroundColor: theme.colors.surface,
   },
-});
+}));
