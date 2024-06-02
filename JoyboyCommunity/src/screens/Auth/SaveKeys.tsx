@@ -1,11 +1,12 @@
 import {useState} from 'react';
 import {View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+
+import {CopyIconStack} from '../../assets/icons';
+import {InfoIcon} from '../../assets/icons';
 import {Button, Input} from '../../components';
 import {Auth} from '../../modules/auth';
 import {Text} from '../../modules/login/styled';
-import {CopyIconStack} from '../../assets/icons';
-import {InfoIcon} from '../../assets/icons';
 
 export const SaveKeys: React.FC = () => {
   const [secretKey, setSecretKey] = useState('nsec65fefewfweehfhewbhvbwehbewhfbewbfhewbfhew');
