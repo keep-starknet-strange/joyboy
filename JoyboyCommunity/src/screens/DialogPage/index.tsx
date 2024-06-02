@@ -8,6 +8,7 @@ import {Container} from './styled';
 
 export const DialogPage: React.FC = () => {
   const [activeModal, setActiveModal] = useState<string | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
   const toggleModal = (modalType: string | null) => {
     setActiveModal(modalType);
   };
@@ -27,55 +28,15 @@ export const DialogPage: React.FC = () => {
       <View style={{marginBottom: 1}}>
         <Divider />
       </View>
+      <Button title="Show Modal" onPress={() => setModalVisible(true)} />
 
-      <View style={{gap: 8}}>
-        <Button title="Open Main Modal" onPress={() => toggleModal('delete')} />
-        <Button title="Open Logout Modal" onPress={() => toggleModal('logout')} />
-        <Button title="Open Update Modal" onPress={() => toggleModal('update')} />
-      </View>
-      {activeModal === 'delete' && (
-        <Modal
-          name="Delete account?"
-          // buttons={[
-          //   { label: 'Confirm', type: 'primary', onPress: closeModal },
-          //   { label: 'Cancel', type: 'secondary', onPress: closeModal },
-          // ]}
-          buttons={[
-            {label: 'Delete', type: 'primary', onPress: () => toggleModal(null)},
-            {label: 'Close', type: 'secondary', onPress: () => toggleModal(null)},
-          ]}
-          icon={<Warning />}
-          description="If you delete your account, you will not be 
-            able to log in again. Would you like to continue?"
-          visible={true}
-        />
-      )}
-
-      {activeModal === 'logout' && (
-        <Modal
-          name="Leaving so soon?"
-          buttons={[
-            {label: 'Logout', type: 'primary', onPress: () => toggleModal(null)},
-            {label: 'Cancel', type: 'secondary', onPress: () => toggleModal(null)},
-          ]}
-          icon={<ExitIcon color="#EC796B" />}
-          description="Are you sure you want to logout?"
-          visible={true}
-        />
-      )}
-
-      {activeModal === 'update' && (
-        <Modal
-          name="Update profile"
-          buttons={[
-            {label: 'Save', type: 'dangerous', onPress: () => toggleModal(null)},
-            {label: 'Cancel', type: 'secondary', onPress: () => toggleModal(null)},
-          ]}
-          icon={<Update color="#0C0C4F" />}
-          description="Would you like to save this update to your profile."
-          visible={true}
-        />
-      )}
+      <Modal
+        name="Example Modal"
+        icon={<Warning />}
+        description="This is an example modal."
+        visible={modalVisible}
+        buttonTypes={['primary', 'secondary']} 
+      />
     </View>
   );
 };

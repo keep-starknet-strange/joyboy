@@ -50,7 +50,7 @@ export const Content = styled(Text)`
   color: #8f979e;
 `;
 
-const getButtonColor = (type: string) => {
+export const getButtonColor = (type: string) => {
   switch (type) {
     case 'dangerous':
       return '#0C0C4F';
