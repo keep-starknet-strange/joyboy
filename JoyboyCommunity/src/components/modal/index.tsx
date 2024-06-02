@@ -1,7 +1,7 @@
 import React from 'react';
-import { Portal } from 'react-native-portalize';
-import { Button } from '../button';
-import { LineIcon } from '../../assets/icons';
+import {Portal} from 'react-native-portalize';
+import {Button} from '../button';
+import {LineIcon} from '../../assets/icons';
 import {
   ButtonText,
   Container,
@@ -10,18 +10,15 @@ import {
   ModalContainer,
   Overlay,
   getButtonColor,
-  Title
+  Title,
 } from './styled';
-
-
 
 type ButtonType = 'primary' | 'secondary' | 'dangerous';
 
-
-const buttons: Array<{ type: ButtonType; label: string; onPress: () => void }> = [
-  { type: 'primary', label: 'Primary', onPress: () => console.log('Primary') },
-  { type: 'secondary', label: 'Secondary', onPress: () => console.log('Secondary') },
-  { type: 'dangerous', label: 'Dangerous', onPress: () => console.log('Dangerous') },
+const buttons: Array<{type: ButtonType; label: string; onPress: () => void}> = [
+  {type: 'primary', label: 'Primary', onPress: () => console.log('Primary')},
+  {type: 'secondary', label: 'Secondary', onPress: () => console.log('Secondary')},
+  {type: 'dangerous', label: 'Dangerous', onPress: () => console.log('Dangerous')},
 ];
 
 interface CustomModalProps {
@@ -32,12 +29,10 @@ interface CustomModalProps {
   buttonTypes: ButtonType[];
 }
 
-const Modal: React.FC<CustomModalProps> = ({ name, icon, description, visible, buttonTypes }) => {
+const Modal: React.FC<CustomModalProps> = ({name, icon, description, visible, buttonTypes}) => {
   if (!visible) return null;
 
-
-
-  const filteredButtons = buttons.filter(button => buttonTypes.includes(button.type));
+  const filteredButtons = buttons.filter((button) => buttonTypes.includes(button.type));
 
   return (
     <Portal>
@@ -54,7 +49,7 @@ const Modal: React.FC<CustomModalProps> = ({ name, icon, description, visible, b
               <Button
                 key={index}
                 onPress={button.onPress}
-                style={{ backgroundColor: getButtonColor(button.type) }}
+                style={{backgroundColor: getButtonColor(button.type)}}
               >
                 <ButtonText type={button.type}>{button.label}</ButtonText>
               </Button>
