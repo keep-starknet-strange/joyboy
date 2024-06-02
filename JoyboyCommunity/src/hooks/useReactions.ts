@@ -12,7 +12,7 @@ export const useReactions = (options?: UseReactionsOptions) => {
   const {ndk} = useNostrContext();
 
   return useInfiniteQuery({
-    initialPageParam: Math.round(Date.now() / 1000),
+    initialPageParam: 0,
     queryKey: ['reactions', options?.authors, options?.search],
     getNextPageParam: (lastPage: any, allPages, lastPageParam) => {
       if (!lastPage?.length) return undefined;
@@ -27,7 +27,7 @@ export const useReactions = (options?: UseReactionsOptions) => {
         kinds: [NDKKind.Reaction],
         authors: options?.authors,
         search: options?.search,
-        until: pageParam,
+        until: pageParam || Math.round(Date.now() / 1000),
         limit: 20,
       });
 

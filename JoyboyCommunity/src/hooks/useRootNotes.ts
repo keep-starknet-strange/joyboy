@@ -12,7 +12,7 @@ export const useRootNotes = (options?: UseRootNotesOptions) => {
   const {ndk} = useNostrContext();
 
   return useInfiniteQuery({
-    initialPageParam: Math.round(Date.now() / 1000),
+    initialPageParam: 0,
     queryKey: ['rootNotes', options?.authors, options?.search],
     getNextPageParam: (lastPage: any, allPages, lastPageParam) => {
       if (!lastPage?.length) return undefined;
@@ -28,7 +28,7 @@ export const useRootNotes = (options?: UseRootNotesOptions) => {
           kinds: [NDKKind.Text],
           authors: options?.authors,
           search: options?.search,
-          until: pageParam,
+          until: pageParam || Math.round(Date.now() / 1000),
           limit: 20,
         });
 

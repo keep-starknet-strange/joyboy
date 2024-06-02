@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react';
-import {FlatList, View} from 'react-native';
+import {FlatList, RefreshControl, View} from 'react-native';
 
 import {Divider, Header, IconButton, Input, KeyboardFixedView} from '../../components';
 import {useNote, useReplyNotes, useSendNote, useStyles} from '../../hooks';
@@ -31,7 +31,7 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
           async onSuccess(data) {
             if (data) alert('Note sent');
 
-            // await note.refetch();
+            await comments.refetch();
           },
           onError(error) {
             console.log('Error send note', error);
@@ -41,7 +41,9 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
     } catch (e) {
       console.log('Error send note', e);
     }
-  }, [comment, note.id, note.pubkey, sendNote]);
+  }, [comment, note.id, note.pubkey, sendNote, comments]);
+
+  console.log(comments.data);
 
   return (
     <View style={styles.container}>
@@ -56,7 +58,9 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
 
       <View style={styles.content}>
         <FlatList
+          style={styles.content}
           data={comments.data.pages.flat()}
+          automaticallyAdjustKeyboardInsets
           ListHeaderComponent={
             <>
               <View style={styles.post}>
@@ -72,6 +76,9 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
               <Post asComment event={item} />
             </View>
           )}
+          refreshControl={
+            <RefreshControl refreshing={comments.isFetching} onRefresh={() => comments.refetch()} />
+          }
         />
       </View>
 

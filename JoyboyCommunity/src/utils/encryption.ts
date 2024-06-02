@@ -10,7 +10,7 @@ export type PBKDF2EncryptedObject = {
 
 // TODO: it would be better if we use a native module for pbkdf2
 // if we use a native module, we can increase the iterations
-const PBKDF2_ITERATIONS = 10_000;
+const PBKDF2_ITERATIONS = 1_000;
 
 export const pbkdf2Encrypt = (privateKey: string, password: string): PBKDF2EncryptedObject => {
   const salt = Crypto.getRandomBytes(16);

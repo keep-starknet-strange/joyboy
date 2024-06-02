@@ -49,6 +49,10 @@ export default ThemedStyleSheet((theme) => ({
     marginVertical: Spacing.large,
   },
 
+  contentContainer: {
+    flex: 1,
+    backgroundColor: theme.colors.surface,
+  },
   content: {
     flex: 1,
     alignItems: 'center',

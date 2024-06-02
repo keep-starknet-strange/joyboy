@@ -27,6 +27,7 @@ export default ThemedStyleSheet((theme) => ({
     alignItems: 'center',
     paddingVertical: Spacing.xsmall,
     paddingHorizontal: Spacing.pagePadding,
+    backgroundColor: theme.colors.surface,
   },
   commentInput: {
     flex: 1,
