@@ -1,7 +1,7 @@
 import React from 'react';
 import {Portal} from 'react-native-portalize';
 
-import { Line } from '../../assets/icons';
+import { LineIcon } from '../../assets/icons';
 import {
   ButtonText,
   Container,
@@ -32,7 +32,7 @@ const Modal: React.FC<CustomModalProps> = ({name, buttons, icon, description, vi
       <Overlay>
         <ModalContainer>
           <Container>
-            <Line color='#3C3C43'/>
+            <LineIcon color='#3C3C43'/>
             <IconContainer>{icon}</IconContainer>
             <Title>{name}</Title>
             <Content>{description}</Content>

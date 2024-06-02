@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Pressable, View} from 'react-native';
-import {Exit, NotificationIcon, Update, Warning} from '../../assets/icons';
+import {ExitIcon, NotificationIcon, Update, Warning} from '../../assets/icons';
 import {Divider} from '../../components';
 import Modal from '../../components/modal';
 import {Container, Logo} from './styled';
@@ -57,7 +57,7 @@ export const DialogPage: React.FC = () => {
             {label: 'Logout', type: 'primary', onPress: () => toggleModal(null)},
             {label: 'Cancel', type: 'secondary', onPress: () => toggleModal(null)},
           ]}
-          icon={<Exit color='#EC796B'/>}
+          icon={<ExitIcon color='#EC796B'/>}
           description="Are you sure you want to logout?"
           visible={true}
         />

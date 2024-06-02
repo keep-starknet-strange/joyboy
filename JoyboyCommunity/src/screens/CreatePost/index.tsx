@@ -14,7 +14,7 @@ import {
   SendbuttonContainer,
   TitleContainer,
 } from './styled';
-import { CopyIcon, Gallery, GifIcon, ProfileIcon, SendButton } from '../../assets/icons';
+import { CopyIcon, GalleryIcon, GifIcon, ProfileIcon, SendIcon } from '../../assets/icons';
 
 export const CreatePost: React.FC = () => {
   const navigation = useNavigation();
@@ -88,11 +88,11 @@ export const CreatePost: React.FC = () => {
 
       <IconDiv>
         <SendbuttonContainer>
-          <SendButton color='#EC796B' width="56" height="56" />
+          <SendIcon color='#EC796B' width="56" height="56" />
         </SendbuttonContainer>
         <IconContainer>
           <TouchableOpacity>
-            <Gallery  width="24" height="24" strokeWidth={1.5} stroke="#4B799F" />
+            <GalleryIcon  width="24" height="24" strokeWidth={1.5} stroke="#4B799F" />
           </TouchableOpacity>
 
           <TouchableOpacity>
