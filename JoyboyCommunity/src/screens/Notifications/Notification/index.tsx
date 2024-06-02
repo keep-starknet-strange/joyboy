@@ -1,8 +1,6 @@
-import {useNavigation} from '@react-navigation/native';
 import {Text, View} from 'react-native';
 
-import {AvatarImage, Button, Typography} from '../../../components';
-import {MainStackNavigationProps} from '../../../types';
+import {AvatarImage} from '../../../components';
 import {NotificationImage, NotificationLayout} from './styled';
 export type NotificationProps = {
   post: {
