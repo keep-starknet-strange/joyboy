@@ -14,7 +14,7 @@ export const Profile: React.FC<ProfileScreenProps> = ({route}) => {
   const notes = useRootNotes({authors: [publicKey]});
   const navigator = useNavigation<MainStackNavigationProps>();
   const Dialogpage = () => {
-    navigator.push('DialogePage');
+    navigator.push('DialogPage');
   };
   return (
     <View style={styles.container}>

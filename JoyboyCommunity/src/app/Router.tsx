@@ -127,7 +127,7 @@ const MainNavigator: React.FC = () => {
       <MainStack.Screen name="Profile" component={Profile} />
       <MainStack.Screen name="CreatePost" component={CreatePost} />
       <MainStack.Screen name="PostDetail" component={PostDetail} />
-      <MainStack.Screen name="DialogePage" component={DialogPage} />
+      <MainStack.Screen name="DialogPage" component={DialogPage} />
     </MainStack.Navigator>
   );
 };
