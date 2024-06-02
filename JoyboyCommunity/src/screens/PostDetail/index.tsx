@@ -5,7 +5,6 @@ import styled from 'styled-components/native';
 import {Text} from '../../components';
 import {useNote} from '../../hooks';
 import Comments from '../../shared/components/Comments';
-import {Icon} from '../../shared/components/Post';
 import {PostDetailScreenProps} from '../../types';
 
 const PostDetailsCard = styled(View)`
@@ -62,17 +61,11 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
     <ScrollView>
       <PostDetailsCard>
         <PostDetailsHeader>
-          <Icon
-            as={MaterialIcons}
-            name="chevron-left"
-            size={25}
-            color="#406686"
-            onPress={handleGoBack}
-          />
+          <MaterialIcons name="chevron-left" size={25} color="#406686" onPress={handleGoBack} />
           <Text weight="bold" style={{color: '#406686', fontSize: 15}}>
             Conversation
           </Text>
-          <Icon as={MaterialIcons} name="more-horiz" size={25} color="#406686" />
+          <MaterialIcons name="more-horiz" size={25} color="#406686" />
         </PostDetailsHeader>
         <View style={{padding: 10}}>
           <PostLayout>
@@ -95,13 +88,7 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
         quote
         repost
         reply  */}
-            <Icon
-              as={Octicons}
-              name="heart"
-              size={24}
-              color="black"
-              style={{alignSelf: 'center'}}
-            />
+            <Octicons name="heart" size={24} color="black" style={{alignSelf: 'center'}} />
           </PostLayout>
           <Text style={{color: 'black', marginTop: 10}}>{note?.content}</Text>
           <InteractionContainer>
@@ -111,13 +98,13 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
                 alignItems: 'center',
               }}
             >
-              <Icon as={Octicons} name="comment" size={18} color="#406686" />
+              <Octicons name="comment" size={18} color="#406686" />
               <Text weight="medium" style={{color: '#406686', fontSize: 11}}>
                 16 comments
               </Text>
             </View>
 
-            <Icon as={MaterialIcons} name="more-horiz" size={18} color="#406686" />
+            <MaterialIcons name="more-horiz" size={18} color="#406686" />
           </InteractionContainer>
         </View>
 

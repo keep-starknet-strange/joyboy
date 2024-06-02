@@ -1,7 +1,7 @@
 import {FlatList, RefreshControl, View} from 'react-native';
 
 import {useRootNotes, useStyles} from '../../hooks';
-import {Post} from '../../shared/components/Post';
+import {Post} from '../../modules/Post';
 import {ProfileScreenProps} from '../../types';
 import {ProfileInfo} from './Info';
 import stylesheet from './styles';

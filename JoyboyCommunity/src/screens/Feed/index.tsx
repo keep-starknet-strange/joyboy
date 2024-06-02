@@ -3,7 +3,7 @@ import {FlatList, Image, Pressable, RefreshControl, View} from 'react-native';
 import {AddPostIcon} from '../../assets/icons';
 import {Header, Story} from '../../components';
 import {useRootNotes, useStyles, useTheme} from '../../hooks';
-import {Post} from '../../shared/components/Post';
+import {Post} from '../../modules/Post';
 import {FeedScreenProps} from '../../types';
 import stylesheet from './styles';
 

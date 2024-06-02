@@ -5,7 +5,6 @@ import styled from 'styled-components/native';
 
 import {Text} from '../../components';
 import {Post as PostType} from '../../types';
-import {Icon} from './Post';
 
 const PostCommentCard = styled(View)`
   padding: 18px 10px;
@@ -54,7 +53,7 @@ export const PostComment: React.FC<PostCommentProps> = (props) => {
           )}
         </View>
 
-        <Icon as={Octicons} name="heart" size={24} color="black" style={{alignSelf: 'center'}} />
+        <Octicons name="heart" size={24} color="black" style={{alignSelf: 'center'}} />
       </PostLayout>
       <Text style={{color: 'black', marginTop: 10}}>{event?.content}</Text>
     </PostCommentCard>
