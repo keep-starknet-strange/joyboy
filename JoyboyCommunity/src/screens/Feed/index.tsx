@@ -3,7 +3,7 @@ import {FlatList, Image, Pressable, RefreshControl, View} from 'react-native';
 import {AddPostIcon} from '../../assets/icons';
 import {Header, Story} from '../../components';
 import {useRootNotes, useStyles, useTheme} from '../../hooks';
-import {Post} from '../../modules/Post';
+import {PostCard} from '../../modules/PostCard';
 import {FeedScreenProps} from '../../types';
 import stylesheet from './styles';
 
@@ -47,7 +47,7 @@ export const Feed: React.FC<FeedScreenProps> = ({navigation}) => {
         }
         data={notes.data.pages.flat()}
         keyExtractor={(item) => item?.id}
-        renderItem={({item}) => <Post event={item} />}
+        renderItem={({item}) => <PostCard event={item} />}
         refreshControl={
           <RefreshControl refreshing={notes.isFetching} onRefresh={() => notes.refetch()} />
         }

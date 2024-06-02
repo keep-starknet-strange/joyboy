@@ -15,19 +15,17 @@ import Animated, {
 import {CommentIcon, LikeFillIcon, LikeIcon, RepostIcon} from '../../assets/icons';
 import {Text} from '../../components';
 import {useStyles, useTheme} from '../../hooks';
-import {MainStackNavigationProps, Post as PostType} from '../../types';
+import {MainStackNavigationProps} from '../../types';
 import {timestampToHumanReadable} from '../../utils/common-utils';
 import stylesheet from './styles';
 
-interface PostProps {
-  post?: PostType; // TODO FIX and use only typed event
+export type PostProps = {
   event?: NDKEvent;
-  sourceUser?: string;
-  repostedEvent?: NDKEvent;
-}
+};
 
-export const Post: React.FC<PostProps> = (props) => {
-  const {post, event, repostedEvent} = props;
+export const Post: React.FC<PostProps> = ({event}) => {
+  const repostedEvent = undefined;
+  const postSource = undefined;
 
   const navigation = useNavigation<MainStackNavigationProps>();
 
@@ -100,7 +98,7 @@ export const Post: React.FC<PostProps> = (props) => {
         <View style={styles.infoUser}>
           <Pressable onPress={() => handleProfilePress(event?.pubkey)}>
             <Image
-              source={props?.sourceUser ?? require('../../../assets/joyboy-logo.png')}
+              source={require('../../../assets/joyboy-logo.png')}
               style={styles.infoUserAvatar}
             />
           </Pressable>
@@ -149,8 +147,8 @@ export const Post: React.FC<PostProps> = (props) => {
             {repostedEvent?.content ?? event?.content}
           </Text>
 
-          {post?.source && (
-            <Image source={{uri: post.source}} resizeMode="cover" style={styles.contentImage} />
+          {postSource && (
+            <Image source={{uri: postSource}} resizeMode="cover" style={styles.contentImage} />
           )}
         </Pressable>
       </View>

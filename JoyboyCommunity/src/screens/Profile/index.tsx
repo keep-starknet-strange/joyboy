@@ -1,7 +1,7 @@
 import {FlatList, RefreshControl, View} from 'react-native';
 
 import {useRootNotes, useStyles} from '../../hooks';
-import {Post} from '../../modules/Post';
+import {PostCard} from '../../modules/PostCard';
 import {ProfileScreenProps} from '../../types';
 import {ProfileInfo} from './Info';
 import stylesheet from './styles';
@@ -20,7 +20,7 @@ export const Profile: React.FC<ProfileScreenProps> = ({route}) => {
         data={notes.data.pages.flat()}
         keyExtractor={(item) => item?.id}
         renderItem={({item}) => {
-          return <Post event={item} />;
+          return <PostCard event={item} />;
         }}
         refreshControl={
           <RefreshControl refreshing={notes.isFetching} onRefresh={() => notes.refetch()} />
