@@ -1,4 +1,7 @@
-use core::to_byte_array::{AppendFormattedToByteArray, FormatAsByteArray};
+// use core::to_byte_array::{AppendFormattedToByteArray, FormatAsByteArray};
+use core::fmt::Display;
+use core::to_byte_array::FormatAsByteArray;
+use core::traits::Into;
 use joyboy::bip340;
 use joyboy::utils::{compute_sha256_byte_array};
 use starknet::{ContractAddress, get_caller_address, get_contract_address, contract_address_const};
@@ -16,6 +19,7 @@ pub trait ISocialAccount<TContractState> {
 
 #[starknet::contract]
 pub mod SocialAccount {
+    use core::traits::Into;
     use openzeppelin::account::AccountComponent;
     use openzeppelin::account::interface::ISRC6;
     use openzeppelin::account::interface;
@@ -118,9 +122,10 @@ pub mod SocialAccount {
 
             let byte_array = format_as_byte_array(hash, 16);
 
-            let verify_signature = bip340::verify(
-                public_key, *signature.at(0_u32).into(), *signature.at(1_u32).into, byte_array
-            );
+            let verify_signature = bip340
+                .verify(
+                    public_key, *signature.at(0_u32).into(), *signature.at(1_u32).into(), byte_array
+                );
 
             if verify_signature {
                 starknet::VALIDATED
@@ -135,6 +140,10 @@ pub mod SocialAccount {
 mod tests {
     use core::traits::Into;
     use openzeppelin::presets::ERC20Upgradeable;
+    use openzeppelin::tests::utils::constants::{
+        NAME, SYMBOL, PUBKEY, NEW_PUBKEY, SALT, ZERO, QUERY_OFFSET, QUERY_VERSION,
+        MIN_TRANSACTION_VERSION
+    };
     use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
     use openzeppelin::utils::serde::SerializedAppend;
     use snforge_std::{
