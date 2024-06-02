@@ -4,9 +4,8 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Button, Input} from '../../components';
 import {Auth} from '../../modules/auth';
 import {Text} from '../../modules/login/styled';
-import CopyIcon from '../../../assets/svgs/svgComponents/Copy';
-import InfoIcon from '../../../assets/svgs/svgComponents/Info';
-import DoubleCopyIcon from '../../../assets/svgs/svgComponents/DoubleCopy';
+import {CopyIconStack} from '../../assets/icons';
+import {InfoIcon} from '../../assets/icons';
 
 export const SaveKeys: React.FC = () => {
   const [secretKey, setSecretKey] = useState('nsec65fefewfweehfhewbhvbwehbewhfbewbfhewbfhew');
@@ -32,7 +31,7 @@ export const SaveKeys: React.FC = () => {
               marginRight: 10,
             }}
           >
-            <DoubleCopyIcon />
+            <CopyIconStack color="#EC796B" />
           </TouchableOpacity>
         }
       />
@@ -50,7 +49,7 @@ export const SaveKeys: React.FC = () => {
               marginRight: 10,
             }}
           >
-            <DoubleCopyIcon />
+            <CopyIconStack color="#EC796B" />
           </TouchableOpacity>
         }
       />
@@ -69,7 +68,7 @@ export const SaveKeys: React.FC = () => {
           gap: 5,
         }}
       >
-        <InfoIcon />
+        <InfoIcon color="#EC796B" />
         <Text
           style={{
             fontSize: 13,
