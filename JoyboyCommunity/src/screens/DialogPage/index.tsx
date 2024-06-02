@@ -4,7 +4,7 @@ import {Button, Pressable, View} from 'react-native';
 import {ExitIcon, JoyboyIcon, NotificationIcon, Update, Warning} from '../../assets/icons';
 import {Divider} from '../../components';
 import Modal from '../../components/modal';
-import {Container, Logo} from './styled';
+import {Container} from './styled';
 
 export const DialogPage: React.FC = () => {
   const [activeModal, setActiveModal] = useState<string | null>(null);
@@ -16,7 +16,7 @@ export const DialogPage: React.FC = () => {
     <View>
       <Container>
         <Pressable>
-        <JoyboyIcon color="#14142C" width={96} height={16} />
+          <JoyboyIcon color="#14142C" width={96} height={16} />
         </Pressable>
 
         <Pressable>

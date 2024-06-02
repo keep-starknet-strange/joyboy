@@ -19,7 +19,6 @@ interface Button {
   onPress: () => void;
 }
 
-
 interface CustomModalProps {
   name: string;
   buttons: Button[];
@@ -53,4 +52,3 @@ const Modal: React.FC<CustomModalProps> = ({name, buttons, icon, description, vi
 };
 
 export default Modal;
-

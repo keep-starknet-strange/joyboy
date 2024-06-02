@@ -1,8 +1,9 @@
-import {Button, FlatList, RefreshControl, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import { MainStackNavigationProps } from '../../types';
+import {Button, FlatList, RefreshControl, View} from 'react-native';
+
 import {useRootNotes} from '../../hooks';
 import {Post} from '../../shared/components/Post';
+import {MainStackNavigationProps} from '../../types';
 import {ProfileScreenProps} from '../../types';
 import {ProfileInfo} from './Info';
 import styles from './styles';
@@ -29,7 +30,7 @@ export const Profile: React.FC<ProfileScreenProps> = ({route}) => {
         }
       />
 
-<Button title="Click to go to Dialog page" onPress={Dialogpage} />
+      <Button title="Click to go to Dialog page" onPress={Dialogpage} />
     </View>
   );
 };

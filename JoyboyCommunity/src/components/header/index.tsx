@@ -13,7 +13,7 @@ export const Header: React.FC = () => {
           <Image style={styles.logo} source={require('../../../assets/joyboy-logo.png')} />
           <JoyboyIcon color="#14142C" width={96} height={16} />
         </View>
- 
+
         <View style={styles.buttons}>
           <IconButton icon="bell" size={20} />
         </View>

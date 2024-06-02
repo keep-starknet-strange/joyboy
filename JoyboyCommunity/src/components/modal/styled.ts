@@ -89,21 +89,3 @@ export const ButtonText = styled(Text)<{type: string}>`
   color: ${({type}) => getTextColor(type)};
   text-align: center;
 `;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

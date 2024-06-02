@@ -16,7 +16,7 @@ export type MainStackParams = {
   CreatePost: undefined;
   Profile: {publicKey: string};
   PostDetail: {postId: string; post?: NDKEvent};
-  DialogePage: undefined
+  DialogePage: undefined;
 };
 
 export type HomeBottomStackParams = {
