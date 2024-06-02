@@ -68,7 +68,7 @@ sequenceDiagram
     Starknet Node->>Alice Account: SocialPay handler
     Alice Account->>STRK Token: transfer
     Starknet Node->>SocialPay relay: SocialPay transaction complete
-    SocialPay relay->>Bob: @bob you just recived 10 STRK from @alice
+    SocialPay relay->>Bob: @bob you just received 10 STRK from @alice
     SocialPay relay->>Alice: @alice transfer of 10 STRK to @bob is complete
     deactivate SocialPay relay
 ```
@@ -134,8 +134,8 @@ To test the mobile app, run:
 
 ```bash
 cd JoyboyCommunity
-npm i
-npm start
+yarn install
+yarn start
 ```
 Select Expo web, Android or IOS. You can scan it with Expo GO on your phone.
 
