@@ -7,7 +7,6 @@ import {useTheme} from 'styled-components/native';
 import {HomeIcon, IndicatorIcon, MessageIcon, SearchIcon, UserIcon} from '../assets/icons';
 import Login from '../modules/login';
 import {CreatePost} from '../screens/CreatePost';
-import {DialogPage} from '../screens/DialogPage';
 import {Feed} from '../screens/Feed';
 import {PostDetail} from '../screens/PostDetail';
 import {Profile} from '../screens/Profile';
@@ -127,7 +126,6 @@ const MainNavigator: React.FC = () => {
       <MainStack.Screen name="Profile" component={Profile} />
       <MainStack.Screen name="CreatePost" component={CreatePost} />
       <MainStack.Screen name="PostDetail" component={PostDetail} />
-      <MainStack.Screen name="DialogPage" component={DialogPage} />
     </MainStack.Navigator>
   );
 };
