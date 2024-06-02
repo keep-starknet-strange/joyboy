@@ -4,6 +4,7 @@ export {Header} from './Header';
 export {IconButton} from './IconButton';
 export {Input} from './Input';
 export {Menu} from './Menu';
+export {Modal} from './Modal';
 export {InputAccessoryView} from './Skeleton/InputAccessoryView';
 export {KeyboardAvoidingView} from './Skeleton/KeyboardAvoidingView';
 export {KeyboardFixedView} from './Skeleton/KeyboardFixedView';

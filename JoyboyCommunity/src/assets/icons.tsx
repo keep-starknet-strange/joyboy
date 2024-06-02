@@ -107,12 +107,6 @@ export const UserIcon: React.FC<SvgProps> = (props) => (
   </Svg>
 );
 
-export const LineIcon: React.FC<SvgProps> = (props) => (
-  <Svg width={37} height={5} fill="none" {...props}>
-    <Rect width={36} height={5} x={0.5} fill="currentColor" fillOpacity={0.3} rx={2.5} />
-  </Svg>
-);
-
 export const CopyIcon: React.FC<SvgProps> = (props) => {
   return (
     <Svg viewBox="0 0 24 24" fill="none" {...props}>
