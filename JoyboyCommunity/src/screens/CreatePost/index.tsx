@@ -1,10 +1,10 @@
 import {useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
-import {Pressable, TextInput, View} from 'react-native';
+import {KeyboardAvoidingView, Pressable, TextInput, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {CopyIcon, GalleryIcon, GifIcon, SendIcon} from '../../assets/icons';
-import {KeyboardAvoidingView, TextButton} from '../../components';
+import {TextButton} from '../../components';
 import {useSendNote, useStyles, useTheme} from '../../hooks';
 import {useAuth} from '../../store/auth';
 import stylesheet from './styles';
@@ -54,8 +54,8 @@ export const CreatePost: React.FC = () => {
         </TextButton>
       </SafeAreaView>
 
-      <View style={styles.content}>
-        <KeyboardAvoidingView>
+      <KeyboardAvoidingView behavior="padding" style={styles.content}>
+        <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.content}>
           <TextInput
             style={styles.input}
             value={note}
@@ -85,8 +85,8 @@ export const CreatePost: React.FC = () => {
               <SendIcon width="56" height="56" color={theme.colors.primary} />
             </Pressable>
           </View>
-        </KeyboardAvoidingView>
-      </View>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
     </View>
   );
 };

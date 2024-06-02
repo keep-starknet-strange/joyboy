@@ -53,7 +53,10 @@ export const Feed: React.FC<FeedScreenProps> = ({navigation}) => {
         }
       />
 
-      <Pressable style={styles.createPostButton} onPress={navigation.goBack}>
+      <Pressable
+        style={styles.createPostButton}
+        onPress={() => navigation.navigate('MainStack', {screen: 'CreatePost'})}
+      >
         <AddPostIcon width={72} height={72} color={theme.colors.primary} />
       </Pressable>
     </View>
