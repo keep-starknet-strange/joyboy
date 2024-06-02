@@ -5,7 +5,7 @@ import {TextInput} from 'react-native-gesture-handler';
 
 import {CopyIcon, GalleryIcon, GifIcon, ProfileIcon, SendIcon} from '../../assets/icons';
 import {Divider, KeyboardAvoidingView, Typography} from '../../components';
-import { useSendNote } from '../../hooks';
+import {useSendNote} from '../../hooks';
 import {useAuth} from '../../store/auth';
 import {
   Container,

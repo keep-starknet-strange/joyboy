@@ -30,9 +30,8 @@ export const Notification: React.FC<NotificationProps> = ({post}) => {
 
         <Text style={{color: 'black'}}>{post.content}</Text>
 
-        {post.image && <NotificationImage  source={{uri: post.image}} />}
+        {post.image && <NotificationImage source={{uri: post.image}} />}
       </View>
-   
     </NotificationLayout>
   );
 };
