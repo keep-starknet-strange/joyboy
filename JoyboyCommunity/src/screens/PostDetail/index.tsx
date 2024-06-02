@@ -114,7 +114,7 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
           </InteractionContainer>
         </View>
 
-        <Comments event={note} />
+        {/* <Comments event={note} /> */}
       </PostDetailsCard>
     </ScrollView>
   );

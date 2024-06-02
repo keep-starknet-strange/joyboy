@@ -29,7 +29,7 @@ export const InteractionContainer = styled(View)`
 `;
 
 export const Icon = styled(View)`
-  padding-horizontal: 4px;
+  padding: 0 4px;
 `;
 
 interface PostProps {
@@ -60,7 +60,7 @@ export const Post: React.FC<PostProps> = (props) => {
   };
 
   const handleNavigateToPostDetails = () => {
-    navigation.navigate('PostDetail', {postId: event?.id, post: event});
+    navigation.navigate('PostDetail', {postId: event?.id});
   };
   /** @TODO react in Nostr */
   const handleReact = () => {};
