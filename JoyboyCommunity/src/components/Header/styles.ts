@@ -23,6 +23,10 @@ export default ThemedStyleSheet((theme) => ({
     marginRight: Spacing.xsmall,
   },
 
+  title: {
+    flex: 1,
+  },
+
   buttons: {
     flexDirection: 'row',
     alignItems: 'center',

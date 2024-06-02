@@ -20,17 +20,18 @@ import {timestampToHumanReadable} from '../../utils/common-utils';
 import stylesheet from './styles';
 
 export type PostProps = {
+  asComment?: boolean;
   event?: NDKEvent;
 };
 
-export const Post: React.FC<PostProps> = ({event}) => {
+export const Post: React.FC<PostProps> = ({asComment, event}) => {
   const repostedEvent = undefined;
   const postSource = undefined;
 
   const navigation = useNavigation<MainStackNavigationProps>();
 
   const theme = useTheme();
-  const styles = useStyles(stylesheet);
+  const styles = useStyles(stylesheet, asComment);
 
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState(12); // static value for now
@@ -104,7 +105,7 @@ export const Post: React.FC<PostProps> = ({event}) => {
           </Pressable>
 
           <Pressable onPress={handleNavigateToPostDetails}>
-            <Text weight="bold" color="textStrong" fontSize={15} lineHeight={20}>
+            <Text weight="bold" color="textStrong" fontSize={asComment ? 13 : 15} lineHeight={20}>
               Monkey D Luffy
             </Text>
 
@@ -155,24 +156,26 @@ export const Post: React.FC<PostProps> = ({event}) => {
 
       {/* TODO: check tags if it's: quote repost reply  */}
 
-      <View style={styles.footer}>
-        <Pressable onPress={handleNavigateToPostDetails}>
-          <View style={styles.footerComments}>
-            <CommentIcon height={20} color={theme.colors.textSecondary} onPress={handleComment} />
+      {!asComment && (
+        <View style={styles.footer}>
+          <Pressable onPress={handleNavigateToPostDetails}>
+            <View style={styles.footerComments}>
+              <CommentIcon height={20} color={theme.colors.textSecondary} onPress={handleComment} />
 
-            <Text color="textSecondary" fontSize={11} lineHeight={16}>
-              16 comments
-            </Text>
-          </View>
-        </Pressable>
+              <Text color="textSecondary" fontSize={11} lineHeight={16}>
+                16 comments
+              </Text>
+            </View>
+          </Pressable>
 
-        <MaterialIcons
-          name="more-horiz"
-          size={24}
-          color={theme.colors.textSecondary}
-          onPress={handleMore}
-        />
-      </View>
+          <MaterialIcons
+            name="more-horiz"
+            size={24}
+            color={theme.colors.textSecondary}
+            onPress={handleMore}
+          />
+        </View>
+      )}
     </View>
   );
 };
