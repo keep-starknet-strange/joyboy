@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Button, Pressable, View} from 'react-native';
 
-import {ExitIcon, NotificationIcon, Update, Warning} from '../../assets/icons';
+import {ExitIcon, JoyboyIcon, NotificationIcon, Update, Warning} from '../../assets/icons';
 import {Divider} from '../../components';
 import Modal from '../../components/modal';
 import {Container, Logo} from './styled';
@@ -16,7 +16,7 @@ export const DialogPage: React.FC = () => {
     <View>
       <Container>
         <Pressable>
-          <Logo source={require('../../../assets/Logo.png')} />
+        <JoyboyIcon color="#14142C" width={96} height={16} />
         </Pressable>
 
         <Pressable>

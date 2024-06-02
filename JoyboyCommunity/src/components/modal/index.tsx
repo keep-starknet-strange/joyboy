@@ -18,6 +18,8 @@ interface Button {
   type: 'dangerous' | 'primary' | 'secondary';
   onPress: () => void;
 }
+
+
 interface CustomModalProps {
   name: string;
   buttons: Button[];

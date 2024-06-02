@@ -10,6 +10,7 @@ import {CreatePost} from '../screens/CreatePost';
 import {Feed} from '../screens/Feed';
 import {PostDetail} from '../screens/PostDetail';
 import {Profile} from '../screens/Profile';
+import { DialogPage } from '../screens/DialogPage';
 import {useAuth} from '../store/auth';
 import {useNavigationStore} from '../store/navigation';
 import {AuthStackParams, HomeBottomStackParams, MainStackParams, RootStackParams} from '../types';
@@ -126,6 +127,7 @@ const MainNavigator: React.FC = () => {
       <MainStack.Screen name="Profile" component={Profile} />
       <MainStack.Screen name="CreatePost" component={CreatePost} />
       <MainStack.Screen name="PostDetail" component={PostDetail} />
+      <MainStack.Screen name="DialogePage" component={DialogPage} />
     </MainStack.Navigator>
   );
 };

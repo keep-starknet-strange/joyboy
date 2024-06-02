@@ -1,5 +1,6 @@
-import {FlatList, RefreshControl, View} from 'react-native';
-
+import {Button, FlatList, RefreshControl, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import { MainStackNavigationProps } from '../../types';
 import {useRootNotes} from '../../hooks';
 import {Post} from '../../shared/components/Post';
 import {ProfileScreenProps} from '../../types';
@@ -10,7 +11,10 @@ export const Profile: React.FC<ProfileScreenProps> = ({route}) => {
   const {publicKey} = route.params ?? {};
 
   const notes = useRootNotes({authors: [publicKey]});
-
+  const navigator = useNavigation<MainStackNavigationProps>();
+  const Dialogpage = () => {
+    navigator.push('DialogePage');
+  };
   return (
     <View style={styles.container}>
       <FlatList
@@ -24,6 +28,8 @@ export const Profile: React.FC<ProfileScreenProps> = ({route}) => {
           <RefreshControl refreshing={notes.isFetching} onRefresh={() => notes.refetch()} />
         }
       />
+
+<Button title="Click to go to Dialog page" onPress={Dialogpage} />
     </View>
   );
 };
