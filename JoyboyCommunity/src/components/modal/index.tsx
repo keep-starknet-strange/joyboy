@@ -4,25 +4,29 @@ import {Portal} from 'react-native-portalize';
 import {LineIcon} from '../../assets/icons';
 import {Button} from '../button';
 import {
-  ButtonText,
   Container,
   Content,
   getButtonColor,
+  getTextColor,
   IconContainer,
   ModalContainer,
   Overlay,
   Title,
 } from './styled';
 
-interface CustomModalProps {
+export type ModalProps = {
   name: string;
   icon: React.ReactNode;
   description: string;
   visible: boolean;
-  buttons: {label: string; type: 'primary' | 'secondary' | 'dangerous'; onPress: () => void}[];
-}
+  buttons: {
+    label: string;
+    type: 'primary' | 'secondary' | 'dangerous';
+    onPress: () => void;
+  }[];
+};
 
-const Modal: React.FC<CustomModalProps> = ({name, icon, description, visible, buttons}) => {
+const Modal: React.FC<ModalProps> = ({name, icon, description, visible, buttons}) => {
   if (!visible) return null;
 
   return (
@@ -35,14 +39,16 @@ const Modal: React.FC<CustomModalProps> = ({name, icon, description, visible, bu
             <Title>{name}</Title>
             <Content>{description}</Content>
           </Container>
+
           <Container>
             {buttons.map((button, index) => (
               <Button
-                key={index}
+                key={index.toString()}
                 onPress={button.onPress}
                 style={{backgroundColor: getButtonColor(button.type)}}
+                textStyle={{color: getTextColor(button.type)}}
               >
-                <ButtonText type={button.type}>{button.label}</ButtonText>
+                {button.label}
               </Button>
             ))}
           </Container>

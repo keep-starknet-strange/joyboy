@@ -1,4 +1,4 @@
-import {Text, TouchableOpacity, View} from 'react-native';
+import {Text, View} from 'react-native';
 import styled from 'styled-components/native';
 
 export const Overlay = styled(View)`
@@ -63,18 +63,7 @@ export const getButtonColor = (type: string) => {
   }
 };
 
-export const StyledButton = styled(TouchableOpacity)<{type: string}>`
-  padding: 16px 52px;
-  background-color: ${({type}) => getButtonColor(type)};
-  border-radius: 5px;
-  margin-bottom: 10px;
-  font-size: 16px;
-  width: 281px;
-  height: 54px;
-  border-radius: 40px;
-`;
-
-const getTextColor = (type: string) => {
+export const getTextColor = (type: string) => {
   switch (type) {
     case 'dangerous':
       return '#ffff';
@@ -84,8 +73,3 @@ const getTextColor = (type: string) => {
       return '#14142C';
   }
 };
-export const ButtonText = styled(Text)<{type: string}>`
-  font-size: 16px;
-  color: ${({type}) => getTextColor(type)};
-  text-align: center;
-`;
