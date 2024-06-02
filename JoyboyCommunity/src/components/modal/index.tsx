@@ -14,26 +14,16 @@ import {
   Title,
 } from './styled';
 
-type ButtonType = 'primary' | 'secondary' | 'dangerous';
-
-const buttons: Array<{type: ButtonType; label: string; onPress: () => void}> = [
-  {type: 'primary', label: 'Primary', onPress: () => console.log('Primary')},
-  {type: 'secondary', label: 'Secondary', onPress: () => console.log('Secondary')},
-  {type: 'dangerous', label: 'Dangerous', onPress: () => console.log('Dangerous')},
-];
-
 interface CustomModalProps {
   name: string;
   icon: React.ReactNode;
   description: string;
   visible: boolean;
-  buttonTypes: ButtonType[];
+  buttons: {label: string; type: 'primary' | 'secondary' | 'dangerous'; onPress: () => void}[];
 }
 
-const Modal: React.FC<CustomModalProps> = ({name, icon, description, visible, buttonTypes}) => {
+const Modal: React.FC<CustomModalProps> = ({name, icon, description, visible, buttons}) => {
   if (!visible) return null;
-
-  const filteredButtons = buttons.filter((button) => buttonTypes.includes(button.type));
 
   return (
     <Portal>
@@ -46,7 +36,7 @@ const Modal: React.FC<CustomModalProps> = ({name, icon, description, visible, bu
             <Content>{description}</Content>
           </Container>
           <Container>
-            {filteredButtons.map((button, index) => (
+            {buttons.map((button, index) => (
               <Button
                 key={index}
                 onPress={button.onPress}

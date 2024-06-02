@@ -1,4 +1,5 @@
-import {Button, FlatList, RefreshControl, View} from 'react-native';
+import {FlatList, RefreshControl, View} from 'react-native';
+
 import {useRootNotes} from '../../hooks';
 import {Post} from '../../shared/components/Post';
 import {ProfileScreenProps} from '../../types';
