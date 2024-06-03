@@ -24,6 +24,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: software-mansion/setup-scarb@v1
+      - name: Scarb version
+        run: scarb --version
+        working-directory: onchain
+      - uses: actions/checkout@v3
+      - uses: foundry-rs/setup-snfoundry@v3
+        with:
+          starknet-foundry-version: '0.24.0'
       - name: Run cairo tests
-        run: scarb test
+        run: snforge test
         working-directory: onchain

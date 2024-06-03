@@ -10,9 +10,7 @@
       "image": "./assets/splash.png",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -25,6 +23,27 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/Poppins/Poppins-Light.ttf",
+            "./assets/fonts/Poppins/Poppins-Regular.ttf",
+            "./assets/fonts/Poppins/Poppins-Italic.ttf",
+            "./assets/fonts/Poppins/Poppins-Medium.ttf",
+            "./assets/fonts/Poppins/Poppins-SemiBold.ttf",
+            "./assets/fonts/Poppins/Poppins-Bold.ttf"
+          ]
+        }
+      ],
+      [
+        "expo-secure-store",
+        {
+          "faceIDPermission": "Allow $(PRODUCT_NAME) to use Face ID."
+        }
+      ]
+    ]
   }
 }

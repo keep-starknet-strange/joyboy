@@ -1,26 +1,28 @@
-import {Ionicons, Octicons} from '@expo/vector-icons';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {useMemo} from 'react';
+import {View} from 'react-native';
 import {useTheme} from 'styled-components/native';
 
-import useNavigationStore from '../hooks/useNavigationContext';
-import Error from '../modules/error';
-import Feed from '../modules/feed';
-import Login from '../modules/login';
-import Notifications from '../modules/notifications';
-import CreatePost from '../modules/post';
-import Profile from '../modules/profile';
-import {NoteDetail} from '../screens/NoteDetail';
-import {UserDetail} from '../screens/UserDetail';
-import {HomeStackParams, RootStackParams} from '../types';
+import {HomeIcon, IndicatorIcon, MessageIcon, SearchIcon, UserIcon} from '../assets/icons';
+import {CreateAccount} from '../screens/Auth/CreateAccount';
+import {Login} from '../screens/Auth/Login';
+import {SaveKeys} from '../screens/Auth/SaveKeys';
+import {CreatePost} from '../screens/CreatePost';
+import {Feed} from '../screens/Feed';
+import {PostDetail} from '../screens/PostDetail';
+import {Profile} from '../screens/Profile';
+import {useAuth} from '../store/auth';
+import {AuthStackParams, HomeBottomStackParams, MainStackParams, RootStackParams} from '../types';
 
 const RootStack = createNativeStackNavigator<RootStackParams>();
-const HomeBottomTabsStack = createBottomTabNavigator<HomeStackParams>();
+const AuthStack = createNativeStackNavigator<AuthStackParams>();
+const MainStack = createNativeStackNavigator<MainStackParams>();
+const HomeBottomTabsStack = createBottomTabNavigator<HomeBottomStackParams>();
 
 const HomeBottomTabNavigator: React.FC = () => {
   const theme = useTheme();
+  const {publicKey} = useAuth();
 
   return (
     <HomeBottomTabsStack.Navigator
@@ -42,72 +44,98 @@ const HomeBottomTabNavigator: React.FC = () => {
         component={Feed}
         options={{
           tabBarActiveTintColor: 'white',
-          tabBarInactiveTintColor: 'grey',
-          tabBarIcon: ({focused}) => (
-            <Ionicons name={focused ? 'home' : 'home-outline'} size={24} color="black" />
-          ),
-        }}
-      />
-      <HomeBottomTabsStack.Screen
-        name="Profile"
-        component={Profile}
-        options={{
-          tabBarActiveTintColor: 'white',
-          tabBarInactiveTintColor: 'grey',
-          tabBarIcon: ({focused}) => (
-            <Octicons name={focused ? 'person-fill' : 'person'} size={24} color="black" />
-          ),
+          tabBarInactiveTintColor: '',
+          tabBarIcon: ({focused}) => {
+            return (
+              <View style={{flex: 1, alignItems: 'center', gap: 2, justifyContent: 'center'}}>
+                <HomeIcon width={24} height={24} fill={focused ? '#14142C' : '#1E2F3D80'} />
+                {focused && <IndicatorIcon color="#EC796B" width={6} height={6} />}
+              </View>
+            );
+          },
         }}
       />
 
       <HomeBottomTabsStack.Screen
         name="Notifications"
-        component={Notifications}
+        component={Profile}
+        initialParams={{publicKey}}
+        options={{
+          tabBarActiveTintColor: 'white',
+          tabBarInactiveTintColor: '',
+          tabBarIcon: ({focused}) => {
+            return (
+              <View style={{flex: 1, alignItems: 'center', gap: 1, justifyContent: 'center'}}>
+                <SearchIcon width={24} height={24} color={focused ? '#14142C' : '#1E2F3D80'} />
+                {focused && <IndicatorIcon color="#EC796B" width={6} height={6} />}
+              </View>
+            );
+          },
+        }}
+      />
+
+      <HomeBottomTabsStack.Screen
+        name="Messages"
+        component={Profile}
         options={{
           tabBarActiveTintColor: 'white',
           tabBarInactiveTintColor: 'grey',
-          tabBarIcon: ({focused}) => (
-            <Octicons name={focused ? 'bell-fill' : 'bell'} size={24} color="black" />
-          ),
+          tabBarIcon: ({focused}) => {
+            return (
+              <View style={{flex: 1, alignItems: 'center', gap: 4, justifyContent: 'center'}}>
+                <MessageIcon width={24} height={24} color={focused ? '#14142C' : '#1E2F3D80'} />
+                {focused && <IndicatorIcon color="#EC796B" width={6} height={6} />}
+              </View>
+            );
+          },
+        }}
+      />
+
+      <HomeBottomTabsStack.Screen
+        name="UserProfile"
+        component={Profile}
+        initialParams={{publicKey}}
+        options={{
+          tabBarActiveTintColor: 'white',
+          tabBarInactiveTintColor: 'grey',
+          tabBarIcon: ({focused}) => {
+            return (
+              <View style={{flex: 1, alignItems: 'center', gap: 1, justifyContent: 'center'}}>
+                <UserIcon width={24} height={24} color={focused ? '#14142C' : '#1E2F3D80'} />
+                {focused && <IndicatorIcon color="#EC796B" width={6} height={6} />}
+              </View>
+            );
+          },
         }}
       />
     </HomeBottomTabsStack.Navigator>
   );
 };
 
+const AuthNavigator: React.FC = () => {
+  return (
+    <AuthStack.Navigator screenOptions={{headerShown: false}}>
+      <AuthStack.Screen name="Login" component={Login} />
+      <AuthStack.Screen name="CreateAccount" component={CreateAccount} />
+      <AuthStack.Screen name="SaveKeys" component={SaveKeys} />
+    </AuthStack.Navigator>
+  );
+};
+
+const MainNavigator: React.FC = () => {
+  return (
+    <MainStack.Navigator screenOptions={{headerShown: false}}>
+      <MainStack.Screen name="Home" component={HomeBottomTabNavigator} />
+      <MainStack.Screen name="Profile" component={Profile} />
+      <MainStack.Screen name="CreatePost" component={CreatePost} />
+      <MainStack.Screen name="PostDetail" component={PostDetail} />
+    </MainStack.Navigator>
+  );
+};
+
 const RootNavigator: React.FC = () => {
-  const stack = useNavigationStore((state) => state.stack);
+  const {publicKey} = useAuth();
   const theme = useTheme();
-
-  const currentStack = useMemo((): React.ReactNode => {
-    switch (stack) {
-      case 'app':
-        return (
-          <>
-            <RootStack.Screen name="Home" component={HomeBottomTabNavigator} />
-            <RootStack.Screen name="CreatePost" component={CreatePost} />
-            <RootStack.Screen name="UserDetail" component={UserDetail} />
-            <RootStack.Screen name="NoteDetail" component={NoteDetail} />
-          </>
-        );
-
-      case 'loading':
-        return (
-          <>
-            <RootStack.Screen name="Loading" component={Error} />
-          </>
-        );
-
-      case 'login':
-        return (
-          <>
-            <RootStack.Screen name="Login" component={Login} />
-          </>
-        );
-      default:
-        return null;
-    }
-  }, [stack]);
 
   return (
     <RootStack.Navigator
@@ -118,7 +146,11 @@ const RootNavigator: React.FC = () => {
         },
       }}
     >
-      {currentStack}
+      {publicKey ? (
+        <RootStack.Screen name="MainStack" component={MainNavigator} />
+      ) : (
+        <RootStack.Screen name="AuthStack" component={AuthNavigator} />
+      )}
     </RootStack.Navigator>
   );
 };
