@@ -122,9 +122,10 @@ pub mod SocialAccount {
             let s = *signature.at(1_u32).into();
             let public_key = self.public_key.read();
 
-            let byte_array = ByteArray::append_word(hash);
+            let mut ba = Default::default();
+            ba.append_word(hash, 4);
 
-            let verify_signature = bip340.verify(public_key, r, s, byte_array);
+            let verify_signature = bip340.verify(public_key, r, s, ba);
 
             if verify_signature {
                 starknet::VALIDATED
