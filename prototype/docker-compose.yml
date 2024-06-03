@@ -1,0 +1,33 @@
+version: '3.3'
+
+services:
+  devnet:
+    build:
+      context: .
+      dockerfile: ./localdevnet/Dockerfile
+    ports:
+      - "5050:5050"
+    environment:
+      - MY_ENV_VAR=some_value
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  relayer:
+    build:
+      context: .
+      dockerfile: ./nostr/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+ 
+
+volumes:
+  db-data:
