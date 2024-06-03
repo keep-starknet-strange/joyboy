@@ -4,6 +4,7 @@ use starknet::{ContractAddress, get_caller_address, get_contract_address, contra
 use super::profile::NostrProfile;
 use super::request::SocialRequest;
 use super::transfer::Transfer;
+use super::interfaceID::ISRC5_ID;
 
 #[starknet::interface]
 pub trait ISocialAccount<TContractState> {
@@ -21,6 +22,7 @@ pub mod SocialAccount {
     };
     use super::super::transfer::Transfer;
     use super::{ISocialAccountDispatcher, ISocialAccountDispatcherTrait};
+    use super::super::interfaceID::ISRC5_ID;
 
     component!(path: SRC5Component, storage: src5, event: SRC5Event);
 
@@ -50,10 +52,6 @@ pub mod SocialAccount {
         #[key]
         public_key: u256
     }
-    // Generate interface using src5.rs
-    // -> Copy interface into a file and run `src5_rs parse <PATH_TO_CAIRO_FILE>`
-    // -> Note: You would need to define custom Structs and Enums in the file. 
-    const ISRC5_ID: felt252 = 0x2717e95370c20103b33f13a20ed0f89783312fd08860f522ef8f6177fedc5e0;
 
     #[constructor]
     fn constructor(ref self: ContractState, public_key: u256,) {
@@ -119,9 +117,9 @@ mod tests {
         ISocialAccountDispatcher, ISocialAccountDispatcherTrait, ISocialAccountSafeDispatcher,
         ISocialAccountSafeDispatcherTrait
     };
+    use super::super::interfaceID::ISRC5_ID;
 
     const public_key: u256 = 45;
-    const ISRC5_ID: felt252 = 0x2717e95370c20103b33f13a20ed0f89783312fd08860f522ef8f6177fedc5e0;
 
     fn declare_account() -> ContractClass {
         declare("SocialAccount").unwrap()
