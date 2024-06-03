@@ -1,30 +1,25 @@
 import {useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
-import {Pressable, TouchableOpacity, View} from 'react-native';
-import {TextInput} from 'react-native-gesture-handler';
+import {KeyboardAvoidingView, Pressable, TextInput, View} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
-import {CopyIcon, GalleryIcon, GifIcon, SendIcon, UserIcon} from '../../assets/icons';
-import {Divider, KeyboardAvoidingView, Typography} from '../../components';
-import {useSendNote} from '../../hooks';
+import {CopyIcon, GalleryIcon, GifIcon, SendIcon} from '../../assets/icons';
+import {TextButton} from '../../components';
+import {useSendNote, useStyles, useTheme} from '../../hooks';
 import {useAuth} from '../../store/auth';
-import {
-  Container,
-  IconContainer,
-  IconDiv,
-  Photo,
-  PostButton,
-  SendbuttonContainer,
-  TitleContainer,
-} from './styled';
+import stylesheet from './styles';
 
 export const CreatePost: React.FC = () => {
   const navigation = useNavigation();
+
+  const theme = useTheme();
+  const styles = useStyles(stylesheet);
 
   const sendNote = useSendNote();
   const {privateKey} = useAuth();
   const [note, setNote] = useState<string | undefined>();
 
-  const handlePostNoteFn = () => {
+  const handleSendNote = () => {
     if (!note || note?.length == 0) {
       alert('Write your note');
       return;
@@ -51,61 +46,47 @@ export const CreatePost: React.FC = () => {
     );
   };
 
-  const isCreateDisabled = note && note?.length > 0 ? false : true;
-
   return (
-    <KeyboardAvoidingView>
-      <Container>
-        <Pressable onPress={navigation.goBack}>
-          <Typography style={{color: '#4B799F', fontSize: 17}} variant="ts15r">
-            Cancel
-          </Typography>
-        </Pressable>
+    <View style={styles.container}>
+      <SafeAreaView edges={['top', 'left', 'right']} style={styles.header}>
+        <TextButton style={styles.cancelButton} onPress={navigation.goBack}>
+          Cancel
+        </TextButton>
+      </SafeAreaView>
 
-        <PostButton onPress={handlePostNoteFn} disabled={isCreateDisabled}>
-          <Typography style={{color: '#4B799F', fontSize: 17}} variant="ts15r">
-            Draft
-          </Typography>
-        </PostButton>
-      </Container>
+      <KeyboardAvoidingView behavior="padding" style={styles.content}>
+        <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.content}>
+          <TextInput
+            style={styles.input}
+            value={note}
+            onChangeText={setNote}
+            autoFocus
+            multiline={true}
+            placeholder="Make a post"
+            placeholderTextColor={theme.colors.inputPlaceholder}
+          />
 
-      <View style={{marginBottom: 1}}>
-        <Divider />
-      </View>
+          <View style={styles.buttons}>
+            <View style={styles.mediaButtons}>
+              <Pressable>
+                <GalleryIcon width="24" height="24" color={theme.colors.primary} />
+              </Pressable>
 
-      <TitleContainer>
-        <Photo>
-          <UserIcon width={32} height={32} color="#1E2F3D" />
-        </Photo>
+              <Pressable>
+                <GifIcon width="24" height="24" color={theme.colors.primary} />
+              </Pressable>
 
-        <TextInput
-          style={{flex: 1, paddingTop: 10, paddingBottom: 10, fontSize: 16, lineHeight: 20}}
-          autoFocus
-          multiline={true}
-          value={note}
-          placeholder="Make a post"
-          onChangeText={setNote}
-        />
-      </TitleContainer>
+              <Pressable>
+                <CopyIcon width="24" height="24" color={theme.colors.primary} />
+              </Pressable>
+            </View>
 
-      <IconDiv>
-        <SendbuttonContainer>
-          <SendIcon width="56" height="56" color="#EC796B" />
-        </SendbuttonContainer>
-        <IconContainer>
-          <TouchableOpacity>
-            <GalleryIcon width="24" height="24" color="#4B799F" />
-          </TouchableOpacity>
-
-          <TouchableOpacity>
-            <GifIcon width="24" height="24" color="#4B799F" />
-          </TouchableOpacity>
-
-          <TouchableOpacity>
-            <CopyIcon width="24" height="24" color="#4B799F" />
-          </TouchableOpacity>
-        </IconContainer>
-      </IconDiv>
-    </KeyboardAvoidingView>
+            <Pressable style={styles.sendButton} onPress={handleSendNote}>
+              <SendIcon width="56" height="56" color={theme.colors.primary} />
+            </Pressable>
+          </View>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
+    </View>
   );
 };

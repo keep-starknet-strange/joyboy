@@ -1,12 +1,16 @@
-import {Platform, StyleSheet} from 'react-native';
+import {Platform} from 'react-native';
 
-export default StyleSheet.create({
+import {Spacing, ThemedStyleSheet} from '../../../styles';
+
+const AVATAR_SIZE = 100;
+
+export default ThemedStyleSheet((theme) => ({
   container: {},
 
   coverContainer: {
     position: 'relative',
     width: '100%',
-    height: Platform.OS === 'android' ? 175 : 220,
+    height: Platform.OS === 'ios' ? 220 : 175,
   },
   coverImage: {
     position: 'absolute',
@@ -21,41 +25,39 @@ export default StyleSheet.create({
 
   backButton: {
     position: 'absolute',
-    top: 16,
-    left: 16,
+    top: Spacing.pagePadding,
+    left: Spacing.pagePadding,
   },
   settingsButton: {
     position: 'absolute',
-    top: 16,
-    right: 16,
+    top: Spacing.pagePadding,
+    right: Spacing.pagePadding,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    paddingVertical: Spacing.xsmall,
+    paddingHorizontal: Spacing.small,
+    backgroundColor: theme.colors.surface,
     borderRadius: 99,
   },
   settingsButtonText: {
-    fontSize: 14,
-    lineHeight: 16,
-    fontWeight: '600',
-    marginLeft: 8,
+    lineHeight: Spacing.medium,
+    marginLeft: Spacing.xsmall,
   },
 
   avatarContainer: {
     position: 'relative',
     flexDirection: 'row',
-    paddingHorizontal: 16,
+    paddingHorizontal: Spacing.pagePadding,
   },
   avatar: {
-    width: 100,
-    height: 50,
-    transform: [{translateY: -50}],
+    width: AVATAR_SIZE,
+    height: AVATAR_SIZE / 2,
+    transform: [{translateY: (AVATAR_SIZE / 2) * -1}],
   },
   avatarImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 100,
+    width: AVATAR_SIZE,
+    height: AVATAR_SIZE,
+    borderRadius: AVATAR_SIZE,
     borderWidth: 5,
     borderColor: 'white',
   },
@@ -65,18 +67,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    gap: 8,
-    paddingTop: 8,
+    gap: Spacing.xsmall,
+    paddingTop: Spacing.xsmall,
   },
-
-  secondaryButton: {
-    backgroundColor: 'rgba(12, 12, 79, 0.1)',
-  },
-  secondaryButtonText: {
-    color: '#14142c',
-  },
-  iconButton: {
-    backgroundColor: 'rgba(12, 12, 79, 0.1)',
-    padding: 12,
-  },
-});
+}));

@@ -3,8 +3,9 @@ import {useNavigation} from '@react-navigation/native';
 import {Image, ImageSourcePropType, Pressable, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
-import {IconButton, Typography} from '../../../components';
-import styles from './styles';
+import {IconButton, Text} from '../../../components';
+import {useStyles} from '../../../hooks';
+import stylesheet from './styles';
 
 export type ProfileHeadProps = {
   profilePhoto?: ImageSourcePropType;
@@ -21,6 +22,8 @@ export const ProfileHead: React.FC<ProfileHeadProps> = ({
   showSettingsButton,
   buttons,
 }) => {
+  const styles = useStyles(stylesheet);
+
   const navigation = useNavigation();
 
   const goToSettings = () => {
@@ -49,7 +52,9 @@ export const ProfileHead: React.FC<ProfileHeadProps> = ({
             {showSettingsButton && (
               <Pressable style={styles.settingsButton} onPress={goToSettings}>
                 <Feather name="settings" size={20} />
-                <Typography style={styles.settingsButtonText}>Settings</Typography>
+                <Text weight="semiBold" fontSize={14} style={styles.settingsButtonText}>
+                  Settings
+                </Text>
               </Pressable>
             )}
           </View>
