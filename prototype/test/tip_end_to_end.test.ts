@@ -35,7 +35,8 @@ import {
   // hexStringToUint256,
   // stringToUint256,
 } from "../utils/format";
-
+import dotenv from "dotenv"
+dotenv.config()
 /** Testing tips flow:
  * Two users Bob & Alice with Nostr & A.A (contract at this stage) => Init Nostr & SocialPay Account for (contract because SNIP-6 not finish)
  * Bob request a social transfer with an event
@@ -51,6 +52,7 @@ describe("End to end test", () => {
     // console.log("rpc version =", resp);
     const privateKey0 = process.env.DEV_PK as string;
     const accountAddress0 = process.env.DEV_PUBLIC_KEY as string;
+
     const account = new Account(provider, accountAddress0, privateKey0, "1");
     /*** Init account
      * @description

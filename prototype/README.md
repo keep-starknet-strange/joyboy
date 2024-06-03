@@ -24,6 +24,15 @@ sequenceDiagram
     deactivate SocialPay relay
 ```
 
+## Overview of the Flow end to end with the Test
+The end to end script is localted in the [End to End test](./test/tip_end_to_end.test.ts) script.
+
+- [x] Create Bob & Alice account on Nostr 
+- [x] Create Account/Contract for Alice & Bob on Starknet
+- [x] Send Nostr event kind 1 with Bob
+- [] Check request, format, type Cairo to send.
+- [] Verify signature
+- [] Send SocialPay request to the Bob contract to send and transfer ERC20
 
 ## Tasks
 
@@ -64,6 +73,10 @@ Run the test by Default in Sepolia
 ```bash 
     npm test
 ```
+
+
+TLDR: When you have already push and deploy your contract for the first time, you can skip this process on the test.
+You can comment on the script the function "createSocialAccount" or "createSocialContract" the deploy process and only use the contract already deployed
 
 
 #### Devnet script need to be fix.
