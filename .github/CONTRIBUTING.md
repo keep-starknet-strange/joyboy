@@ -22,11 +22,11 @@
 
 ### Setup
 
-1. Clone the repository
-2. Navigate to the JoyboyCommunity directory. `cd JoyboyCommunity`
-3. Install the dependencies using yarn `yarn install`
-4. Start the development server `yarn start`
-5. Open the app in your browser / device / emulator.
+- Clone the repository
+- Navigate to the JoyboyCommunity directory. `cd JoyboyCommunity`
+- Install the dependencies using yarn `yarn install`
+- Start the development server `yarn start`
+- Open the app in your browser / device / emulator.
 
 ### Development
 
