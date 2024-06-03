@@ -3,7 +3,6 @@
 // -> Note: You would need to define custom Structs and Enums in the file. 
 pub const ISRC5_ID: felt252 = 0x2717e95370c20103b33f13a20ed0f89783312fd08860f522ef8f6177fedc5e0;
 
-
 // Below is the interface structure for generating the interface ID
 // You can generate the ID using this tool: https://github.com/ericnordelo/src5-rs/tree/main?tab=readme-ov-file
 struct Transfer {
