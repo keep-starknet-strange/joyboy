@@ -1,5 +1,3 @@
-use starknet::{ContractAddress, get_caller_address, get_contract_address, contract_address_const};
-use super::profile::NostrProfile;
 use super::request::SocialRequest;
 use super::transfer::Transfer;
 
@@ -12,24 +10,38 @@ pub trait ISocialAccount<TContractState> {
 
 #[starknet::contract]
 pub mod SocialAccount {
-    use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
-    use super::super::request::{
-        SocialRequest, SocialRequestImpl, SocialRequestTrait, Encode, Signature
-    };
-    use super::super::transfer::Transfer;
-    use super::{ISocialAccountDispatcher, ISocialAccountDispatcherTrait};
+    use super::super::public_key_component::PublicKeyComponent;
+    use super::super::social_component::SocialComponent;
+
+    component!(path: PublicKeyComponent, storage: public_key, event: PublicKeyEvent);
+    component!(path: SocialComponent, storage: social, event: SocialEvent);
+
+    // PublicKey
+    #[abi(embed_v0)]
+    impl PublicKeyImpl = PublicKeyComponent::PublicKeyImpl<ContractState>;
+    impl PublicKeyInternalImpl = PublicKeyComponent::InternalImpl<ContractState>;
+
+    // Social
+    #[abi(embed_v0)]
+    impl SocialImpl = SocialComponent::SocialImpl<ContractState>;
+    impl SocialInternalImpl = SocialComponent::InternalImpl<ContractState>;
 
     #[storage]
     struct Storage {
-        #[key]
-        public_key: u256,
-        transfers: LegacyMap<u256, bool>,
+        #[substorage(v0)]
+        public_key: PublicKeyComponent::Storage,
+        #[substorage(v0)]
+        social: SocialComponent::Storage,
     }
 
     #[event]
     #[derive(Drop, starknet::Event)]
     enum Event {
         AccountCreated: AccountCreated,
+        #[flat]
+        PublicKeyEvent: PublicKeyComponent::Event,
+        #[flat]
+        SocialEvent: SocialComponent::Event,
     }
 
     #[derive(Drop, starknet::Event)]
@@ -40,36 +52,8 @@ pub mod SocialAccount {
 
     #[constructor]
     fn constructor(ref self: ContractState, public_key: u256) {
-        self.public_key.write(public_key);
+        self.public_key.initializer(public_key);
         self.emit(AccountCreated { public_key: public_key });
-    }
-
-    #[abi(embed_v0)]
-    impl SocialAccount of super::ISocialAccount<ContractState> {
-        fn get_public_key(self: @ContractState) -> u256 {
-            self.public_key.read()
-        }
-        fn handle_transfer(ref self: ContractState, request: SocialRequest<Transfer>) {
-            assert!(request.public_key == self.public_key.read(), "wrong public_key");
-
-            let erc20 = ERC20ABIDispatcher { contract_address: request.content.token_address };
-            assert!(erc20.symbol() == request.content.token, "wrong token symbol");
-
-            let recipient = ISocialAccountDispatcher {
-                contract_address: request.content.recipient_address
-            };
-
-            assert!(
-                recipient.get_public_key() == request.content.recipient.public_key,
-                "wrong public_key"
-            );
-
-            assert!(request.verify());
-
-            // check uniqueness
-
-            erc20.transfer(request.content.recipient_address, request.content.amount);
-        }
     }
 }
 
