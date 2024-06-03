@@ -1,7 +1,7 @@
+import {NDKKind} from '@nostr-dev-kit/ndk';
 import {useInfiniteQuery} from '@tanstack/react-query';
 
 import {useNostrContext} from '../context/NostrContext';
-import {EventKind} from '../types';
 
 export type UseReactionsOptions = {
   authors?: string[];
@@ -9,10 +9,10 @@ export type UseReactionsOptions = {
 };
 
 export const useReactions = (options?: UseReactionsOptions) => {
-  const {pool, relays} = useNostrContext();
+  const {ndk} = useNostrContext();
 
   return useInfiniteQuery({
-    initialPageParam: Math.round(Date.now() / 1000),
+    initialPageParam: 0,
     queryKey: ['reactions', options?.authors, options?.search],
     getNextPageParam: (lastPage: any, allPages, lastPageParam) => {
       if (!lastPage?.length) return undefined;
@@ -23,15 +23,15 @@ export const useReactions = (options?: UseReactionsOptions) => {
       return pageParam;
     },
     queryFn: async ({pageParam}) => {
-      const notes = await pool.querySync(relays, {
-        kinds: [EventKind.Reaction],
+      const notes = await ndk.fetchEvents({
+        kinds: [NDKKind.Reaction],
         authors: options?.authors,
         search: options?.search,
-        until: pageParam,
+        until: pageParam || Math.round(Date.now() / 1000),
         limit: 20,
       });
 
-      return notes;
+      return [...notes];
     },
     placeholderData: {pages: [], pageParams: []},
   });

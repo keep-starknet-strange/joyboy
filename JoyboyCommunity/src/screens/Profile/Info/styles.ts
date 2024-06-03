@@ -1,42 +1,32 @@
-import {StyleSheet} from 'react-native';
+import {Spacing, ThemedStyleSheet} from '../../../styles';
 
-export default StyleSheet.create({
+export default ThemedStyleSheet((theme) => ({
   secondaryButton: {
-    backgroundColor: 'rgba(12, 12, 79, 0.1)',
+    backgroundColor: theme.colors.buttonDisabledBackground,
   },
   secondaryButtonText: {
-    color: '#14142c',
+    color: theme.colors.text,
   },
   iconButton: {
-    backgroundColor: 'rgba(12, 12, 79, 0.1)',
-    padding: 12,
+    backgroundColor: theme.colors.buttonDisabledBackground,
+    padding: Spacing.small,
   },
   buttonIcon: {
-    marginRight: 6,
+    marginRight: Spacing.xxsmall,
   },
 
   info: {
-    padding: 16,
-  },
-
-  displayName: {
-    fontSize: 20,
-    lineHeight: 24,
-    fontWeight: '700',
-    color: '#14142c',
+    padding: Spacing.medium,
   },
 
   usernameContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: Spacing.xsmall,
   },
   username: {
     maxWidth: '50%',
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#6B6B8C',
-    marginRight: 16,
+    marginRight: Spacing.medium,
   },
   publicKey: {
     flex: 1,
@@ -46,27 +36,16 @@ export default StyleSheet.create({
   },
   publicKeyText: {
     flex: 1,
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#EC796B',
+    color: theme.colors.primary,
   },
 
   bio: {
-    fontSize: 14,
-    lineHeight: 20,
-    color: '#6B6B8C',
-    fontWeight: '500',
-    marginBottom: 16,
+    marginBottom: Spacing.medium,
   },
 
   connections: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: Spacing.xsmall,
   },
-  connectionsText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#14142C',
-  },
-});
+}));

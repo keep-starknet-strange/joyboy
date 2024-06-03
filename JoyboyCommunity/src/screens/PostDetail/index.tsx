@@ -1,121 +1,101 @@
-import {MaterialIcons, Octicons} from '@expo/vector-icons';
-import {Image, Pressable, ScrollView, Text, View} from 'react-native';
-import styled from 'styled-components/native';
+import {useCallback, useState} from 'react';
+import {FlatList, RefreshControl, View} from 'react-native';
 
-import {useNote} from '../../hooks';
-import Comments from '../../shared/components/Comments';
-import {Icon} from '../../shared/components/Post';
+import {Divider, Header, IconButton, Input, KeyboardFixedView} from '../../components';
+import {useNote, useReplyNotes, useSendNote, useStyles} from '../../hooks';
+import {Post} from '../../modules/Post';
 import {PostDetailScreenProps} from '../../types';
-
-const PostDetailsCard = styled(View)`
-  background-color: #ffffff;
-  margin-top: 20px;
-  border-radius: 16px;
-`;
-
-const PostDetailsHeader = styled(View)`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom-width: 1px;
-  border-bottom-color: #eff0f1;
-  padding: 8px;
-  margin-bottom: 20px;
-`;
-
-const PostLayout = styled(View)`
-  flex-direction: row;
-`;
-
-export const InteractionContainer = styled(View)`
-  margin-top: 30px;
-  width: 100%;
-  display: flex;
-  gap: 8px;
-  flex-direction: row;
-  align-content: center;
-  align-self: center;
-  justify-content: space-between;
-  border-bottom-width: 1px;
-  padding-bottom: 20px;
-  border-bottom-color: #eff0f1;
-`;
+import stylesheet from './styles';
 
 export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route}) => {
   const {postId, post} = route.params;
 
+  const styles = useStyles(stylesheet);
+
+  const [comment, setComment] = useState('');
+
+  const sendNote = useSendNote();
   const {data: note = post} = useNote({noteId: postId});
+  const comments = useReplyNotes({noteId: note.id});
 
-  const handleGoBack = () => {
-    navigation.goBack();
-  };
+  const handleSendComment = useCallback(async () => {
+    try {
+      if (!comment || comment?.length == 0) {
+        alert('Write your note');
+        return;
+      }
 
-  const handleProfilePress = () => {
-    if (note?.pubkey) {
-      navigation.navigate('Profile', {publicKey: note.pubkey});
+      sendNote.mutate(
+        {content: comment, tags: [['e', note.id, '', 'root', note.pubkey]]},
+        {
+          async onSuccess(data) {
+            if (data) alert('Note sent');
+
+            await comments.refetch();
+          },
+          onError(error) {
+            console.log('Error send note', error);
+          },
+        },
+      );
+    } catch (e) {
+      console.log('Error send note', e);
     }
-  };
+  }, [comment, note.id, note.pubkey, sendNote, comments]);
+
+  console.log(comments.data);
 
   return (
-    <ScrollView>
-      <PostDetailsCard>
-        <PostDetailsHeader>
-          <Icon
-            as={MaterialIcons}
-            name="chevron-left"
-            size={25}
-            color="#406686"
-            onPress={handleGoBack}
+    <View style={styles.container}>
+      <Header
+        showLogo={false}
+        left={<IconButton icon="chevron-left" size={24} onPress={navigation.goBack} />}
+        right={<IconButton icon="more-horizontal" size={24} />}
+        title="Conversation"
+      />
+
+      <Divider />
+
+      <View style={styles.content}>
+        <FlatList
+          style={styles.content}
+          data={comments.data.pages.flat()}
+          automaticallyAdjustKeyboardInsets
+          ListHeaderComponent={
+            <>
+              <View style={styles.post}>
+                <Post event={note} />
+              </View>
+
+              <Divider />
+            </>
+          }
+          ItemSeparatorComponent={() => <Divider />}
+          renderItem={({item}) => (
+            <View style={styles.comment}>
+              <Post asComment event={item} />
+            </View>
+          )}
+          refreshControl={
+            <RefreshControl refreshing={comments.isFetching} onRefresh={() => comments.refetch()} />
+          }
+        />
+      </View>
+
+      <KeyboardFixedView containerProps={{style: styles.commentInputContainer}}>
+        <Divider />
+
+        <View style={styles.commentInputContent}>
+          <Input
+            value={comment}
+            onChangeText={setComment}
+            containerStyle={styles.commentInput}
+            placeholder="Comment"
           />
-          <Text style={{color: '#406686', fontWeight: '700', fontSize: 15}}>Conversation</Text>
-          <Icon as={MaterialIcons} name="more-horiz" size={25} color="#406686" />
-        </PostDetailsHeader>
-        <View style={{padding: 10}}>
-          <PostLayout>
-            <View style={{marginRight: 10}}>
-              <Pressable onPress={handleProfilePress}>
-                <Image
-                  source={require('../../../assets/joyboy-logo.png')}
-                  style={{width: 44, height: 44}}
-                />
-              </Pressable>
-            </View>
 
-            <View style={{gap: 4, flex: 1}}>
-              <Text style={{color: 'black', fontWeight: '700'}}>{note?.pubkey}</Text>
-            </View>
-
-            {/* TODO check tags if it's:
-        quote
-        repost
-        reply  */}
-            <Icon
-              as={Octicons}
-              name="heart"
-              size={24}
-              color="black"
-              style={{alignSelf: 'center'}}
-            />
-          </PostLayout>
-          <Text style={{color: 'black', marginTop: 10}}>{note?.content}</Text>
-          <InteractionContainer>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <Icon as={Octicons} name="comment" size={18} color="#406686" />
-              <Text style={{color: '#406686', fontWeight: '500', fontSize: 11}}>16 comments</Text>
-            </View>
-
-            <Icon as={MaterialIcons} name="more-horiz" size={18} color="#406686" />
-          </InteractionContainer>
+          <IconButton icon="send" size={24} onPress={handleSendComment} />
         </View>
-
-        <Comments event={note} />
-      </PostDetailsCard>
-    </ScrollView>
+      </KeyboardFixedView>
+    </View>
   );
 };

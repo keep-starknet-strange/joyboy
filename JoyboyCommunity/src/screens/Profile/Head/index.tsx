@@ -3,8 +3,9 @@ import {useNavigation} from '@react-navigation/native';
 import {Image, ImageSourcePropType, Pressable, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
-import {IconButton, Typography} from '../../../components';
-import styles from './styles';
+import {IconButton, Text} from '../../../components';
+import {useStyles} from '../../../hooks';
+import stylesheet from './styles';
 
 export type ProfileHeadProps = {
   profilePhoto?: ImageSourcePropType;
@@ -21,6 +22,8 @@ export const ProfileHead: React.FC<ProfileHeadProps> = ({
   showSettingsButton,
   buttons,
 }) => {
+  const styles = useStyles(stylesheet);
+
   const navigation = useNavigation();
 
   const goToSettings = () => {
@@ -29,28 +32,34 @@ export const ProfileHead: React.FC<ProfileHeadProps> = ({
 
   return (
     <View style={styles.container}>
-      <SafeAreaView edges={['top', 'left', 'right']} style={styles.coverContainer}>
+      <View style={styles.coverContainer}>
         <Image
           source={coverPhoto ?? require('../../../assets/joyboy-logo.png')}
           style={styles.coverImage}
         />
 
-        {showBackButton && (
-          <IconButton
-            icon="chevron-left"
-            size={20}
-            style={styles.backButton}
-            onPress={navigation.goBack}
-          />
-        )}
+        <SafeAreaView edges={['top', 'left', 'right']}>
+          <View style={styles.coverButtons}>
+            {showBackButton && (
+              <IconButton
+                icon="chevron-left"
+                size={20}
+                style={styles.backButton}
+                onPress={navigation.goBack}
+              />
+            )}
 
-        {showSettingsButton && (
-          <Pressable style={styles.settingsButton} onPress={goToSettings}>
-            <Feather name="settings" size={20} />
-            <Typography style={styles.settingsButtonText}>Settings</Typography>
-          </Pressable>
-        )}
-      </SafeAreaView>
+            {showSettingsButton && (
+              <Pressable style={styles.settingsButton} onPress={goToSettings}>
+                <Feather name="settings" size={20} />
+                <Text weight="semiBold" fontSize={14} style={styles.settingsButtonText}>
+                  Settings
+                </Text>
+              </Pressable>
+            )}
+          </View>
+        </SafeAreaView>
+      </View>
 
       <View style={styles.avatarContainer}>
         <View style={styles.avatar}>

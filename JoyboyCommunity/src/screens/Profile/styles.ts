@@ -1,8 +1,8 @@
-import {StyleSheet} from 'react-native';
+import {ThemedStyleSheet} from '../../styles';
 
-export default StyleSheet.create({
+export default ThemedStyleSheet((theme) => ({
   container: {
     flex: 1,
-    backgroundColor: '#F4F9FF',
+    backgroundColor: theme.colors.background,
   },
-});
+}));

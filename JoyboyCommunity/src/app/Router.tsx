@@ -4,15 +4,15 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {View} from 'react-native';
 import {useTheme} from 'styled-components/native';
 
-import {HomeIcon, IndicatorIcon, MessageIcon, NotificationIcon, SearchIcon} from '../assets/icons';
-import Login from '../modules/login';
+import {HomeIcon, IndicatorIcon, MessageIcon, SearchIcon, UserIcon} from '../assets/icons';
+import {CreateAccount} from '../screens/Auth/CreateAccount';
+import {Login} from '../screens/Auth/Login';
+import {SaveKeys} from '../screens/Auth/SaveKeys';
 import {CreatePost} from '../screens/CreatePost';
 import {Feed} from '../screens/Feed';
-import {Notifications} from '../screens/Notifications';
 import {PostDetail} from '../screens/PostDetail';
 import {Profile} from '../screens/Profile';
 import {useAuth} from '../store/auth';
-import {useNavigationStore} from '../store/navigation';
 import {AuthStackParams, HomeBottomStackParams, MainStackParams, RootStackParams} from '../types';
 
 const RootStack = createNativeStackNavigator<RootStackParams>();
@@ -57,7 +57,7 @@ const HomeBottomTabNavigator: React.FC = () => {
       />
 
       <HomeBottomTabsStack.Screen
-        name="UserProfile"
+        name="Notifications"
         component={Profile}
         initialParams={{publicKey}}
         options={{
@@ -67,27 +67,6 @@ const HomeBottomTabNavigator: React.FC = () => {
             return (
               <View style={{flex: 1, alignItems: 'center', gap: 1, justifyContent: 'center'}}>
                 <SearchIcon width={24} height={24} color={focused ? '#14142C' : '#1E2F3D80'} />
-                {focused && <IndicatorIcon color="#EC796B" width={6} height={6} />}
-              </View>
-            );
-          },
-        }}
-      />
-
-      <HomeBottomTabsStack.Screen
-        name="Notifications"
-        component={Notifications}
-        options={{
-          tabBarActiveTintColor: 'white',
-          tabBarInactiveTintColor: 'grey',
-          tabBarIcon: ({focused}) => {
-            return (
-              <View style={{flex: 1, alignItems: 'center', gap: 1, justifyContent: 'center'}}>
-                <NotificationIcon
-                  width={24}
-                  height={24}
-                  color={focused ? '#14142C' : '#1E2F3D80'}
-                />
                 {focused && <IndicatorIcon color="#EC796B" width={6} height={6} />}
               </View>
             );
@@ -111,6 +90,24 @@ const HomeBottomTabNavigator: React.FC = () => {
           },
         }}
       />
+
+      <HomeBottomTabsStack.Screen
+        name="UserProfile"
+        component={Profile}
+        initialParams={{publicKey}}
+        options={{
+          tabBarActiveTintColor: 'white',
+          tabBarInactiveTintColor: 'grey',
+          tabBarIcon: ({focused}) => {
+            return (
+              <View style={{flex: 1, alignItems: 'center', gap: 1, justifyContent: 'center'}}>
+                <UserIcon width={24} height={24} color={focused ? '#14142C' : '#1E2F3D80'} />
+                {focused && <IndicatorIcon color="#EC796B" width={6} height={6} />}
+              </View>
+            );
+          },
+        }}
+      />
     </HomeBottomTabsStack.Navigator>
   );
 };
@@ -119,6 +116,8 @@ const AuthNavigator: React.FC = () => {
   return (
     <AuthStack.Navigator screenOptions={{headerShown: false}}>
       <AuthStack.Screen name="Login" component={Login} />
+      <AuthStack.Screen name="CreateAccount" component={CreateAccount} />
+      <AuthStack.Screen name="SaveKeys" component={SaveKeys} />
     </AuthStack.Navigator>
   );
 };
@@ -135,7 +134,7 @@ const MainNavigator: React.FC = () => {
 };
 
 const RootNavigator: React.FC = () => {
-  const stack = useNavigationStore((state) => state.stack);
+  const {publicKey} = useAuth();
   const theme = useTheme();
 
   return (
@@ -147,9 +146,11 @@ const RootNavigator: React.FC = () => {
         },
       }}
     >
-      {stack === 'login' && <RootStack.Screen name="AuthStack" component={AuthNavigator} />}
-
-      {stack === 'app' && <RootStack.Screen name="MainStack" component={MainNavigator} />}
+      {publicKey ? (
+        <RootStack.Screen name="MainStack" component={MainNavigator} />
+      ) : (
+        <RootStack.Screen name="AuthStack" component={AuthNavigator} />
+      )}
     </RootStack.Navigator>
   );
 };

@@ -1,18 +1,21 @@
 import {Feather} from '@expo/vector-icons';
 import {useState} from 'react';
-import {Pressable, Text, View} from 'react-native';
+import {Pressable, View} from 'react-native';
 
-import {Button, IconButton, Menu, Typography} from '../../../components';
-import {useProfile} from '../../../hooks';
+import {Button, IconButton, Menu, Text} from '../../../components';
+import {useProfile, useStyles, useTheme} from '../../../hooks';
 import {useAuth} from '../../../store/auth';
 import {ProfileHead} from '../Head';
-import styles from './styles';
+import stylesheet from './styles';
 
 export type ProfileInfoProps = {
   publicKey: string;
 };
 
 export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKey}) => {
+  const theme = useTheme();
+  const styles = useStyles(stylesheet);
+
   const {data: profile} = useProfile({publicKey: userPublicKey});
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -40,7 +43,6 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                   <IconButton
                     icon="more-vertical"
                     size={20}
-                    color="#14142c"
                     style={styles.iconButton}
                     onPress={() => setMenuOpen(true)}
                   />
@@ -64,12 +66,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                 Connect
               </Button>
 
-              <IconButton
-                icon="message-square"
-                size={20}
-                style={styles.iconButton}
-                color="#14142c"
-              />
+              <IconButton icon="message-square" size={20} style={styles.iconButton} />
 
               <Menu
                 open={menuOpen}
@@ -78,7 +75,6 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                   <IconButton
                     icon="more-vertical"
                     size={20}
-                    color="#14142c"
                     style={styles.iconButton}
                     onPress={() => setMenuOpen(true)}
                   />
@@ -101,28 +97,41 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
       />
 
       <View style={styles.info}>
-        <Typography style={styles.displayName}>{profile?.displayName}</Typography>
+        <Text weight="bold" fontSize={20} lineHeight={24}>
+          {profile?.displayName}
+        </Text>
 
         <View style={styles.usernameContainer}>
           {profile?.username ? (
-            <Typography style={styles.username}>@{profile.username}</Typography>
+            <Text weight="medium" color="textSecondary" fontSize={16} style={styles.username}>
+              @{profile.username}
+            </Text>
           ) : null}
 
           <Pressable style={styles.publicKey}>
-            <Text style={styles.publicKeyText} numberOfLines={1} ellipsizeMode="middle">
+            <Text
+              weight="medium"
+              style={styles.publicKeyText}
+              numberOfLines={1}
+              ellipsizeMode="middle"
+            >
               {userPublicKey}
             </Text>
 
-            <IconButton size={16} icon="copy" color="#EC796B" />
+            <IconButton size={16} icon="copy" color="primary" />
           </Pressable>
         </View>
 
-        {profile?.about ? <Typography style={styles.bio}>{profile.about}</Typography> : null}
+        {profile?.about ? (
+          <Text weight="medium" color="textSecondary" lineHeight={20} style={styles.bio}>
+            {profile.about}
+          </Text>
+        ) : null}
 
         <View style={styles.connections}>
-          <Feather name="user-plus" size={16} color="#14142C" />
+          <Feather name="user-plus" size={16} color={theme.colors.text} />
 
-          <Typography style={styles.connectionsText}>13 Connections</Typography>
+          <Text weight="semiBold">13 Connections</Text>
         </View>
       </View>
     </View>

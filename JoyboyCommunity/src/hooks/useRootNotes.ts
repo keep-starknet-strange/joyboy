@@ -1,7 +1,7 @@
+import {NDKKind} from '@nostr-dev-kit/ndk';
 import {useInfiniteQuery} from '@tanstack/react-query';
 
 import {useNostrContext} from '../context/NostrContext';
-import {EventKind} from '../types';
 
 export type UseRootNotesOptions = {
   authors?: string[];
@@ -9,10 +9,10 @@ export type UseRootNotesOptions = {
 };
 
 export const useRootNotes = (options?: UseRootNotesOptions) => {
-  const {pool, relays} = useNostrContext();
+  const {ndk} = useNostrContext();
 
   return useInfiniteQuery({
-    initialPageParam: Math.round(Date.now() / 1000),
+    initialPageParam: 0,
     queryKey: ['rootNotes', options?.authors, options?.search],
     getNextPageParam: (lastPage: any, allPages, lastPageParam) => {
       if (!lastPage?.length) return undefined;
@@ -23,15 +23,19 @@ export const useRootNotes = (options?: UseRootNotesOptions) => {
       return pageParam;
     },
     queryFn: async ({pageParam}) => {
-      const notes = await pool.querySync(relays, {
-        kinds: [EventKind.Note],
-        authors: options?.authors,
-        search: options?.search,
-        until: pageParam,
-        limit: 20,
-      });
+      try {
+        const notes = await ndk.fetchEvents({
+          kinds: [NDKKind.Text],
+          authors: options?.authors,
+          search: options?.search,
+          until: pageParam || Math.round(Date.now() / 1000),
+          limit: 20,
+        });
 
-      return notes.filter((note) => note.tags.every((tag) => tag[0] !== 'e'));
+        return [...notes].filter((note) => note.tags.every((tag) => tag[0] !== 'e'));
+      } catch (error) {
+        console.log('error', error);
+      }
     },
     placeholderData: {pages: [], pageParams: []},
   });

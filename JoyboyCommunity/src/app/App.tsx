@@ -4,6 +4,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import {useCallback, useEffect, useState} from 'react';
 import {StatusBar, View} from 'react-native';
 
+import {useNostrContext} from '../context/NostrContext';
 import {Router} from './Router';
 
 // Keep the splash screen visible while we fetch resources
@@ -11,21 +12,31 @@ SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
+  const {ndk} = useNostrContext();
 
   useEffect(() => {
-    async function prepare() {
+    (async () => {
       try {
         // Pre-load fonts, make any API calls you need to do here
         await Font.loadAsync(Entypo.font);
+
+        await Font.loadAsync({
+          'Poppins-Light': require('../../assets/fonts/Poppins/Poppins-Light.ttf'),
+          'Poppins-Regular': require('../../assets/fonts/Poppins/Poppins-Regular.ttf'),
+          'Poppins-Italic': require('../../assets/fonts/Poppins/Poppins-Italic.ttf'),
+          'Poppins-Medium': require('../../assets/fonts/Poppins/Poppins-Medium.ttf'),
+          'Poppins-SemiBold': require('../../assets/fonts/Poppins/Poppins-SemiBold.ttf'),
+          'Poppins-Bold': require('../../assets/fonts/Poppins/Poppins-Bold.ttf'),
+        });
+
+        await ndk.connect();
       } catch (e) {
         console.warn(e);
       } finally {
         // Tell the application to render
         setAppIsReady(true);
       }
-    }
-
-    prepare();
+    })();
   }, []);
 
   const onLayoutRootView = useCallback(async () => {

@@ -1,6 +1,6 @@
+import {NDKEvent} from '@nostr-dev-kit/ndk';
 import {CompositeScreenProps, NavigatorScreenParams} from '@react-navigation/native';
 import {NativeStackNavigationProp, NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Event} from 'nostr-tools';
 
 export type RootStackParams = {
   MainStack: NavigatorScreenParams<MainStackParams>;
@@ -9,13 +9,18 @@ export type RootStackParams = {
 
 export type AuthStackParams = {
   Login: undefined;
+  CreateAccount: undefined;
+  SaveKeys: {
+    privateKey: string;
+    publicKey: string;
+  };
 };
 
 export type MainStackParams = {
   Home: NavigatorScreenParams<HomeBottomStackParams>;
   CreatePost: undefined;
   Profile: {publicKey: string};
-  PostDetail: {postId: string; post?: Event};
+  PostDetail: {postId: string; post?: NDKEvent};
 };
 
 export type HomeBottomStackParams = {
@@ -32,6 +37,14 @@ export type RootStackScreenProps = NativeStackScreenProps<RootStackParams>;
 // Auth
 export type AuthLoginScreenProps = CompositeScreenProps<
   NativeStackScreenProps<AuthStackParams, 'Login'>,
+  NativeStackScreenProps<RootStackParams>
+>;
+export type AuthCreateAccountScreenProps = CompositeScreenProps<
+  NativeStackScreenProps<AuthStackParams, 'CreateAccount'>,
+  NativeStackScreenProps<RootStackParams>
+>;
+export type AuthSaveKeysScreenProps = CompositeScreenProps<
+  NativeStackScreenProps<AuthStackParams, 'SaveKeys'>,
   NativeStackScreenProps<RootStackParams>
 >;
 
