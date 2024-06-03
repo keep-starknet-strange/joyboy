@@ -118,14 +118,13 @@ pub mod SocialAccount {
         ) -> felt252 {
             assert(signature.len() == 2_u32, 'Invalid Signature Length');
 
+            let r = *signature.at(0_u32).into();
+            let s = *signature.at(1_u32).into();
             let public_key = self.public_key.read();
 
-            let byte_array = format_as_byte_array(hash, 16);
+            let byte_array = ByteArray::append_word(hash);
 
-            let verify_signature = bip340
-                .verify(
-                    public_key, *signature.at(0_u32).into(), *signature.at(1_u32).into(), byte_array
-                );
+            let verify_signature = bip340.verify(public_key, r, s, byte_array);
 
             if verify_signature {
                 starknet::VALIDATED
