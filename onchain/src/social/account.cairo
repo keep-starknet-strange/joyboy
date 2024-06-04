@@ -1,7 +1,7 @@
 use openzeppelin::account::interface;
 use openzeppelin::introspection::src5::SRC5Component;
 use starknet::{ContractAddress, get_caller_address, get_contract_address, contract_address_const};
-use super::interfaceID::ISRC5_ID;
+use super::interface::ISRC5_ID;
 use super::profile::NostrProfile;
 use super::request::SocialRequest;
 use super::transfer::Transfer;
@@ -17,7 +17,7 @@ pub trait ISocialAccount<TContractState> {
 pub mod SocialAccount {
     use openzeppelin::introspection::src5::SRC5Component;
     use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
-    use super::super::interfaceID::ISRC5_ID;
+    use super::super::interface::ISRC5_ID;
     use super::super::request::{
         SocialRequest, SocialRequestImpl, SocialRequestTrait, Encode, Signature
     };
@@ -109,7 +109,7 @@ mod tests {
     use starknet::{
         ContractAddress, get_caller_address, get_contract_address, contract_address_const
     };
-    use super::super::interfaceID::ISRC5_ID;
+    use super::super::interface::ISRC5_ID;
     use super::super::profile::NostrProfile;
 
     use super::super::request::{SocialRequest, Signature, Encode};
