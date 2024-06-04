@@ -5,7 +5,7 @@ export interface SocialPayRequest extends EventNostr {
     sender?: string;
     to?: string;
     addressToken?: string;
-    contentTransfer?:Transfer
+    contentTransfer?:Transfer | any
     signature?: {
         r?:string,
         x?:string
@@ -19,7 +19,7 @@ export interface NostrProfile {
 }
 export interface Transfer {
     amount:number|Uint256,
-    token:string,
+    token:string | ByteArray,
     token_address:string,
     joyboy:NostrProfile,
     recipient:NostrProfile,

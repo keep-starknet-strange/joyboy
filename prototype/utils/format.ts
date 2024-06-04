@@ -36,30 +36,43 @@ export function nostrPubkeyToUint256(pubkey: string): Uint256 {
 
 
 // // Define the function to convert a hex string to Uint256
-// export function hexStringToUint256(hexString: string) {
-//   // Remove the leading '0x' if present
-//   if (hexString.startsWith('0x')) {
-//     hexString = hexString.slice(2);
-//   }
+export function hexStringToUint256(hexString: string) {
+  // Remove the leading '0x' if present
+  if (hexString.startsWith('0x')) {
+    hexString = hexString.slice(2);
+  }
 
-//   // // Ensure the hex string is 64 characters (32 bytes) long
-//   // if (hexString.length !== 64) {
-//   //   throw new Error('Invalid hex string length');
-//   // }
+  // // Ensure the hex string is 64 characters (32 bytes) long
+  // if (hexString.length !== 64) {
+  //   throw new Error('Invalid hex string length');
+  // }
 
-//   // Split the string into two 128-bit parts (16 bytes each)
-//   const highHex = hexString.slice(0, 32);
-//   const lowHex = hexString.slice(32);
+  // Split the string into two 128-bit parts (16 bytes each)
+  const highHex = hexString.slice(0, 32);
+  const lowHex = hexString.slice(32);
 
-//   // Convert the hex parts to BigInt
-//   const high = BigInt('0x' + highHex);
-//   const low = BigInt('0x' + lowHex);
+  // Convert the hex parts to BigInt
+  const high = BigInt('0x' + highHex);
+  const low = BigInt('0x' + lowHex);
 
-//   // Create the Uint256 object
-//   const uint256Value = uint256.bnToUint256(low + (high << BigInt(128)));
+  // Create the Uint256 object
+  const uint256Value = uint256.bnToUint256(low + (high << BigInt(128)));
 
-//   return uint256Value;
-// }
+  return uint256Value;
+}
+
+export function stringToUint8Array(str: string): Uint8Array {
+  // Create a Uint8Array with a length of 32
+  const uint8Array = new Uint8Array(32);
+  
+  // Fill the array with the string characters converted to their corresponding ASCII values
+  for (let i = 0; i < str.length; i++) {
+    uint8Array[i] = str.charCodeAt(i);
+  }
+  
+  // Return the filled Uint8Array
+  return uint8Array;
+}
 
 
 // /**

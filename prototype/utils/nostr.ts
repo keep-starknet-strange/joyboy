@@ -6,7 +6,7 @@ import {
   getPublicKey,
   nip05,
 } from "nostr-tools";
-import { finalizeEvent, verifyEvent } from "nostr-tools";
+import { finalizeEvent, verifyEvent ,} from "nostr-tools";
 import { Relay } from "nostr-tools";
 import { logDev } from "./log";
 import * as secp from "@noble/secp256k1";
@@ -33,7 +33,7 @@ function transformSignature(signature: string) {
  */
 export const sendEvent = async (
   sk: Uint8Array,
-  content: string = "@joyboy send 20 USDC to @alice.xyz"
+  content: string = "@joyboy send 10 USDC to @alice.xyz"
 ) => {
   let eventRender: Event | undefined;
   try {
