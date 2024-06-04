@@ -6809,6 +6809,11 @@ react-native-keychain@^8.2.0:
   resolved "https://registry.yarnpkg.com/react-native-keychain/-/react-native-keychain-8.2.0.tgz#aea82df37aacbb04f8b567a8e0e6d7292025610a"
   integrity sha512-SkRtd9McIl1Ss2XSWNLorG+KMEbgeVqX+gV+t3u1EAAqT8q2/OpRmRbxpneT2vnb/dMhiU7g6K/pf3nxLUXRvA==
 
+react-native-modalize@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-modalize/-/react-native-modalize-2.1.1.tgz#dcb67d208f4c5bdc76f45075e727be43fd008561"
+  integrity sha512-4/7EZWsrUqAAkkAVEnOsSdpAPQaEBewX7TvwFuzgvGDzxKpq3O58I9SnSeU8QtG/r91XYHJNaU5dAuDrcLjUaQ==
+
 react-native-pager-view@6.3.0:
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-6.3.0.tgz#7e734e84b1692f877591335373f6fd92f0d67aa6"
