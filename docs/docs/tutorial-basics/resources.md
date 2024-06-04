@@ -4,7 +4,7 @@ sidebar_position: 5
 
 # Resources
 
-- [Starknet](www.starknet.io)
+- [Starknet](https://www.starknet.io)
 - [Nostr](https://nostr.com/)
 - [Nostr Implementation possibilities](https://github.com/nostr-protocol/nips)
 - [JoinStr:Decentralized CoinJoin Implementation using Nostr](https://www.nobsbitcoin.com/joinstr-decentralized-coinjoin-implementation-using-nostr/)
