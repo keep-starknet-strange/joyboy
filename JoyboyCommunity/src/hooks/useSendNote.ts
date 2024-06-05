@@ -10,6 +10,7 @@ export const useSendNote = () => {
   const {privateKey} = useAuth();
 
   return useMutation({
+    mutationKey: ['sendNote'],
     mutationFn: async (data: {content: string; tags?: string[][]}) => {
       if (!privateKey) {
         throw new Error('Private key is required');
