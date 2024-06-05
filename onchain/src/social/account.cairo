@@ -237,7 +237,7 @@ mod tests {
 
     #[test]
     #[should_panic(expected: "can't verify signature")]
-    fn incorect_signature() {
+    fn incorrect_signature() {
         let (request, sender, _, _) = request_fixture();
 
         let request = SocialRequest {
