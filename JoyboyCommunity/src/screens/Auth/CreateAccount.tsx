@@ -22,9 +22,9 @@ export const CreateAccount: React.FC<AuthCreateAccountScreenProps> = ({navigatio
       return;
     }
 
-    const {secretKeyHex, publicKey} = generateRandomKeypair();
+    const {privateKey, publicKey} = generateRandomKeypair();
 
-    await storePrivateKey(secretKeyHex, password);
+    await storePrivateKey(privateKey, password);
     await storePublicKey(publicKey);
 
     const biometySupported = canUseBiometricAuthentication();
@@ -44,7 +44,7 @@ export const CreateAccount: React.FC<AuthCreateAccountScreenProps> = ({navigatio
       ]);
     }
 
-    navigation.navigate('SaveKeys', {privateKey: secretKeyHex, publicKey});
+    navigation.navigate('SaveKeys', {privateKey, publicKey});
   };
 
   return (

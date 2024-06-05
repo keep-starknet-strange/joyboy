@@ -39,9 +39,7 @@ export const storePrivateKey = async (privateKeyHex: string, password: string) =
   }
 };
 
-export const retrieveAndDecryptPrivateKey = async (
-  password: string,
-): Promise<false | Uint8Array> => {
+export const retrieveAndDecryptPrivateKey = async (password: string): Promise<false | Buffer> => {
   try {
     const encryptedPrivateKey = isSecureStoreAvailable
       ? await SecureStore.getItemAsync('encryptedPrivateKey')
@@ -60,10 +58,7 @@ export const retrieveAndDecryptPrivateKey = async (
       return false;
     }
 
-    const decryptedPrivateKey = pbkdf2Decrypt(parsedEncryptedPrivateKey, password);
-    const privateKey = new Uint8Array(decryptedPrivateKey);
-
-    return privateKey;
+    return pbkdf2Decrypt(parsedEncryptedPrivateKey, password);
   } catch (e) {
     // We shouldn't throw the original error for security reasons
     throw new Error('Error retrieving and decrypting private key');

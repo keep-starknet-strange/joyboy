@@ -26,7 +26,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
   return (
     <View>
       <ProfileHead
-        profilePhoto={profile?.picture && {uri: profile.picture}}
+        profilePhoto={profile?.image && {uri: profile.image}}
         coverPhoto={profile?.banner && {uri: profile.banner}}
         showSettingsButton={isSelf}
         buttons={
@@ -98,13 +98,13 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
 
       <View style={styles.info}>
         <Text weight="bold" fontSize={20} lineHeight={24}>
-          {profile?.displayName}
+          {profile?.displayName ?? profile?.name}
         </Text>
 
         <View style={styles.usernameContainer}>
-          {profile?.username ? (
+          {profile?.nip05 ? (
             <Text weight="medium" color="textSecondary" fontSize={16} style={styles.username}>
-              @{profile.username}
+              @{profile.nip05}
             </Text>
           ) : null}
 

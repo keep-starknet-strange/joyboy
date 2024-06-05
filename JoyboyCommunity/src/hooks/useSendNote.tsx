@@ -15,9 +15,7 @@ export const useSendNote = () => {
         throw new Error('Private key is required');
       }
 
-      const privateKeyString = Buffer.from(privateKey).toString('hex');
-
-      const signer = new NDKPrivateKeySigner(privateKeyString);
+      const signer = new NDKPrivateKeySigner(privateKey);
 
       const event = new NDKEvent(ndk);
       event.kind = NDKKind.Text;

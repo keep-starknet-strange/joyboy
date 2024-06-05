@@ -3,15 +3,14 @@ import {getRandomBytes} from 'expo-crypto';
 
 export const generateRandomKeypair = () => {
   try {
-    const secretKey = getRandomBytes(32);
-    const secretKeyHex = Buffer.from(secretKey).toString('hex');
+    const privateKey = getRandomBytes(32);
+    const privateKeyHex = Buffer.from(privateKey).toString('hex');
 
-    const publicKey = secp256k1.getPublicKey(secretKeyHex);
+    const publicKey = secp256k1.getPublicKey(privateKeyHex);
     const publicKeyHex = Buffer.from(publicKey).toString('hex');
 
     return {
-      secretKey,
-      secretKeyHex,
+      privateKey: privateKeyHex,
       publicKey: publicKeyHex,
     };
   } catch (error) {
@@ -20,12 +19,9 @@ export const generateRandomKeypair = () => {
   }
 };
 
-export const getPublicKeyFromSecret = (secretKey: Uint8Array | string) => {
+export const getPublicKeyFromSecret = (privateKey: string) => {
   try {
-    const secretKeyHex =
-      typeof secretKey === 'string' ? secretKey : Buffer.from(secretKey).toString('hex');
-
-    const publicKey = secp256k1.getPublicKey(secretKeyHex);
+    const publicKey = secp256k1.getPublicKey(privateKey);
     return Buffer.from(publicKey).toString('hex');
   } catch (error) {
     // We shouldn't throw the original error for security reasons
