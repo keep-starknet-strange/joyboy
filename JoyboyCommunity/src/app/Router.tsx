@@ -9,6 +9,7 @@ import {CreateAccount} from '../screens/Auth/CreateAccount';
 import {Login} from '../screens/Auth/Login';
 import {SaveKeys} from '../screens/Auth/SaveKeys';
 import {CreatePost} from '../screens/CreatePost';
+import {EditProfile} from '../screens/EditProfile';
 import {Feed} from '../screens/Feed';
 import {PostDetail} from '../screens/PostDetail';
 import {Profile} from '../screens/Profile';
@@ -127,6 +128,7 @@ const MainNavigator: React.FC = () => {
     <MainStack.Navigator screenOptions={{headerShown: false}}>
       <MainStack.Screen name="Home" component={HomeBottomTabNavigator} />
       <MainStack.Screen name="Profile" component={Profile} />
+      <MainStack.Screen name="EditProfile" component={EditProfile} />
       <MainStack.Screen name="CreatePost" component={CreatePost} />
       <MainStack.Screen name="PostDetail" component={PostDetail} />
     </MainStack.Navigator>

@@ -21,6 +21,7 @@ export type MainStackParams = {
   CreatePost: undefined;
   Profile: {publicKey: string};
   PostDetail: {postId: string; post?: NDKEvent};
+  EditProfile: undefined;
 };
 
 export type HomeBottomStackParams = {
@@ -85,5 +86,10 @@ export type ProfileScreenProps = CompositeScreenProps<
 
 export type PostDetailScreenProps = CompositeScreenProps<
   NativeStackScreenProps<MainStackParams, 'PostDetail'>,
+  NativeStackScreenProps<RootStackParams>
+>;
+
+export type EditProfileScreenProps = CompositeScreenProps<
+  NativeStackScreenProps<MainStackParams, 'EditProfile'>,
   NativeStackScreenProps<RootStackParams>
 >;
