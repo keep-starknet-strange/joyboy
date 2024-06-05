@@ -157,8 +157,13 @@ mod tests {
         ERC20ABIDispatcher { contract_address }
     }
 
-    fn request_fixture_custom_classes(erc20_class: ContractClass, account_class: ContractClass) -> (
-        SocialRequest<Transfer>, ISocialAccountDispatcher, ISocialAccountDispatcher, ERC20ABIDispatcher
+    fn request_fixture_custom_classes(
+        erc20_class: ContractClass, account_class: ContractClass
+    ) -> (
+        SocialRequest<Transfer>,
+        ISocialAccountDispatcher,
+        ISocialAccountDispatcher,
+        ERC20ABIDispatcher
     ) {
         // sender private key: 70aca2a9ab722bd56a9a1aadae7f39bc747c7d6735a04d677e0bc5dbefa71d47
         // just for testing, do not use for anything else
@@ -175,9 +180,7 @@ mod tests {
 
         let joyboy_public_key = 0x84603b4e300840036ca8cc812befcc8e240c09b73812639d5cdd8ece7d6eba40;
 
-        let erc20 = deploy_erc20(
-            erc20_class, "USDC token", "USDC", 100, sender.contract_address
-        );
+        let erc20 = deploy_erc20(erc20_class, "USDC token", "USDC", 100, sender.contract_address);
 
         let transfer = Transfer {
             amount: 1,
@@ -202,13 +205,16 @@ mod tests {
                 r: 0x3570a9a0c92c180bd4ac826c887e63844b043e3b65da71a857d2aa29e7cd3a4e_u256,
                 s: 0x1c0c0a8b7a8330b6b8915985c9cd498a407587213c2e7608e7479b4ef966605f_u256,
             }
-        };        
+        };
 
         (request, sender, recipient, erc20)
     }
 
     fn request_fixture() -> (
-        SocialRequest<Transfer>, ISocialAccountDispatcher, ISocialAccountDispatcher, ERC20ABIDispatcher
+        SocialRequest<Transfer>,
+        ISocialAccountDispatcher,
+        ISocialAccountDispatcher,
+        ERC20ABIDispatcher
     ) {
         let erc20_class = declare_erc20();
         let account_class = declare_account();
@@ -250,10 +256,7 @@ mod tests {
     fn wrong_sender() {
         let (request, sender, _, _) = request_fixture();
 
-        let request = SocialRequest {
-            public_key: 123_u256,
-            ..request,
-        };
+        let request = SocialRequest { public_key: 123_u256, ..request, };
 
         sender.handle_transfer(request);
     }
@@ -267,8 +270,7 @@ mod tests {
 
         let request = SocialRequest {
             content: Transfer {
-                recipient_address: sender.contract_address,
-                ..request.content.clone()
+                recipient_address: sender.contract_address, ..request.content.clone()
             },
             ..request,
         };
@@ -279,23 +281,17 @@ mod tests {
     #[test]
     #[should_panic(expected: "wrong token")]
     fn wrong_token() {
-
         let erc20_class = declare_erc20();
         let account_class = declare_account();
 
-        let dai = deploy_erc20(
-            erc20_class, "DAI token", "DAI", 100, 21.try_into().unwrap()
-        );
+        let dai = deploy_erc20(erc20_class, "DAI token", "DAI", 100, 21.try_into().unwrap());
 
         let (request, sender, _, _) = request_fixture_custom_classes(erc20_class, account_class);
 
         // let content = request.content.clone();
 
         let request = SocialRequest {
-            content: Transfer {
-                token_address: dai.contract_address,
-                ..request.content.clone()
-            },
+            content: Transfer { token_address: dai.contract_address, ..request.content.clone() },
             ..request,
         };
 
