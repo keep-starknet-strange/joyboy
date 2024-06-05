@@ -14,7 +14,7 @@ import Animated, {
 
 import {CommentIcon, LikeFillIcon, LikeIcon, RepostIcon} from '../../assets/icons';
 import {Text} from '../../components';
-import {useStyles, useTheme} from '../../hooks';
+import {useProfile, useStyles, useTheme} from '../../hooks';
 import {MainStackNavigationProps} from '../../types';
 import {timestampToHumanReadable} from '../../utils/common-utils';
 import stylesheet from './styles';
@@ -29,6 +29,8 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
   const postSource = undefined;
 
   const navigation = useNavigation<MainStackNavigationProps>();
+
+  const {data: profile} = useProfile({publicKey: event?.pubkey});
 
   const theme = useTheme();
   const styles = useStyles(stylesheet, asComment);
@@ -104,17 +106,28 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
             />
           </Pressable>
 
-          <Pressable onPress={handleNavigateToPostDetails}>
-            <Text weight="bold" color="textStrong" fontSize={asComment ? 13 : 15} lineHeight={20}>
-              Monkey D Luffy
+          <Pressable style={styles.infoProfile} onPress={handleNavigateToPostDetails}>
+            <Text
+              weight="bold"
+              color="textStrong"
+              fontSize={asComment ? 13 : 15}
+              lineHeight={20}
+              numberOfLines={1}
+              ellipsizeMode="middle"
+            >
+              {profile?.displayName ?? profile?.name ?? event?.pubkey}
             </Text>
 
             <View style={styles.infoDetails}>
-              <Text color="textLight" fontSize={11} lineHeight={16}>
-                @luffy
-              </Text>
+              {profile?.nip05 && (
+                <>
+                  <Text color="textLight" fontSize={11} lineHeight={16}>
+                    @{profile?.nip05}
+                  </Text>
 
-              <View style={styles.infoDetailsDivider} />
+                  <View style={styles.infoDetailsDivider} />
+                </>
+              )}
 
               <Text color="textLight" fontSize={11} lineHeight={16}>
                 {timestampToHumanReadable(event.created_at)}

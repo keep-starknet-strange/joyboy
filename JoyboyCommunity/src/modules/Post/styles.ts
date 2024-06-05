@@ -16,6 +16,7 @@ export default ThemedStyleSheet((theme, asComment: boolean) => ({
     marginBottom: Spacing.small,
   },
   infoUser: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.small,
@@ -23,6 +24,9 @@ export default ThemedStyleSheet((theme, asComment: boolean) => ({
   infoUserAvatar: {
     width: asComment ? 40 : 50,
     height: asComment ? 40 : 50,
+  },
+  infoProfile: {
+    flex: 1,
   },
   infoDetails: {
     flexDirection: 'row',
