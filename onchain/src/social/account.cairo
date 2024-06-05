@@ -14,6 +14,8 @@ use super::transfer::Transfer;
 pub trait ISocialAccount<TContractState> {
     fn get_public_key(self: @TContractState) -> u256;
     fn handle_transfer(ref self: TContractState, request: SocialRequest<Transfer>);
+    // fn is_valid_signature( self: @TContractState, hash: felt252, signature: Array<felt252>
+    //     ) -> felt252 
 }
 
 
@@ -98,9 +100,10 @@ pub mod SocialAccount {
 
             erc20.transfer(request.content.recipient_address, request.content.amount);
         }
+
     }
 
-    #[abi(embed_v0)]
+  //   #[abi(embed_v0)]
     impl SRC6Impl of ISRC6<ContractState> {
         fn __execute__(self: @ContractState, mut calls: Array<Call>) -> Array<Span<felt252>> {
             execute_calls(calls)
@@ -109,8 +112,15 @@ pub mod SocialAccount {
         fn __validate__(self: @ContractState, mut calls: Array<Call>) -> felt252 {
             let tx_info = get_tx_info().unbox();
             let tx_hash = tx_info.transaction_hash;
-            let signature = tx_info.signature;
-            return self.is_valid_signature(tx_hash, signature);
+            let mut signature = tx_info.signature; 
+
+            let mut array_sign = array![];
+            while let Option::Some(v) = signature.pop_front() {
+                array_sign.append(*v);
+            };
+
+
+             return self.is_valid_signature(tx_hash, array_sign);
         }
 
         fn is_valid_signature(
@@ -121,11 +131,10 @@ pub mod SocialAccount {
             let r = *signature.at(0_u32).into();
             let s = *signature.at(1_u32).into();
             let public_key = self.public_key.read();
-
             let mut ba = Default::default();
             ba.append_word(hash, 4);
 
-            let verify_signature = bip340.verify(public_key, r, s, ba);
+            let verify_signature = super::bip340::verify(public_key, r.into(), s.into(), ba);
 
             if verify_signature {
                 starknet::VALIDATED
