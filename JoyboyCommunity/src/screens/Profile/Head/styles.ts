@@ -2,7 +2,7 @@ import {Platform} from 'react-native';
 
 import {Spacing, ThemedStyleSheet} from '../../../styles';
 
-const AVATAR_SIZE = 100;
+export const AVATAR_SIZE = 100;
 
 export default ThemedStyleSheet((theme) => ({
   container: {},
@@ -67,9 +67,6 @@ export default ThemedStyleSheet((theme) => ({
   avatarImage: {
     width: AVATAR_SIZE,
     height: AVATAR_SIZE,
-    borderRadius: AVATAR_SIZE,
-    borderWidth: 5,
-    borderColor: 'white',
   },
   avatarUploadIcon: {
     position: 'absolute',

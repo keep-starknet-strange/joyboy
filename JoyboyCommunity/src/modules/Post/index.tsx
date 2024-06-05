@@ -13,7 +13,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import {CommentIcon, LikeFillIcon, LikeIcon, RepostIcon} from '../../assets/icons';
-import {Text} from '../../components';
+import {Avatar, Text} from '../../components';
 import {useProfile, useStyles, useTheme} from '../../hooks';
 import {MainStackNavigationProps} from '../../types';
 import {timestampToHumanReadable} from '../../utils/common-utils';
@@ -33,7 +33,7 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
   const {data: profile} = useProfile({publicKey: event?.pubkey});
 
   const theme = useTheme();
-  const styles = useStyles(stylesheet, asComment);
+  const styles = useStyles(stylesheet);
 
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState(12); // static value for now
@@ -100,9 +100,9 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
       <View style={styles.info}>
         <View style={styles.infoUser}>
           <Pressable onPress={() => handleProfilePress(event?.pubkey)}>
-            <Image
+            <Avatar
+              size={asComment ? 40 : 50}
               source={require('../../../assets/joyboy-logo.png')}
-              style={styles.infoUserAvatar}
             />
           </Pressable>
 

@@ -4,9 +4,9 @@ import {Image, ImageSourcePropType, Pressable, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {UploadIcon} from '../../../assets/icons';
-import {IconButton, Text} from '../../../components';
+import {Avatar, IconButton, Text} from '../../../components';
 import {useStyles, useTheme} from '../../../hooks';
-import stylesheet from './styles';
+import stylesheet, {AVATAR_SIZE} from './styles';
 
 export type ProfileHeadProps = {
   profilePhoto?: ImageSourcePropType;
@@ -75,9 +75,9 @@ export const ProfileHead: React.FC<ProfileHeadProps> = ({
 
       <View style={styles.avatarContainer}>
         <View style={styles.avatar}>
-          <Image
+          <Avatar
+            size={AVATAR_SIZE}
             source={profilePhoto ?? require('../../../assets/joyboy-logo.png')}
-            style={styles.avatarImage}
           />
 
           {onProfilePhotoUpload && (
