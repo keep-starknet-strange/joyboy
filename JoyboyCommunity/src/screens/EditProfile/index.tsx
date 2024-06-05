@@ -1,7 +1,8 @@
 import {useQueryClient} from '@tanstack/react-query';
 import * as Clipboard from 'expo-clipboard';
+import * as ImagePicker from 'expo-image-picker';
 import {Formik, FormikProps} from 'formik';
-import {useRef} from 'react';
+import {useRef, useState} from 'react';
 import {ScrollView, TouchableOpacity, View} from 'react-native';
 
 import {CopyIconStack} from '../../assets/icons';
@@ -33,17 +34,49 @@ export const EditProfile: React.FC<EditProfileScreenProps> = () => {
   const theme = useTheme();
   const styles = useStyles(stylesheet);
 
+  const [profilePhoto, setProfilePhoto] = useState<ImagePicker.ImagePickerAsset | undefined>();
+  const [coverPhoto, setCoverPhoto] = useState<ImagePicker.ImagePickerAsset | undefined>();
+
   const publicKey = useAuth((state) => state.publicKey);
   const profile = useProfile({publicKey});
   const editProfile = useEditProfile();
   const queryClient = useQueryClient();
+
+  if (profile.isLoading || !profile.data) return null;
 
   const onPublicKeyCopyPress = async () => {
     await Clipboard.setStringAsync(publicKey);
     alert('Copied to clipboard');
   };
 
-  if (profile.isLoading || !profile.data) return null;
+  const handlePhotoUpload = async (type: 'profile' | 'cover') => {
+    const pickerResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      aspect: type === 'profile' ? [1, 1] : [16, 9],
+      allowsEditing: true,
+      allowsMultipleSelection: false,
+      selectionLimit: 1,
+      exif: false,
+      quality: 0.75,
+    });
+
+    if (pickerResult.canceled || !pickerResult.assets.length) return;
+    return pickerResult.assets[0];
+  };
+
+  const onProfilePhotoUpload = async () => {
+    const file = await handlePhotoUpload('profile');
+    if (file) setProfilePhoto(file);
+
+    // TODO: upload file
+  };
+
+  const onCoverPhotoUpload = async () => {
+    const file = await handlePhotoUpload('cover');
+    if (file) setCoverPhoto(file);
+
+    // TODO: upload file
+  };
 
   const initialFormValues: FormValues = {
     username: profile.data.nip05,
@@ -84,8 +117,16 @@ export const EditProfile: React.FC<EditProfileScreenProps> = () => {
   return (
     <ScrollView automaticallyAdjustKeyboardInsets style={styles.container}>
       <ProfileHead
-        profilePhoto={profile.data.image && {uri: profile.data.image}}
-        coverPhoto={profile.data.banner && {uri: profile.data.banner}}
+        onProfilePhotoUpload={onProfilePhotoUpload}
+        onCoverPhotoUpload={onCoverPhotoUpload}
+        profilePhoto={
+          (profilePhoto?.uri && {uri: profilePhoto.uri}) ||
+          (profile.data.image && {uri: profile.data.image})
+        }
+        coverPhoto={
+          (coverPhoto?.uri && {uri: coverPhoto.uri}) ||
+          (profile.data.banner && {uri: profile.data.banner})
+        }
         buttons={
           <Button variant="secondary" small onPress={onSubmitPress}>
             Save

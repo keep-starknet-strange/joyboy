@@ -3,13 +3,16 @@ import {useNavigation} from '@react-navigation/native';
 import {Image, ImageSourcePropType, Pressable, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
+import {UploadIcon} from '../../../assets/icons';
 import {IconButton, Text} from '../../../components';
-import {useStyles} from '../../../hooks';
+import {useStyles, useTheme} from '../../../hooks';
 import stylesheet from './styles';
 
 export type ProfileHeadProps = {
   profilePhoto?: ImageSourcePropType;
   coverPhoto?: ImageSourcePropType;
+  onCoverPhotoUpload?: () => void;
+  onProfilePhotoUpload?: () => void;
   showBackButton?: boolean;
   showSettingsButton?: boolean;
   buttons?: React.ReactNode;
@@ -18,10 +21,13 @@ export type ProfileHeadProps = {
 export const ProfileHead: React.FC<ProfileHeadProps> = ({
   profilePhoto,
   coverPhoto,
+  onProfilePhotoUpload,
+  onCoverPhotoUpload,
   showBackButton = true,
   showSettingsButton,
   buttons,
 }) => {
+  const theme = useTheme();
   const styles = useStyles(stylesheet);
 
   const navigation = useNavigation();
@@ -57,6 +63,12 @@ export const ProfileHead: React.FC<ProfileHeadProps> = ({
                 </Text>
               </Pressable>
             )}
+
+            {onCoverPhotoUpload && (
+              <Pressable style={styles.coverUploadIcon} onPress={onCoverPhotoUpload}>
+                <UploadIcon width={44} height={44} color={theme.colors.surface} />
+              </Pressable>
+            )}
           </View>
         </SafeAreaView>
       </View>
@@ -67,6 +79,12 @@ export const ProfileHead: React.FC<ProfileHeadProps> = ({
             source={profilePhoto ?? require('../../../assets/joyboy-logo.png')}
             style={styles.avatarImage}
           />
+
+          {onProfilePhotoUpload && (
+            <Pressable style={styles.avatarUploadIcon} onPress={onProfilePhotoUpload}>
+              <UploadIcon width={44} height={44} color={theme.colors.surface} />
+            </Pressable>
+          )}
         </View>
 
         <View style={styles.buttons}>{buttons}</View>
