@@ -1,10 +1,12 @@
 import {Feather} from '@expo/vector-icons';
+import {useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
 import {Pressable, View} from 'react-native';
 
 import {Button, IconButton, Menu, Text} from '../../../components';
 import {useProfile, useStyles, useTheme} from '../../../hooks';
 import {useAuth} from '../../../store/auth';
+import {ProfileScreenProps} from '../../../types';
 import {ProfileHead} from '../Head';
 import stylesheet from './styles';
 
@@ -16,12 +18,18 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
   const theme = useTheme();
   const styles = useStyles(stylesheet);
 
+  const navigation = useNavigation<ProfileScreenProps['navigation']>();
+
   const {data: profile} = useProfile({publicKey: userPublicKey});
 
   const [menuOpen, setMenuOpen] = useState(false);
   const publicKey = useAuth((state) => state.publicKey);
 
   const isSelf = publicKey === userPublicKey;
+
+  const onEditProfilePress = () => {
+    navigation.navigate('EditProfile');
+  };
 
   return (
     <View>
@@ -32,7 +40,12 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
         buttons={
           isSelf ? (
             <>
-              <Button small style={styles.secondaryButton} textStyle={styles.secondaryButtonText}>
+              <Button
+                small
+                style={styles.secondaryButton}
+                textStyle={styles.secondaryButtonText}
+                onPress={onEditProfilePress}
+              >
                 Edit profile
               </Button>
 
@@ -59,6 +72,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
             <>
               <Button
                 small
+                variant="secondary"
                 left={
                   <Feather name="user-plus" size={16} color="white" style={styles.buttonIcon} />
                 }
