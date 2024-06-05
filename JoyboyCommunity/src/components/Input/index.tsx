@@ -21,8 +21,6 @@ export type InputProps = TextInputProps & {
 
 export const Input: React.FC<InputProps> = (props) => {
   const {
-    value,
-    placeholder,
     error,
     left,
     right,
@@ -41,8 +39,6 @@ export const Input: React.FC<InputProps> = (props) => {
         {left}
 
         <TextInput
-          value={value}
-          placeholder={placeholder}
           style={[styles.input, inputStyleProp]}
           placeholderTextColor={theme.colors.inputPlaceholder}
           underlineColorAndroid="transparent"

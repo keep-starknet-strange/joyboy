@@ -1,5 +1,6 @@
 import {canUseBiometricAuthentication} from 'expo-secure-store';
 import {useEffect, useState} from 'react';
+import {Platform} from 'react-native';
 
 import {LockIcon} from '../../assets/icons';
 import {Button, Input, TextButton} from '../../components';
@@ -22,7 +23,7 @@ export const Login: React.FC<AuthLoginScreenProps> = ({navigation}) => {
 
   useEffect(() => {
     (async () => {
-      const biometrySupported = canUseBiometricAuthentication();
+      const biometrySupported = Platform.OS !== 'web' && canUseBiometricAuthentication?.();
 
       if (biometrySupported) {
         const storedPassword = await retrievePassword();
