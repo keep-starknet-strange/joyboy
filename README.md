@@ -124,7 +124,7 @@ snforge test
 ## Mobile
 
 The Joyboy Mobile app is built with React-native & Expo.
-[Mobile repo](https://github.com/keep-starknet-strange/joyboy/blob/main/JoyboyCommunity/README)
+[Mobile repo](https://github.com/keep-starknet-strange/joyboy/blob/main/JoyboyCommunity/README.md)
 
 Pick an issue with the labels "mobile" to start work on React-native and contribute!
 
@@ -145,7 +145,7 @@ Here is what we have on the mobile app on the first days, contributions welcome!
 Check the issues with the "mobile" labels.
  
 You can see more details on the README here:
-[Mobile repo](https://github.com/keep-starknet-strange/joyboy/blob/main/JoyboyCommunity/README)
+[Mobile repo](https://github.com/keep-starknet-strange/joyboy/blob/main/JoyboyCommunity/README.md)
 
 Proposal for UI Mobile.
 [UI/UX proposal for video discussions](https://github.com/keep-starknet-strange/joyboy/discussions/48#discussion-6683225)
