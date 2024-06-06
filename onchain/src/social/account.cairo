@@ -8,16 +8,29 @@ use super::transfer::Transfer;
 pub trait ISocialAccount<TContractState> {
     fn get_public_key(self: @TContractState) -> u256;
     fn handle_transfer(ref self: TContractState, request: SocialRequest<Transfer>);
+    // fn __execute__(self: @TContractState, calls: Array<Call>) -> Array<Span<felt252>>;
+    // fn __validate__(self: @TContractState, calls: Array<Call>) -> felt252;
+    // fn is_valid_signature(self: @TContractState, hash: felt252, signature: Array<felt252>) -> felt252;
 }
 
-#[starknet::contract]
+#[starknet::contract(account)]
 pub mod SocialAccount {
+    use joyboy::bip340;
+    use openzeppelin::account::interface::ISRC6;
+    use openzeppelin::account::utils::{
+        MIN_TRANSACTION_VERSION, QUERY_VERSION, QUERY_OFFSET, execute_calls,
+        is_valid_stark_signature
+    };
     use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
+    use starknet::account::Call;
+    use starknet::{get_caller_address, get_contract_address, get_tx_info, ContractAddress};
+
     use super::super::request::{
         SocialRequest, SocialRequestImpl, SocialRequestTrait, Encode, Signature
     };
     use super::super::transfer::Transfer;
     use super::{ISocialAccountDispatcher, ISocialAccountDispatcherTrait};
+    use core::num::traits::Zero;
 
     #[storage]
     struct Storage {
@@ -74,6 +87,60 @@ pub mod SocialAccount {
             }
         }
     }
+
+    #[abi(embed_v0)]
+    impl ISRC6Impl of ISRC6<ContractState> {
+        fn __execute__(self: @ContractState, calls: Array<Call>) -> Array<Span<felt252>> {
+            assert!(get_caller_address().is_zero(), "invalid caller");
+
+            // Check tx version
+            let tx_info = get_tx_info().unbox();
+            let tx_version: u256 = tx_info.version.into();
+            // Check if tx is a query
+            if (tx_version >= QUERY_OFFSET) {
+                assert!(QUERY_OFFSET + MIN_TRANSACTION_VERSION <= tx_version, "invalid tx version");
+            } else {
+                assert!(MIN_TRANSACTION_VERSION <= tx_version, "invalid tx version");
+            }
+
+            execute_calls(calls)
+        }
+
+        fn __validate__(self: @ContractState, calls: Array<Call>) -> felt252 {
+            let tx_info = get_tx_info().unbox();
+            self._is_valid_signature(tx_info.transaction_hash, tx_info.signature)
+        }
+
+        fn is_valid_signature(
+            self: @ContractState, hash: felt252, signature: Array<felt252>
+        ) -> felt252 {
+            self._is_valid_signature(hash, signature.span())
+        }
+    }
+
+    #[generate_trait]
+    impl InternalImpl of InternalTrait {
+        fn _is_valid_signature(
+            self: @ContractState, hash: felt252, signature: Span<felt252>
+        ) -> felt252 {
+            let public_key = self.public_key.read();
+
+            let mut signature = signature;
+            let r: u256 = Serde::deserialize(ref signature).expect('invalid signature format');
+            let s: u256 = Serde::deserialize(ref signature).expect('invalid signature format');
+
+            let hash: u256 = hash.into();
+            let mut hash_as_ba = Default::default();
+            hash_as_ba.append_word(hash.high.into(), 16);
+            hash_as_ba.append_word(hash.low.into(), 16);
+
+            if bip340::verify(public_key, r, s, hash_as_ba) {
+                starknet::VALIDATED
+            } else {
+                0
+            }
+        }
+    }
 }
 
 #[cfg(test)]
@@ -98,6 +165,8 @@ mod tests {
         ISocialAccountDispatcher, ISocialAccountDispatcherTrait, ISocialAccountSafeDispatcher,
         ISocialAccountSafeDispatcherTrait
     };
+
+    use openzeppelin::account::interface::{ISRC6Dispatcher, ISRC6DispatcherTrait};
 
     fn declare_account() -> ContractClass {
         declare("SocialAccount").unwrap()
@@ -308,5 +377,30 @@ mod tests {
 
         sender.handle_transfer(request);
         sender.handle_transfer(request2);
+    }
+
+    #[test]
+ 
+    fn is_valid_signature_success() {
+        // private key: 70aca2a9ab722bd56a9a1aadae7f39bc747c7d6735a04d677e0bc5dbefa71d47
+        // just for testing, do not use for anything else
+        let public_key =
+            0xd6f1cf53f9f52d876505164103b1e25811ec4226a17c7449576ea48b00578171_u256;
+
+        let account_class = declare_account();
+        let account = deploy_account(account_class, public_key);
+        // TODO: cleanup
+        let account = ISRC6Dispatcher { contract_address: account.contract_address};
+
+        let hash = 123;
+
+        let r = 1_u256;
+        let s = 2_u256;
+
+        let mut signature = Default::default();
+        r.serialize(ref signature);
+        s.serialize(ref signature);
+
+        assert!(account.is_valid_signature(hash, signature) == starknet::VALIDATED);
     }
 }
