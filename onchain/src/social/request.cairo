@@ -30,7 +30,7 @@ pub trait Encode<T> {
 
 #[generate_trait]
 pub impl SocialRequestImpl<C, +Encode<C>> of SocialRequestTrait<C> {
-    fn verify(self: @SocialRequest<C>) -> bool {
+    fn verify(self: @SocialRequest<C>) -> Option<u256> {
         let id = @format!(
             "[0,\"{}\",{},{},{},\"{}\"]",
             self.public_key.format_as_byte_array(16),
@@ -52,7 +52,22 @@ pub impl SocialRequestImpl<C, +Encode<C>> of SocialRequestTrait<C> {
         ba.append_word(x6.into(), 4);
         ba.append_word(x7.into(), 4);
 
-        bip340::verify(*self.public_key, *self.sig.r, *self.sig.s, ba)
+        if bip340::verify(*self.public_key, *self.sig.r, *self.sig.s, ba) {
+            Option::Some(
+                u256 {
+                    high: x0.into() * TWO_POW_96
+                        + x1.into() * TWO_POW_64
+                        + x2.into() * TWO_POW_32
+                        + x3.into(),
+                    low: x4.into() * TWO_POW_96
+                        + x5.into() * TWO_POW_64
+                        + x6.into() * TWO_POW_32
+                        + x7.into(),
+                }
+            )
+        } else {
+            Option::None
+        }
     }
 }
 
@@ -80,7 +95,7 @@ mod tests {
             }
         };
 
-        assert!(r.verify());
+        assert!(r.verify().is_some());
     }
 
     #[test]
@@ -97,7 +112,7 @@ mod tests {
             }
         };
 
-        assert!(r.verify());
+        assert!(r.verify().is_some());
     }
 
     #[test]
@@ -114,7 +129,7 @@ mod tests {
             }
         };
 
-        assert!(r.verify());
+        assert!(r.verify().is_some());
     }
 
     #[test]
@@ -133,7 +148,7 @@ mod tests {
             }
         };
 
-        assert!(!r.verify());
+        assert!(r.verify().is_none());
     }
 
     #[test]
@@ -153,7 +168,7 @@ mod tests {
             }
         };
 
-        assert!(!r.verify());
+        assert!(r.verify().is_none());
     }
 
     #[test]
@@ -171,7 +186,7 @@ mod tests {
             }
         };
 
-        assert!(!r.verify());
+        assert!(r.verify().is_none());
     }
 
     #[test]
@@ -189,7 +204,7 @@ mod tests {
             }
         };
 
-        assert!(!r.verify());
+        assert!(r.verify().is_none());
     }
 
     #[test]
@@ -207,7 +222,7 @@ mod tests {
             }
         };
 
-        assert!(!r.verify());
+        assert!(r.verify().is_none());
     }
 
     #[test]
@@ -225,7 +240,7 @@ mod tests {
             }
         };
 
-        assert!(!r.verify());
+        assert!(r.verify().is_none());
     }
 }
 

@@ -1,5 +1,6 @@
 import {canUseBiometricAuthentication} from 'expo-secure-store';
 import {useEffect, useState} from 'react';
+import {Platform} from 'react-native';
 
 import {LockIcon} from '../../assets/icons';
 import {Button, Input, TextButton} from '../../components';
@@ -22,7 +23,7 @@ export const Login: React.FC<AuthLoginScreenProps> = ({navigation}) => {
 
   useEffect(() => {
     (async () => {
-      const biometrySupported = canUseBiometricAuthentication();
+      const biometrySupported = Platform.OS !== 'web' && canUseBiometricAuthentication?.();
 
       if (biometrySupported) {
         const storedPassword = await retrievePassword();
@@ -37,21 +38,22 @@ export const Login: React.FC<AuthLoginScreenProps> = ({navigation}) => {
       return;
     }
 
-    const secretKey = await retrieveAndDecryptPrivateKey(password);
-    if (!secretKey || secretKey.length !== 32) {
+    const privateKey = await retrieveAndDecryptPrivateKey(password);
+    if (!privateKey || privateKey.length !== 32) {
       alert('Invalid password');
       return;
     }
+    const privateKeyHex = privateKey.toString('hex');
 
     const storedPublicKey = await retrievePublicKey();
-    const publicKey = getPublicKeyFromSecret(secretKey);
+    const publicKey = getPublicKeyFromSecret(privateKeyHex);
 
     if (publicKey !== storedPublicKey) {
       alert('Invalid password');
       return;
     }
 
-    setAuth(publicKey, secretKey);
+    setAuth(publicKey, privateKeyHex);
   };
 
   return (
