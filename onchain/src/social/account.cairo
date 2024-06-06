@@ -8,13 +8,14 @@ use super::transfer::Transfer;
 pub trait ISocialAccount<TContractState> {
     fn get_public_key(self: @TContractState) -> u256;
     fn handle_transfer(ref self: TContractState, request: SocialRequest<Transfer>);
-    // fn __execute__(self: @TContractState, calls: Array<Call>) -> Array<Span<felt252>>;
-    // fn __validate__(self: @TContractState, calls: Array<Call>) -> felt252;
-    // fn is_valid_signature(self: @TContractState, hash: felt252, signature: Array<felt252>) -> felt252;
+// fn __execute__(self: @TContractState, calls: Array<Call>) -> Array<Span<felt252>>;
+// fn __validate__(self: @TContractState, calls: Array<Call>) -> felt252;
+// fn is_valid_signature(self: @TContractState, hash: felt252, signature: Array<felt252>) -> felt252;
 }
 
 #[starknet::contract(account)]
 pub mod SocialAccount {
+    use core::num::traits::Zero;
     use joyboy::bip340;
     use openzeppelin::account::interface::ISRC6;
     use openzeppelin::account::utils::{
@@ -30,7 +31,6 @@ pub mod SocialAccount {
     };
     use super::super::transfer::Transfer;
     use super::{ISocialAccountDispatcher, ISocialAccountDispatcherTrait};
-    use core::num::traits::Zero;
 
     #[storage]
     struct Storage {
@@ -147,6 +147,8 @@ pub mod SocialAccount {
 mod tests {
     use core::array::SpanTrait;
     use core::traits::Into;
+
+    use openzeppelin::account::interface::{ISRC6Dispatcher, ISRC6DispatcherTrait};
     use openzeppelin::presets::ERC20Upgradeable;
     use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
     use openzeppelin::utils::serde::SerializedAppend;
@@ -165,8 +167,6 @@ mod tests {
         ISocialAccountDispatcher, ISocialAccountDispatcherTrait, ISocialAccountSafeDispatcher,
         ISocialAccountSafeDispatcherTrait
     };
-
-    use openzeppelin::account::interface::{ISRC6Dispatcher, ISRC6DispatcherTrait};
 
     fn declare_account() -> ContractClass {
         declare("SocialAccount").unwrap()
@@ -380,17 +380,15 @@ mod tests {
     }
 
     #[test]
- 
     fn is_valid_signature_success() {
         // private key: 70aca2a9ab722bd56a9a1aadae7f39bc747c7d6735a04d677e0bc5dbefa71d47
         // just for testing, do not use for anything else
-        let public_key =
-            0xd6f1cf53f9f52d876505164103b1e25811ec4226a17c7449576ea48b00578171_u256;
+        let public_key = 0xd6f1cf53f9f52d876505164103b1e25811ec4226a17c7449576ea48b00578171_u256;
 
         let account_class = declare_account();
         let account = deploy_account(account_class, public_key);
         // TODO: cleanup
-        let account = ISRC6Dispatcher { contract_address: account.contract_address};
+        let account = ISRC6Dispatcher { contract_address: account.contract_address };
 
         let hash = 123;
 
