@@ -27,6 +27,8 @@ pub mod SocialAccount {
     use openzeppelin::account::interface;
     use openzeppelin::account::utils::{execute_calls, is_valid_stark_signature};
     use openzeppelin::introspection::interface::ISRC5;
+    use openzeppelin::introspection::src5::SRC5Component::SRC5;
+    use openzeppelin::introspection::src5::SRC5Component;
 
     use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
@@ -102,13 +104,49 @@ pub mod SocialAccount {
         }
     }
 
-    //   #[abi(embed_v0)]
-    impl SRC6Impl of ISRC6<ContractState> {
-        fn __execute__(self: @ContractState, mut calls: Array<Call>) -> Array<Span<felt252>> {
+    #[generate_trait]
+    impl InternalImpl<
+         TContractState,
+        +HasComponent<TContractState>,
+        impl SRC5: SRC5Component::HasComponent<TContractState>,
+        +Drop<TContractState>
+    > of InternalTrait<TContractState> {
+
+       fn is_valid_signature_bool(
+            self: @ContractState, hash: felt252, signature: Array<felt252>
+        ) -> felt252 {
+            assert(signature.len() == 2_u32, 'Invalid Signature Length');
+            
+            let r = *signature.at(0_u32).into();
+            let s = *signature.at(1_u32).into();
+            let public_key = self.public_key.read();
+            let mut ba = Default::default();
+            ba.append_word(hash, 31);
+
+            let verify_signature = super::bip340::verify(public_key, r.into(), s.into(), ba);
+
+            if verify_signature {
+                starknet::VALIDATED
+            } else {
+                0
+            }
+        }
+
+    }
+
+
+    #[embeddable_as(SRC6Impl)]
+    impl SRC6<
+        TContractState,
+        +HasComponent<TContractState>,
+        +SRC5Component::HasComponent<TContractState>,
+        +Drop<TContractState>
+    > of interface::ISRC6<ComponentState<TContractState>>  {
+        fn __execute__(self: @ComponentState, mut calls: Array<Call>) -> Array<Span<felt252>> {
             execute_calls(calls)
         }
 
-        fn __validate__(self: @ContractState, mut calls: Array<Call>) -> felt252 {
+        fn __validate__(self: @ComponentState, mut calls: Array<Call>) -> felt252 {
             let tx_info = get_tx_info().unbox();
             let tx_hash = tx_info.transaction_hash;
             let mut signature = tx_info.signature;
@@ -121,24 +159,13 @@ pub mod SocialAccount {
             return self.is_valid_signature(tx_hash, array_sign);
         }
 
+
         fn is_valid_signature(
-            self: @ContractState, hash: felt252, signature: Array<felt252>
+            self: @ComponentState, hash: felt252, signature: Array<felt252>
         ) -> felt252 {
             assert(signature.len() == 2_u32, 'Invalid Signature Length');
-
-            let r = *signature.at(0_u32).into();
-            let s = *signature.at(1_u32).into();
-            let public_key = self.public_key.read();
-            let mut ba = Default::default();
-            ba.append_word(hash, 4);
-
-            let verify_signature = super::bip340::verify(public_key, r.into(), s.into(), ba);
-
-            if verify_signature {
-                starknet::VALIDATED
-            } else {
-                0
-            }
+            
+            self.is_valid_signature_bool(hash, signature)
         }
     }
 }
