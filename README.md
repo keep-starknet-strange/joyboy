@@ -218,6 +218,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://soetandev.netlify.app/"><img src="https://avatars.githubusercontent.com/u/17912134?v=4?s=100" width="100px;" alt="Emmanuel Soetan"/><br /><sub><b>Emmanuel Soetan</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=Shoetan" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/princeibs"><img src="https://avatars.githubusercontent.com/u/64266194?v=4?s=100" width="100px;" alt="princeibs"/><br /><sub><b>princeibs</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=princeibs" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/goofylfg"><img src="https://avatars.githubusercontent.com/u/165781272?v=4?s=100" width="100px;" alt="goofylfg"/><br /><sub><b>goofylfg</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=goofylfg" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/lfgtwo"><img src="https://avatars.githubusercontent.com/u/171595475?v=4?s=100" width="100px;" alt="lfg2"/><br /><sub><b>lfg2</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=lfgtwo" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
