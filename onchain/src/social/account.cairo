@@ -403,7 +403,6 @@ mod tests {
         let invalid_hash = 0x5a8885a308d313198a2e03707344a4093822299f31d0082efa98ec4e6c89;
 
         assert!(account.is_valid_signature(invalid_hash, signature) != starknet::VALIDATED);
-
     }
 
     #[test]
