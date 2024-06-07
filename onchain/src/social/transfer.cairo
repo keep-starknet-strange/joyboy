@@ -2,9 +2,7 @@ use starknet::ContractAddress;
 use super::profile::{NostrProfile, NostrProfileTrait};
 use super::request::Encode;
 
-type NostrKey = u256;
-
-#[derive(Debug, Drop, Serde)]
+#[derive(Clone, Debug, Drop, Serde)]
 pub struct Transfer {
     pub amount: u256,
     pub token: ByteArray,

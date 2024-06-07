@@ -17,13 +17,9 @@ export default ThemedStyleSheet((theme) => ({
 
   middle: {
     position: 'absolute',
-    top: '50%',
+    bottom: 0,
     left: 0,
     right: 0,
-  },
-  logoContainer: {
-    position: 'relative',
-    top: '-100%',
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',

@@ -124,7 +124,7 @@ snforge test
 ## Mobile
 
 The Joyboy Mobile app is built with React-native & Expo.
-[Mobile repo](https://github.com/keep-starknet-strange/joyboy/blob/main/JoyboyCommunity/README)
+[Mobile repo](https://github.com/keep-starknet-strange/joyboy/blob/main/JoyboyCommunity/README.md)
 
 Pick an issue with the labels "mobile" to start work on React-native and contribute!
 
@@ -145,7 +145,7 @@ Here is what we have on the mobile app on the first days, contributions welcome!
 Check the issues with the "mobile" labels.
  
 You can see more details on the README here:
-[Mobile repo](https://github.com/keep-starknet-strange/joyboy/blob/main/JoyboyCommunity/README)
+[Mobile repo](https://github.com/keep-starknet-strange/joyboy/blob/main/JoyboyCommunity/README.md)
 
 Proposal for UI Mobile.
 [UI/UX proposal for video discussions](https://github.com/keep-starknet-strange/joyboy/discussions/48#discussion-6683225)
@@ -210,6 +210,19 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/EjembiEmmanuel"><img src="https://avatars.githubusercontent.com/u/83036156?v=4?s=100" width="100px;" alt="Emmaunuel Ejembi"/><br /><sub><b>Emmaunuel Ejembi</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=EjembiEmmanuel" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Ayoazeez26"><img src="https://avatars.githubusercontent.com/u/44169294?v=4?s=100" width="100px;" alt="Abdulhakeem Abdulazeez Ayodeji"/><br /><sub><b>Abdulhakeem Abdulazeez Ayodeji</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=Ayoazeez26" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/josephchimebuka"><img src="https://avatars.githubusercontent.com/u/87217051?v=4?s=100" width="100px;" alt="Joseph Chimebuka"/><br /><sub><b>Joseph Chimebuka</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=josephchimebuka" title="Code">💻</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/omahs"><img src="https://avatars.githubusercontent.com/u/73983677?v=4?s=100" width="100px;" alt="omahs"/><br /><sub><b>omahs</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=omahs" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Calebux"><img src="https://avatars.githubusercontent.com/u/119738245?v=4?s=100" width="100px;" alt="Caleb "/><br /><sub><b>Caleb </b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=Calebux" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://developer.mozilla.org/"><img src="https://avatars.githubusercontent.com/u/89651828?v=4?s=100" width="100px;" alt="Ben Ickah"/><br /><sub><b>Ben Ickah</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=benbaruka" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://soetandev.netlify.app/"><img src="https://avatars.githubusercontent.com/u/17912134?v=4?s=100" width="100px;" alt="Emmanuel Soetan"/><br /><sub><b>Emmanuel Soetan</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=Shoetan" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/princeibs"><img src="https://avatars.githubusercontent.com/u/64266194?v=4?s=100" width="100px;" alt="princeibs"/><br /><sub><b>princeibs</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=princeibs" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/goofylfg"><img src="https://avatars.githubusercontent.com/u/165781272?v=4?s=100" width="100px;" alt="goofylfg"/><br /><sub><b>goofylfg</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=goofylfg" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/lfgtwo"><img src="https://avatars.githubusercontent.com/u/171595475?v=4?s=100" width="100px;" alt="lfg2"/><br /><sub><b>lfg2</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=lfgtwo" title="Code">💻</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/devcollinss"><img src="https://avatars.githubusercontent.com/u/90073781?v=4?s=100" width="100px;" alt="Collins Ikechukwu (devcollins)"/><br /><sub><b>Collins Ikechukwu (devcollins)</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=devcollinss" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/petersssong"><img src="https://avatars.githubusercontent.com/u/171840752?v=4?s=100" width="100px;" alt="petersssong"/><br /><sub><b>petersssong</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=petersssong" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
