@@ -72,7 +72,6 @@ fn hash_challenge(rx: u256, px: u256, m: ByteArray) -> u256 {
     // m
     ba.append(@m);
 
-    // TODO: consider using compute_sha256_u32_array when available
     let [x0, x1, x2, x3, x4, x5, x6, x7] = compute_sha256_byte_array(@ba);
 
     u256 {

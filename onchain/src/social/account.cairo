@@ -134,6 +134,8 @@ pub mod SocialAccount {
             hash_as_ba.append_word(hash.high.into(), 16);
             hash_as_ba.append_word(hash.low.into(), 16);
 
+            println!("hash: {}", hash);
+
             if bip340::verify(public_key, r, s, hash_as_ba) {
                 starknet::VALIDATED
             } else {
@@ -381,19 +383,17 @@ mod tests {
 
     #[test]
     fn is_valid_signature_success() {
-        // private key: 70aca2a9ab722bd56a9a1aadae7f39bc747c7d6735a04d677e0bc5dbefa71d47
-        // just for testing, do not use for anything else
-        let public_key = 0xd6f1cf53f9f52d876505164103b1e25811ec4226a17c7449576ea48b00578171_u256;
+        let public_key = 0xdff1d77f2a671c5f36183726db2341be58feae1da2deced843240f7b502ba659;
 
         let account_class = declare_account();
         let account = deploy_account(account_class, public_key);
-        // TODO: cleanup
+
         let account = ISRC6Dispatcher { contract_address: account.contract_address };
 
-        let hash = 123;
+        let hash = 0x6a8885a308d313198a2e03707344a4093822299f31d0082efa98ec4e6c89;
 
-        let r = 1_u256;
-        let s = 2_u256;
+        let r: u256 = 0x49ae3fa614e2877877a90987726f1b48387bef1f66de78e5075659040cbbf612;
+        let s: u256 = 0x11259ae25e0743ac7490df3fef875ea291c7b99cf2295e44aabd677107b9c53a;
 
         let mut signature = Default::default();
         r.serialize(ref signature);
