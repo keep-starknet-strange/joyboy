@@ -14,11 +14,11 @@ export const ACCOUNT_TEST_PROFILE = {
     pubkey: "",
     strkKey: "",
     /** FIRST TEST */
-    nostrPk: "7bda974afb863f5b5fb841be3f45442d0b0ac5c6cfea8dd328c51870c56c9082",
+    nostrPk: "a86e01b9cafa2e0300fd533e9a957a7c0c7190a16fcf85310ef8a901a7008f6e",
     nostrPrivateKey:
-      "0x6f9cd1183ead4a04abe45ec4dccf615b7b2fe34d2dcae223dfd12acad50c6b0",
+      "6e0954daccb161397ebca2952431fd3d635625100beec26f3863175db3c4e009",
     contract:
-      "0x6a9473d2024ca4d2de98895ef53a211c40fe683f38ace6e0e201ccc23455a65",
+      "0xb0ad08de898deba1d8d34bab08ea796a48e46323cb1901c776d2a06bb3a6ed",
   },
 };
 export const ERROR_MESSAGES = {

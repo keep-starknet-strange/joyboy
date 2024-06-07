@@ -335,11 +335,11 @@ describe("End to end test", () => {
     console.log("create social account");
     // @TODO Finish SNIP-6 to use it
     //  Use your ENV or Generate public and private key pair when A.A SNIP-06.
-    const AAprivateKey = process.env.AA_PRIVATE_KEY ?? stark.randomAddress();
-    console.log("New account:\nprivateKey=", AAprivateKey);
-    const AAstarkKeyPub =
-      process.env.AA_PUBKEY ?? ec.starkCurve.getStarkKey(AAprivateKey);
-    console.log("publicKey=", AAstarkKeyPub);
+    // const AAprivateKey = process.env.AA_PRIVATE_KEY ?? stark.randomAddress();
+    // console.log("New account:\nprivateKey=", AAprivateKey);
+    // const AAstarkKeyPub =
+    //   process.env.AA_PUBKEY ?? ec.starkCurve.getStarkKey(AAprivateKey);
+    // console.log("publicKey=", AAstarkKeyPub);
     /** @description Uncomment to create your social account or comment and change your old contract in the constant ACCOUNT_TEST_PROFILE or direcly below***/
     let accountBob = await createSocialContract(bobPublicKey);
     /** uncomment to use social account deploy when SNIP-6 finish */

@@ -1,28 +1,23 @@
-import {
-  Account,
-  json,
-  hash,
-  CallData,
-  Contract,
-  cairo,
-} from "starknet";
+import { Account, json, hash, CallData, Contract, cairo } from "starknet";
 import fs from "fs";
 import dotenv from "dotenv";
-import {
-  nostrPubkeyToUint256,
-} from "./format";
+import { nostrPubkeyToUint256 } from "./format";
 import { provider } from "./starknet";
 import { transferToken } from "./token";
-import path from 'path';
+import path from "path";
 
 dotenv.config();
-const PATH_SOCIAL_ACCOUNT = path.resolve(__dirname, '../../onchain/target/dev/joyboy_SocialAccount.contract_class.json');
-const PATH_SOCIAL_ACCOUNT_COMPILED =path.resolve(__dirname, '../../onchain/target/dev/joyboy_SocialAccount.compiled_contract_class.json');
+const PATH_SOCIAL_ACCOUNT = path.resolve(
+  __dirname,
+  "../../onchain/target/dev/joyboy_SocialAccount.contract_class.json"
+);
+const PATH_SOCIAL_ACCOUNT_COMPILED = path.resolve(
+  __dirname,
+  "../../onchain/target/dev/joyboy_SocialAccount.compiled_contract_class.json"
+);
 
 /** @TODO spec need to be discuss. This function serve as an exemple */
-export const createSocialContract = async (
-  nostrPublicKey: string,
-) => {
+export const createSocialContract = async (nostrPublicKey: string) => {
   try {
     // initialize existing predeployed account 0 of Devnet
     const privateKey0 = process.env.DEV_PK as string;
@@ -53,7 +48,7 @@ export const createSocialContract = async (
     const hexString = nostrPublicKey; // Replace with actual hex string
     // console.log("nostPubkeyUint", nostPubkeyUint);
     const AAaccountConstructorCallData = CallData.compile({
-      public_key: nostPubkeyUint
+      public_key: nostPubkeyUint,
     });
     //Devnet
     // //  fund account address before account creation
@@ -71,18 +66,29 @@ export const createSocialContract = async (
     // deploy account
 
     // const AAaccount = new Account(provider, AAcontractAddress, AAprivateKey);
+    /** @description uncomment this to declare your accout */
+    // console.log("declare account");
+    // console.log("try declare account");
+    // const declareResponse = await account0.declare({
+    //   contract: compiledSierraAAaccount,
+    //   casm: compiledAACasm,
+    // });
+    // console.log("Declare deploy", declareResponse?.transaction_hash);
+    // await provider.waitForTransaction(declareResponse?.transaction_hash);
+    // const contractClassHash = declareResponse.class_hash;
+    // AAaccountClassHash = contractClassHash;
+    // console.log("AAaccountClassHash", AAaccountClassHash);
+
     const testClassHash = AAaccountClassHash;
 
     const nonce = await account0?.getNonce();
     console.log("nonce", nonce);
 
     const { transaction_hash, contract_address } =
-      await account0.deployContract(
-        {
-          classHash: AAaccountClassHash,
-          constructorCalldata: AAaccountConstructorCallData,
-        },
-      );
+      await account0.deployContract({
+        classHash: AAaccountClassHash,
+        constructorCalldata: AAaccountConstructorCallData,
+      });
 
     console.log("transaction_hash", transaction_hash);
     console.log("contract_address", contract_address);
@@ -95,13 +101,11 @@ export const createSocialContract = async (
       contract_address
     );
 
-
     // const contract = new Contract(compiledSierraAAaccount, contract_address, account0)
     return {
       contract_address,
       tx,
       // contract
-
     };
   } catch (error) {
     console.log("Error createSocialAccount= ", error);
@@ -145,7 +149,7 @@ export const createSocialAccount = async (
     let nostPubkeyUint = nostrPubkeyToUint256(nostrPublicKey?.toString());
 
     const AAaccountConstructorCallData = CallData.compile({
-      public_key: nostPubkeyUint
+      public_key: nostPubkeyUint,
     });
     // Calculate future address of the account
     const AAcontractAddress = hash.calculateContractAddressFromHash(
@@ -157,7 +161,7 @@ export const createSocialAccount = async (
     console.log("Precalculated account address=", AAcontractAddress);
 
     /*** Uncomment to used DEVNET */
-    // devnet local 
+    // devnet local
     // //  fund account address before account creation
     // const { data: answer } = await axios.post(
     //   "http://127.0.0.1:5050/mint",
@@ -202,7 +206,6 @@ export const createSocialAccount = async (
     const nonce = await account0?.getNonce();
     console.log("nonce", nonce);
 
-
     const { transaction_hash, contract_address } =
       await AAaccount.deployAccount(
         // await account0.deployAccount(
@@ -210,7 +213,7 @@ export const createSocialAccount = async (
           classHash: AAaccountClassHash,
           constructorCalldata: AAaccountConstructorCallData,
           addressSalt: AAstarkKeyPub,
-        },
+        }
         // {
         //   // maxFee: estimateDeployAccount?.suggestedMaxFee * BigInt(2),
         //   // maxFee: estimateDeployAccount?.suggestedMaxFee,
@@ -229,7 +232,7 @@ export const createSocialAccount = async (
     return {
       privateKey: AAprivateKey,
       contract_address,
-      tx
+      tx,
     };
   } catch (error) {
     console.log("Error createSocialAccount= ", error);
@@ -241,7 +244,7 @@ export const prepareAndConnectContract = async (
   // addressUser: string,
   contractAddress: string,
   account: Account,
-  privateKeyProps?: string,
+  privateKeyProps?: string
 ) => {
   // read abi of Test contract
   const { abi: testAbi } = await provider.getClassAt(contractAddress);
@@ -250,5 +253,3 @@ export const prepareAndConnectContract = async (
   socialPay.connect(account);
   return socialPay;
 };
-
-
