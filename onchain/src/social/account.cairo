@@ -18,10 +18,6 @@ pub trait ISocialAccount<TContractState> {
 
 #[starknet::contract(account)]
 pub mod SocialAccount {
-    use openzeppelin::introspection::src5::SRC5Component;
-    use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
-    use super::super::interface::ISRC5_ID;
-    
     use core::num::traits::Zero;
     use joyboy::bip340;
     use openzeppelin::account::interface::ISRC6;
@@ -29,9 +25,11 @@ pub mod SocialAccount {
         MIN_TRANSACTION_VERSION, QUERY_VERSION, QUERY_OFFSET, execute_calls,
         is_valid_stark_signature
     };
+    use openzeppelin::introspection::src5::SRC5Component;
     use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
     use starknet::account::Call;
     use starknet::{get_caller_address, get_contract_address, get_tx_info, ContractAddress};
+    use super::super::interface::ISRC5_ID;
 
 
     use super::super::request::{
@@ -44,7 +42,7 @@ pub mod SocialAccount {
 
     #[abi(embed_v0)]
     impl SRC5Impl = SRC5Component::SRC5Impl<ContractState>;
-    impl InternalImpl = SRC5Component::InternalImpl<ContractState>;
+    impl SRC5InternalImpl = SRC5Component::InternalImpl<ContractState>;
 
     #[storage]
     struct Storage {
@@ -105,6 +103,10 @@ pub mod SocialAccount {
                 panic!("can't verify signature");
             }
         }
+
+        fn is_supported_interface(self: @ContractState, interface_id: felt252) -> bool {
+            self.src5.supports_interface(interface_id)
+        }
     }
 
     #[abi(embed_v0)]
@@ -159,22 +161,18 @@ pub mod SocialAccount {
                 0
             }
         }
-
-        fn is_supported_interface(self: @ContractState, interface_id: felt252) -> bool {
-            self.src5.supports_interface(interface_id)
-        }
     }
 }
 #[cfg(test)]
 mod tests {
     use core::array::SpanTrait;
     use core::traits::Into;
+    use openzeppelin::account::interface::{ISRC6Dispatcher, ISRC6DispatcherTrait};
 
     use openzeppelin::account::interface;
     use openzeppelin::introspection::interface::ISRC5Dispatcher;
     use openzeppelin::introspection::interface::ISRC5DispatcherTrait;
-    use openzeppelin::account::interface::{ISRC6Dispatcher, ISRC6DispatcherTrait};
-    
+
     use openzeppelin::presets::ERC20Upgradeable;
     use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
     use openzeppelin::utils::serde::SerializedAppend;
@@ -256,23 +254,6 @@ mod tests {
         ERC20ABIDispatcher { contract_address }
     }
 
-    #[test]
-    fn test_supports_interface() {
-        let account_class = declare_account();
-        let account = deploy_account(account_class, public_key);
-        let supports_src5 = ISocialAccountDispatcherTrait::is_supported_interface(
-            account, ISRC5_ID
-        );
-        assert!(supports_src5, "The contract does not support the ISRC5 interface");
-    }
-
-    #[test]
-    fn get_public_key() {
-        let public_key: u256 = 45;
-        let account = deploy_account(declare_account(), public_key);
-        assert!(account.get_public_key() == public_key, "wrong public_key");
-    }
-
     fn request_fixture_custom_classes(
         erc20_class: ContractClass, account_class: ContractClass
     ) -> (
@@ -342,6 +323,16 @@ mod tests {
         let public_key: u256 = 45;
         let account = deploy_account(declare_account(), public_key);
         assert!(account.get_public_key() == public_key, "wrong public_key");
+    }
+
+    #[test]
+    fn test_supports_interface() {
+        let account_class = declare_account();
+        let account = deploy_account(account_class, public_key);
+        let supports_src5 = ISocialAccountDispatcherTrait::is_supported_interface(
+            account, ISRC5_ID
+        );
+        assert!(supports_src5, "The contract does not support the ISRC5 interface");
     }
 
     #[test]
