@@ -3,19 +3,22 @@ export const ACCOUNT_TEST_PROFILE = {
     name: "alice.xyz",
     pubkey: "",
     strkKey: "",
-    nostrPk:"",
-    nostrPrivateKey:"",
-    contract:"0x261d2434b2583293b7dd2048cb9c0984e262ed0a3eb70a19ed4eac6defef8b1"
+    nostrPk: "",
+    nostrPrivateKey: "",
+    // contract:"0x261d2434b2583293b7dd2048cb9c0984e262ed0a3eb70a19ed4eac6defef8b1",
+    contract:
+      "0x0261d2434b2583293b7dd2048cb9c0984e262ed0a3eb70a19ed4eac6defef8b1",
   },
   bob: {
     name: "joyboy.xyz",
     pubkey: "",
     strkKey: "",
-    nostrPk:"f80a41c2d4b98af3b18ff26c7fd394e88b5ee80256b785ab23e38f0467323a15",
-    nostrPrivateKey:"cb50e368a53237adb0d02b7eb1ba4bebba64b4f85925e5ba672a974adc794e61",
-    // contract:"0x0538907b56f07ef4f90e6f2da26a099ccfbc64e1cc4d03ff1e627fa7c2eb78ac"
-    // contract:"0x11f7a94765890f008e9053b2c1ec19fb350ac3aaaf8a52ea68ef4e1b7d6c80a" // change with your own address deploy to handle transfer
-    contract:"0x25666639a56e895cc484f8dbd611be2633be561449001aa61bcbd517bc9c7d5"
+    /** FIRST TEST */
+    nostrPk: "7bda974afb863f5b5fb841be3f45442d0b0ac5c6cfea8dd328c51870c56c9082",
+    nostrPrivateKey:
+      "0x6f9cd1183ead4a04abe45ec4dccf615b7b2fe34d2dcae223dfd12acad50c6b0",
+    contract:
+      "0x6a9473d2024ca4d2de98895ef53a211c40fe683f38ace6e0e201ccc23455a65",
   },
 };
 export const ERROR_MESSAGES = {
@@ -33,11 +36,10 @@ export const ERROR_MESSAGES = {
   },
 };
 
-
 export const TOKENS_ADDRESS = {
   SEPOLIA: {
-    ETH:"0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
-    TEST:"0x00148a15f9fbf4c015b927bf88608fbafb6d149abdd5ef5b3e3b296e6ac999a4",
-    STRK:"0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d"
+    ETH: "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
+    TEST: "0x00148a15f9fbf4c015b927bf88608fbafb6d149abdd5ef5b3e3b296e6ac999a4",
+    STRK: "0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d",
   },
-}
+};

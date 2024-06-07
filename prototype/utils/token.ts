@@ -124,10 +124,7 @@ export const transferToken = async (
       );
       console.log("transferTxHash", transferTxHash);
       let tx = await provider.waitForTransaction(transferTxHash);
-      console.log("wait tx", tx);
       console.log("transfer done");
-      console.log("account0 has a balance of:", balanceInitial);
-      balanceInitial = await token?.balanceOf(account.address);
     }
   } catch (e) {
     console.log("transferToken Error: ", e);
