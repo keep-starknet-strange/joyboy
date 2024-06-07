@@ -222,6 +222,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/devcollinss"><img src="https://avatars.githubusercontent.com/u/90073781?v=4?s=100" width="100px;" alt="Collins Ikechukwu (devcollins)"/><br /><sub><b>Collins Ikechukwu (devcollins)</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=devcollinss" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/petersssong"><img src="https://avatars.githubusercontent.com/u/171840752?v=4?s=100" width="100px;" alt="petersssong"/><br /><sub><b>petersssong</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=petersssong" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
