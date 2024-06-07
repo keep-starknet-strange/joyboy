@@ -214,6 +214,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/omahs"><img src="https://avatars.githubusercontent.com/u/73983677?v=4?s=100" width="100px;" alt="omahs"/><br /><sub><b>omahs</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=omahs" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Calebux"><img src="https://avatars.githubusercontent.com/u/119738245?v=4?s=100" width="100px;" alt="Caleb "/><br /><sub><b>Caleb </b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=Calebux" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://developer.mozilla.org/"><img src="https://avatars.githubusercontent.com/u/89651828?v=4?s=100" width="100px;" alt="Ben Ickah"/><br /><sub><b>Ben Ickah</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=benbaruka" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>

@@ -153,6 +153,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "benbaruka",
+      "name": "Ben Ickah",
+      "avatar_url": "https://avatars.githubusercontent.com/u/89651828?v=4",
+      "profile": "https://developer.mozilla.org/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
