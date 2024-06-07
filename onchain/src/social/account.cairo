@@ -134,8 +134,6 @@ pub mod SocialAccount {
             hash_as_ba.append_word(hash.high.into(), 16);
             hash_as_ba.append_word(hash.low.into(), 16);
 
-            println!("hash: {}", hash);
-
             if bip340::verify(public_key, r, s, hash_as_ba) {
                 starknet::VALIDATED
             } else {
@@ -156,7 +154,8 @@ mod tests {
     use openzeppelin::utils::serde::SerializedAppend;
     use snforge_std::{
         declare, ContractClass, ContractClassTrait, spy_events, SpyOn, EventSpy, EventFetcher,
-        Event, EventAssertions
+        Event, EventAssertions, cheat_transaction_hash_global, cheat_signature_global,
+        stop_cheat_transaction_hash_global, stop_cheat_signature_global
     };
     use starknet::{
         ContractAddress, get_caller_address, get_contract_address, contract_address_const
@@ -382,7 +381,7 @@ mod tests {
     }
 
     #[test]
-    fn is_valid_signature_success() {
+    fn is_valid_signature() {
         let public_key = 0xdff1d77f2a671c5f36183726db2341be58feae1da2deced843240f7b502ba659;
 
         let account_class = declare_account();
@@ -399,6 +398,43 @@ mod tests {
         r.serialize(ref signature);
         s.serialize(ref signature);
 
-        assert!(account.is_valid_signature(hash, signature) == starknet::VALIDATED);
+        assert!(account.is_valid_signature(hash, signature.clone()) == starknet::VALIDATED);
+
+        let invalid_hash = 0x5a8885a308d313198a2e03707344a4093822299f31d0082efa98ec4e6c89;
+
+        assert!(account.is_valid_signature(invalid_hash, signature) != starknet::VALIDATED);
+
+    }
+
+    #[test]
+    fn validate_transaction() {
+        let public_key = 0xdff1d77f2a671c5f36183726db2341be58feae1da2deced843240f7b502ba659;
+
+        let account_class = declare_account();
+        let account = deploy_account(account_class, public_key);
+
+        let account = ISRC6Dispatcher { contract_address: account.contract_address };
+
+        let hash = 0x6a8885a308d313198a2e03707344a4093822299f31d0082efa98ec4e6c89;
+
+        let r: u256 = 0x49ae3fa614e2877877a90987726f1b48387bef1f66de78e5075659040cbbf612;
+        let s: u256 = 0x11259ae25e0743ac7490df3fef875ea291c7b99cf2295e44aabd677107b9c53a;
+
+        let mut signature = Default::default();
+        r.serialize(ref signature);
+        s.serialize(ref signature);
+
+        cheat_transaction_hash_global(hash);
+        cheat_signature_global(signature.span());
+
+        assert!(account.__validate__(Default::default()) == starknet::VALIDATED);
+
+        let invalid_hash = 0x5a8885a308d313198a2e03707344a4093822299f31d0082efa98ec4e6c89;
+        cheat_transaction_hash_global(invalid_hash);
+
+        assert!(account.__validate__(Default::default()) != starknet::VALIDATED);
+
+        stop_cheat_transaction_hash_global();
+        stop_cheat_signature_global();
     }
 }
