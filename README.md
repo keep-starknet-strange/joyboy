@@ -220,6 +220,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/goofylfg"><img src="https://avatars.githubusercontent.com/u/165781272?v=4?s=100" width="100px;" alt="goofylfg"/><br /><sub><b>goofylfg</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=goofylfg" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/lfgtwo"><img src="https://avatars.githubusercontent.com/u/171595475?v=4?s=100" width="100px;" alt="lfg2"/><br /><sub><b>lfg2</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=lfgtwo" title="Code">💻</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/devcollinss"><img src="https://avatars.githubusercontent.com/u/90073781?v=4?s=100" width="100px;" alt="Collins Ikechukwu (devcollins)"/><br /><sub><b>Collins Ikechukwu (devcollins)</b></sub></a><br /><a href="https://github.com/keep-starknet-strange/joyboy/commits?author=devcollinss" title="Code">💻</a></td>
+    </tr>
   </tbody>
 </table>
 
