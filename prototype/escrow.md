@@ -1,6 +1,6 @@
 # Escrow proposal: Vision & Purposes
 
-Escrow, compared to A.A customized by Joybou with BIP-340:
+Escrow & Vault have few advantages compared to A.A customized by Joyboy with BIP-340:
 
 This solution can be more integrated into the Starknet ecosystem and other Wallets (Argent, Bravoos, OKX, Joyboy after and others).
 I think it can help for more integration and UI/UX, with less keys to manage, features to do, and security concerns on the Joyboy client.
@@ -8,7 +8,7 @@ In this case, the Client/Relayer/Wallet & Payment stack are dissociated.
 
 Pros:
 
-- user can deposit / withdraw assets easily from anywhere in the ecosystem (Argent, Bravoos, Joyboy).
+- User can deposit / withdraw assets easily from anywhere in the ecosystem (Argent, Bravoos, Joyboy).
 - We don't need to manage our Starknet pubkey and be a well-garden. Moarrr integrations for Nostr x Starknet.
 - Escrow possibilities and features by Joyboy and every builder: DAO, Channels, Batch transfer, Merch, Payment like Sablier, SocialFi
 
@@ -30,7 +30,7 @@ We have a few ways of implementing this with an Escrow.
 
 - Joyboy Escrow: A single escrow for Joyboy.
 
-- Custom Escrow deployed by one account: The user has to deploy his own contract, which can be more customized.
+- Custom Owned Escrow deployed with a Factory or deployed by an user: The user can deployed it's owned escrow customizable with a Factory, or has to deploy his own contract which can be more customized.
 
 ## Namespacing:
 
@@ -39,6 +39,21 @@ Mapping between Nostr pubkey & Starknet pubkey.
 We can start with one-to-one management, but we can think about a Nostr pubkey to manage the List of StarknetAddress (Argent, Bravoos, Joyboy, OKX) by one Nostr pk: made one by one at least to verify also the sender() address.
 
 handle_link: Send a Nostr Event to verify signature and create a Linked Profile with Pubkey Nostr and Starknet wallet.
+
+```ts
+
+// storage
+interface {
+  // Linked nostr key that's can Starknet Address list of Escrow owned
+  nostr_users:Map<ByteArray || uint256, // nostr_pubkey
+  List<StarknetAddress> // One account or Multi address possible
+  >;
+  delegated_nostr_key:Map<
+  StarknetAddress, //
+  List<ByteArray||uint256>
+  >
+}
+```
 
 ### Nostr Event:
 
@@ -74,18 +89,36 @@ Write state for Deposit by Starknet user linked by a Nostr pk.
 
 Let's start with a very simple draft (without all details, security concerns etc)
 
+Can be used as an exemple: 
+[Tokei contract like Sablier](https://github.com/starknet-io/tokei/blob/main/src/core/lockup_linear.cairo)
+
 ```ts
 interface ContractState {
   namespace_address: string;
   users_escrows: Map<
-    string, // starknet address or nostr, we can have two distinct map depends if the users is already linked or not
+    string || ByteArray || StarknetAddress, // starknet address or nostr, we can have two distinct map depends if the users is already linked or not
+
+
+    // We have two way, an escrow that"s manage every token, or one escrow by token
+    // Let's start with one Escrow with state by token address
     UserFund
   >;
+  claimable_amount:Map<string, // by nostr key
+  EscrowGift[]>
 }
 
 interface UserFund {
   nostr_key: uint256; // BytesArray;
   starknet_key: StarknetAddress; //
+  tokens:Map<
+  StarknetAddress,
+  TokenEscrow
+  >
+}
+/** 
+ * Token management detail by User
+*/
+interface TokenEscrow {
   deposited: uint256;
   transfered: uint256;
   withdrawn: uint256;
@@ -94,6 +127,22 @@ interface UserFund {
   to_claimed: uint256;
   // If we accept users can use different Starknet address with one Nostr pubkey. Need to be linked one by one to verify contract_address as a sender.
   others_strk_key?: StarknetAddress[];
+}
+
+interface EscrowGift {
+  sender:StarknetAddress;
+  nostr_sender:uint256;
+  asset:StarknetAddress;
+
+  recipient: StarknetAddress; //
+  recipient_nostr: uint256; //
+  deposited: uint256;
+  total_
+  claimed: uint256;
+  withdrawn: uint256;
+  start_time:u64;
+  end_time:u64;
+  is_canceled:boolean;
 }
 ```
 
@@ -136,7 +185,10 @@ Cons:
 
 ### Custom owned escrow:
 
-Can only be call by an owner and others management address (more A.A similar if if it's not).
+
+Factory deployer of Owned escrow.
+Create the base of the Escrow and Smart vault.
+Can only be call by an owner and others management address.
 
 State related to the owner, less management and more customizable for the Starknet & Nostr ecosystem.
 
