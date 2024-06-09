@@ -8,11 +8,24 @@ use super::transfer::Transfer;
 pub trait ISocialAccount<TContractState> {
     fn get_public_key(self: @TContractState) -> u256;
     fn handle_transfer(ref self: TContractState, request: SocialRequest<Transfer>);
+// fn __execute__(self: @TContractState, calls: Array<Call>) -> Array<Span<felt252>>;
+// fn __validate__(self: @TContractState, calls: Array<Call>) -> felt252;
+// fn is_valid_signature(self: @TContractState, hash: felt252, signature: Array<felt252>) -> felt252;
 }
 
-#[starknet::contract]
+#[starknet::contract(account)]
 pub mod SocialAccount {
+    use core::num::traits::Zero;
+    use joyboy::bip340;
+    use openzeppelin::account::interface::ISRC6;
+    use openzeppelin::account::utils::{
+        MIN_TRANSACTION_VERSION, QUERY_VERSION, QUERY_OFFSET, execute_calls,
+        is_valid_stark_signature
+    };
     use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
+    use starknet::account::Call;
+    use starknet::{get_caller_address, get_contract_address, get_tx_info, ContractAddress};
+
     use super::super::request::{
         SocialRequest, SocialRequestImpl, SocialRequestTrait, Encode, Signature
     };
@@ -74,18 +87,75 @@ pub mod SocialAccount {
             }
         }
     }
+
+    #[abi(embed_v0)]
+    impl ISRC6Impl of ISRC6<ContractState> {
+        fn __execute__(self: @ContractState, calls: Array<Call>) -> Array<Span<felt252>> {
+            assert!(get_caller_address().is_zero(), "invalid caller");
+
+            // Check tx version
+            let tx_info = get_tx_info().unbox();
+            let tx_version: u256 = tx_info.version.into();
+            // Check if tx is a query
+            if (tx_version >= QUERY_OFFSET) {
+                assert!(QUERY_OFFSET + MIN_TRANSACTION_VERSION <= tx_version, "invalid tx version");
+            } else {
+                assert!(MIN_TRANSACTION_VERSION <= tx_version, "invalid tx version");
+            }
+
+            execute_calls(calls)
+        }
+
+        fn __validate__(self: @ContractState, calls: Array<Call>) -> felt252 {
+            let tx_info = get_tx_info().unbox();
+            self._is_valid_signature(tx_info.transaction_hash, tx_info.signature)
+        }
+
+        fn is_valid_signature(
+            self: @ContractState, hash: felt252, signature: Array<felt252>
+        ) -> felt252 {
+            self._is_valid_signature(hash, signature.span())
+        }
+    }
+
+    #[generate_trait]
+    impl InternalImpl of InternalTrait {
+        fn _is_valid_signature(
+            self: @ContractState, hash: felt252, signature: Span<felt252>
+        ) -> felt252 {
+            let public_key = self.public_key.read();
+
+            let mut signature = signature;
+            let r: u256 = Serde::deserialize(ref signature).expect('invalid signature format');
+            let s: u256 = Serde::deserialize(ref signature).expect('invalid signature format');
+
+            let hash: u256 = hash.into();
+            let mut hash_as_ba = Default::default();
+            hash_as_ba.append_word(hash.high.into(), 16);
+            hash_as_ba.append_word(hash.low.into(), 16);
+
+            if bip340::verify(public_key, r, s, hash_as_ba) {
+                starknet::VALIDATED
+            } else {
+                0
+            }
+        }
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use core::array::SpanTrait;
     use core::traits::Into;
+
+    use openzeppelin::account::interface::{ISRC6Dispatcher, ISRC6DispatcherTrait};
     use openzeppelin::presets::ERC20Upgradeable;
     use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
     use openzeppelin::utils::serde::SerializedAppend;
     use snforge_std::{
         declare, ContractClass, ContractClassTrait, spy_events, SpyOn, EventSpy, EventFetcher,
-        Event, EventAssertions
+        Event, EventAssertions, cheat_transaction_hash_global, cheat_signature_global,
+        stop_cheat_transaction_hash_global, stop_cheat_signature_global
     };
     use starknet::{
         ContractAddress, get_caller_address, get_contract_address, contract_address_const
@@ -308,5 +378,62 @@ mod tests {
 
         sender.handle_transfer(request);
         sender.handle_transfer(request2);
+    }
+
+    #[test]
+    fn is_valid_signature() {
+        let public_key = 0xdff1d77f2a671c5f36183726db2341be58feae1da2deced843240f7b502ba659;
+
+        let account_class = declare_account();
+        let account = deploy_account(account_class, public_key);
+
+        let account = ISRC6Dispatcher { contract_address: account.contract_address };
+
+        let hash = 0x6a8885a308d313198a2e03707344a4093822299f31d0082efa98ec4e6c89;
+
+        let r: u256 = 0x49ae3fa614e2877877a90987726f1b48387bef1f66de78e5075659040cbbf612;
+        let s: u256 = 0x11259ae25e0743ac7490df3fef875ea291c7b99cf2295e44aabd677107b9c53a;
+
+        let mut signature = Default::default();
+        r.serialize(ref signature);
+        s.serialize(ref signature);
+
+        assert!(account.is_valid_signature(hash, signature.clone()) == starknet::VALIDATED);
+
+        let invalid_hash = 0x5a8885a308d313198a2e03707344a4093822299f31d0082efa98ec4e6c89;
+
+        assert!(account.is_valid_signature(invalid_hash, signature) != starknet::VALIDATED);
+    }
+
+    #[test]
+    fn validate_transaction() {
+        let public_key = 0xdff1d77f2a671c5f36183726db2341be58feae1da2deced843240f7b502ba659;
+
+        let account_class = declare_account();
+        let account = deploy_account(account_class, public_key);
+
+        let account = ISRC6Dispatcher { contract_address: account.contract_address };
+
+        let hash = 0x6a8885a308d313198a2e03707344a4093822299f31d0082efa98ec4e6c89;
+
+        let r: u256 = 0x49ae3fa614e2877877a90987726f1b48387bef1f66de78e5075659040cbbf612;
+        let s: u256 = 0x11259ae25e0743ac7490df3fef875ea291c7b99cf2295e44aabd677107b9c53a;
+
+        let mut signature = Default::default();
+        r.serialize(ref signature);
+        s.serialize(ref signature);
+
+        cheat_transaction_hash_global(hash);
+        cheat_signature_global(signature.span());
+
+        assert!(account.__validate__(Default::default()) == starknet::VALIDATED);
+
+        let invalid_hash = 0x5a8885a308d313198a2e03707344a4093822299f31d0082efa98ec4e6c89;
+        cheat_transaction_hash_global(invalid_hash);
+
+        assert!(account.__validate__(Default::default()) != starknet::VALIDATED);
+
+        stop_cheat_transaction_hash_global();
+        stop_cheat_signature_global();
     }
 }
