@@ -57,20 +57,20 @@ Tech stack:
 sequenceDiagram
     actor Alice
     actor Bob
-    participant SocialPay relay
+    participant SocialPay gateway
     participant Starknet Node
     participant Alice Account
     participant STRK Token
 
-    Alice->>SocialPay relay: @joyboy send 10 STRK to @bob
-    activate SocialPay relay
-    SocialPay relay->>Starknet Node: SocialPay transaction
+    Alice->>SocialPay gateway: @joyboy send 10 STRK to @bob
+    activate SocialPay gateway
+    SocialPay gateway->>Starknet Node: SocialPay transaction
     Starknet Node->>Alice Account: SocialPay handler
     Alice Account->>STRK Token: transfer
-    Starknet Node->>SocialPay relay: SocialPay transaction complete
-    SocialPay relay->>Bob: @bob you just received 10 STRK from @alice
-    SocialPay relay->>Alice: @alice transfer of 10 STRK to @bob is complete
-    deactivate SocialPay relay
+    Starknet Node->>SocialPay gateway: SocialPay transaction complete
+    SocialPay gateway->>Bob: @bob you just received 10 STRK from @alice
+    SocialPay gateway->>Alice: @alice transfer of 10 STRK to @bob is complete
+    deactivate SocialPay gateway
 ```
 
 ## Modules
