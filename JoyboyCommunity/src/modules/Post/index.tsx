@@ -13,8 +13,8 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import {CommentIcon, LikeFillIcon, LikeIcon, RepostIcon} from '../../assets/icons';
-import {Text} from '../../components';
-import {useStyles, useTheme} from '../../hooks';
+import {Avatar, Text} from '../../components';
+import {useProfile, useStyles, useTheme} from '../../hooks';
 import {MainStackNavigationProps} from '../../types';
 import {timestampToHumanReadable} from '../../utils/common-utils';
 import stylesheet from './styles';
@@ -30,8 +30,10 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
 
   const navigation = useNavigation<MainStackNavigationProps>();
 
+  const {data: profile} = useProfile({publicKey: event?.pubkey});
+
   const theme = useTheme();
-  const styles = useStyles(stylesheet, asComment);
+  const styles = useStyles(stylesheet);
 
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState(12); // static value for now
@@ -98,23 +100,34 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
       <View style={styles.info}>
         <View style={styles.infoUser}>
           <Pressable onPress={() => handleProfilePress(event?.pubkey)}>
-            <Image
+            <Avatar
+              size={asComment ? 40 : 50}
               source={require('../../../assets/joyboy-logo.png')}
-              style={styles.infoUserAvatar}
             />
           </Pressable>
 
-          <Pressable onPress={handleNavigateToPostDetails}>
-            <Text weight="bold" color="textStrong" fontSize={asComment ? 13 : 15} lineHeight={20}>
-              Monkey D Luffy
+          <Pressable style={styles.infoProfile} onPress={handleNavigateToPostDetails}>
+            <Text
+              weight="bold"
+              color="textStrong"
+              fontSize={asComment ? 13 : 15}
+              lineHeight={20}
+              numberOfLines={1}
+              ellipsizeMode="middle"
+            >
+              {profile?.displayName ?? profile?.name ?? event?.pubkey}
             </Text>
 
             <View style={styles.infoDetails}>
-              <Text color="textLight" fontSize={11} lineHeight={16}>
-                @luffy
-              </Text>
+              {profile?.nip05 && (
+                <>
+                  <Text color="textLight" fontSize={11} lineHeight={16}>
+                    @{profile?.nip05}
+                  </Text>
 
-              <View style={styles.infoDetailsDivider} />
+                  <View style={styles.infoDetailsDivider} />
+                </>
+              )}
 
               <Text color="textLight" fontSize={11} lineHeight={16}>
                 {timestampToHumanReadable(event.created_at)}

@@ -1,6 +1,6 @@
 import {canUseBiometricAuthentication} from 'expo-secure-store';
 import {useState} from 'react';
-import {Alert} from 'react-native';
+import {Alert, Platform} from 'react-native';
 
 import {LockIcon} from '../../assets/icons';
 import {Button, Input, TextButton} from '../../components';
@@ -22,12 +22,12 @@ export const CreateAccount: React.FC<AuthCreateAccountScreenProps> = ({navigatio
       return;
     }
 
-    const {secretKeyHex, publicKey} = generateRandomKeypair();
+    const {privateKey, publicKey} = generateRandomKeypair();
 
-    await storePrivateKey(secretKeyHex, password);
+    await storePrivateKey(privateKey, password);
     await storePublicKey(publicKey);
 
-    const biometySupported = canUseBiometricAuthentication();
+    const biometySupported = Platform.OS !== 'web' && canUseBiometricAuthentication();
     if (biometySupported) {
       Alert.alert('Easy login', 'Would you like to use biometrics to login?', [
         {
@@ -44,7 +44,7 @@ export const CreateAccount: React.FC<AuthCreateAccountScreenProps> = ({navigatio
       ]);
     }
 
-    navigation.navigate('SaveKeys', {privateKey: secretKeyHex, publicKey});
+    navigation.navigate('SaveKeys', {privateKey, publicKey});
   };
 
   return (

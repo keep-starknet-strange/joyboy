@@ -10,14 +10,13 @@ export const useSendNote = () => {
   const {privateKey} = useAuth();
 
   return useMutation({
+    mutationKey: ['sendNote'],
     mutationFn: async (data: {content: string; tags?: string[][]}) => {
       if (!privateKey) {
         throw new Error('Private key is required');
       }
 
-      const privateKeyString = Buffer.from(privateKey).toString('hex');
-
-      const signer = new NDKPrivateKeySigner(privateKeyString);
+      const signer = new NDKPrivateKeySigner(privateKey);
 
       const event = new NDKEvent(ndk);
       event.kind = NDKKind.Text;

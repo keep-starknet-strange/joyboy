@@ -23,7 +23,7 @@ export const SaveKeys: React.FC<AuthSaveKeysScreenProps> = ({route}) => {
   };
 
   const handleContinue = () => {
-    setAuth(publicKey, new Uint8Array(Buffer.from(privateKey, 'hex')));
+    setAuth(publicKey, privateKey);
   };
 
   return (

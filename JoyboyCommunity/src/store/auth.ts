@@ -4,11 +4,11 @@ import createBoundedUseStore from './createBoundedUseStore';
 
 type State = {
   publicKey: string | null;
-  privateKey: Uint8Array | null;
+  privateKey: string | null;
 };
 
 type Action = {
-  setAuth: (publicKey: string, privateKey: Uint8Array) => void;
+  setAuth: (publicKey: string, privateKey: string) => void;
 };
 
 export const authStore = createStore<State & Action>((set, get) => ({
