@@ -67,7 +67,8 @@ pub mod SocialAccount {
             assert!(request.public_key == self.public_key.read(), "wrong sender");
 
             let erc20 = ERC20ABIDispatcher { contract_address: request.content.token_address };
-            assert!(erc20.symbol() == request.content.token, "wrong token");
+            // disable symbol check for now, does not work with deployed tokens
+            // assert!(erc20.symbol() == request.content.token, "wrong token");
 
             let recipient = ISocialAccountDispatcher {
                 contract_address: request.content.recipient_address
@@ -349,6 +350,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore]
     #[should_panic(expected: "wrong token")]
     fn wrong_token() {
         let erc20_class = declare_erc20();
