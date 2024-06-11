@@ -16,10 +16,14 @@ export const NostrProvider: React.FC<React.PropsWithChildren> = ({children}) => 
 
   const relays = JOYBOY_RELAYS;
   const ndk = useMemo(() => {
-    return new NDK({
+    const ndk = new NDK({
       explicitRelayUrls: relays,
       signer: privateKey ? new NDKPrivateKeySigner(privateKey) : undefined,
     });
+
+    ndk.connect();
+
+    return ndk;
   }, [relays, privateKey]);
 
   return <NostrContext.Provider value={{ndk, relays}}>{children}</NostrContext.Provider>;
