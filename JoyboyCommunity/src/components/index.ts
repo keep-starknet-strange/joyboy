@@ -1,3 +1,4 @@
+export {Avatar} from './Avatar';
 export {Button} from './Button';
 export {Divider} from './Divider';
 export {Header} from './Header';
@@ -14,6 +15,7 @@ export {RootScreenContainer} from './Skeleton/RootScreenContainer';
 export {RowContainer} from './Skeleton/RowContainer';
 export {ScreenContainer} from './Skeleton/ScreenContainer';
 export {ScrollableContainer} from './Skeleton/ScrollableContainer';
+export {SquareInput} from './SquareInput';
 export {Story} from './Story';
 export {Text} from './Text';
 export {TextButton} from './TextButton';

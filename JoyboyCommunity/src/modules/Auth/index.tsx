@@ -20,9 +20,8 @@ export const Auth: React.FC<AuthProps> = ({title, children}) => {
             style={styles.backgroundImage}
             source={require('../../assets/login-background.png')}
           />
-        </View>
-        <View style={styles.middle}>
-          <View style={styles.logoContainer}>
+
+          <View style={styles.middle}>
             <View style={styles.logo}>
               <Image style={styles.logoImage} source={require('../../../assets/joyboy-logo.png')} />
             </View>

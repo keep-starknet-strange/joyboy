@@ -1,6 +1,6 @@
 import {Spacing, ThemedStyleSheet} from '../../styles';
 
-export default ThemedStyleSheet((theme, asComment: boolean) => ({
+export default ThemedStyleSheet((theme) => ({
   container: {},
 
   repost: {
@@ -16,13 +16,13 @@ export default ThemedStyleSheet((theme, asComment: boolean) => ({
     marginBottom: Spacing.small,
   },
   infoUser: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.small,
   },
-  infoUserAvatar: {
-    width: asComment ? 40 : 50,
-    height: asComment ? 40 : 50,
+  infoProfile: {
+    flex: 1,
   },
   infoDetails: {
     flexDirection: 'row',

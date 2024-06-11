@@ -9,7 +9,7 @@ const Faq: React.FC = () => {
         Frequently asked Questions
       </h2>
       <div className="flex flex-col gap-y-[24px] items-center w-full">
-        <FaqBar question="How do i Join Joyboy?" answer="" />
+        <FaqBar question="How do i Join Joyboy?" answer="Joyboy" />
         <FaqBar question="What kind of contents can i post?" answer="" />
         <FaqBar
           question="How can i contribute to the Joyboy project?"
