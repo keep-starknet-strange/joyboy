@@ -51,6 +51,9 @@ export function hexStringToUint256(hexString: string) {
   const highHex = hexString.slice(0, 32);
   const lowHex = hexString.slice(32);
 
+  // const highHex = hexString.slice(0, hexString?.length / 2);
+  // const lowHex = hexString.slice(hexString?.length/2 );
+
   // Convert the hex parts to BigInt
   const high = BigInt('0x' + highHex);
   const low = BigInt('0x' + lowHex);

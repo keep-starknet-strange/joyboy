@@ -9,18 +9,25 @@ import {
   Uint256,
   uint256,
   Call,
+  byteArray,
 } from "starknet";
 import fs from "fs";
 import dotenv from "dotenv";
 import { TOKENS_ADDRESS } from "../constants";
 import { provider } from "./starknet";
 import { SocialPayRequest } from "types";
-import path from 'path';
+import path from "path";
 dotenv.config();
 
 const STARKNET_URL = process.env.RPC_ENDPOINT || "http://127.0.0.1:5050";
-const PATH_TOKEN = path.resolve(__dirname, '../../onchain/target/dev/ERC20Upgradeable.contract_class.json');
-const PATH_TOKEN_COMPILED = path.resolve(__dirname, '../../onchain/target/dev/ERC20Upgradeable.compiled_contract_class.json');
+const PATH_TOKEN = path.resolve(
+  __dirname,
+  "../../onchain/target/dev/joyboy_ERC20Upgradeable.contract_class.json"
+);
+const PATH_TOKEN_COMPILED = path.resolve(
+  __dirname,
+  "../../onchain/target/dev/joyboy_ERC20Upgradeable.compiled_contract_class.json"
+);
 
 /** @TODO spec need to be discuss. This function serve as an exemple */
 export const createToken = async () => {
@@ -38,7 +45,7 @@ export const createToken = async () => {
     const compiledCasm = json.parse(
       fs.readFileSync(PATH_TOKEN_COMPILED).toString("ascii")
     );
-  
+
     console.log("declareIfNot");
 
     const declareIfNot = await account0.declareIfNot({
@@ -48,8 +55,8 @@ export const createToken = async () => {
     console.log("declareIfNot", declareIfNot);
 
     const contractConstructor: Calldata = CallData.compile({
-      symbol: cairo.felt("JOY"),
-      name: cairo.felt("JOYBOY"),
+      symbol:byteArray.byteArrayFromString("JOY"),
+      name:byteArray.byteArrayFromString("JOYBOY"),
       total_supply: cairo.uint256(10000),
       recipient: account0?.address,
     });
@@ -58,7 +65,7 @@ export const createToken = async () => {
       declareIfNot?.class_hash ?? (process.env.TOKEN_CLASS_HASH as string);
     const deployResponse = await account0.deployContract({
       classHash: ERC20_HASH,
-      constructorCalldata: contractConstructor
+      constructorCalldata: contractConstructor,
     });
 
     let tx = await account0?.waitForTransaction(
@@ -85,10 +92,12 @@ export const transferToken = async (
   amount?: number
 ) => {
   try {
+    console.log("transfer token");
+
     let token = await getToken(tokenAddress ?? TOKENS_ADDRESS.SEPOLIA.TEST);
 
     token?.connect(account);
-    console.log("transfer token");
+    console.log("tokenAddress",tokenAddress);
     let balanceInitial = await token?.balanceOf(account.address);
     console.log("account0 has a balance of:", balanceInitial);
     // Execute tx transfer of 1 tokens to account 1
@@ -143,11 +152,10 @@ export const getToken = async (tokenAddress: string, classHash?: string) => {
   }
 };
 
-
 /** @TODO determine paymaster master specs to send the TX */
 export const prepareAndConnectContract = async (
   addressUser: string,
-  account:Account,
+  account: Account
 ) => {
   // read abi of Test contract
   const { abi: testAbi } = await provider.getClassAt(addressUser);

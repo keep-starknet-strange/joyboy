@@ -5,6 +5,7 @@ import {
   getEventHash,
   getPublicKey,
   nip05,
+  serializeEvent,
 } from "nostr-tools";
 import { finalizeEvent, verifyEvent ,} from "nostr-tools";
 import { Relay } from "nostr-tools";
@@ -60,6 +61,8 @@ export const sendEvent = async (
     const signature = await secp.sign(messageHash, sk);
     let sig = transformSignature(Buffer.from(signature).toString("hex"));
 
+    let serialize= serializeEvent(event)
+    console.log("serialize", serialize)
 
     /** To test the local Nostr relayer */
     // const pool = new SimplePool();
@@ -78,6 +81,7 @@ export const sendEvent = async (
       },
       signature:sig,
       isValid: true,
+      serialize
     };
   } catch (e) {
     console.log("Error send note", e);

@@ -25,6 +25,7 @@ import {
   byteArray,
   cairo,
   ec,
+  getChecksumAddress,
   num,
   shortString,
   stark,
@@ -40,6 +41,7 @@ import {
   // stringToUint256,
 } from "../utils/format";
 import dotenv from "dotenv";
+import { finalizeEvent, nip19, serializeEvent } from "nostr-tools";
 dotenv.config();
 /** Testing tips flow:
  * Two users Bob & Alice with Nostr & A.A (contract at this stage) => Init Nostr & SocialPay Account for (contract because SNIP-6 not finish)
@@ -52,263 +54,6 @@ dotenv.config();
  * test2 to Deploy contract/account
  */
 describe("End to end test", () => {
-  // it("Script to Pay tips End to end test", async function () {
-  //   this.timeout(0); // Disable timeout for this test
-
-  //   const privateKey0 = process.env.DEV_PK as string;
-  //   const accountAddress0 = process.env.DEV_PUBLIC_KEY as string;
-
-  //   const account = new Account(provider, accountAddress0, privateKey0, "1");
-  //   /*** Init account already done
-  //    * @description
-  //    * Get both account for Bob & Alice
-  //    * Send request of account bob to alice
-  //    ***/
-
-  //   /**  Generate keypair for both account*/
-
-  //   let pkBob = stringToUint8Array(ACCOUNT_TEST_PROFILE?.bob?.nostrPrivateKey);
-  //   const bobPublicKey = ACCOUNT_TEST_PROFILE?.bob?.nostrPk;
-  //   console.log("pkBob", new Buffer(pkBob).toString("hex"));
-  //   // Bob contract/A.A
-  //   // @TODO Finish SNIP-6 to use it
-  //   //  Use your ENV or Generate public and private key pair when A.A SNIP-06.
-  //   // const AAprivateKey = process.env.AA_PRIVATE_KEY ?? stark.randomAddress();
-  //   // // console.log("New account:\nprivateKey=", AAprivateKey);
-  //   // const AAstarkKeyPub =
-  //   //   process.env.AA_PUBKEY ?? ec.starkCurve.getStarkKey(AAprivateKey);
-  //   // // console.log("publicKey=", AAstarkKeyPub);
-  //   /** @description Uncomment to create your social account or comment and change your old contract in the constant ACCOUNT_TEST_PROFILE or direcly below***/
-
-  //   // console.log("accountBob?.contract_address ", accountBob?.contract_address);
-  //   let socialPayBob = await prepareAndConnectContract(
-  //     ACCOUNT_TEST_PROFILE?.bob?.contract ??
-  //       "0x25666639a56e895cc484f8dbd611be2633be561449001aa61bcbd517bc9c7d5",
-  //     account
-  //   );
-
-  //   let pkBobAccount = await socialPayBob?.get_public_key();
-  //   console.log("public key Bob account", pkBobAccount);
-
-  //   /** @TODO Alice account key */
-  //   // Nostr account
-  //   let { privateKey: pkAlice, publicKey: alicePublicKey } = generateKeypair();
-  //   let socialAlice = await prepareAndConnectContract(
-  //     // accountAlice?.contract_address ??
-  //     ACCOUNT_TEST_PROFILE?.alice?.contract ??
-  //       "0x261d2434b2583293b7dd2048cb9c0984e262ed0a3eb70a19ed4eac6defef8b1",
-  //     account
-  //   );
-
-  //   let pkAliceAccount = await socialAlice?.get_public_key();
-  //   console.log("public key Alice Account", pkAliceAccount);
-
-  //   /** @description
-  //    * Prepare the event
-  //    * Check and format for Social pay
-  //    * Send handle_transfer with Bob account to Alice account
-  //    */
-
-  //   /** Send a note */
-  //   // let amount: number = 10;
-  //   let amount: number = 1;
-
-  //   let currencyTicker = "STRK";
-  //   // let contentRequest = "@joyboy send 1 STRK to @alice.xyz";
-  //   // let contentRequest = `@joyboy send ${amount} STRK to @alice.xyz`;
-  //   let contentRequest = `@joyboy send ${amount} ${currencyTicker} to @alice.xyz`;
-  //   // let contentRequest = `nprofile${bobPublicKey} send ${amount} ${currencyTicker} to nprofile${alicePublicKey}`;
-  //   // let contentRequest=`nprofile1qys8wumn8ghj7un9d3shjtn2daukymme9e3k7mtdw4hxjare9e3k7mgqyzzxqw6wxqyyqqmv4rxgz2l0ej8zgrqfkuupycuatnwcannad6ayqx7zdcy send 1 USDC to nprofile1qqs9k2urpunhsp66kwl0kkjge8vp8zh0q9l6k2exkhp35f6z4yq6lnqjv2kmc`
-
-  //   let content = "a test";
-  //   // Check request, need to be undefined
-  //   let request = checkAndFilterSocialPayContent(content);
-  //   expect(request).to.eq(undefined);
-  //   // Check request, need to be defined with sender, amount, token, recipient
-  //   request = checkAndFilterSocialPayContent(contentRequest);
-  //   logDev(`second request = ${JSON.stringify(request)}`);
-  //   expect(true).to.eq(true);
-  //   console.log("request", request);
-  //   // expect(request).to.deep.eq({
-  //   //   sender: "@joyboy",
-  //   //   receiver: "@alice.xyz",
-  //   //   currency: "STRK",
-  //   //   amount: amount,
-  //   //   isValidAddress: false,
-  //   // });
-
-  //   // Send an event predefined sig for the onchain contract request
-  //   let { event, isValid, signature } = await sendEvent(pkBob, contentRequest);
-  //   console.log("event", event);
-
-  //   /** @TODO prepare request  */
-
-  //   let eventRequest = await getProfilesByNames(request, event);
-
-  //   /** @TODO NIP-05 to get user recipient */
-
-  //   if (eventRequest) {
-  //     eventRequest.receiver = alicePublicKey;
-  //   } else {
-  //     eventRequest = {
-  //       receiver: alicePublicKey,
-  //       sender: bobPublicKey,
-  //       amount: amount,
-  //       currency: currencyTicker,
-  //     };
-  //   }
-  //   console.log("Event request handle transfer", eventRequest);
-
-  //   let strkToken = await prepareAndConnectContract(
-  //     TOKENS_ADDRESS?.SEPOLIA?.TEST,
-  //     account
-  //   );
-  //   let balanceContractBob = await strkToken?.balanceOf(
-  //     ACCOUNT_TEST_PROFILE?.bob?.contract
-  //   );
-  //   console.log("Bob balance", balanceContractBob);
-
-  //   // expect(balanceContractBob).to.eq(cairo.uint256(amount));
-
-  //   let balanceAlice = await strkToken?.balanceOf(
-  //     ACCOUNT_TEST_PROFILE?.alice?.contract
-  //   );
-
-  //   console.log("Alice balance STRK", balanceAlice);
-
-  //   // expect(balanceAlice).to.eq(BigInt(0));
-  //   /*** Starknet handle_transfer call for SocialPay request
-  //    * @TODO We need to have an hard check for the pubkey before sending tx
-  //    ***/
-
-  //   /** @TODO
-  //    *  utils to fetch token address
-  //    * Format socialRequest and input*/
-  //   if (event && eventRequest) {
-  //     let socialTransfer: SocialPayRequest = {
-  //       ...eventRequest,
-  //       ...event,
-  //       signature: signature,
-  //       created_at: event?.created_at,
-  //       contentTransfer: {
-  //         amount: cairo.uint256(amount),
-  //         // amount:num.toHex(amount),
-  //         token: byteArray.byteArrayFromString("TEST"),
-  //         // token_address: TOKENS_ADDRESS?.SEPOLIA?.STRK,
-  //         token_address: TOKENS_ADDRESS?.SEPOLIA?.TEST,
-
-  //         // joyboy: cairo.tuple({
-  //         //   public_key: cairo.uint256(1),
-  //         //   relays: ["wss://relay.joyboy.community.com"],
-  //         //   // relays: [],
-  //         // }),
-  //         // recipient: cairo.tuple({
-  //         //   public_key: nostrPubkeyToUint256(alicePublicKey),
-  //         //   // relays: ["wss://relay.joyboy.community.com"],
-  //         //   relays: [],
-  //         // }),
-  //         joyboy: {
-  //           // public_key: nostrPubkeyToUint256(bobPublicKey),
-  //           public_key: cairo.uint256(1),
-
-  //           relays: ["wss://relay.joyboy.community.com"],
-  //           // relays: [],
-  //         },
-  //         recipient: {
-  //           public_key: nostrPubkeyToUint256(alicePublicKey),
-  //           // relays: ["wss://relay.joyboy.community.com"],
-  //           relays: [],
-  //         },
-  //         recipient_address:
-  //           ACCOUNT_TEST_PROFILE?.alice?.contract ??
-  //           "0x261d2434b2583293b7dd2048cb9c0984e262ed0a3eb70a19ed4eac6defef8b1",
-  //       },
-  //       // contentTransfer: {
-  //       //   amount: cairo.uint256(amount),
-  //       //   token: byteArray.byteArrayFromString("TEST"),
-  //       //   // token_address: TOKENS_ADDRESS?.SEPOLIA?.STRK,
-  //       //   token_address: TOKENS_ADDRESS?.SEPOLIA?.TEST,
-
-  //       //   joyboy: cairo.tuple({
-  //       //     public_key: nostrPubkeyToUint256(bobPublicKey),
-  //       //     relays: ["wss://relay.joyboy.community.com"],
-  //       //     // relays: [],
-  //       //   }),
-  //       //   recipient: cairo.tuple({
-  //       //     public_key: nostrPubkeyToUint256(alicePublicKey),
-  //       //     relays: ["wss://relay.joyboy.community.com"],
-  //       //     // relays: [],
-  //       //   }),
-  //       //   // joyboy: {
-  //       //   //   public_key: nostrPubkeyToUint256(bobPublicKey),
-  //       //   //   relays: ["wss://relay.joyboy.community.com"],
-  //       //   //   // relays: [],
-  //       //   // },
-  //       //   // recipient: {
-  //       //   //   public_key: nostrPubkeyToUint256(alicePublicKey),
-  //       //   //   // relays: ["wss://relay.joyboy.community.com"],
-  //       //   //   relays: [],
-  //       //   // },
-  //       //   recipient_address:
-  //       //     ACCOUNT_TEST_PROFILE?.alice?.contract ??
-  //       //     "0x261d2434b2583293b7dd2048cb9c0984e262ed0a3eb70a19ed4eac6defef8b1",
-  //       // },
-  //     };
-  //     console.log("socialTransfer", socialTransfer);
-
-  //     // Handle transfer with SocialPay A.A
-  //     if (socialTransfer?.signature) {
-  //       console.log("send handle_transfer");
-  //       /*** @TODO fix issue serialized request and type for attributes **/
-
-  //       console.log("try function parameters");
-  //       console.log("contentTransfer", socialTransfer?.contentTransfer);
-
-  //       const functionParameters = {
-  //         // public_key:cairo.uint256(1),
-  //         public_key: nostrPubkeyToUint256(bobPublicKey?.toString()),
-  //         // public_key: num.cleanHex(nostrPubkeyToUint256(bobPublicKey?.toString())) ,
-  //         // public_key: num.toHex(bobPublicKey?.toString()) ,
-  //         // public_key: num.toHexString((bobPublicKey?.toString())) ,
-  //         // public_key: num.getHexString(bobPublicKey?.toString()) ,
-  //         // public_key: num.getHexString(bobPublicKey?.toString()) ,
-  //         // public_key: num.cleanHex(bobPublicKey?.toString()) ,
-
-  //         /*** @TODO fix created_at deserialize as u64*/
-  //         // created_at: parseInt(event?.created_at?.toString()),
-  //         created_at: num.cleanHex(event?.created_at?.toString())  ,
-  //         kind: 1,
-  //         // kind:num.getHexString(event?.created_at?.toString()),
-  //         // kind:num.toHex(1),
-  //         tags: byteArray.byteArrayFromString("[]"), // tagsCalls
-  //         content: socialTransfer?.contentTransfer,
-  //         sig: {
-  //           r: signature?.r && hexStringToUint256(signature?.r),
-  //           s: signature?.s && hexStringToUint256(signature?.s),
-  //           // r: cairo.uint256("1"),
-  //           // s: cairo.uint256("1"),
-  //           // r: num.toHex("1"),
-  //           // s: num.toHex("1"),
-  //         },
-  //       };
-
-  //       console.log("before tx handle transfer");
-  //       console.log("account address", account?.address);
-  //       console.log(" socialPayBob?.address", socialPayBob?.address);
-  //       const tx = await account.execute({
-  //         contractAddress: socialPayBob?.address,
-  //         calldata: functionParameters,
-  //         entrypoint: "handle_transfer",
-  //       });
-
-  //       console.log("tx handle transfer", tx);
-  //     }
-  //   }
-
-  //   console.log("Alice balance STRK", balanceAlice);
-  //   expect(balanceAlice).to.eq(cairo.uint256(amount));
-  // });
-
   /*** @description uncomment this test to deploy your own contract, nostr account etc ***/
   it("Deploy account and Pay tips End to end test", async function () {
     this.timeout(0); // Disable timeout for this test
@@ -327,12 +72,14 @@ describe("End to end test", () => {
 
     /**  Generate keypair for both account*/
     // Bob nostr account
-    let { privateKey: pkBob, publicKey: bobPublicKey } = generateKeypair();
-    console.log("pkBob", new Buffer(pkBob).toString("hex"));
+    // let { privateKey: pkBob, publicKey: bobPublicKey } = generateKeypair();
+
+    let pkBob = stringToUint8Array(ACCOUNT_TEST_PROFILE?.bob?.nostrPrivateKey);
+    const bobPublicKey = ACCOUNT_TEST_PROFILE?.bob?.nostrPk;
+    console.log("privateKey Bob", new Buffer(pkBob).toString("hex"));
     console.log("bobPublicKey", bobPublicKey);
 
     // Bob contract/A.A
-    console.log("create social account");
     // @TODO Finish SNIP-6 to use it
     //  Use your ENV or Generate public and private key pair when A.A SNIP-06.
     // const AAprivateKey = process.env.AA_PRIVATE_KEY ?? stark.randomAddress();
@@ -340,8 +87,18 @@ describe("End to end test", () => {
     // const AAstarkKeyPub =
     //   process.env.AA_PUBKEY ?? ec.starkCurve.getStarkKey(AAprivateKey);
     // console.log("publicKey=", AAstarkKeyPub);
+    // await transferToken(
+    //   account,
+    //   accountAddress0,
+    //   TOKENS_ADDRESS?.DEVNET?.ETH,
+    //   // token?.address, // TOKENS_ADDRESS.SEPOLIA.TEST,
+    //   10
+    // );
+
     /** @description Uncomment to create your social account or comment and change your old contract in the constant ACCOUNT_TEST_PROFILE or direcly below***/
-    let accountBob = await createSocialContract(bobPublicKey);
+    // console.log("create social account");
+
+    // let accountBob = await createSocialContract(bobPublicKey);
     /** uncomment to use social account deploy when SNIP-6 finish */
 
     // let accountBob = await createSocialAccount(
@@ -354,8 +111,8 @@ describe("End to end test", () => {
     // };
     // console.log("accountBob?.contract_address ", accountBob?.contract_address);
     let socialPayBob = await prepareAndConnectContract(
-      accountBob?.contract_address ?? // uncomment if you recreate a contract
-        ACCOUNT_TEST_PROFILE?.bob?.contract ??
+      // accountBob?.contract_address ?? // uncomment if you recreate a contract
+      ACCOUNT_TEST_PROFILE?.bob?.contract ??
         "0x0538907b56f07ef4f90e6f2da26a099ccfbc64e1cc4d03ff1e627fa7c2eb78ac",
       account
     );
@@ -363,16 +120,23 @@ describe("End to end test", () => {
     let pkBobAccount = await socialPayBob?.get_public_key();
     console.log("public key Bob account", pkBobAccount);
 
-    await transferToken(
-      account,
-      socialPayBob?.address,
-      TOKENS_ADDRESS.SEPOLIA.TEST,
-      10
-    );
+    // let token = await createToken()
+
+    // let TOKEN_TEST=token?.address
+    // console.log("TOKEN_TEST",TOKEN_TEST)
+    // await transferToken(
+    //   account,
+    //   socialPayBob?.address,
+    //   token?.address, // TOKENS_ADDRESS.SEPOLIA.TEST,
+    //   10
+    // );
 
     /** @TODO Alice account key */
     // Nostr account
-    let { privateKey: pkAlice, publicKey: alicePublicKey } = generateKeypair();
+    // let { privateKey: pkAlice, publicKey: alicePublicKey } = generateKeypair();
+    
+    let pkAlice = stringToUint8Array(ACCOUNT_TEST_PROFILE?.alice?.nostrPrivateKey);
+    const alicePublicKey = ACCOUNT_TEST_PROFILE?.alice?.nostrPk;
     // const AAprivateKeyAlice = stark.randomAddress();
     // console.log("New account:\nprivateKey=", AAprivateKeyAlice);
     // const AAstarkKeyPubAlice = ec.starkCurve.getStarkKey(AAprivateKeyAlice);
@@ -389,6 +153,7 @@ describe("End to end test", () => {
     //   AAprivateKeyAlice,
     //   AAstarkKeyPubAlice
     // );
+    // console.log("accountAlice", accountAlice?.contract_address);
 
     let socialAlice = await prepareAndConnectContract(
       // accountAlice?.contract_address ??
@@ -430,8 +195,14 @@ describe("End to end test", () => {
     });
 
     // Send an event predefined sig for the onchain contract request
-    let { event, isValid, signature } = await sendEvent(pkBob, contentRequest);
+    let {
+      event,
+      isValid,
+      // signature
+    } = await sendEvent(pkBob, contentRequest);
     console.log("event", event);
+
+    // let serialize= serializeEvent(event)
 
     /** @TODO prepare request  */
 
@@ -463,100 +234,261 @@ describe("End to end test", () => {
      *  utils to fetch token address
      * Format socialRequest and input*/
     if (event && eventRequest) {
-      let socialTransfer: SocialPayRequest = {
-        ...eventRequest,
-        ...event,
-        signature: signature,
-        created_at: event?.created_at,
-        /** @TODO fix format and type */
-        contentTransfer: {
-          // amount: cairo.uint256(amount),
-          amount: cairo.uint256(amount),
-          // amount: num.toHex(amount),
+      // Handle transfer with SocialPay A.A+
+      let profileBob = {
+        pubkey: bobPublicKey,
+        // relays: ["wss://relay.joyboy.community.com"],
+        relays: [],
 
-
-          token: byteArray.byteArrayFromString("TEST"),
-          token_address: TOKENS_ADDRESS?.SEPOLIA?.TEST,
-          joyboy: {
-            public_key: nostrPubkeyToUint256(bobPublicKey),
-            relays: ["wss://relay.joyboy.community.com"],
-          },
-          recipient: {
-            public_key: nostrPubkeyToUint256(alicePublicKey),
-            relays: ["wss://relay.joyboy.community.com"],
-          },
-          recipient_address:
-            ACCOUNT_TEST_PROFILE?.alice?.contract ??
-            "0x261d2434b2583293b7dd2048cb9c0984e262ed0a3eb70a19ed4eac6defef8b1",
-        },
       };
-      console.log("socialTransfer", socialTransfer);
+      let nprofileBob = nip19.nprofileEncode(profileBob);
+      console.log("nprofileBob",nprofileBob)
+      let nprofileAlice = nip19.nprofileEncode({
+        pubkey: alicePublicKey,
+        relays: [],
+      });
+      console.log("nprofileAlice",nprofileAlice)
 
-      // Handle transfer with SocialPay A.A
-      if (socialTransfer?.signature) {
-        console.log("send handle_transfer");
-        let nostPubkeyUint = nostrPubkeyToUint256(bobPublicKey?.toString());
-        /*** @TODO fix issue serialized request and type for attributes **/
+      // const finalizedFunctionParametersEvent = finalizeEvent(
+      //   {
+      //     kind: 1,
+      //     tags: [],
+      //     content: `${nprofileBob} send ${amount} TEST to ${nprofileAlice}`,
+      //     // content: JSON.stringify({
+      //     //   amount: amount,
+      //     //   token: "TEST",
+      //     //   token_address: TOKENS_ADDRESS?.SEPOLIA?.TEST,
+      //     //   joyboy: {
+      //     //     public_key: bobPublicKey,
+      //     //     relays: [],
+      //     //   },
+      //     //   recipient: {
+      //     //     public_key: alicePublicKey,
+      //     //     relays: [],
+      //     //   },
+      //     //   recipient_address:
+      //     //     ACCOUNT_TEST_PROFILE?.alice?.contract ??
+      //     //     "0x261d2434b2583293b7dd2048cb9c0984e262ed0a3eb70a19ed4eac6defef8b1",
+      //     // }),
+      //     // created_at: event?.created_at,
+      //     created_at: new Date().getTime(),
 
-        console.log("try function parameters");
-        // const functionParameters: RawArgsObject = {
-        //   //wrong order; all properties are mixed
-        //   public_key:
-        //     nostPubkeyUint ?? nostrPubkeyToUint256(bobPublicKey?.toString()),
-        //   kind: 1,
-        //   tags: byteArray.byteArrayFromString("[]"), // tagsCalls
-
-        //   /** @TODO fix stringToUint256 for Signature r + s */
-        //   content: {
-        //     ...socialTransfer?.contentTransfer,
-        //   },
-        //   sig: {
-        //     r: signature?.r && hexStringToUint256(signature?.r),
-        //     s: signature?.s && hexStringToUint256(signature?.s),
-        //     // r:signature?.r && cairo.uint256(signature?.r),
-        //     // s:signature?.s && cairo.uint256(signature?.s),
-        //   },
-        // };
-        const functionParameters = {
-          // public_key:cairo.uint256(1),
-          public_key: nostrPubkeyToUint256(bobPublicKey?.toString()),
-
-          /*** @TODO fix created_at deserialize as u64*/
-          // created_at: parseInt(event?.created_at?.toString()),
-          created_at: event?.created_at?.toString(),
-
+      //   },
+      //   pkBob
+      // );
+      const finalizedFunctionParametersEvent = finalizeEvent(
+        {
           kind: 1,
-          tags: byteArray.byteArrayFromString("[]"), // tagsCalls
-          content: socialTransfer?.contentTransfer,
-          sig: {
-            r: cairo.uint256(
-              "0x3570a9a0c92c180bd4ac826c887e63844b043e3b65da71a857d2aa29e7cd3a4e"
-            ),
-            s: cairo.uint256(
-              "0x3570a9a0c92c180bd4ac826c887e63844b043e3b65da71a857d2aa29e7cd3a4e"
-            ),
-            // r: signature?.r && hexStringToUint256(signature?.r),
-            // s: signature?.s && hexStringToUint256(signature?.s),
-          },
-          // content: cairo.tuple({
-          //   ...socialTransfer?.contentTransfer,
-          // }),
-          // sig: cairo.tuple({
-          //   r: signature?.r && hexStringToUint256(signature?.r),
-          //   s: signature?.s && hexStringToUint256(signature?.s),
-          // }),
-        };
+          tags: [],
+          content: `${nprofileBob} send ${amount} TEST to ${nprofileAlice}`,
+          created_at: new Date().getTime(),
+        },
+        pkBob
+      );
+      const signature = finalizedFunctionParametersEvent.sig;
+      const signatureR = signature.slice(0, signature.length / 2);
+      const signatureS = signature.slice(signature.length / 2);
+      if (signature) {
+        // const functionParameters = [
+        //   // nostrPubkeyToUint256(bobPublicKey?.toString()),
+        //   cairo.uint256(pkBobAccount),
+        //   // uint256.bnToUint256(BigInt("0x" + bobPublicKey)),
+
+        //   // pkBobAccount,
+        //   // event?.created_at?.toString(),
+        //   event?.created_at,
+        //   1,
+        //   byteArray.byteArrayFromString("[]"),
+        //   socialTransfer?.contentTransfer,
+        //   {
+        //     r: uint256.bnToUint256(BigInt("0x" + signR)),
+        //     s: uint256.bnToUint256(BigInt("0x" + signS)),
+        //     // s: hexStringToUint256(signS),
+        //     // r: cairo.uint256(signR),
+        //     // s: cairo.uint256(signS),
+        //     // r: signR,
+        //     // s: signS,
+        //     // r: cairo.uint256(
+        //     //   "0x3570a9a0c92c180bd4ac826c887e63844b043e3b65da71a857d2aa29e7cd3a4e"
+        //     // ),
+        //     // s: cairo.uint256(
+        //     //   "0x3570a9a0c92c180bd4ac826c887e63844b043e3b65da71a857d2aa29e7cd3a4e"
+        //     // ),
+        //     // r: signature?.r && hexStringToUint256(signature?.r),
+        //     // s: signature?.s && hexStringToUint256(signature?.s),
+        //     // r: hexStringToUint256(signR),
+        //     // s: hexStringToUint256(signS),
+        //   },
+        // ];
+
+        // const functionParameters = [
+        //   cairo.uint256(pkBobAccount), // uint256.bnToUint256(BigInt("0x" + bobPublicKey)),
+        //   finalizedFunctionParametersEvent?.created_at,
+        //   1,
+        //   byteArray.byteArrayFromString("[]"), // tags
+        //   uint256.bnToUint256(BigInt(amount)), // amount
+        //   byteArray.byteArrayFromString("TEST"), // token symbol
+        //   getChecksumAddress(TOKENS_ADDRESS?.SEPOLIA?.TEST), // token address
+        //   uint256.bnToUint256(BigInt("0x" + bobPublicKey)),
+        //   // "0x" + bobPublicKey,
+        //   [],
+        //   cairo.uint256(pkAliceAccount), // uint256.bnToUint256(BigInt("0x" + alicePublicKey)),
+        //   [],
+        //   getChecksumAddress(
+        //     ACCOUNT_TEST_PROFILE?.alice?.contract ??
+        //       "0x261d2434b2583293b7dd2048cb9c0984e262ed0a3eb70a19ed4eac6defef8b1"
+        //   ),
+        //   uint256.bnToUint256(BigInt("0x" + signatureR)),
+        //   uint256.bnToUint256(BigInt("0x" + signatureS)),
+        // ];
+        // console.log("functionParameters", functionParameters);
+
+        // const functionParametersDummy = [
+        //   cairo.uint256(pkBobAccount), // uint256.bnToUint256(BigInt("0x" + bobPublicKey)),
+        //   finalizedFunctionParametersEvent?.created_at,
+        //   1,
+        //   byteArray.byteArrayFromString("[]"), // tags
+        //   uint256.bnToUint256(BigInt(amount)), // amount
+        //   byteArray.byteArrayFromString("TEST"), // token symbol
+        //   getChecksumAddress(TOKENS_ADDRESS?.SEPOLIA?.TEST), // token address
+        //   uint256.bnToUint256(BigInt("0x" + bobPublicKey)),
+        //   // "0x" + bobPublicKey,
+        //   ["wss://relay.joyboy.community.com"],
+        //   cairo.uint256(pkAliceAccount), // uint256.bnToUint256(BigInt("0x" + alicePublicKey)),
+        //   [],
+        //   getChecksumAddress(
+        //     ACCOUNT_TEST_PROFILE?.alice?.contract ??
+        //       "0x261d2434b2583293b7dd2048cb9c0984e262ed0a3eb70a19ed4eac6defef8b1"
+        //   ),
+        //   uint256.bnToUint256(BigInt("0x" + signatureR)),
+        //   uint256.bnToUint256(BigInt("0x" + signatureS)),
+        // ];
+
+        const functionParametersDummy = [
+          // uint256.bnToUint256(bobPublicKey), // uint256.bnToUint256(BigInt("0x" + bobPublicKey)),
+          uint256.bnToUint256(BigInt("0x" + bobPublicKey)),
+        
+          // cairo.uint256(bobPublicKey), // uint256.bnToUint256(BigInt("0x" + bobPublicKey)),
+
+          // uint256.bnToUint256("97222190664923577697232436244924436943183762259335404131785622463208003961201"), // uint256.bnToUint256(BigInt("0x" + bobPublicKey)),
+          "1716285235",
+          1,
+          byteArray.byteArrayFromString("[]"), // tags
+          uint256.bnToUint256(BigInt(amount)), // amount
+          byteArray.byteArrayFromString("TEST"), // token symbol
+          getChecksumAddress(TOKENS_ADDRESS?.SEPOLIA?.TEST), // token address
+          uint256.bnToUint256(BigInt("0x" + bobPublicKey)),
+          // "0x" + bobPublicKey,
+          // ["wss://relay.joyboy.community.com"],
+          [],
+          uint256.bnToUint256(BigInt("0x" + alicePublicKey)),
+          // cairo.uint256(pkAliceAccount), // uint256.bnToUint256(BigInt("0x" + alicePublicKey)),
+          [],
+          getChecksumAddress(
+            ACCOUNT_TEST_PROFILE?.alice?.contract ??
+              "0x261d2434b2583293b7dd2048cb9c0984e262ed0a3eb70a19ed4eac6defef8b1"
+          ),
+          // {
+          //   // r: "0x3570a9a0c92c180bd4ac826c887e63844b043e3b65da71a857d2aa29e7cd3a4e",
+          //   // s: "0x1c0c0a8b7a8330b6b8915985c9cd498a407587213c2e7608e7479b4ef966605f",
+          //   r:cairo.uint256("24171638576078281794368410527468905496497988497448814608660484064887975000654"),
+            
+          //   s:cairo.uint256("12686034702906922263785357016076956293086009546396231082163943033601530421343")
+          //   // r:"24171638576078281794368410527468905496497988497448814608660484064887975000654",
+          //   // s:"12686034702906922263785357016076956293086009546396231082163943033601530421343"
+          //   // r: uint256.bnToUint256("0x3570a9a0c92c180bd4ac826c887e63844b043e3b65da71a857d2aa29e7cd3a4e"),
+
+          //   // s: uint256.bnToUint256("0x1c0c0a8b7a8330b6b8915985c9cd498a407587213c2e7608e7479b4ef966605f"),
+
+            
+          //   // r: uint256.bnToUint256("24171638576078281794368410527468905496497988497448814608660484064887975000654"),
+
+          //   // s: uint256.bnToUint256("12686034702906922263785357016076956293086009546396231082163943033601530421343"),
+          //   // r: cairo.uint256("0x3570a9a0c92c180bd4ac826c887e63844b043e3b65da71a857d2aa29e7cd3a4e"),
+          //   // s: cairo.uint256("0x1c0c0a8b7a8330b6b8915985c9cd498a407587213c2e7608e7479b4ef966605f"),
+
+          //   // r: cairo.uint256("24171638576078281794368410527468905496497988497448814608660484064887975000654"),
+          //   // s: cairo.uint256("12686034702906922263785357016076956293086009546396231082163943033601530421343"),
+          // },
+        //  "0x3570a9a0c92c180bd4ac826c887e63844b043e3b65da71a857d2aa29e7cd3a4e",
+          // "0x1c0c0a8b7a8330b6b8915985c9cd498a407587213c2e7608e7479b4ef966605f",
+          uint256.bnToUint256(BigInt("0x" + signatureR)),
+          uint256.bnToUint256(BigInt("0x" + signatureS)),
+        ];
+
         console.log("before tx handle transfer");
+        console.log(
+          "finalizedFunctionParametersEvent",
+          finalizedFunctionParametersEvent
+        );
+
+        console.log("functionParametersDummy", functionParametersDummy);
         // const tx = await account.execute(myCall);
-        console.log("account address", account?.address);
-        console.log(" socialPayBob?.address", socialPayBob?.address);
+        // console.log("account address", account?.address);
+        // console.log(" socialPayBob?.address", socialPayBob?.address);
         const tx = await account.execute({
           contractAddress: socialPayBob?.address,
-          calldata: functionParameters,
+          calldata: functionParametersDummy,
           entrypoint: "handle_transfer",
         });
 
         console.log("tx handle transfer", tx);
+
+        // console.log("send handle_transfer");
+        // const sig = event?.sig;
+        // console.log("sig", sig);
+        // const len = sig?.length;
+        // const signR = sig?.slice(0, len / 2);
+        // console.log("signR", signR);
+
+        // const signS = sig?.slice(len / 2, len);
+        // console.log("signS", signS);
+
+        // let socialTransfer: SocialPayRequest = {
+        //   ...eventRequest,
+        //   ...event,
+        //   // signature: signature,
+        //   created_at: event?.created_at,
+        //   /** @TODO fix format and type */
+        //   contentTransfer: {
+        //     // amount: cairo.uint256(amount),
+        //     amount: cairo.uint256(amount),
+        //     // amount: num.toHex(amount),
+        //     token: byteArray.byteArrayFromString("TEST"),
+        //     token_address: TOKENS_ADDRESS?.SEPOLIA?.TEST, // TOKENS_ADDRESS?.SEPOLIA?.TEST,
+        //     joyboy: {
+        //       public_key: nostrPubkeyToUint256(bobPublicKey),
+        //       // relays: [byteArray.byteArrayFromString(
+        //       //   "wss://relay.joyboy.community.com"
+        //       // )],
+        //       relays: [],
+        //       // relays: byteArray.byteArrayFromString(
+        //       //   "wss://relay.joyboy.community.com"
+        //       // ),
+        //     },
+        //     recipient: {
+        //       // public_key: nostrPubkeyToUint256(alicePublicKey),
+        //       public_key: cairo.uint256(pkAliceAccount),
+        //       // relays: ["wss://relay.joyboy.community.com"],
+        //       relays: [],
+        //       // relays: [byteArray.byteArrayFromString(
+        //       //   "wss://relay.joyboy.community.com"
+        //       // )]
+        //     },
+        //     recipient_address:
+        //       ACCOUNT_TEST_PROFILE?.alice?.contract ??
+        //       "0x261d2434b2583293b7dd2048cb9c0984e262ed0a3eb70a19ed4eac6defef8b1",
+        //   },
+        // };
+        // console.log("socialTransfer alicePublicKey", alicePublicKey);
+        // console.log(
+        //   "socialTransfer joyboy",
+        //   socialTransfer?.contentTransfer?.joyboy
+        // );
+        // console.log(
+        //   "socialTransfer recipient",
+        //   socialTransfer?.contentTransfer?.recipient
+        // );
       }
     }
 

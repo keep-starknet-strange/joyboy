@@ -1,4 +1,4 @@
-import { Account, json, hash, CallData, Contract, cairo } from "starknet";
+import { Account, json, hash, CallData, Contract, cairo, uint256 } from "starknet";
 import fs from "fs";
 import dotenv from "dotenv";
 import { nostrPubkeyToUint256 } from "./format";
@@ -48,7 +48,12 @@ export const createSocialContract = async (nostrPublicKey: string) => {
     const hexString = nostrPublicKey; // Replace with actual hex string
     // console.log("nostPubkeyUint", nostPubkeyUint);
     const AAaccountConstructorCallData = CallData.compile({
-      public_key: nostPubkeyUint,
+      // public_key: nostPubkeyUint,
+      // public_key:nostrPublicKey
+      // public_key:cairo.uint256(nostrPublicKey)
+      public_key:uint256.bnToUint256(BigInt("0x"+ nostrPublicKey)) 
+
+      
     });
     //Devnet
     // //  fund account address before account creation
@@ -78,6 +83,18 @@ export const createSocialContract = async (nostrPublicKey: string) => {
     // const contractClassHash = declareResponse.class_hash;
     // AAaccountClassHash = contractClassHash;
     // console.log("AAaccountClassHash", AAaccountClassHash);
+    // console.log("declare account");
+    // console.log("try declare account")
+    // const declareResponse = await account0.declare({
+    //   contract: compiledSierraAAaccount,
+    //   casm: compiledAACasm,
+    // });
+
+    // const contractClassHash = declareResponse.class_hash;
+    // AAaccountClassHash=contractClassHash
+
+    // await provider.waitForTransaction(declareResponse?.transaction_hash)
+    // console.log("declareResponse", declareResponse?.class_hash);
 
     const testClassHash = AAaccountClassHash;
 
@@ -175,16 +192,18 @@ export const createSocialAccount = async (
     // console.log("Answer mint =", answer);
 
     /** @description uncomment this to declare your accout */
-    // console.log("declare account");
-    // console.log("try declare account")
-    // const declareResponse = await account0.declare({
-    //   contract: compiledSierraAAaccount,
-    //   casm: compiledAACasm,
-    // });
-    // console.log("declareResponse", declareResponse);
+    console.log("declare account");
+    console.log("try declare account")
+    const declareResponse = await account0.declare({
+      contract: compiledSierraAAaccount,
+      casm: compiledAACasm,
+    });
 
-    // const contractClassHash = declareResponse.class_hash;
-    // AAaccountClassHash=contractClassHash
+    const contractClassHash = declareResponse.class_hash;
+    AAaccountClassHash=contractClassHash
+
+    await provider.waitForTransaction(declareResponse?.transaction_hash)
+    console.log("declareResponse", declareResponse?.class_hash);
 
     const AAaccount = new Account(provider, AAcontractAddress, AAprivateKey);
 
@@ -196,12 +215,12 @@ export const createSocialAccount = async (
     // });
 
     /** Fun your AA Account to deploy*/
-    await transferToken(
-      account0,
-      AAcontractAddress,
-      "0x49D36570D4E46F48E99674BD3FCC84644DDD6B96F7C741B1562B82F9E004DC7"
-      // "0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d"
-    );
+    // await transferToken(
+    //   account0,
+    //   AAcontractAddress,
+    //   "0x49D36570D4E46F48E99674BD3FCC84644DDD6B96F7C741B1562B82F9E004DC7"
+    //   // "0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d"
+    // );
 
     const nonce = await account0?.getNonce();
     console.log("nonce", nonce);
