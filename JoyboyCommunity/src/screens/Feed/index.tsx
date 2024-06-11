@@ -1,14 +1,13 @@
+import {useRef} from 'react';
 import {Button, FlatList, Image, Pressable, RefreshControl, View} from 'react-native';
 
 import {AddPostIcon} from '../../assets/icons';
-import {Header, Modal, Modalize, Story} from '../../components';
+import {Header, Modalize, Story} from '../../components';
+import {TipToken} from '../../components/Tip';
 import {useRootNotes, useStyles, useTheme} from '../../hooks';
 import {PostCard} from '../../modules/PostCard';
 import {FeedScreenProps} from '../../types';
 import stylesheet from './styles';
-import {useRef, useState} from 'react';
-import {TipToken} from '../../components/Tip';
-import {Portal} from 'react-native-portalize';
 
 export const Feed: React.FC<FeedScreenProps> = ({navigation}) => {
   const theme = useTheme();

@@ -1,6 +1,6 @@
 import {Platform} from 'react-native';
 
-import {Spacing, ThemedStyleSheet, Theme} from '../../styles';
+import {Spacing, ThemedStyleSheet} from '../../styles';
 
 export default ThemedStyleSheet((theme) => ({
   modal: {

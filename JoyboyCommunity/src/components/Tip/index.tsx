@@ -1,16 +1,17 @@
 import {forwardRef, useMemo, useState} from 'react';
-import {Platform, View, Image} from 'react-native';
-import {Modalize as RNModalize, ModalizeProps as RNModalizeProps} from 'react-native-modalize';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {Image, Platform, View} from 'react-native';
+import {Modalize as RNModalize} from 'react-native-modalize';
 import RNPickerSelect from 'react-native-picker-select';
+import {SafeAreaView} from 'react-native-safe-area-context';
+
+import {BackIcon, CancelIcon, LikeFillIcon} from '../../assets/icons';
 import {useStyles} from '../../hooks';
+import {Spacing} from '../../styles';
+import {Button} from '../Button';
 import {Divider} from '../Divider';
+import {Input} from '../Input';
 import {Text} from '../Text';
 import stylesheet from './styles';
-import {BackIcon, CancelIcon, LikeFillIcon} from '../../assets/icons';
-import {Button} from '../Button';
-import {Spacing} from '../../styles';
-import {Input} from '../Input';
 
 export const TipToken = forwardRef((props, ref) => {
   const styles = useStyles(stylesheet);
@@ -106,7 +107,7 @@ export const TipToken = forwardRef((props, ref) => {
           </View>
         </View>
 
-        <Button variant={isActive ? 'secondary': 'default'} >Tip</Button>
+        <Button variant={isActive ? 'secondary' : 'default'}>Tip</Button>
 
         <Text style={{paddingTop: Spacing.small}} fontSize={13} weight="regular" color="#A1A1C7">
           Tip friends and support creators with your favorite tokens.
