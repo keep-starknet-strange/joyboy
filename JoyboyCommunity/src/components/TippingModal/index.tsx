@@ -4,9 +4,9 @@ import {View} from 'react-native';
 import {Portal} from 'react-native-portalize';
 
 import {TippingModalIcon} from '../../assets/icons';
-import {Button, Text} from '../../components';
 import {useStyles} from '../../hooks';
 import {MainStackNavigationProps} from '../../types';
+import {Button, Text} from '..';
 import stylesheet from './styles';
 
 export type TippingModalProps = {
@@ -19,10 +19,6 @@ export const TippingModal: React.FC<TippingModalProps> = ({user, amount, visible
   const styles = useStyles(stylesheet);
 
   const navigation = useNavigation<MainStackNavigationProps>();
-
-  const handleHomePress = () => {
-    navigation.navigate('Home');
-  };
 
   if (!visible) return null;
 
@@ -41,10 +37,17 @@ export const TippingModal: React.FC<TippingModalProps> = ({user, amount, visible
             <Text color="#EC796B" weight="bold" fontSize={21} lineHeight={24}>
               {amount} JBY
             </Text>
-            <Text color="#EC796B" weight="semiBold" fontSize={15} lineHeight={24}>
+            <Text color="#6B6B8C" weight="medium" fontSize={15} lineHeight={24}>
               Keep spreading love
             </Text>
-            <Button style={styles.button} onPress={handleHomePress}>
+
+            <Button
+              style={styles.button}
+              onPress={() => {
+                navigation.navigate('Home');
+              }}
+              variant="secondary"
+            >
               Home
             </Button>
           </View>

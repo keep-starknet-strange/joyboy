@@ -14,6 +14,13 @@ export default ThemedStyleSheet((theme) => ({
     justifyContent: 'center',
     paddingHorizontal: Spacing.xlarge,
   },
+  backgroundImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+  },
   modal: {
     width: 329,
     height: 291,
@@ -39,11 +46,5 @@ export default ThemedStyleSheet((theme) => ({
   },
   button: {
     width: 281,
-    height: 54,
-    backgroundColor: '#0C0C4F',
-    color: '#FFFFFF',
-    fontSize: 15,
-    lineHeight: 22,
-    textAlign: 'center',
   },
 }));
