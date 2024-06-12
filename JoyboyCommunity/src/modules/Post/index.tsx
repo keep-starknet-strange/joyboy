@@ -16,7 +16,7 @@ import {CommentIcon, LikeFillIcon, LikeIcon, RepostIcon} from '../../assets/icon
 import {Avatar, Text} from '../../components';
 import {useProfile, useStyles, useTheme} from '../../hooks';
 import {MainStackNavigationProps} from '../../types';
-import {timestampToHumanReadable} from '../../utils/common-utils';
+import {getElapsedTimeStringFull} from '../../utils/timestamp';
 import stylesheet from './styles';
 
 export type PostProps = {
@@ -130,7 +130,7 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
               )}
 
               <Text color="textLight" fontSize={11} lineHeight={16}>
-                {timestampToHumanReadable(event.created_at)}
+                {getElapsedTimeStringFull(event.created_at * 1000)}
               </Text>
             </View>
           </Pressable>
