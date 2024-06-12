@@ -95,6 +95,12 @@ describe("Event", () => {
       amount: amount,
       isValidAddress: false,
     });
+    
+    /** @TODO prepare request  */
+
+
+    /** @TODO NIP-05 to get user recipient */
+
 
   });
 });
