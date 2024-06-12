@@ -302,6 +302,8 @@ mod tests {
     fn successful_transfer() {
         let (request, sender, _, _) = request_fixture();
 
+        println!("{:?}", request);
+
         sender.handle_transfer(request);
     }
 
