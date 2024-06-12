@@ -77,6 +77,15 @@ describe("End to end test", () => {
     console.log("privateKey Bob", new Buffer(pkBob).toString("hex"));
     console.log("bobPublicKey", bobPublicKey);
 
+    /** @TODO Alice account key */
+    // Nostr account
+    // let { privateKey: pkAlice, publicKey: alicePublicKey } = generateKeypair();
+
+    let pkAlice = stringToUint8Array(
+      ACCOUNT_TEST_PROFILE?.alice?.nostrPrivateKey
+    );
+    const alicePublicKey = ACCOUNT_TEST_PROFILE?.alice?.nostrPk;
+
     // Bob contract/A.A
     // @TODO Finish SNIP-6 to use it
     //  Use your ENV or Generate public and private key pair when A.A SNIP-06.
@@ -108,16 +117,50 @@ describe("End to end test", () => {
     //   contract_address: undefined,
     // };
     // console.log("accountBob?.contract_address ", accountBob?.contract_address);
-    let socialPayBob = await prepareAndConnectContract(
-      // accountBob?.contract_address ?? // uncomment if you recreate a contract
-      ACCOUNT_TEST_PROFILE?.bob?.contract ??
-      "0x0538907b56f07ef4f90e6f2da26a099ccfbc64e1cc4d03ff1e627fa7c2eb78ac",
-      account
-    );
+    let socialPayBob;
+    let socialAlice;
+
+    if (process.env.IS_DEPLOY_CONTRACT == 'true') {
+      let accountBob = await createSocialContract(bobPublicKey);
+
+      socialPayBob = await prepareAndConnectContract(
+        accountBob?.contract_address ?? // uncomment if you recreate a contract
+          ACCOUNT_TEST_PROFILE?.bob?.contract ??
+          "0x0538907b56f07ef4f90e6f2da26a099ccfbc64e1cc4d03ff1e627fa7c2eb78ac",
+        account
+      );
+
+      let accountAlice = await createSocialContract(alicePublicKey);
+      /** uncomment to use social account deploy when SNIP-6 finish */
+      // let accountAlice = await createSocialAccount(
+      //   alicePublicKey,
+      //   AAprivateKeyAlice,
+      //   AAstarkKeyPubAlice
+      // );
+      // console.log("accountAlice", accountAlice?.contract_address);
+
+      socialAlice = await prepareAndConnectContract(
+        accountAlice?.contract_address ??
+          ACCOUNT_TEST_PROFILE?.alice?.contract ??
+          "0x261d2434b2583293b7dd2048cb9c0984e262ed0a3eb70a19ed4eac6defef8b1",
+        account
+      );
+    } else {
+      socialPayBob = await prepareAndConnectContract(
+        ACCOUNT_TEST_PROFILE?.bob?.contract ??
+          "0x0538907b56f07ef4f90e6f2da26a099ccfbc64e1cc4d03ff1e627fa7c2eb78ac",
+        account
+      );
+
+      socialAlice = await prepareAndConnectContract(
+        ACCOUNT_TEST_PROFILE?.alice?.contract ??
+          "0x261d2434b2583293b7dd2048cb9c0984e262ed0a3eb70a19ed4eac6defef8b1",
+        account
+      );
+    }
 
     let pkBobAccount = await socialPayBob?.get_public_key();
     console.log("public key Bob account", pkBobAccount);
-
     // let token = await createToken()
 
     // let TOKEN_TEST=token?.address
@@ -129,40 +172,14 @@ describe("End to end test", () => {
     //   10
     // );
 
-    /** @TODO Alice account key */
-    // Nostr account
-    // let { privateKey: pkAlice, publicKey: alicePublicKey } = generateKeypair();
-
-    let pkAlice = stringToUint8Array(ACCOUNT_TEST_PROFILE?.alice?.nostrPrivateKey);
-    const alicePublicKey = ACCOUNT_TEST_PROFILE?.alice?.nostrPk;
     // const AAprivateKeyAlice = stark.randomAddress();
     // console.log("New account:\nprivateKey=", AAprivateKeyAlice);
     // const AAstarkKeyPubAlice = ec.starkCurve.getStarkKey(AAprivateKeyAlice);
     // console.log("publicKey=", AAstarkKeyPubAlice);
     /** @description Uncomment to create your social account or comment and change your old contract in the constant ACCOUNT_TEST_PROFILE or direcly below***/
-    // let accountAlice = await createSocialContract(
-    //   alicePublicKey
-    //   // AAprivateKeyAlice,
-    //   // AAstarkKeyPubAlice
-    // );
-    /** uncomment to use social account deploy when SNIP-6 finish */
-    // let accountAlice = await createSocialAccount(
-    //   alicePublicKey,
-    //   AAprivateKeyAlice,
-    //   AAstarkKeyPubAlice
-    // );
-    // console.log("accountAlice", accountAlice?.contract_address);
-
-    let socialAlice = await prepareAndConnectContract(
-      // accountAlice?.contract_address ??
-      ACCOUNT_TEST_PROFILE?.alice?.contract ??
-      "0x261d2434b2583293b7dd2048cb9c0984e262ed0a3eb70a19ed4eac6defef8b1",
-      account
-    );
 
     let pkAliceAccount = await socialAlice?.get_public_key();
     console.log("public key Alice Account", pkAliceAccount);
-
 
     /** Send a note */
     let amount: number = 1;
@@ -187,23 +204,22 @@ describe("End to end test", () => {
       relays: ["wss://relay.joyboy.community.com"],
     };
     let nprofileBob = nip19.nprofileEncode(profileBob);
-    console.log("nprofileBob", nprofileBob)
+    console.log("nprofileBob", nprofileBob);
     let nprofileAlice = nip19.nprofileEncode({
       pubkey: alicePublicKey,
       relays: [],
     });
-    console.log("nprofileAlice", nprofileAlice)
+    console.log("nprofileAlice", nprofileAlice);
     // let symbol = await strkToken.symbol();
     let symbol = "BIG_TOKEN";
-    console.log("symbol", symbol)
+    console.log("symbol", symbol);
     let timestamp = new Date().getTime();
     let content = `${nprofileBob} send ${amount} ${symbol} to ${nprofileAlice}`;
-    console.log("content", content)
+    console.log("content", content);
     const finalizedFunctionParametersEvent = finalizeEvent(
       {
         kind: 1,
         tags: [],
-        // content: `${nprofileBob} send ${amount} TEST to ${nprofileAlice}`,
         content: content,
         created_at: timestamp,
       },
@@ -213,7 +229,6 @@ describe("End to end test", () => {
     const signatureR = signature.slice(0, signature.length / 2);
     const signatureS = signature.slice(signature.length / 2);
     if (signature) {
-
       const functionParametersDummy = {
         public_key: uint256.bnToUint256(BigInt("0x" + bobPublicKey)),
         created_at: timestamp,
@@ -232,22 +247,30 @@ describe("End to end test", () => {
           recipient: {
             public_key: uint256.bnToUint256(BigInt("0x" + alicePublicKey)),
             realys: [],
-          }
+          },
         },
 
-        recipient_address: ACCOUNT_TEST_PROFILE?.alice?.contract ??
+        recipient_address:
+          ACCOUNT_TEST_PROFILE?.alice?.contract ??
           "0x261d2434b2583293b7dd2048cb9c0984e262ed0a3eb70a19ed4eac6defef8b1",
         signature: {
-          r: uint256.bnToUint256(BigInt("0x" + signatureR)),
-          s: uint256.bnToUint256(BigInt("0x" + signatureS)),
-        }
-      }
-   
+          r: cairo.uint256(BigInt("0x" + signatureR)),
+          s: cairo.uint256(BigInt("0x" + signatureS)),
+          // r: uint256.bnToUint256(BigInt("0x" + signatureR)),
+          // s: uint256.bnToUint256(BigInt("0x" + signatureS)),
+        },
+      };
+
       console.log("before tx handle transfer");
       console.log(
         "finalizedFunctionParametersEvent",
         finalizedFunctionParametersEvent
       );
+      console.log(
+        "signature",
+        signature
+      );
+
 
       console.log("functionParametersDummy", functionParametersDummy);
       // console.log("account address", account?.address);
