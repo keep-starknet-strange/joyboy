@@ -13,8 +13,7 @@ export const useProfile = (options: UseProfileOptions) => {
     queryKey: ['profile', options.publicKey],
     queryFn: async () => {
       const user = ndk.getUser({pubkey: options.publicKey});
-
-      return user.fetchProfile();
+      return await user.fetchProfile();
     },
     placeholderData: {} as any,
   });
