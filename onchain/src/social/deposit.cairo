@@ -11,39 +11,30 @@ impl DepositIdEncodeImpl of Encode<DepositId> {
 
 type NostrPublicKey = u256;
 
-#[derive(Copy, Debug, Drop, PartialEq, starknet::Store)]
-pub struct Deposit {
-    sender: ContractAddress,
-    amount: u256,
-    token_address: ContractAddress,
-    recipient: NostrPublicKey
-}
-
-impl DepositDefault of Default<Deposit> {
-    #[inline(always)]
-    fn default() -> Deposit {
-        Deposit {
-            sender: 0.try_into().unwrap(),
-            amount: 0.into(),
-            token_address: 0.try_into().unwrap(),
-            recipient: 0_u256
-        }
-    }
-}
-
 #[derive(Copy, Debug, Drop, Serde)]
 pub enum DepositResult {
     Transfer: ContractAddress,
     Deposit: DepositId,
 }
 
+#[derive(Copy, Debug, Drop, PartialEq, starknet::Store, Serde)]
+struct Deposit {
+    sender: ContractAddress,
+    amount: u256,
+    token_address: ContractAddress,
+    recipient: NostrPublicKey,
+    ttl: u64,
+}
+
 #[starknet::interface]
 pub trait IDepositEscrow<TContractState> {
+    fn get_deposit(self: @TContractState, deposit_id: DepositId) -> Deposit;
     fn deposit(
         ref self: TContractState,
         amount: u256,
         token_address: ContractAddress,
-        nostr_recipient: NostrPublicKey
+        nostr_recipient: NostrPublicKey,
+        timelock: u64
     ) -> DepositResult;
     fn cancel(ref self: TContractState, deposit_id: DepositId);
     fn claim(ref self: TContractState, request: SocialRequest<DepositId>);
@@ -57,7 +48,9 @@ pub mod DepositEscrow {
 
     use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
     use starknet::account::Call;
-    use starknet::{get_caller_address, get_contract_address, get_tx_info, ContractAddress};
+    use starknet::{
+        get_block_timestamp, get_caller_address, get_contract_address, get_tx_info, ContractAddress
+    };
     use super::super::request::{
         SocialRequest, SocialRequestImpl, SocialRequestTrait, Encode, Signature
     };
@@ -65,6 +58,19 @@ pub mod DepositEscrow {
     use super::{
         Deposit, DepositId, DepositResult, IDepositEscrow, NostrPublicKey, DepositIdEncodeImpl
     };
+
+    impl DepositDefault of Default<Deposit> {
+        #[inline(always)]
+        fn default() -> Deposit {
+            Deposit {
+                sender: 0.try_into().unwrap(),
+                amount: 0.into(),
+                token_address: 0.try_into().unwrap(),
+                recipient: 0_u256,
+                ttl: 0_u64
+            }
+        }
+    }
 
     #[storage]
     struct Storage {
@@ -80,11 +86,16 @@ pub mod DepositEscrow {
 
     #[abi(embed_v0)]
     impl DepositEscrowImpl of IDepositEscrow<ContractState> {
+        fn get_deposit(self: @ContractState, deposit_id: DepositId) -> Deposit {
+            self.deposits.read(deposit_id)
+        }
+
         fn deposit(
             ref self: ContractState,
             amount: u256,
             token_address: ContractAddress,
-            nostr_recipient: NostrPublicKey
+            nostr_recipient: NostrPublicKey,
+            timelock: u64
         ) -> DepositResult {
             let recipient = self.nostr_to_sn.read(nostr_recipient);
 
@@ -100,10 +111,18 @@ pub mod DepositEscrow {
             let erc20 = ERC20ABIDispatcher { contract_address: token_address };
             erc20.transfer_from(get_caller_address(), get_contract_address(), amount);
 
-            let deposit = Deposit {
-                sender: get_caller_address(), amount, token_address, recipient: nostr_recipient
-            };
-            self.deposits.write(deposit_id, deposit);
+            self
+                .deposits
+                .write(
+                    deposit_id,
+                    Deposit {
+                        sender: get_caller_address(),
+                        amount,
+                        token_address,
+                        recipient: nostr_recipient,
+                        ttl: get_block_timestamp() + timelock
+                    }
+                );
 
             DepositResult::Deposit(deposit_id)
         }
@@ -111,8 +130,10 @@ pub mod DepositEscrow {
         fn cancel(ref self: ContractState, deposit_id: DepositId) {
             let deposit = self.deposits.read(deposit_id);
             assert!(deposit != Default::default(), "can't find deposit");
-
             assert!(deposit.sender == get_caller_address(), "not authorized");
+            assert!(
+                deposit.ttl <= get_block_timestamp(), "can't cancel before timelock expiration"
+            );
 
             let erc20 = ERC20ABIDispatcher { contract_address: deposit.token_address };
 
@@ -149,10 +170,11 @@ mod tests {
     use snforge_std::{
         declare, ContractClass, ContractClassTrait, spy_events, SpyOn, EventSpy, EventFetcher,
         Event, EventAssertions, start_cheat_caller_address, cheat_caller_address_global,
-        stop_cheat_caller_address_global
+        stop_cheat_caller_address_global, start_cheat_block_timestamp
     };
     use starknet::{
-        ContractAddress, get_caller_address, get_contract_address, contract_address_const
+        ContractAddress, get_block_timestamp, get_caller_address, get_contract_address,
+        contract_address_const
     };
 
     use super::super::request::{SocialRequest, Signature, Encode};
@@ -258,7 +280,7 @@ mod tests {
         stop_cheat_caller_address_global();
 
         start_cheat_caller_address(escrow.contract_address, sender_address);
-        escrow.deposit(amount, erc20.contract_address, recipient_nostr_key);
+        escrow.deposit(amount, erc20.contract_address, recipient_nostr_key, 0_u64);
 
         start_cheat_caller_address(escrow.contract_address, recipient_address);
         escrow.claim(request);
@@ -276,7 +298,7 @@ mod tests {
         stop_cheat_caller_address_global();
 
         start_cheat_caller_address(escrow.contract_address, sender_address);
-        escrow.deposit(amount, erc20.contract_address, recipient_nostr_key);
+        escrow.deposit(amount, erc20.contract_address, recipient_nostr_key, 0_u64);
 
         start_cheat_caller_address(escrow.contract_address, recipient_address);
 
@@ -292,7 +314,7 @@ mod tests {
     }
 
     #[test]
-    fn deposit_cancel() {
+    fn deposit_cancel_no_timelock() {
         let (_, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
 
         let amount = 100_u256;
@@ -302,10 +324,52 @@ mod tests {
         stop_cheat_caller_address_global();
 
         start_cheat_caller_address(escrow.contract_address, sender_address);
-        let result = escrow.deposit(amount, erc20.contract_address, recipient_nostr_key);
+        let result = escrow.deposit(amount, erc20.contract_address, recipient_nostr_key, 0_u64);
 
         if let DepositResult::Deposit(deposit_id) = result {
             assert!(deposit_id == 1, "wrong deposit_id");
+            escrow.cancel(deposit_id);
+        } else {
+            assert!(false, "wrong deposit result");
+        }
+    }
+
+    #[test]
+    #[should_panic(expected: "can't cancel before timelock expiration")]
+    fn deposit_cancel_before_timelock() {
+        let (_, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
+
+        let amount = 100_u256;
+
+        cheat_caller_address_global(sender_address);
+        erc20.approve(escrow.contract_address, amount + amount);
+        stop_cheat_caller_address_global();
+
+        start_cheat_caller_address(escrow.contract_address, sender_address);
+        let result = escrow.deposit(amount, erc20.contract_address, recipient_nostr_key, 10_u64);
+
+        if let DepositResult::Deposit(deposit_id) = result {
+            assert!(deposit_id == 1, "wrong deposit_id");
+            escrow.cancel(deposit_id);
+        }
+    }
+
+    #[test]
+    fn deposit_cancel_timelock() {
+        let (_, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
+
+        let amount = 100_u256;
+
+        cheat_caller_address_global(sender_address);
+        erc20.approve(escrow.contract_address, amount + amount);
+        stop_cheat_caller_address_global();
+
+        start_cheat_caller_address(escrow.contract_address, sender_address);
+        let result = escrow.deposit(amount, erc20.contract_address, recipient_nostr_key, 10_u64);
+
+        if let DepositResult::Deposit(deposit_id) = result {
+            assert!(deposit_id == 1, "wrong deposit_id");
+            start_cheat_block_timestamp(escrow.contract_address, get_block_timestamp() + 10_u64);
             escrow.cancel(deposit_id);
         } else {
             assert!(false, "wrong deposit result");
@@ -324,14 +388,12 @@ mod tests {
         stop_cheat_caller_address_global();
 
         start_cheat_caller_address(escrow.contract_address, sender_address);
-        let result = escrow.deposit(amount, erc20.contract_address, recipient_nostr_key);
+        let result = escrow.deposit(amount, erc20.contract_address, recipient_nostr_key, 0_u64);
 
         if let DepositResult::Deposit(deposit_id) = result {
             let not_sender: ContractAddress = 345.try_into().unwrap();
             start_cheat_caller_address(escrow.contract_address, not_sender);
             escrow.cancel(deposit_id);
-        } else {
-            assert!(false, "wrong deposit result");
         }
     }
 
@@ -345,7 +407,7 @@ mod tests {
         stop_cheat_caller_address_global();
 
         start_cheat_caller_address(escrow.contract_address, sender_address);
-        let result = escrow.deposit(amount, erc20.contract_address, recipient_nostr_key);
+        let result = escrow.deposit(amount, erc20.contract_address, recipient_nostr_key, 0_u64);
 
         if let DepositResult::Deposit(deposit_id) = result {
             assert!(deposit_id == 1, "wrong deposit_id");
@@ -357,7 +419,7 @@ mod tests {
         escrow.claim(request);
 
         start_cheat_caller_address(escrow.contract_address, sender_address);
-        let result = escrow.deposit(amount, erc20.contract_address, recipient_nostr_key);
+        let result = escrow.deposit(amount, erc20.contract_address, recipient_nostr_key, 0_u64);
 
         if let DepositResult::Transfer(recipient) = result {
             assert!(recipient == recipient_address, "wrong recipient address");
