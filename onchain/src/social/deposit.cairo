@@ -11,7 +11,7 @@ impl DepositIdEncodeImpl of Encode<DepositId> {
 
 type NostrPublicKey = u256;
 
-#[derive(Debug, Drop, PartialEq, starknet::Store)]
+#[derive(Copy, Debug, Drop, PartialEq, starknet::Store)]
 pub struct Deposit {
     sender: ContractAddress,
     amount: u256,
@@ -31,17 +31,24 @@ impl DepositDefault of Default<Deposit> {
     }
 }
 
+#[derive(Copy, Debug, Drop, Serde)]
+pub enum DepositResult {
+    Transfer: ContractAddress,
+    Deposit: DepositId,
+}
+
 #[starknet::interface]
 pub trait IDepositEscrow<TContractState> {
     fn deposit(
         ref self: TContractState,
         amount: u256,
         token_address: ContractAddress,
-        recipient: NostrPublicKey
-    ) -> DepositId;
+        nostr_recipient: NostrPublicKey
+    ) -> DepositResult;
     fn cancel(ref self: TContractState, deposit_id: DepositId);
     fn claim(ref self: TContractState, request: SocialRequest<DepositId>);
 }
+
 
 #[starknet::contract]
 pub mod DepositEscrow {
@@ -55,12 +62,15 @@ pub mod DepositEscrow {
         SocialRequest, SocialRequestImpl, SocialRequestTrait, Encode, Signature
     };
 
-    use super::{Deposit, DepositId, IDepositEscrow, NostrPublicKey, DepositIdEncodeImpl};
+    use super::{
+        Deposit, DepositId, DepositResult, IDepositEscrow, NostrPublicKey, DepositIdEncodeImpl
+    };
 
     #[storage]
     struct Storage {
         next_deposit_id: DepositId,
-        deposits: LegacyMap<DepositId, Deposit>
+        deposits: LegacyMap<DepositId, Deposit>,
+        nostr_to_sn: LegacyMap<NostrPublicKey, ContractAddress>
     }
 
     #[constructor]
@@ -74,8 +84,16 @@ pub mod DepositEscrow {
             ref self: ContractState,
             amount: u256,
             token_address: ContractAddress,
-            recipient: NostrPublicKey
-        ) -> DepositId {
+            nostr_recipient: NostrPublicKey
+        ) -> DepositResult {
+            let recipient = self.nostr_to_sn.read(nostr_recipient);
+
+            if (!recipient.is_zero()) {
+                let erc20 = ERC20ABIDispatcher { contract_address: token_address };
+                erc20.transfer_from(get_caller_address(), recipient, amount);
+                return DepositResult::Transfer(recipient);
+            }
+
             let deposit_id = self.next_deposit_id.read();
             self.next_deposit_id.write(deposit_id + 1);
 
@@ -83,11 +101,11 @@ pub mod DepositEscrow {
             erc20.transfer_from(get_caller_address(), get_contract_address(), amount);
 
             let deposit = Deposit {
-                sender: get_caller_address(), amount, token_address, recipient
+                sender: get_caller_address(), amount, token_address, recipient: nostr_recipient
             };
             self.deposits.write(deposit_id, deposit);
 
-            deposit_id
+            DepositResult::Deposit(deposit_id)
         }
 
         fn cancel(ref self: ContractState, deposit_id: DepositId) {
@@ -109,10 +127,11 @@ pub mod DepositEscrow {
             assert!(deposit != Default::default(), "can't find deposit");
             assert!(request.public_key == deposit.recipient, "invalid recipient");
             request.verify().expect('can\'t verify signature');
-            
+
             let erc20 = ERC20ABIDispatcher { contract_address: deposit.token_address };
             erc20.transfer(get_caller_address(), deposit.amount);
 
+            self.nostr_to_sn.write(request.public_key, get_caller_address());
             self.deposits.write(deposit_id, Default::default());
         }
     }
@@ -138,7 +157,7 @@ mod tests {
 
     use super::super::request::{SocialRequest, Signature, Encode};
     use super::super::transfer::Transfer;
-    use super::{Deposit, DepositId, IDepositEscrow, NostrPublicKey};
+    use super::{Deposit, DepositId, DepositResult, IDepositEscrow, NostrPublicKey};
     use super::{IDepositEscrowDispatcher, IDepositEscrowDispatcherTrait};
 
     fn declare_escrow() -> ContractClass {
@@ -229,7 +248,7 @@ mod tests {
     }
 
     #[test]
-    fn deposit_claim_flow() {
+    fn deposit_claim() {
         let (request, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
         let recipient_address: ContractAddress = 345.try_into().unwrap();
         let amount = 100_u256;
@@ -243,5 +262,107 @@ mod tests {
 
         start_cheat_caller_address(escrow.contract_address, recipient_address);
         escrow.claim(request);
+    }
+
+    #[test]
+    #[should_panic(expected: 'can\'t verify signature')]
+    fn claim_incorrect_signature() {
+        let (request, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
+        let recipient_address: ContractAddress = 345.try_into().unwrap();
+        let amount = 100_u256;
+
+        cheat_caller_address_global(sender_address);
+        erc20.approve(escrow.contract_address, amount + amount);
+        stop_cheat_caller_address_global();
+
+        start_cheat_caller_address(escrow.contract_address, sender_address);
+        escrow.deposit(amount, erc20.contract_address, recipient_nostr_key);
+
+        start_cheat_caller_address(escrow.contract_address, recipient_address);
+
+        let request = SocialRequest {
+            sig: Signature {
+                r: 0x2570a9a0c92c180bd4ac826c887e63844b043e3b65da71a857d2aa29e7cd3a4e_u256,
+                s: 0x1c0c0a8b7a8330b6b8915985c9cd498a407587213c2e7608e7479b4ef966605f_u256,
+            },
+            ..request,
+        };
+
+        escrow.claim(request);
+    }
+
+    #[test]
+    fn deposit_cancel() {
+        let (_, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
+
+        let amount = 100_u256;
+
+        cheat_caller_address_global(sender_address);
+        erc20.approve(escrow.contract_address, amount + amount);
+        stop_cheat_caller_address_global();
+
+        start_cheat_caller_address(escrow.contract_address, sender_address);
+        let result = escrow.deposit(amount, erc20.contract_address, recipient_nostr_key);
+
+        if let DepositResult::Deposit(deposit_id) = result {
+            assert!(deposit_id == 1, "wrong deposit_id");
+            escrow.cancel(deposit_id);
+        } else {
+            assert!(false, "wrong deposit result");
+        }
+    }
+
+    #[test]
+    #[should_panic(expected: "not authorized")]
+    fn not_authorized_cancel() {
+        let (_, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
+
+        let amount = 100_u256;
+
+        cheat_caller_address_global(sender_address);
+        erc20.approve(escrow.contract_address, amount + amount);
+        stop_cheat_caller_address_global();
+
+        start_cheat_caller_address(escrow.contract_address, sender_address);
+        let result = escrow.deposit(amount, erc20.contract_address, recipient_nostr_key);
+
+        if let DepositResult::Deposit(deposit_id) = result {
+            let not_sender: ContractAddress = 345.try_into().unwrap();
+            start_cheat_caller_address(escrow.contract_address, not_sender);
+            escrow.cancel(deposit_id);
+        } else {
+            assert!(false, "wrong deposit result");
+        }
+    }
+
+    fn deposit_claim_deposit() {
+        let (request, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
+        let recipient_address: ContractAddress = 345.try_into().unwrap();
+        let amount = 100_u256;
+
+        cheat_caller_address_global(sender_address);
+        erc20.approve(escrow.contract_address, amount + amount);
+        stop_cheat_caller_address_global();
+
+        start_cheat_caller_address(escrow.contract_address, sender_address);
+        let result = escrow.deposit(amount, erc20.contract_address, recipient_nostr_key);
+
+        if let DepositResult::Deposit(deposit_id) = result {
+            assert!(deposit_id == 1, "wrong deposit_id");
+        } else {
+            assert!(false, "wrong first deposit result");
+        }
+
+        start_cheat_caller_address(escrow.contract_address, recipient_address);
+        escrow.claim(request);
+
+        start_cheat_caller_address(escrow.contract_address, sender_address);
+        let result = escrow.deposit(amount, erc20.contract_address, recipient_nostr_key);
+
+        if let DepositResult::Transfer(recipient) = result {
+            assert!(recipient == recipient_address, "wrong recipient address");
+        } else {
+            assert!(false, "wrong second deposit result");
+        }
     }
 }
