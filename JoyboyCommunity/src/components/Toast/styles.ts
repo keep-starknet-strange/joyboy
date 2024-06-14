@@ -1,19 +1,7 @@
 import {Spacing, ThemedStyleSheet} from '../../styles';
 
-export default ThemedStyleSheet((theme) => ({
-  content: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: Spacing.medium,
-    paddingHorizontal: Spacing.medium,
-    gap: Spacing.medium,
-    borderRadius: 8,
-    boxShadow: '0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08)',
-  },
-  sent: {
-    backgroundColor: theme.colors.successLight,
+export default ThemedStyleSheet((theme, type: 'success' | 'info' | 'error') => ({
+  container: {
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
@@ -21,31 +9,20 @@ export default ThemedStyleSheet((theme) => ({
     paddingVertical: Spacing.medium,
     paddingHorizontal: Spacing.medium,
     borderRadius: 8,
-    boxShadow: '0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08)',
+
+    ...(type === 'success' && {
+      backgroundColor: theme.colors.successLight,
+    }),
+
+    ...(type === 'info' && {
+      backgroundColor: theme.colors.infoLight,
+    }),
+
+    ...(type === 'error' && {
+      backgroundColor: theme.colors.errorLight,
+    }),
   },
-  info: {
-    backgroundColor: theme.colors.infoLight,
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.xsmall,
-    paddingVertical: Spacing.medium,
-    paddingHorizontal: Spacing.medium,
-    borderRadius: 8,
-    boxShadow: '0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08)',
-  },
-  error: {
-    backgroundColor: theme.colors.errorLight,
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.xsmall,
-    paddingVertical: Spacing.medium,
-    paddingHorizontal: Spacing.medium,
-    borderRadius: 8,
-    boxShadow: '0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08)',
-  },
-  title: {
+  text: {
     flex: 1,
   },
 }));

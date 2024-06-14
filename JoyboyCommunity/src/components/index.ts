@@ -19,3 +19,4 @@ export {SquareInput} from './SquareInput';
 export {Story} from './Story';
 export {Text} from './Text';
 export {TextButton} from './TextButton';
+export {Toast} from './Toast';

@@ -1,5 +1,4 @@
 import {View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {ErrorIcon, InfoIcon, SuccessIcon} from '../../assets/icons';
 import {useStyles, useTheme} from '../../hooks';
@@ -7,46 +6,37 @@ import {Text} from '../Text';
 import stylesheet from './styles';
 
 export type ToastProps = {
-  type?: 'success' | 'info' | 'error';
+  type: 'success' | 'info' | 'error';
+  title: string;
 };
 
-export const Toast: React.FC<ToastProps> = ({type}) => {
+export const Toast: React.FC<ToastProps> = ({type, title}) => {
   const theme = useTheme();
-  const styles = useStyles(stylesheet);
-  const isSent = type === 'success';
-  const isInfo = type === 'info';
-  const isError = type === 'error';
+  const styles = useStyles(stylesheet, type);
+
+  const color = (
+    {
+      success: 'successDark',
+      info: 'infoDark',
+      error: 'errorDark',
+    } as const
+  )[type];
+
+  const Icon = (
+    {
+      success: SuccessIcon,
+      info: InfoIcon,
+      error: ErrorIcon,
+    } as const
+  )[type];
 
   return (
-    <SafeAreaView>
-      <View style={styles.content}>
-        {isSent && (
-          <View style={styles.sent}>
-            <SuccessIcon color={theme.colors.successDark} />
-            <Text weight="regular" color="successDark" align="center" fontSize={18}>
-              Post sent!
-            </Text>
-          </View>
-        )}
+    <View style={styles.container}>
+      <Icon width={20} height={20} color={theme.colors[color]} />
 
-        {isInfo && (
-          <View style={styles.info}>
-            <InfoIcon color={theme.colors.infoDark} />
-            <Text weight="regular" color="infoDark" align="center" fontSize={14}>
-              Post will be viewed by followers only
-            </Text>
-          </View>
-        )}
-
-        {isError && (
-          <View style={styles.error}>
-            <ErrorIcon color={theme.colors.errorDark} />
-            <Text weight="regular" color="errorDark" align="center" fontSize={14}>
-              Oops! Something went wrong!
-            </Text>
-          </View>
-        )}
-      </View>
-    </SafeAreaView>
+      <Text weight="semiBold" color={color} fontSize={14} style={styles.text}>
+        {title}
+      </Text>
+    </View>
   );
 };
