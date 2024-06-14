@@ -55,7 +55,7 @@ export const Feed: React.FC<FeedScreenProps> = ({navigation}) => {
         }
       />
 
-      <Button title="View Tip scrren UI" onPress={() => tippingRef.current?.open()} />
+      <Button title="View Tip screen UI" onPress={() => tippingRef.current?.open()} />
 
       <TipToken ref={tippingRef} />
 
