@@ -1,8 +1,8 @@
-import githubLogo from "../assets/githubLogo.svg";
-import githubLogoDark from "../assets/githubLogoDark.svg";
-import gotTo from "../assets/go-to.svg";
+"use client";
+
 import { motion } from "framer-motion";
-const ContributeSection: React.FC = () => {
+
+export function ContributeSection() {
   return (
     <div className="desktop:pt-[84px] pt-[40px] pb-[50px] desktop:pb-[180px] bg-contributeBg bg-contain tab:bg-cover bg-center bg-no-repeat text-white h-auto desktop:h-[654px]">
       <motion.div
@@ -15,7 +15,7 @@ const ContributeSection: React.FC = () => {
         className="flex flex-col items-center"
       >
         <img
-          src={githubLogo}
+          src="/assets/githubLogo.svg"
           className="mb-4 desktop:h-[150px] desktop:w-[150px] h-[80px] w-[80px]"
           alt=""
         />
@@ -26,13 +26,11 @@ const ContributeSection: React.FC = () => {
           Joyboy is available on iOS and Android. It's free and open source.
         </p>
         <button className="py-[15px] desktop:px-[42px] px-[24px] bg-white rounded-[5px] flex gap-x-[10px] items-center text-black">
-          <img src={githubLogoDark} alt="" />
+          <img src="/assets/githubLogoDark.svg" alt="" />
           See all issues on Github
-          <img src={gotTo} alt="" />
+          <img src="/assets/go-to.svg" alt="" />
         </button>
       </motion.div>
     </div>
   );
 };
-
-export default ContributeSection;

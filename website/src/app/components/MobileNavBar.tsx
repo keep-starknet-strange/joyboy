@@ -1,13 +1,11 @@
-/* eslint-disable react/prop-types */
+"use client";
+
 import { motion } from "framer-motion";
 import { useEffect } from "react";
-// import close from "../assets/closeBtn.svg";
-// import whatsappLogo from "../assets/whatsapp-logo.svg";
-import cancelIcon from "../assets/cancel-icon.svg";
 
 type Props = { setToggle: any; toggle: boolean };
 
-const MobileNavBar: React.FC<Props> = ({ setToggle, toggle }) => {
+export function MobileNavBar({ setToggle, toggle }: Props) {
   const parentAnimationVariants = {
     init: {
       scale: 0,
@@ -39,7 +37,7 @@ const MobileNavBar: React.FC<Props> = ({ setToggle, toggle }) => {
           className="absolute right-[51px] top-[39px] h-fit w-fit"
           onClick={toggleNav}
         >
-          <img src={cancelIcon} alt="" />
+          <img src="/assets/cancel-icon.svg" alt="" />
         </div>
 
         <motion.div
@@ -74,5 +72,3 @@ const MobileNavBar: React.FC<Props> = ({ setToggle, toggle }) => {
     </div>
   );
 };
-
-export default MobileNavBar;

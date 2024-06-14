@@ -2,7 +2,7 @@
 @tailwind components;
 @font-face {
   font-family: "Droid Sans";
-  src: url("../public/DroidSans.ttf");
+  src: url("../../public/DroidSans.ttf");
 }
 @tailwind utilities;
 
