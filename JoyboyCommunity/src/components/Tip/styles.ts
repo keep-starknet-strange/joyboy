@@ -5,9 +5,10 @@ import {Spacing, ThemedStyleSheet} from '../../styles';
 export default ThemedStyleSheet((theme) => ({
   modal: {
     backgroundColor: theme.colors.surface,
-    paddingLeft: Spacing.small,
-    paddingRight: Spacing.small,
+    paddingLeft: Spacing.medium,
+    paddingRight: Spacing.medium,
     paddingBottom: Spacing.medium,
+    height: 728,
   },
 
   header: {
@@ -23,18 +24,24 @@ export default ThemedStyleSheet((theme) => ({
   icon: {
     color: theme.colors.primary,
   },
+
+  postHeader: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'},
+
+  innerPostHeader: {flexDirection: 'row', gap: 5, alignItems: 'center'},
   title: {
     marginBottom: Spacing.xsmall,
   },
+  likes: {flexDirection: 'row', gap: 3, alignItems: 'center'},
 
+  recipient: {flexDirection: 'row', gap: 4, alignItems: 'center', paddingBottom: 10},
   post: {
     width: '100%',
     height: 112,
     backgroundColor: '#EC796B1A',
     borderRadius: 16,
     justifyContent: 'center',
-    paddingLeft: Spacing.small,
-    paddingRight: Spacing.small,
+    paddingLeft: Spacing.medium,
+    paddingRight: Spacing.medium,
   },
 
   pickerSelect: {
@@ -46,9 +53,8 @@ export default ThemedStyleSheet((theme) => ({
     backgroundColor: theme.colors.inputBackground,
     borderRadius: 80,
     color: theme.colors.inputPlaceholder,
-    paddingRight: 30,
-    paddingLeft: 30,
-
+    paddingRight: 0,
+    paddingLeft: 20,
     fontWeight: 600,
   },
 

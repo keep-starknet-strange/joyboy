@@ -13,7 +13,6 @@ export const Feed: React.FC<FeedScreenProps> = ({navigation}) => {
   const theme = useTheme();
   const styles = useStyles(stylesheet);
   const tippingRef = useRef<Modalize>(null);
-
   const notes = useRootNotes();
 
   const stories = [

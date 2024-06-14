@@ -52,10 +52,8 @@ export const TipToken = forwardRef((props, ref) => {
         <Divider />
 
         <View style={styles.post}>
-          <View
-            style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}
-          >
-            <View style={{flexDirection: 'row', gap: 5, alignItems: 'center'}}>
+          <View style={styles.postHeader}>
+            <View style={styles.innerPostHeader}>
               <Image source={require('../../assets/post.png')} />
               <View>
                 <Text fontSize={15} color="text" weight="bold">
@@ -67,7 +65,7 @@ export const TipToken = forwardRef((props, ref) => {
               </View>
             </View>
 
-            <View style={{flexDirection: 'row', gap: 3, alignItems: 'center'}}>
+            <View style={styles.likes}>
               <LikeFillIcon color="#EC796B" />
               <Text fontSize={11}>16 likes</Text>
             </View>
@@ -85,8 +83,8 @@ export const TipToken = forwardRef((props, ref) => {
               onValueChange={(value) => setToken(value)}
               value={token}
               items={[
-                {label: 'Strk', value: 'Strk'},
-                {label: 'Eth', value: 'Eth'},
+                {label: 'JYB', value: 'JYB'},
+                {label: 'STRK', value: 'STRK'},
               ]}
             />
           </View>
@@ -95,9 +93,19 @@ export const TipToken = forwardRef((props, ref) => {
 
         <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
           <Text color="#6B6B8C" fontSize={16} weight="medium">
-            Sending...
+            Sending
+            {amount.length > 0 && token.length > 0 ? (
+              <Text style={{paddingLeft: 10}} color="#EC796B" fontSize={16} weight="bold">
+                {amount} {token}
+              </Text>
+            ) : (
+              <Text style={{paddingLeft: 10}} color="#EC796B" fontSize={16} weight="bold">
+                ...
+              </Text>
+            )}
           </Text>
-          <View style={{flexDirection: 'row', gap: 4, alignItems: 'center', paddingBottom: 10}}>
+
+          <View style={styles.recipient}>
             <Text fontSize={16} weight="regular">
               to
             </Text>
@@ -107,7 +115,9 @@ export const TipToken = forwardRef((props, ref) => {
           </View>
         </View>
 
-        <Button variant={isActive ? 'secondary' : 'default'}>Tip</Button>
+        <View style={{paddingTop: 40}}>
+          <Button variant={isActive ? 'secondary' : 'default'}>Tip</Button>
+        </View>
 
         <Text style={{paddingTop: Spacing.small}} fontSize={13} weight="regular" color="#A1A1C7">
           Tip friends and support creators with your favorite tokens.
@@ -116,3 +126,4 @@ export const TipToken = forwardRef((props, ref) => {
     </RNModalize>
   );
 });
+TipToken.displayName = 'TipToken';
