@@ -23,7 +23,7 @@ export const Wrapper: React.FC = () => {
   );
 
   useEffect(() => {
-    // TODO: uncomment when we want to apply themeing
+    // TODO: uncomment when we want to apply theming
     // setTheme(colorScheme === "light" ? lightModeColors : darkModeColors);
   }, [colorScheme]);
 

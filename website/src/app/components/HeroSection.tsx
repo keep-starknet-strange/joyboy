@@ -1,8 +1,8 @@
-import joyboy from "../assets/joyboyMascot.png";
-import moon from "../assets/moon.svg";
+"use client";
+
 import { motion } from "framer-motion";
 
-const HeroSection: React.FC = () => {
+export function HeroSection() {
   return (
     <div className="desktop:h-[900px] h-[833px] w-full overflow-hidden relative pt-[98px] desktop:pt-[159px] flex justify-center bg-black desktop:bg-herobg bg-mobileHeroBg bg-no-repeat bg-bottom">
       <motion.img
@@ -12,7 +12,7 @@ const HeroSection: React.FC = () => {
         }}
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
-        src={moon}
+        src="/assets/moon.svg"
         className="absolute top-5 desktop:top-[36px] right-[31px] desktop:right-[150px] w-[50px] desktop:w-auto"
         alt=""
       />
@@ -42,7 +42,7 @@ const HeroSection: React.FC = () => {
         </div>
       </motion.div>
       <motion.img
-        src={joyboy}
+        src="/assets/joyboyMascot.png"
         className="absolute left-[-31px] desktop:left-2 bottom-[39px] desktop:bottom-[49px] z-[250] desktop:w-[380px] w-[210px]"
         alt=""
         animate={{ x: [-500, 0] }}
@@ -55,5 +55,3 @@ const HeroSection: React.FC = () => {
     </div>
   );
 };
-
-export default HeroSection;
