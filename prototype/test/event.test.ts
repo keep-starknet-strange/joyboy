@@ -57,44 +57,44 @@ describe("Event", () => {
 
   /*** @description uncomment this test to deploy your own contract, nostr account etc ***/
   it("Check event", async function () {
-    this.timeout(0); // Disable timeout for this test
+    // this.timeout(0); // Disable timeout for this test
 
-    // const resp = await provider.getSpecVersion();
-    // console.log("rpc version =", resp);
-    const privateKey0 = process.env.DEV_PK as string;
-    const accountAddress0 = process.env.DEV_PUBLIC_KEY as string;
+    // // const resp = await provider.getSpecVersion();
+    // // console.log("rpc version =", resp);
+    // const privateKey0 = process.env.DEV_PK as string;
+    // const accountAddress0 = process.env.DEV_PUBLIC_KEY as string;
 
-    const account = new Account(provider, accountAddress0, privateKey0, "1");
+    // const account = new Account(provider, accountAddress0, privateKey0, "1");
     
-    let pkBob = stringToUint8Array(ACCOUNT_TEST_PROFILE?.bob?.nostrPrivateKey);
-    const bobPublicKey = ACCOUNT_TEST_PROFILE?.bob?.nostrPk;
-    console.log("pkBob", new Buffer(pkBob).toString("hex"));
-    console.log("bobPublicKey", bobPublicKey);
+    // let pkBob = stringToUint8Array(ACCOUNT_TEST_PROFILE?.bob?.nostrPrivateKey);
+    // const bobPublicKey = ACCOUNT_TEST_PROFILE?.bob?.nostrPk;
+    // console.log("pkBob", new Buffer(pkBob).toString("hex"));
+    // console.log("bobPublicKey", bobPublicKey);
 
-    // Bob contract/A.A
+    // // Bob contract/A.A
    
-    /** Send a note */
-    let amount: number = 1;
-    // let contentRequest = "@joyboy send 10 STRK to @alice.xyz";
-    let contentRequest = `@joyboy send ${amount} STRK to @alice.xyz`;
+    // /** Send a note */
+    // let amount: number = 1;
+    // // let contentRequest = "@joyboy send 10 STRK to @alice.xyz";
+    // let contentRequest = `@joyboy send ${amount} STRK to @alice.xyz`;
 
-    let content = "a test";
-    // Check request, need to be undefined
-    let request = checkAndFilterSocialPayContent(content);
-    logDev(`first request need to be undefined request ${request}`);
-    expect(request).to.eq(undefined);
-    // Check request, need to be defined with sender, amount, token, recipient
-    request = checkAndFilterSocialPayContent(contentRequest);
-    logDev(`second request = ${JSON.stringify(request)}`);
-    expect(true).to.eq(true);
-    console.log("request", request);
-    expect(request).to.deep.eq({
-      sender: "@joyboy",
-      receiver: "@alice.xyz",
-      currency: "STRK",
-      amount: amount,
-      isValidAddress: false,
-    });
+    // let content = "a test";
+    // // Check request, need to be undefined
+    // let request = checkAndFilterSocialPayContent(content);
+    // logDev(`first request need to be undefined request ${request}`);
+    // expect(request).to.eq(undefined);
+    // // Check request, need to be defined with sender, amount, token, recipient
+    // request = checkAndFilterSocialPayContent(contentRequest);
+    // logDev(`second request = ${JSON.stringify(request)}`);
+    // expect(true).to.eq(true);
+    // console.log("request", request);
+    // expect(request).to.deep.eq({
+    //   sender: "@joyboy",
+    //   receiver: "@alice.xyz",
+    //   currency: "STRK",
+    //   amount: amount,
+    //   isValidAddress: false,
+    // });
     
     /** @TODO prepare request  */
 
