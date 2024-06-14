@@ -38,7 +38,7 @@ export const TipToken = forwardRef((props, ref) => {
           <BackIcon />
 
           <Text
-            weight="regular"
+            weight="medium"
             color="textSecondary"
             align="center"
             fontSize={18}
