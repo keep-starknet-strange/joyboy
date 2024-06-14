@@ -1,16 +1,17 @@
+"use client";
+
 import React, { useState } from "react";
-import logo from "../assets/logo.svg";
-import NavigationLinks from "./NavigationLinks";
-import hamburger from "../assets/hamburger-icon.svg";
+import { NavigationLinks } from "./NavigationLinks";
 import { createPortal } from "react-dom";
-import MobileNavBar from "./MobileNavBar";
-const Navbar: React.FC = () => {
+import { MobileNavBar } from "./MobileNavBar";
+
+export function Navbar() {
   const [toggleNav, setToggleNav] = useState(false);
   return (
     <div className="desktop:py-[26px] py-3 px-6 desktop:px-[120px] bg-black flex justify-between items-center">
       <div className="flex items-center gap-x-[10px] text">
         <img
-          src={logo}
+          src="/assets/logo.svg"
           className="desktop:h-[52px] w-9 h-9 desktop:w-[52px]"
           alt=""
         />
@@ -30,7 +31,7 @@ const Navbar: React.FC = () => {
           window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
         }}
       >
-        <img src={hamburger} className="w-6 h-6" alt="" />
+        <img src="assets/hamburger-icon.svg" className="w-6 h-6" alt="" />
       </button>
 
       {toggleNav &&
@@ -41,5 +42,3 @@ const Navbar: React.FC = () => {
     </div>
   );
 };
-
-export default Navbar;

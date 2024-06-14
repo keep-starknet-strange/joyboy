@@ -1,4 +1,6 @@
-const NavigationLinks: React.FC = () => {
+"use client";
+
+export function NavigationLinks() {
   return (
     <ul className="items-center gap-x-[32px] font-normal text-lg leading-[21px] text-white hidden desktop:flex">
       <li>Servers</li>
@@ -8,5 +10,3 @@ const NavigationLinks: React.FC = () => {
     </ul>
   );
 };
-
-export default NavigationLinks;

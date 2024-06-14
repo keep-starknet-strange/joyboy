@@ -1,11 +1,9 @@
-import Feature from "./Feature";
-import keyIcon from "../assets/key.svg";
-import noAdIcon from "../assets/noAdIcon.svg";
-import moneyIcon from "../assets/money-send.svg";
-import saveYourKeysImg from "../assets/save-your-keys.png";
+"use client";
+
+import { Feature } from "./Feature";
 import { motion } from "framer-motion";
 
-const DescriptionSection: React.FC = () => {
+export function DescriptionSection() {
   return (
     <div className="flex flex-col items-center text-center text-white  px-6 desktop:px-[120px] bg-gradientBg bg-no-repeat bg-contain">
       <div className="desktop:py-[112px] py-[50px] flex flex-col items-center desktop:gap-y-[72px] gap-y-[36px]">
@@ -32,22 +30,22 @@ const DescriptionSection: React.FC = () => {
           className="flex desktop:flex-row flex-col items-center gap-6"
         >
           <Feature
-            img={keyIcon}
+            img="/assets/key.svg"
             title="No Registration Required"
             description="No registration required. Use passkeys to log in and sign messages securely, ensuring your interactions remain private and effortless."
           />
           <Feature
-            img={noAdIcon}
+            img="/assets/noAdIcon.svg"
             title="No Advertisement"
             description="No registration required. Use passkeys to log in and sign messages securely, ensuring your interactions remain private and effortless."
           />
           <Feature
-            img={moneyIcon}
+            img="/assets/money-send.svg"
             title="Social Payment"
             description="No registration required. Use passkeys to log in and sign messages securely, ensuring your interactions remain private and effortless."
           />
           <Feature
-            img={keyIcon}
+            img="/assets/key.svg"
             title="No Registration Required"
             description="No registration required. Use passkeys to log in and sign messages securely, ensuring your interactions remain private and effortless."
           />
@@ -83,7 +81,7 @@ const DescriptionSection: React.FC = () => {
             </p>
           </motion.div>
           <motion.img
-            src={saveYourKeysImg}
+            src="/assets/save-your-keys.png"
             alt=""
             animate={{ x: [1200, 0] }}
             transition={{
@@ -95,7 +93,7 @@ const DescriptionSection: React.FC = () => {
         </div>
         <div className="flex desktop:flex-row items-center desktop:items-start flex-col justify-center gap-y-7 gap-x-[181px]">
           <motion.img
-            src={saveYourKeysImg}
+            src="/assets/save-your-keys.png"
             alt=""
             animate={{ x: [-1200, 0] }}
             transition={{
@@ -135,5 +133,3 @@ const DescriptionSection: React.FC = () => {
     </div>
   );
 };
-
-export default DescriptionSection;
