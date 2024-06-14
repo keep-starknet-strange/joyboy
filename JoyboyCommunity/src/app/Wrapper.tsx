@@ -10,6 +10,7 @@ import {NostrProvider} from '../context/NostrContext';
 import {ThemeProvider} from '../context/Theme';
 import {darkModeColors, lightModeColors} from '../tokens/colors';
 import App from './App';
+import {StarknetProvider} from './StarknetProvider';
 
 const queryClient = new QueryClient({
   defaultOptions: {queries: {retry: 2}},
@@ -34,9 +35,11 @@ export const Wrapper: React.FC = () => {
           <NostrProvider>
             <QueryClientProvider client={queryClient}>
               <PortalizeProvider>
-                <RootScreenContainer>
-                  <App />
-                </RootScreenContainer>
+                <StarknetProvider>
+                  <RootScreenContainer>
+                    <App />
+                  </RootScreenContainer>
+                </StarknetProvider>
               </PortalizeProvider>
             </QueryClientProvider>
           </NostrProvider>
