@@ -1,7 +1,7 @@
+import {Picker} from '@react-native-picker/picker';
 import {forwardRef, useMemo, useState} from 'react';
 import {Image, Platform, View} from 'react-native';
 import {Modalize as RNModalize} from 'react-native-modalize';
-import RNPickerSelect from 'react-native-picker-select';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {BackIcon, CancelIcon, LikeFillIcon} from '../../assets/icons';
@@ -82,15 +82,14 @@ export const TipToken = forwardRef((props: TipTokenProps, ref) => {
 
         <View style={{paddingTop: 40, paddingBottom: 40}}>
           <View style={{marginBottom: 20}}>
-            <RNPickerSelect
-              pickerProps={{style: styles.pickerSelect}}
-              onValueChange={(value) => setToken(value)}
-              value={token}
-              items={[
-                {label: 'JYB', value: 'JYB'},
-                {label: 'STRK', value: 'STRK'},
-              ]}
-            />
+            <Picker
+              style={styles.pickerSelect}
+              selectedValue={token}
+              onValueChange={(itemValue) => setToken(itemValue)}
+            >
+              <Picker.Item label="JYB" value="JYB" />
+              <Picker.Item label="STRK" value="STRK" />
+            </Picker>
           </View>
           <Input value={amount} onChangeText={setAmount} placeholder="Amount" />
         </View>
