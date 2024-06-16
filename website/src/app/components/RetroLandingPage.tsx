@@ -1,6 +1,6 @@
 import React from "react";
 
-const RetroLandingPage: React.FC = () => {
+export function RetroLandingPage() {
   // Function to handle the click event
   const handleClick = () => {
     alert("Stay tuned, more coming soon.");
@@ -23,5 +23,3 @@ const RetroLandingPage: React.FC = () => {
     </div>
   );
 };
-
-export default RetroLandingPage;

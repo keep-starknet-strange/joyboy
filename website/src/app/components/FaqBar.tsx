@@ -1,8 +1,9 @@
+"use client";
+
 import { useState } from "react";
-import downCheveron from "../assets/down-cheveron.svg";
 type Props = { answer: string; question: string };
 
-const FaqBar: React.FC<Props> = ({ question, answer }) => {
+export function FaqBar({ question, answer }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const handleClick = () => {
     if (isOpen === true) {
@@ -21,13 +22,13 @@ const FaqBar: React.FC<Props> = ({ question, answer }) => {
           <h2 className="desktop:text-[20px] text-xs leading-[28px]">
             {question}
           </h2>
-          <img src={downCheveron} alt="" />
+          <img src="/assets/down-cheveron.svg" alt="" />
         </div>
 
-        <div>{isOpen ? <p className=" w-full text-start mt-6">{answer}</p> : ""}</div>
+        <div>
+          {isOpen ? <p className=" w-full text-start mt-6">{answer}</p> : ""}
+        </div>
       </button>
     </>
   );
-};
-
-export default FaqBar;
+}
