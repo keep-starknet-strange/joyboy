@@ -33,7 +33,11 @@ export const TippingModal: React.FC<TippingModalProps> = ({
         <View style={styles.modalContainer}>
           <View style={styles.modal}>
             <View style={styles.logo}>
-              <Image source={require('../../assets/tipping-modal.png')} resizeMode="cover" />
+              <Image
+                style={styles.logoImage}
+                source={require('../../assets/tipping-modal.png')}
+                resizeMode="cover"
+              />
             </View>
 
             <View style={styles.content}>

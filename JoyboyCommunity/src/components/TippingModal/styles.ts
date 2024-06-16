@@ -17,7 +17,7 @@ export default ThemedStyleSheet((theme) => ({
   },
   modal: {
     width: '80%',
-    height: '35%',
+    height: '40%',
     backgroundColor: theme.colors.surface,
     borderRadius: 24,
   },
@@ -28,6 +28,9 @@ export default ThemedStyleSheet((theme) => ({
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  logoImage: {
+    width: 238,
   },
   content: {
     gap: Spacing.small,
