@@ -30,14 +30,6 @@ export const TippingModal: React.FC<TippingModalProps> = ({
   return (
     <Portal>
       <View style={styles.container}>
-        <View style={styles.background}>
-          <Image
-            style={styles.backgroundImage}
-            source={require('../../assets/tipping-bg.png')}
-            resizeMode="cover"
-          />
-        </View>
-
         <View style={styles.modalContainer}>
           <View style={styles.modal}>
             <View style={styles.logo}>
@@ -45,13 +37,13 @@ export const TippingModal: React.FC<TippingModalProps> = ({
             </View>
 
             <View style={styles.content}>
-              <Text style={styles.tipUser} weight="bold" fontSize={21} lineHeight={24}>
+              <Text color="text" weight="bold" fontSize={21} lineHeight={24}>
                 Tipped {user}
               </Text>
-              <Text style={styles.tipAmount} weight="bold" fontSize={21} lineHeight={24}>
+              <Text color="primary" weight="bold" fontSize={21} lineHeight={24}>
                 {amount} {symbol}
               </Text>
-              <Text style={styles.tipText} weight="medium" fontSize={15} lineHeight={24}>
+              <Text color="textSecondary" weight="medium" fontSize={15} lineHeight={24}>
                 Keep spreading love
               </Text>
 
