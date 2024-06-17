@@ -4,7 +4,7 @@ export const ACCOUNT_TEST_PROFILE = {
     pubkey: "",
     strkKey: "",
     // nostrPk: "5b2b830f2778075ab3befb5a48c9d8138aef017fab2b26b5c31a2742a901afcc",
-    nostrPk:"5b2b830f2778075ab3befb5a48c9d8138aef017fab2b26b5c31a2742a901afcc",
+    nostrPublicKey:"5b2b830f2778075ab3befb5a48c9d8138aef017fab2b26b5c31a2742a901afcc",
     nostrPrivateKey: "59a772c0e643e4e2be5b8bac31b2ab5c5582b03a84444c81d6e2eec34a5e6c35",
     // contract:"0x261d2434b2583293b7dd2048cb9c0984e262ed0a3eb70a19ed4eac6defef8b1",
     contract:
@@ -32,7 +32,7 @@ export const ACCOUNT_TEST_PROFILE = {
       /*** Dummy data */
       nostrPrivateKey:"70aca2a9ab722bd56a9a1aadae7f39bc747c7d6735a04d677e0bc5dbefa71d47",
       
-      nostrPk:"d6f1cf53f9f52d876505164103b1e25811ec4226a17c7449576ea48b00578171",
+      nostrPublicKey:"d6f1cf53f9f52d876505164103b1e25811ec4226a17c7449576ea48b00578171",
       // nostrPk:"d6f1cf53f9f52d876505164103b1e25811ec4226a17c7449576ea48b00578171",
 
       contract:

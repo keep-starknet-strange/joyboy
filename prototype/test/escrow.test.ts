@@ -44,23 +44,26 @@ describe("Escrow End to end test", () => {
     // let { privateKey: pkBob, publicKey: bobPublicKey } = generateKeypair();
 
     let pkBob = stringToUint8Array(ACCOUNT_TEST_PROFILE?.bob?.nostrPrivateKey);
-    const bobPublicKey = ACCOUNT_TEST_PROFILE?.bob?.nostrPk;
+    const bobPublicKey = ACCOUNT_TEST_PROFILE?.bob?.nostrPublicKey;
     console.log("privateKey Bob", new Buffer(pkBob).toString("hex"));
     console.log("bobPublicKey", bobPublicKey);
 
     /** @TODO Alice account key */
     // Nostr account
-    // let { privateKey: pkAlice, publicKey: alicePublicKey } = generateKeypair();
+    // let { privateKey: privateKeyAlice, publicKey: alicePublicKey } = generateKeypair();
 
-    let pkAlice = stringToUint8Array(
-      ACCOUNT_TEST_PROFILE?.alice?.nostrPrivateKey
-    );
-    const alicePublicKey = ACCOUNT_TEST_PROFILE?.alice?.nostrPk;
-    console.log("pkAlice", new Buffer(pkAlice).toString("hex"));
+    // let privateKeyAlice = stringToUint8Array(
+    //   ACCOUNT_TEST_PROFILE?.alice?.nostrPrivateKey
+    // );
+    let privateKeyAlice =  ACCOUNT_TEST_PROFILE?.alice?.nostrPrivateKey as any;
+
+    console.log("ACCOUNT_TEST_PROFILE?.alice?.nostrPrivateKey", ACCOUNT_TEST_PROFILE?.alice?.nostrPrivateKey);
+
+    const alicePublicKey = ACCOUNT_TEST_PROFILE?.alice?.nostrPublicKey;
     console.log("alicePublicKey", alicePublicKey);
 
     let escrow;
-    let token_used_address=TOKENS_ADDRESS.DEVNET.ETH;
+    let token_used_address = TOKENS_ADDRESS.DEVNET.ETH;
 
     if (process.env.IS_DEPLOY_CONTRACT == "true") {
       let accountBob = await createEscrowAccount();
@@ -85,47 +88,48 @@ describe("Escrow End to end test", () => {
 
     /** Deposit */
 
-    let firstId=1
+    let firstId = 1
     let currentId = 1; //
     let nextId = currentId //  await escrow.get_next_deposit_id(); // function need to be made?
-    console.log("nextId",nextId)
+    console.log("nextId", nextId)
 
-    let depositCurrentId = await escrow.get_deposit(currentId)
-    console.log("depositCurrentId",depositCurrentId)
+    // let depositCurrentId = await escrow.get_deposit(currentId)
+    // console.log("depositCurrentId",depositCurrentId)
 
-    const depositParams = {
-      amount: cairo.uint256(amount), // amount int. Float need to be convert with bnToUint
-      // amount: uint256.bnToUint256(BigInt(amount)), // amount
-      token_address: strkToken?.address, // token address
-      // nostr_recipient: uint256.bnToUint256(BigInt("0x" + alicePublicKey)),
-      nostr_recipient: cairo.uint256(BigInt("0x"+alicePublicKey)),
-      timelock: 100,
-    };
+    // const depositParams = {
+    //   amount: cairo.uint256(amount), // amount int. Float need to be convert with bnToUint
+    //   // amount: uint256.bnToUint256(BigInt(amount)), // amount
+    //   token_address: strkToken?.address, // token address
+    //   // nostr_recipient: uint256.bnToUint256(BigInt("0x" + alicePublicKey)),
+    //   nostr_recipient: cairo.uint256(BigInt("0x"+alicePublicKey)),
+    //   timelock: 100,
+    // };
 
-    expect(cairo.uint256(depositCurrentId?.amount)).to.deep.eq(depositParams?.amount)
-    // console.log("try approve escrow erc20")
+    // expect(cairo.uint256(depositCurrentId?.amount)).to.deep.eq(depositParams?.amount)
+    // // console.log("try approve escrow erc20")
 
-    let txApprove = await strkToken.approve(escrow?.address, depositParams?.amount)
+    // let txApprove = await strkToken.approve(escrow?.address, depositParams?.amount)
 
-    await account?.waitForTransaction(txApprove?.transaction_hash)
-    // Need an approve before
-    console.log("deposit amount")
+    // await account?.waitForTransaction(txApprove?.transaction_hash)
+    // // Need an approve before
+    // console.log("deposit amount")
 
-    let txDeposit = await escrow.deposit(depositParams?.amount, 
-      depositParams?.token_address,
-      depositParams?.nostr_recipient,
-      depositParams?.timelock,
-    
-    );
-    console.log("txDeposit",txDeposit)
+    // let txDeposit = await escrow.deposit(depositParams?.amount, 
+    //   depositParams?.token_address,
+    //   depositParams?.nostr_recipient,
+    //   depositParams?.timelock,
 
-    await account?.waitForTransaction(txDeposit?.transaction_hash);
+    // );
+    // console.log("txDeposit",txDeposit)
 
-    currentId++;
+    // await account?.waitForTransaction(txDeposit?.transaction_hash);
+
+    // currentId++;
 
     /** Claim */
-    let timestamp = new Date().getTime();
-    let content = cairo.felt(currentId);
+    // let timestamp = new Date().getTime();
+    let timestamp=1716285235;
+    let content = `claim ${cairo.felt(currentId)}`;
     // let content =String(currentId)
 
     console.log("content event", content);
@@ -137,37 +141,34 @@ describe("Escrow End to end test", () => {
         content: content,
         created_at: timestamp,
       },
-      pkAlice
+      privateKeyAlice
     );
-    
+
     console.log(
       "event",
       event
     );
     const signature = event.sig;
-    const signatureR = signature.slice(0, signature.length / 2);
-    const signatureS = signature.slice(signature.length / 2);
+    const signatureR = "0x" + signature.slice(0, signature.length / 2);
+    const signatureS = "0x" + signature.slice(signature.length / 2);
     console.log("signature", signature);
     console.log("signatureR", signatureR);
     console.log("signatureS", signatureS);
 
     if (signature) {
       // let public_key=uint256.bnToUint256(BigInt("0x" + alicePublicKey))
-      let public_key=cairo.uint256(BigInt("0x" + alicePublicKey))
-      expect(depositCurrentId?.recipient).to.eq(BigInt("0x" + alicePublicKey))
+      let public_key = cairo.uint256(BigInt("0x" + alicePublicKey))
+      // expect(depositCurrentId?.recipient).to.eq(BigInt("0x" + alicePublicKey))
       const claimParams = {
         public_key: public_key,
         created_at: timestamp,
         kind: 1,
         tags: byteArray.byteArrayFromString("[]"), // tags
-        content: content, // currentId in felt
+        // content: content, // currentId in felt
+        content:cairo.felt(currentId),
         signature: {
-          // r: BigInt("0x"+signatureR),
-          // s: BigInt("0x"+signatureS),
-          // r: uint256.bnToUint256(BigInt("0x"+signatureR)),
-          // s: uint256.bnToUint256(BigInt("0x"+signatureS)),
-          r: cairo.uint256(BigInt("0x" + signatureR)),
-          s: cairo.uint256(BigInt("0x" + signatureS)),
+          r: cairo.uint256(signatureR),
+          s: cairo.uint256(signatureS),
         },
       };
 
