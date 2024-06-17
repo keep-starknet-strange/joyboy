@@ -8,8 +8,10 @@ import {ThemeProvider as StyledThemeProvider} from 'styled-components/native';
 import {RootScreenContainer} from '../components';
 import {NostrProvider} from '../context/NostrContext';
 import {ThemeProvider} from '../context/Theme';
+import {WalletModalProvider} from '../context/WalletModal';
 import {darkModeColors, lightModeColors} from '../tokens/colors';
 import App from './App';
+import {StarknetProvider} from './StarknetProvider';
 
 const queryClient = new QueryClient({
   defaultOptions: {queries: {retry: 2}},
@@ -34,9 +36,13 @@ export const Wrapper: React.FC = () => {
           <NostrProvider>
             <QueryClientProvider client={queryClient}>
               <PortalizeProvider>
-                <RootScreenContainer>
-                  <App />
-                </RootScreenContainer>
+                <StarknetProvider>
+                  <WalletModalProvider>
+                    <RootScreenContainer>
+                      <App />
+                    </RootScreenContainer>
+                  </WalletModalProvider>
+                </StarknetProvider>
               </PortalizeProvider>
             </QueryClientProvider>
           </NostrProvider>

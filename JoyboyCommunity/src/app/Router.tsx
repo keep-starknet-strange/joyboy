@@ -13,6 +13,7 @@ import {EditProfile} from '../screens/EditProfile';
 import {Feed} from '../screens/Feed';
 import {PostDetail} from '../screens/PostDetail';
 import {Profile} from '../screens/Profile';
+import {WalletConnect} from '../screens/WalletConnect';
 import {useAuth} from '../store/auth';
 import {AuthStackParams, HomeBottomStackParams, MainStackParams, RootStackParams} from '../types';
 
@@ -77,7 +78,7 @@ const HomeBottomTabNavigator: React.FC = () => {
 
       <HomeBottomTabsStack.Screen
         name="Messages"
-        component={Profile}
+        component={WalletConnect}
         options={{
           tabBarActiveTintColor: 'white',
           tabBarInactiveTintColor: 'grey',
