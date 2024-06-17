@@ -35,6 +35,7 @@ export const StarknetReactProvider: React.FC<React.PropsWithChildren> = ({childr
       connectors={[
         argentMobileConnector({
           chain: constants.NetworkName.SN_MAIN,
+          // TODO: Move this to ENV
           wcProjectId: 'a9b4b052eb741f95a54c90ac5bdb343e',
           dappName: 'Joyboy',
           description: 'Joyboy Starknet dApp',
