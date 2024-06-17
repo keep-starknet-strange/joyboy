@@ -1,17 +1,10 @@
-import logo from "../assets/logo.svg";
-import appStore from "../assets/appStoreBtn.svg";
-import googleStore from "../assets/googlePlaybtn.svg";
-import facebook from "../assets/facebookIcon.svg";
-import linkedin from "../assets/linkedinIcon.svg";
-import twitter from "../assets/twitterIcon.svg";
-
-const Footer: React.FC = () => {
+export function Footer() {
   return (
     <div className="bg-footerBg bg-no-repeat bg-contain bg-black mt-0 tab:mt-[140px] pt-[200px] tab:pt-[514px] tab:px-[73px] px-6 pb-[42px] text-white">
       <div className="flex tab:flex-row flex-col items-center tab:items-start justify-between border-b-[1px] border-b-[#484040] border-b-solid pb-[30px]">
         <div className="flex flex-col items-center tab:items-start text-center tab:text-left">
           <img
-            src={logo}
+            src="/assets/logo.svg"
             className="w-[80px] h-[80px] tab:h-auto tab:w-auto"
             alt=""
           />
@@ -20,10 +13,10 @@ const Footer: React.FC = () => {
           </p>
           <div className="flex items-center gap-x-5">
             <button>
-              <img src={appStore} className="w-[100px] tab:w-auto" alt="" />
+              <img src="/assets/appStoreBtn.svg" className="w-[100px] tab:w-auto" alt="" />
             </button>
             <button>
-              <img src={googleStore} className="w-[100px] tab:w-auto" alt="" />
+              <img src="/assets/googlePlaybtn.svg" className="w-[100px] tab:w-auto" alt="" />
             </button>
           </div>
         </div>
@@ -42,9 +35,9 @@ const Footer: React.FC = () => {
           </ul>
         </div>
         <div className="flex items-center gap-x-[14px] mt-5 tab:mt-0 self-center tab:self-end">
-          <img src={facebook} alt="" />
-          <img src={linkedin} alt="" />
-          <img src={twitter} alt="" />
+          <img src="/assets/facebookIcon.svg" alt="" />
+          <img src="/assets/linkedinIcon.svg" alt="" />
+          <img src="/assets/twitterIcon.svg" alt="" />
         </div>
       </div>
       <h6 className="text-xs tab:text-sm leading-[14px] font-normal text-center mt-4">
@@ -53,5 +46,3 @@ const Footer: React.FC = () => {
     </div>
   );
 };
-
-export default Footer;

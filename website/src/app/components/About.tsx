@@ -1,5 +1,8 @@
+"use client";
+
 import { motion } from "framer-motion";
-const About: React.FC = () => {
+
+export function About() {
   return (
     <div className="bg-black py-[40px] tab:py-[140px] text-center text-white text-base tab:text-[32px] leading-[32px] desktop:leading-[50px] font-normal z-[50] relative px-6 desktop:px-[171px]">
       <motion.p
@@ -18,5 +21,3 @@ const About: React.FC = () => {
     </div>
   );
 };
-
-export default About;
