@@ -1,9 +1,12 @@
+import dotenv from "dotenv";
+dotenv.config()
+
 import { Account, RpcProvider, ec, stark } from "starknet";
 const STARKNET_URL = process.env.RPC_ENDPOINT || "http://127.0.0.1:5050";
-
-export const provider = new RpcProvider();
+console.log(" process.env.RPC_ENDPOINT", process.env.RPC_ENDPOINT)
+console.log("STARKNET_URL",STARKNET_URL)
 /** @TODO Uncomment to use with your own RPC_ENDPOINT, Sepolia by default */
-// export const provider = new RpcProvider({nodeUrl:STARKNET_URL});
+export const provider = new RpcProvider({nodeUrl:STARKNET_URL});
 
 export const createStarknetWallet = () => {
   try {

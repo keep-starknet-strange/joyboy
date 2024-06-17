@@ -58,38 +58,9 @@ describe("Escrow End to end test", () => {
     const alicePublicKey = ACCOUNT_TEST_PROFILE?.alice?.nostrPk;
     console.log("pkAlice", new Buffer(pkAlice).toString("hex"));
     console.log("alicePublicKey", alicePublicKey);
-    // Bob contract/A.A
-    // @TODO Finish SNIP-6 to use it
-    //  Use your ENV or Generate public and private key pair when A.A SNIP-06.
-    // const AAprivateKey = process.env.AA_PRIVATE_KEY ?? stark.randomAddress();
-    // console.log("New account:\nprivateKey=", AAprivateKey);
-    // const AAstarkKeyPub =
-    //   process.env.AA_PUBKEY ?? ec.starkCurve.getStarkKey(AAprivateKey);
-    // console.log("publicKey=", AAstarkKeyPub);
-    // await transferToken(
-    //   account,
-    //   accountAddress0,
-    //   TOKENS_ADDRESS?.DEVNET?.ETH,
-    //   // token?.address, // TOKENS_ADDRESS.SEPOLIA.TEST,
-    //   10
-    // );
 
-    /** @description Uncomment to create your social account or comment and change your old contract in the constant ACCOUNT_TEST_PROFILE or direcly below***/
-    // console.log("create social account");
-
-    // let accountBob = await createSocialContract(bobPublicKey);
-    /** uncomment to use social account deploy when SNIP-6 finish */
-
-    // let accountBob = await createSocialAccount(
-    //   bobPublicKey,
-    //   AAprivateKey,
-    //   AAstarkKeyPub
-    // );
-    // let accountBob = {
-    //   contract_address: undefined,
-    // };
-    // console.log("accountBob?.contract_address ", accountBob?.contract_address);
     let escrow;
+    let token_used_address=TOKENS_ADDRESS.DEVNET.ETH;
 
     if (process.env.IS_DEPLOY_CONTRACT == "true") {
       let accountBob = await createEscrowAccount();
@@ -108,16 +79,16 @@ describe("Escrow End to end test", () => {
     /** Send a note */
     let amount: number = 1;
     let strkToken = await prepareAndConnectContract(
-      TOKENS_ADDRESS?.SEPOLIA?.BIG_TOKEN,
+      token_used_address,
       account
     );
 
     /** Deposit */
 
-    let currentId = 1;
-    let nextId = 2 //  await escrow.get_next_deposit_id(); // function get need to be made
+    let firstId=1
+    let currentId = 9; //
+    let nextId = currentId //  await escrow.get_next_deposit_id(); // function get need to be made
     console.log("nextId",nextId)
-
 
     let depositCurrentId = await escrow.get_deposit(currentId)
     console.log("depositCurrentId",depositCurrentId)
@@ -126,38 +97,34 @@ describe("Escrow End to end test", () => {
       amount: cairo.uint256(amount), // amount int. Float need to be convert with bnToUint
       // amount: uint256.bnToUint256(BigInt(amount)), // amount
       token_address: strkToken?.address, // token address
-      // nostr_recipient: alicePublicKey,
-      nostr_recipient: uint256.bnToUint256(BigInt("0x" + alicePublicKey)),
+      // nostr_recipient: uint256.bnToUint256(BigInt("0x" + alicePublicKey)),
+      nostr_recipient: cairo.uint256(BigInt("0x"+alicePublicKey)),
       timelock: 100,
     };
 
     expect(cairo.uint256(depositCurrentId?.amount)).to.deep.eq(depositParams?.amount)
-    // let firstDeposit = 1;
-
-
     // console.log("try approve escrow erc20")
 
-    // let txApprove = await strkToken.approve(escrow?.address, depositParams?.amount)
+    let txApprove = await strkToken.approve(escrow?.address, depositParams?.amount)
 
-    // await account?.waitForTransaction(txApprove?.transaction_hash)
-    // // Need an approve before
-    // console.log("deposit amount")
+    await account?.waitForTransaction(txApprove?.transaction_hash)
+    // Need an approve before
+    console.log("deposit amount")
 
-    // let txDeposit = await escrow.deposit(depositParams?.amount, 
-    //   depositParams?.token_address,
-    //   depositParams?.nostr_recipient,
-    //   depositParams?.timelock,
+    let txDeposit = await escrow.deposit(depositParams?.amount, 
+      depositParams?.token_address,
+      depositParams?.nostr_recipient,
+      depositParams?.timelock,
     
-    // );
-    // console.log("txDeposit",txDeposit)
+    );
+    console.log("txDeposit",txDeposit)
 
-    // await account?.waitForTransaction(txDeposit?.transaction_hash);
+    await account?.waitForTransaction(txDeposit?.transaction_hash);
 
-    // currentId++;
+    currentId++;
 
     /** Claim */
     let timestamp = new Date().getTime();
-    // let content = cairo.felt(currentId);
     let content = cairo.felt(currentId);
     // let content =String(currentId)
 
@@ -185,7 +152,8 @@ describe("Escrow End to end test", () => {
     console.log("signatureS", signatureS);
 
     if (signature) {
-      let public_key=uint256.bnToUint256(BigInt("0x" + alicePublicKey))
+      // let public_key=uint256.bnToUint256(BigInt("0x" + alicePublicKey))
+      let public_key=cairo.uint256(BigInt("0x" + alicePublicKey))
       expect(depositCurrentId?.recipient).to.eq(BigInt("0x" + alicePublicKey))
       const claimParams = {
         public_key: public_key,
@@ -194,10 +162,12 @@ describe("Escrow End to end test", () => {
         tags: byteArray.byteArrayFromString("[]"), // tags
         content: content, // currentId in felt
         signature: {
-          r: uint256.bnToUint256(BigInt("0x"+signatureR)),
-          s: uint256.bnToUint256(BigInt("0x"+signatureS)),
-          // r: cairo.uint256(BigInt("0x" + signatureR)),
-          // s: cairo.uint256(BigInt("0x" + signatureS)),
+          // r: BigInt("0x"+signatureR),
+          // s: BigInt("0x"+signatureS),
+          // r: uint256.bnToUint256(BigInt("0x"+signatureR)),
+          // s: uint256.bnToUint256(BigInt("0x"+signatureS)),
+          r: cairo.uint256(BigInt("0x" + signatureR)),
+          s: cairo.uint256(BigInt("0x" + signatureS)),
         },
       };
 
