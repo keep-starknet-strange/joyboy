@@ -8,6 +8,7 @@ import {ThemeProvider as StyledThemeProvider} from 'styled-components/native';
 import {RootScreenContainer} from '../components';
 import {NostrProvider} from '../context/NostrContext';
 import {ThemeProvider} from '../context/Theme';
+import {WalletModalProvider} from '../context/WalletModal';
 import {darkModeColors, lightModeColors} from '../tokens/colors';
 import App from './App';
 import {StarknetProvider} from './StarknetProvider';
@@ -36,9 +37,11 @@ export const Wrapper: React.FC = () => {
             <QueryClientProvider client={queryClient}>
               <PortalizeProvider>
                 <StarknetProvider>
-                  <RootScreenContainer>
-                    <App />
-                  </RootScreenContainer>
+                  <WalletModalProvider>
+                    <RootScreenContainer>
+                      <App />
+                    </RootScreenContainer>
+                  </WalletModalProvider>
                 </StarknetProvider>
               </PortalizeProvider>
             </QueryClientProvider>

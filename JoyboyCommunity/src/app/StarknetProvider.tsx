@@ -36,8 +36,6 @@ export const StarknetReactProvider: React.FC<React.PropsWithChildren> = ({childr
       chains={[mainnet]}
       provider={publicProvider()}
       connectors={[
-        ...(Platform.OS === 'web' ? connectors : []),
-
         argentMobileConnector({
           chain: constants.NetworkName.SN_MAIN,
           wcProjectId: 'a9b4b052eb741f95a54c90ac5bdb343e',
@@ -45,6 +43,8 @@ export const StarknetReactProvider: React.FC<React.PropsWithChildren> = ({childr
           description: 'Joyboy Starknet dApp',
           url: 'https://joyboy.community',
         }),
+
+        ...(Platform.OS === 'web' ? connectors : []),
       ]}
       explorer={voyager}
     >
