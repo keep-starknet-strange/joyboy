@@ -5,10 +5,7 @@ import {Spacing, ThemedStyleSheet} from '../../styles';
 export default ThemedStyleSheet((theme) => ({
   modal: {
     backgroundColor: theme.colors.surface,
-    paddingLeft: Spacing.medium,
-    paddingRight: Spacing.medium,
-    paddingBottom: Spacing.medium,
-    height: 728,
+    paddingBottom: Spacing.xxlarge,
   },
 
   header: {
@@ -16,6 +13,7 @@ export default ThemedStyleSheet((theme) => ({
     marginBottom: Spacing.medium,
     paddingTop: Spacing.small,
     paddingLeft: Spacing.small,
+    paddingBottom: Spacing.medium,
     paddingRight: Spacing.small,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -25,25 +23,65 @@ export default ThemedStyleSheet((theme) => ({
     color: theme.colors.primary,
   },
 
-  postHeader: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'},
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
 
-  innerPostHeader: {flexDirection: 'row', gap: 5, alignItems: 'center'},
+  cardContent: {
+    flexDirection: 'row',
+    gap: 5,
+    alignItems: 'center',
+  },
+
   title: {
     marginBottom: Spacing.xsmall,
   },
-  likes: {flexDirection: 'row', gap: 3, alignItems: 'center'},
-
-  recipient: {flexDirection: 'row', gap: 4, alignItems: 'center', paddingBottom: 10},
-  post: {
-    width: '100%',
-    height: 112,
-    backgroundColor: '#EC796B1A',
-    borderRadius: 16,
-    justifyContent: 'center',
-    paddingLeft: Spacing.medium,
-    paddingRight: Spacing.medium,
+  likes: {
+    flexDirection: 'row',
+    gap: 3,
+    alignItems: 'center',
+  },
+  sending: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 
+  recipient: {
+    flexDirection: 'row',
+    gap: 4,
+    alignItems: 'center',
+    paddingBottom: 10,
+  },
+  card: {
+    width: '100%',
+    height: 112,
+    backgroundColor: theme.colors.primaryLight,
+    borderRadius: 16,
+    paddingLeft: Spacing.small,
+    paddingRight: Spacing.small,
+    paddingTop: Spacing.medium,
+    justifyContent: 'center',
+    paddingBottom: Spacing.medium,
+  },
+
+  comment: {
+    paddingTop: Spacing.small,
+    fontSize: 13,
+    fontWeight: 400,
+    color: theme.colors.inputPlaceholder,
+  },
+
+  more: {
+    paddingLeft: 10,
+    color: theme.colors.primary,
+  },
+
+  likeIcon: {
+    color: theme.colors.primary,
+  },
   pickerSelect: {
     fontSize: 16,
     paddingVertical: Spacing.medium,
@@ -61,5 +99,9 @@ export default ThemedStyleSheet((theme) => ({
   content: {
     padding: Spacing.xlarge,
     paddingTop: Platform.OS === 'ios' ? Spacing.xlarge : Spacing.xsmall,
+  },
+
+  submitButton: {
+    paddingTop: 30,
   },
 }));

@@ -56,7 +56,7 @@ export const Feed: React.FC<FeedScreenProps> = ({navigation}) => {
       />
 
       <Button onPress={() => tippingRef.current?.open()}>View Tipping Screen</Button>
-      <TipToken close={() => tippingRef.current?.close()} ref={tippingRef} />
+      <TipToken ref={tippingRef} />
 
       <Pressable
         style={styles.createPostButton}

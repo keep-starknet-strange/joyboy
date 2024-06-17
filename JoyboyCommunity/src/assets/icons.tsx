@@ -324,29 +324,3 @@ export const ErrorIcon: React.FC<SvgProps> = (props) => (
     />
   </Svg>
 );
-
-export const CancelIcon: React.FC<SvgProps> = (props) => (
-  <Svg width={24} height={24} fill="none" {...props}>
-    <Path
-      stroke="#406686"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={1.44}
-      d="M15.12 14.4 9.36 8.64m0 5.76 5.76-5.76"
-    />
-    <Path
-      stroke="#406686"
-      strokeWidth={1.44}
-      d="M21.84 11.52a9.6 9.6 0 1 0-19.2 0 9.6 9.6 0 0 0 19.2 0Z"
-    />
-  </Svg>
-);
-
-export const BackIcon: React.FC<SvgProps> = (props) => (
-  <Svg width={12} height={20} fill="none" {...props}>
-    <Path
-      fill="#4B799F"
-      d="M.61 10.007c.006-.194.045-.37.117-.531.072-.16.182-.316.332-.465L9.376.959c.238-.238.531-.357.88-.357.232 0 .443.055.63.166.194.11.347.26.457.448a1.242 1.242 0 0 1-.216 1.536l-7.52 7.247 7.52 7.254c.26.266.39.568.39.905 0 .238-.057.451-.174.64-.11.188-.263.337-.456.448a1.176 1.176 0 0 1-.631.174c-.349 0-.642-.122-.88-.365l-8.317-8.052a1.514 1.514 0 0 1-.34-.465 1.322 1.322 0 0 1-.109-.531Z"
-    />
-  </Svg>
-);

@@ -16,7 +16,7 @@ export default ThemedStyleSheet((theme) => ({
   },
 
   content: {
-    padding: Spacing.xlarge,
+    padding: Spacing.medium,
     paddingTop: Platform.OS === 'ios' ? Spacing.xlarge : Spacing.xsmall,
   },
 }));

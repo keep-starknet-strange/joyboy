@@ -4,24 +4,17 @@ import {Image, Platform, View} from 'react-native';
 import {Modalize as RNModalize} from 'react-native-modalize';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
-import {BackIcon, CancelIcon, LikeFillIcon} from '../../assets/icons';
-import {Button, Divider, Input} from '../../components';
+import {LikeFillIcon} from '../../assets/icons';
+import {Button, Input, Modalize} from '../../components';
 import {Text} from '../../components/Text';
 import {useStyles} from '../../hooks';
 import {Spacing} from '../../styles';
 import stylesheet from './styles';
 
-type TipTokenProps = {
-  close: () => void;
-};
-
-export const TipToken = forwardRef((props: TipTokenProps, ref) => {
+export const TipToken = forwardRef<RNModalize>((props, ref) => {
   const styles = useStyles(stylesheet);
-
   const [token, setToken] = useState<string>('');
   const [amount, setAmount] = useState<string>('');
-
-  const {close} = props;
 
   const isActive = useMemo(() => {
     if (amount.length > 0 && token.length > 0) {
@@ -31,34 +24,21 @@ export const TipToken = forwardRef((props: TipTokenProps, ref) => {
   }, [amount, token]);
 
   return (
-    <RNModalize
-      ref={ref}
+    <Modalize
       handlePosition={Platform.OS === 'ios' ? 'inside' : 'outside'}
       adjustToContentHeight
+      title="Tip"
+      ref={ref}
       modalStyle={styles.modal}
     >
       <SafeAreaView edges={['bottom', 'left', 'right']}>
-        <View style={styles.header}>
-          <BackIcon />
-
-          <Text
-            weight="medium"
-            color="textSecondary"
-            align="center"
-            fontSize={18}
-            style={styles.title}
-          >
-            Tip
-          </Text>
-
-          <CancelIcon onPress={() => close()} />
-        </View>
-        <Divider />
-
-        <View style={styles.post}>
-          <View style={styles.postHeader}>
-            <View style={styles.innerPostHeader}>
-              <Image source={require('../../assets/user.png')} />
+        <View style={styles.card}>
+          <View style={styles.cardHeader}>
+            <View style={styles.cardContent}>
+              <Image
+                style={{width: 48, height: 48}}
+                source={require('../../assets/joyboy-logo.png')}
+              />
               <View>
                 <Text fontSize={15} color="text" weight="bold">
                   Abdel 全快 Zenkai 🐉🐺
@@ -94,15 +74,15 @@ export const TipToken = forwardRef((props: TipTokenProps, ref) => {
           <Input value={amount} onChangeText={setAmount} placeholder="Amount" />
         </View>
 
-        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+        <View style={styles.sending}>
           <Text color="#6B6B8C" fontSize={16} weight="medium">
             Sending
             {amount.length > 0 && token.length > 0 ? (
-              <Text style={{paddingLeft: 10}} color="#EC796B" fontSize={16} weight="bold">
+              <Text style={styles.more} fontSize={16} weight="bold">
                 {amount} {token}
               </Text>
             ) : (
-              <Text style={{paddingLeft: 10}} color="#EC796B" fontSize={16} weight="bold">
+              <Text style={styles.more} fontSize={16} weight="bold">
                 ...
               </Text>
             )}
@@ -118,15 +98,15 @@ export const TipToken = forwardRef((props: TipTokenProps, ref) => {
           </View>
         </View>
 
-        <View style={{paddingTop: 40}}>
+        <View style={styles.submitButton}>
           <Button variant={isActive ? 'secondary' : 'default'}>Tip</Button>
         </View>
 
-        <Text style={{paddingTop: Spacing.small}} fontSize={13} weight="regular" color="#A1A1C7">
+        <Text style={styles.comment}>
           Tip friends and support creators with your favorite tokens.
         </Text>
       </SafeAreaView>
-    </RNModalize>
+    </Modalize>
   );
 });
 TipToken.displayName = 'TipToken';
