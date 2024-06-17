@@ -1,3 +1,4 @@
+use core::ecdsa::check_ecdsa_signature;
 use core::integer::{u32_wide_mul, u8_wide_mul, BoundedInt};
 use joyboy::sha256::sha256;
 
@@ -180,8 +181,6 @@ fn execute_single_call(call: Call) -> Span<felt252> {
     let Call { to, selector, calldata } = call;
     starknet::syscalls::call_contract_syscall(to, selector, calldata).unwrap_syscall()
 }
-
-use core::ecdsa::check_ecdsa_signature;
 
 pub fn is_valid_stark_signature(
     msg_hash: felt252, public_key: felt252, signature: Span<felt252>

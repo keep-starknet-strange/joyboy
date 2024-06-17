@@ -1,8 +1,8 @@
+use starknet::account::Call;
 use starknet::{ContractAddress, get_caller_address, get_contract_address, contract_address_const};
 use super::profile::NostrProfile;
 use super::request::SocialRequest;
 use super::transfer::Transfer;
-use starknet::account::Call;
 
 
 #[starknet::interface]
@@ -11,7 +11,8 @@ pub trait ISocialAccount<TContractState> {
     fn handle_transfer(ref self: TContractState, request: SocialRequest<Transfer>);
 // fn __execute__(self: @TContractState, calls: Array<Call>) -> Array<Span<felt252>>;
 // fn __validate__(self: @TContractState, calls: Array<Call>) -> felt252;
-// fn is_valid_signature(self: @TContractState, hash: felt252, signature: Array<felt252>) -> felt252;
+// fn is_valid_signature(self: @TContractState, hash: felt252, signature: Array<felt252>) ->
+// felt252;
 }
 
 #[starknet::interface]
@@ -27,13 +28,13 @@ pub mod SocialAccount {
     use core::num::traits::Zero;
     use joyboy::bip340;
     use joyboy::erc20::{IERC20Dispatcher, IERC20DispatcherTrait};
-    use super::ISRC6;
     use joyboy::utils::{
         MIN_TRANSACTION_VERSION, QUERY_VERSION, QUERY_OFFSET, execute_calls,
         is_valid_stark_signature
     };
     use starknet::account::Call;
     use starknet::{get_caller_address, get_contract_address, get_tx_info, ContractAddress};
+    use super::ISRC6;
 
     use super::super::request::{
         SocialRequest, SocialRequestImpl, SocialRequestTrait, Encode, Signature
@@ -157,8 +158,6 @@ mod tests {
     use core::array::SpanTrait;
     use core::traits::Into;
     use joyboy::erc20::{ERC20, IERC20Dispatcher, IERC20DispatcherTrait};
-
-    use super::{ISRC6Dispatcher, ISRC6DispatcherTrait};
     use snforge_std::{
         declare, ContractClass, ContractClassTrait, spy_events, SpyOn, EventSpy, EventFetcher,
         Event, EventAssertions, cheat_transaction_hash_global, cheat_signature_global,
@@ -175,6 +174,8 @@ mod tests {
         ISocialAccountDispatcher, ISocialAccountDispatcherTrait, ISocialAccountSafeDispatcher,
         ISocialAccountSafeDispatcherTrait
     };
+
+    use super::{ISRC6Dispatcher, ISRC6DispatcherTrait};
 
     fn declare_account() -> ContractClass {
         declare("SocialAccount").unwrap()

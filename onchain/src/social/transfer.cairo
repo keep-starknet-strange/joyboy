@@ -14,9 +14,9 @@ pub struct Transfer {
 
 fn len(f: felt252) -> usize {
     let mut f: u128 = f.try_into().unwrap();
-    let mut l = 0; 
+    let mut l = 0;
     while f != 0 {
-        f = f / 256;    
+        f = f / 256;
         l += 1;
     };
     l
@@ -28,11 +28,7 @@ impl TransferEncodeImpl of Encode<Transfer> {
         // assuming token is no longer than 16 bytes
         token.append_word(*self.token, len(*self.token));
         @format!(
-            "{} send {} {} to {}",
-            self.joyboy.encode(),
-            self.amount,
-            token,
-            self.recipient.encode()
+            "{} send {} {} to {}", self.joyboy.encode(), self.amount, token, self.recipient.encode()
         )
     }
 }
