@@ -29,7 +29,7 @@ const PATH_TOKEN_COMPILED = path.resolve(
   "../../onchain/target/dev/joyboy_ERC20Upgradeable.compiled_contract_class.json"
 );
 
-/** @TODO spec need to be discuss. This function serve as an exemple */
+/** @TODO spec need to be discuss. This function serve as an example */
 export const createToken = async () => {
   try {
     const privateKey0 = process.env.DEV_PK as string;

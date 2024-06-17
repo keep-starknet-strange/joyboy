@@ -16,7 +16,7 @@ const PATH_SOCIAL_ACCOUNT_COMPILED = path.resolve(
   "../../onchain/target/dev/joyboy_SocialAccount.compiled_contract_class.json"
 );
 
-/** @TODO spec need to be discuss. This function serve as an exemple */
+/** @TODO spec need to be discuss. This function serve as an example */
 export const createSocialContract = async (nostrPublicKey: string) => {
   try {
     // initialize existing predeployed account 0 of Devnet
@@ -71,7 +71,7 @@ export const createSocialContract = async (nostrPublicKey: string) => {
     // deploy account
 
     // const AAaccount = new Account(provider, AAcontractAddress, AAprivateKey);
-    /** @description uncomment this to declare your accout */
+    /** @description uncomment this to declare your account */
     // console.log("declare account");
     // console.log("try declare account");
     // const declareResponse = await account0.declare({
@@ -131,7 +131,7 @@ export const createSocialContract = async (nostrPublicKey: string) => {
 
 /** @TODO account SNIP-06 to finish.
  * Not finish with the SocialPay abi.
- * spec need to be discuss. This function serve as an exemple */
+ * spec need to be discuss. This function serve as an example */
 export const createSocialAccount = async (
   nostrPublicKey: string,
   AAprivateKey: string,
@@ -191,7 +191,7 @@ export const createSocialAccount = async (
     // );
     // console.log("Answer mint =", answer);
 
-    /** @description uncomment this to declare your accout */
+    /** @description uncomment this to declare your account */
     console.log("declare account");
     console.log("try declare account")
     const declareResponse = await account0.declare({

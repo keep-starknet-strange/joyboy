@@ -102,7 +102,7 @@ describe("End to end test", () => {
   //   //   10
   //   // );
 
-  //   /** @description Uncomment to create your social account or comment and change your old contract in the constant ACCOUNT_TEST_PROFILE or direcly below***/
+  //   /** @description Uncomment to create your social account or comment and change your old contract in the constant ACCOUNT_TEST_PROFILE or directly below***/
   //   // console.log("create social account");
 
   //   // let accountBob = await createSocialContract(bobPublicKey);
@@ -176,7 +176,7 @@ describe("End to end test", () => {
   //   // console.log("New account:\nprivateKey=", AAprivateKeyAlice);
   //   // const AAstarkKeyPubAlice = ec.starkCurve.getStarkKey(AAprivateKeyAlice);
   //   // console.log("publicKey=", AAstarkKeyPubAlice);
-  //   /** @description Uncomment to create your social account or comment and change your old contract in the constant ACCOUNT_TEST_PROFILE or direcly below***/
+  //   /** @description Uncomment to create your social account or comment and change your old contract in the constant ACCOUNT_TEST_PROFILE or directly below***/
 
   //   let pkAliceAccount = await socialAlice?.get_public_key();
   //   console.log("public key Alice Account", pkAliceAccount);

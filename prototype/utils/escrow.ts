@@ -24,7 +24,7 @@ const PATH_SOCIAL_ACCOUNT_COMPILED = path.resolve(
   "../../onchain/target/dev/joyboy_DepositEscrow.compiled_contract_class.json"
 );
 
-/** @TODO spec need to be discuss. This function serve as an exemple */
+/** @TODO spec need to be discuss. This function serve as an example */
 export const createEscrowAccount = async () => {
   try {
     // initialize existing predeployed account 0 of Devnet
@@ -63,7 +63,7 @@ export const createEscrowAccount = async () => {
     // deploy account
 
     // const AAaccount = new Account(provider, AAcontractAddress, AAprivateKey);
-    /** @description uncomment this to declare your accout */
+    /** @description uncomment this to declare your account */
     // console.log("declare account");
     console.log("try declare account");
     const declareResponse = await account0.declare({

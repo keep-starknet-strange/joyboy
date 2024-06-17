@@ -9,7 +9,7 @@ const app = express();
 const port = process.env.PORT_SOCIALPAY || 8080;
 app.use(express.json());
 
-/*** Not finish and used, can serve as an exemple. 
+/*** Not finish and used, can serve as an example. 
  * @escription Maybe not needed on the specs, if the Joyboy client serve as a Wallet. 
  * 
  * Endpoint to receive Nostr messages for Social pay 

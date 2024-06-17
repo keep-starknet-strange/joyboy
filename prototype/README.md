@@ -55,14 +55,14 @@ TODO:
 ## How install and use it: 
 
 The script is working only on Sepolia.
-Please setup your .env correctly as the exemple.
+Please setup your .env correctly as the example.
 If you want to do it on Localnet, change the Provider in this file to use your RPC_ENDPOINT:
 
 [Starknet utils](./utils//starknet.ts) 
 
 ### Locally
 
-Create and Setup your .env file, use .env.exemple as exemple
+Create and Setup your .env file, use .env.example as example
 
 Install the packages
 ```bash 

@@ -71,7 +71,7 @@ It can just be verify and not send on the Nostr relayer for "privacy" issue if n
 }
 ```
 
-Above exemple with a content request is the easy way to do it.
+Above example with a content request is the easy way to do it.
 We can think about a NIP after and use existing one, but more complicated.
 
 ## Escrow:
@@ -89,7 +89,7 @@ Write state for Deposit by Starknet user linked by a Nostr pk.
 
 Let's start with a very simple draft (without all details, security concerns etc)
 
-Can be used as an exemple: 
+Can be used as an example: 
 [Tokei contract like Sablier](https://github.com/starknet-io/tokei/blob/main/src/core/lockup_linear.cairo)
 
 ```ts
@@ -120,10 +120,10 @@ interface UserFund {
 */
 interface TokenEscrow {
   deposited: uint256;
-  transfered: uint256;
+  transferred: uint256;
   withdrawn: uint256;
   // Not a direct transfer or just you are not linked before as needed,
-  //  but payment request claimable with date or not. Like Sablier and Tokei for exemple, or a Gift to onboard user to Starknet by Nostr user or inversely.
+  //  but payment request claimable with date or not. Like Sablier and Tokei for example, or a Gift to onboard user to Starknet by Nostr user or inversely.
   to_claimed: uint256;
   // If we accept users can use different Starknet address with one Nostr pubkey. Need to be linked one by one to verify contract_address as a sender.
   others_strk_key?: StarknetAddress[];
@@ -177,7 +177,7 @@ A lot of cool features can be implemented in that's way I think.
 Pros:
 
 - Starting with a simple one Contract is better?  
-  Serve as an exemple and more easy to do.
+  Serve as an example and more easy to do.
 
 Cons:
 
