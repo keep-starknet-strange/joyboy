@@ -5,7 +5,7 @@ import {Portal} from 'react-native-portalize';
 
 import {useStyles} from '../../hooks';
 import {MainStackNavigationProps} from '../../types';
-import {Button, Text} from '..';
+import {Button, Text} from '../../components';
 import stylesheet from './styles';
 
 export type TippingModalProps = {
