@@ -23,6 +23,7 @@
     "@noble/curves": "^1.4.0",
     "@nostr-dev-kit/ndk": "^2.8.2",
     "@react-native-async-storage/async-storage": "^1.23.1",
+    "@react-native-picker/picker": "^2.7.7",
     "@react-navigation/bottom-tabs": "^6.5.20",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
