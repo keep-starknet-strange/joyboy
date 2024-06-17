@@ -9,3 +9,4 @@ export {useRootNotes} from './useRootNotes';
 export {useSendNote} from './useSendNote';
 export {useStyles} from './useStyles';
 export {useTheme} from './useTheme';
+export {useWalletModal} from './useWalletModal';
