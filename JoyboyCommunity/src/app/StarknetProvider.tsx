@@ -9,15 +9,12 @@ import {
 } from '@starknet-react/core';
 import {
   ConnectorProvider as StarknetWCProvider,
-  getArgentMobileURL,
   useArgentMobileConnector,
 } from '@starknet-wc/react';
-import * as Linking from 'expo-linking';
-import {Platform, View} from 'react-native';
-import QRCode from 'react-native-qrcode-svg';
+import {Platform} from 'react-native';
 import {constants} from 'starknet';
 
-import {Button, Text} from '../components';
+import {WalletQRModal} from '../modules/WalletQRModal';
 
 export const StarknetReactProvider: React.FC<React.PropsWithChildren> = ({children}) => {
   const {connectors} = useInjectedConnectors({
@@ -53,48 +50,9 @@ export const StarknetReactProvider: React.FC<React.PropsWithChildren> = ({childr
   );
 };
 
-const Modal: React.FC<{url: string}> = ({url}) => (
-  <View
-    style={{
-      position: 'absolute',
-      left: 0,
-      top: 0,
-      width: '100%',
-      height: '100%',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    }}
-  >
-    <View style={{width: '75%', padding: 12, backgroundColor: 'white'}}>
-      <Text style={{marginBottom: 24}}>{url}</Text>
-
-      <QRCode size={250} value={getArgentMobileURL(url)} />
-
-      <Button
-        onPress={async () => {
-          const argentUrl = encodeURIComponent(getArgentMobileURL(url));
-          const openUrl = `https://unruggable.meme/wallet-redirect/${argentUrl}`;
-
-          const canOpen = await Linking.canOpenURL(openUrl);
-
-          if (!canOpen) {
-            alert('Argent is not installed');
-            return;
-          }
-
-          await Linking.openURL(openUrl);
-        }}
-      >
-        Open in Argent
-      </Button>
-    </View>
-  </View>
-);
-
 export const StarknetProvider: React.FC<React.PropsWithChildren> = ({children}) => {
   return (
-    <StarknetWCProvider modal={Modal}>
+    <StarknetWCProvider modal={WalletQRModal}>
       <StarknetReactProvider>{children}</StarknetReactProvider>
     </StarknetWCProvider>
   );
