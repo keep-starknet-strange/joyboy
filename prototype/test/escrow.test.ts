@@ -86,8 +86,8 @@ describe("Escrow End to end test", () => {
     /** Deposit */
 
     let firstId=1
-    let currentId = 9; //
-    let nextId = currentId //  await escrow.get_next_deposit_id(); // function get need to be made
+    let currentId = 1; //
+    let nextId = currentId //  await escrow.get_next_deposit_id(); // function need to be made?
     console.log("nextId",nextId)
 
     let depositCurrentId = await escrow.get_deposit(currentId)
