@@ -168,7 +168,7 @@ pub mod ERC20 {
             ref self: ContractState, owner: ContractAddress, spender: ContractAddress, amount: u256
         ) {
             let current_allowance = self.allowances.read((owner, spender));
-            assert(current_allowance >= amount, 'not enought allowance');
+            assert(current_allowance >= amount, 'not enough allowance');
             self.allowances.write((owner, spender), current_allowance - amount);
         }
 
