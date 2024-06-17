@@ -7,7 +7,7 @@ import {Button, ButtonProps} from '../Button';
 import {Text} from '../Text';
 import stylesheet from './styles';
 
-export type ModalProps = {
+export type DialogProps = {
   title: string;
   description: string;
   icon?: React.ReactNode;
@@ -19,7 +19,7 @@ export type ModalProps = {
   }[];
 };
 
-export const Modal: React.FC<ModalProps> = ({
+export const Dialog: React.FC<DialogProps> = ({
   title,
   icon,
   description,
