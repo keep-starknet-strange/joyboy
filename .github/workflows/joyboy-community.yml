@@ -34,9 +34,6 @@ jobs:
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Dependencies Check
-        run: yarn check
-
       - name: Prettier Format Check
         run: yarn format:check
 

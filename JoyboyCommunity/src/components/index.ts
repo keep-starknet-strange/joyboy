@@ -1,5 +1,6 @@
 export {Avatar} from './Avatar';
 export {Button} from './Button';
+export {Dialog} from './Dialog';
 export {Divider} from './Divider';
 export {Header} from './Header';
 export {IconButton} from './IconButton';
