@@ -1,14 +1,13 @@
 import {Picker} from '@react-native-picker/picker';
 import {forwardRef, useMemo, useState} from 'react';
-import {Image, Platform, View} from 'react-native';
+import {Platform, View} from 'react-native';
 import {Modalize as RNModalize} from 'react-native-modalize';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {LikeFillIcon} from '../../assets/icons';
-import {Button, Input, Modalize} from '../../components';
+import {Avatar, Button, Input, Modalize} from '../../components';
 import {Text} from '../../components/Text';
 import {useStyles} from '../../hooks';
-import {Spacing} from '../../styles';
 import stylesheet from './styles';
 
 export const TipToken = forwardRef<RNModalize>((props, ref) => {
@@ -35,33 +34,30 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <View style={styles.cardContent}>
-              <Image
-                style={{width: 48, height: 48}}
-                source={require('../../assets/joyboy-logo.png')}
-              />
+              <Avatar size={48} source={require('../../assets/joyboy-logo.png')} />
               <View>
                 <Text fontSize={15} color="text" weight="bold">
                   Abdel 全快 Zenkai 🐉🐺
                 </Text>
-                <Text fontSize={11} color="#8F979E" weight="regular">
+                <Text fontSize={11} color="textLight" weight="regular">
                   @zenkai
                 </Text>
               </View>
             </View>
 
             <View style={styles.likes}>
-              <LikeFillIcon color="#EC796B" />
+              <LikeFillIcon />
               <Text fontSize={11}>16 likes</Text>
             </View>
           </View>
 
-          <Text fontSize={13} weight="medium" color="#14142C" style={{paddingTop: Spacing.small}}>
+          <Text fontSize={13} weight="medium" color="text" style={styles.cardContentText}>
             Live at Miami Stark Conf 2.0...
           </Text>
         </View>
 
-        <View style={{paddingTop: 40, paddingBottom: 40}}>
-          <View style={{marginBottom: 20}}>
+        <View style={styles.pickerContainer}>
+          <View>
             <Picker
               style={styles.pickerSelect}
               selectedValue={token}
@@ -71,11 +67,12 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
               <Picker.Item label="STRK" value="STRK" />
             </Picker>
           </View>
+
           <Input value={amount} onChangeText={setAmount} placeholder="Amount" />
         </View>
 
         <View style={styles.sending}>
-          <Text color="#6B6B8C" fontSize={16} weight="medium">
+          <Text color="textSecondary" fontSize={16} weight="medium">
             Sending
             {amount.length > 0 && token.length > 0 ? (
               <Text style={styles.more} fontSize={16} weight="bold">

@@ -38,11 +38,16 @@ export default ThemedStyleSheet((theme) => ({
   title: {
     marginBottom: Spacing.xsmall,
   },
+
+  cardContentText: {
+    paddingTop: Spacing.small,
+  },
   likes: {
     flexDirection: 'row',
     gap: 3,
     alignItems: 'center',
   },
+
   sending: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -53,7 +58,7 @@ export default ThemedStyleSheet((theme) => ({
     flexDirection: 'row',
     gap: 4,
     alignItems: 'center',
-    paddingBottom: 10,
+    paddingBottom: Spacing.small,
   },
   card: {
     width: '100%',
@@ -74,8 +79,15 @@ export default ThemedStyleSheet((theme) => ({
     color: theme.colors.inputPlaceholder,
   },
 
+  pickerContainer: {
+    flex: 1,
+    gap: 20,
+    paddingTop: Spacing.xxlarge,
+    paddingBottom: Spacing.xxlarge,
+  },
+
   more: {
-    paddingLeft: 10,
+    paddingLeft: Spacing.small,
     color: theme.colors.primary,
   },
 
@@ -92,7 +104,7 @@ export default ThemedStyleSheet((theme) => ({
     borderRadius: 80,
     color: theme.colors.inputPlaceholder,
     paddingRight: 0,
-    paddingLeft: 20,
+    paddingLeft: Spacing.normal,
     fontWeight: 600,
   },
 
@@ -102,6 +114,6 @@ export default ThemedStyleSheet((theme) => ({
   },
 
   submitButton: {
-    paddingTop: 30,
+    paddingTop: Spacing.xlarge,
   },
 }));
