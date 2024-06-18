@@ -1,18 +1,46 @@
+import {useAccount} from '@starknet-react/core';
 import {forwardRef, useState} from 'react';
 import {Platform, View} from 'react-native';
 import {Modalize as RNModalize} from 'react-native-modalize';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {CallData, uint256} from 'starknet';
 
 import {Avatar, Button, Input, Modalize, Picker, Text} from '../../components';
-import {useStyles} from '../../hooks';
+import {TOKENS, TokenSymbol} from '../../constants/tokens';
+import {useChainId, useStyles, useWalletModal} from '../../hooks';
 import stylesheet from './styles';
 
 export const TipToken = forwardRef<RNModalize>((props, ref) => {
   const styles = useStyles(stylesheet);
-  const [token, setToken] = useState<string>('JBY');
+
+  const [token, setToken] = useState<TokenSymbol>(TokenSymbol.JBY);
   const [amount, setAmount] = useState<string>('');
 
+  const chainId = useChainId();
+  const account = useAccount();
+  const walletModal = useWalletModal();
+
   const isActive = !!amount && !!token;
+
+  const onTipPress = async () => {
+    if (!account.address) {
+      walletModal.show();
+      return;
+    }
+
+    await account.account.execute([
+      {
+        contractAddress: '0x53327953bddcb4ae216b14ea0b84261c6c1ad0af112a29be2dab11cf2e76c48',
+        entrypoint: 'transfer',
+        calldata: CallData.compile([
+          '0x028446b7625A071Bd169022eE8C77c1aaD1E13D40994f54B2D84F8cDe6AA458D',
+          uint256.bnToUint256(BigInt(amount) * BigInt(10 ** 18)),
+        ]),
+      },
+    ]);
+
+    alert('Tip sent!');
+  };
 
   return (
     <Modalize
@@ -53,10 +81,15 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
             <Picker
               label="Please select a token"
               selectedValue={token}
-              onValueChange={(itemValue) => setToken(itemValue)}
+              onValueChange={(itemValue) => setToken(itemValue as TokenSymbol)}
             >
-              <Picker.Item label="JYB" value="JYB" />
-              <Picker.Item label="STRK" value="STRK" />
+              {Object.values(TOKENS).map((tkn) => (
+                <Picker.Item
+                  key={tkn[chainId].symbol}
+                  label={tkn[chainId].name}
+                  value={tkn[chainId].symbol}
+                />
+              ))}
             </Picker>
           </View>
 
@@ -91,8 +124,8 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
         </View>
 
         <View style={styles.submitButton}>
-          <Button variant="secondary" disabled={!isActive}>
-            Tip
+          <Button variant="secondary" disabled={!isActive} onPress={onTipPress}>
+            {account.address ? 'Tip' : 'Connect Wallet'}
           </Button>
         </View>
 
