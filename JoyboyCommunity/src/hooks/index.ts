@@ -1,3 +1,4 @@
+export {useChainId} from './useChainId';
 export {useColor} from './useColor';
 export {useEditProfile} from './useEditProfile';
 export {useNote} from './useNote';
