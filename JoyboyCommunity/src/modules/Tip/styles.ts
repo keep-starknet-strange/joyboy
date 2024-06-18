@@ -1,6 +1,6 @@
 import {Platform} from 'react-native';
 
-import {Spacing, ThemedStyleSheet, Typography} from '../../styles';
+import {Spacing, ThemedStyleSheet} from '../../styles';
 
 export default ThemedStyleSheet((theme) => ({
   modal: {
@@ -93,15 +93,6 @@ export default ThemedStyleSheet((theme) => ({
 
   likeIcon: {
     color: theme.colors.primary,
-  },
-  pickerSelect: {
-    paddingVertical: Platform.OS === 'android' ? Spacing.none : Spacing.medium,
-    paddingHorizontal: Platform.OS === 'android' ? Spacing.medium : Spacing.large,
-    borderWidth: 1,
-    borderColor: theme.colors.inputBorder,
-    backgroundColor: theme.colors.inputBackground,
-    borderRadius: 99,
-    color: theme.colors.inputPlaceholder,
   },
 
   content: {

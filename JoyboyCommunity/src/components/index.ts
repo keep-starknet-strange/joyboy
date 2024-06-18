@@ -8,6 +8,7 @@ export {Input} from './Input';
 export {Menu} from './Menu';
 export {Modal} from './Modal';
 export {Modalize} from './Modalize';
+export {Picker} from './Picker';
 export {PickerContainer} from './PickerContainer';
 export {InputAccessoryView} from './Skeleton/InputAccessoryView';
 export {KeyboardAvoidingView} from './Skeleton/KeyboardAvoidingView';
