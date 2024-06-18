@@ -5,7 +5,7 @@ import {
   ARGENT_APP_STORE_URL_FALLBACK,
   ARGENT_GOOGLE_PLAY_URL,
   ARGENT_GOOGLE_PLAY_URL_FALLBACK,
-} from './constants';
+} from '../constants/urls';
 
 export const getOperatingSystem = (): Platform['OS'] => {
   const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
