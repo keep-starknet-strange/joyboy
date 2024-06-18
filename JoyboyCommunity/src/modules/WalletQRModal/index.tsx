@@ -9,7 +9,7 @@ import {Spacing} from '../../styles';
 import {getArgentAppStoreURL} from '../../utils/helpers';
 import stylesheet from './styles';
 
-export const WalletQRModal: React.FC<{url: string}> = ({url}) => {
+export const WalletQRModal: React.FC<{url: string; hideModal: () => void}> = ({url, hideModal}) => {
   const styles = useStyles(stylesheet);
 
   const {width} = useWindowDimensions();
@@ -56,7 +56,9 @@ export const WalletQRModal: React.FC<{url: string}> = ({url}) => {
           Open in Argent
         </Button>
 
-        <Button variant="default">Cancel</Button>
+        <Button variant="default" onPress={hideModal}>
+          Cancel
+        </Button>
       </View>
     </Modal>
   );
