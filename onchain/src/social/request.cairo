@@ -172,8 +172,7 @@ mod tests {
 
     #[test]
     fn verify_invalid_public_key() {
-        // valid public_key =
-        // 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256
+        // valid public_key = 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256
         let r: SocialRequest<ByteArray> = SocialRequest {
             public_key: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f4_u256,
             created_at: 1716380267_u64,
