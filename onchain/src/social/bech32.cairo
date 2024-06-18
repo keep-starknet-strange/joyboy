@@ -17,6 +17,12 @@ use joyboy::utils::{shl, shr};
 //! https://github.com/sipa/bech32/blob/master/ref/javascript/bech32.js#L86
 //! https://github.com/paulmillr/scure-base/blob/main/index.ts#L479
 
+// const GENERATOR: [
+//     felt252
+//     ; 5] = [
+//     1, 2, 3, 4
+//     ];
+
 fn polymod(values: Array<u8>) -> u32 {
     let generator = array![
         0x3b6a57b2_u32, 0x26508e6d_u32, 0x1ea119fa_u32, 0x3d4233dd_u32, 0x2a1462b3_u32

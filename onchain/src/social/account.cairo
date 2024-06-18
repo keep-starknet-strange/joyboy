@@ -1,3 +1,4 @@
+use starknet::account::Call;
 use starknet::{ContractAddress, get_caller_address, get_contract_address, contract_address_const};
 use super::profile::NostrProfile;
 use super::request::SocialRequest;
@@ -10,21 +11,30 @@ pub trait ISocialAccount<TContractState> {
     fn handle_transfer(ref self: TContractState, request: SocialRequest<Transfer>);
 // fn __execute__(self: @TContractState, calls: Array<Call>) -> Array<Span<felt252>>;
 // fn __validate__(self: @TContractState, calls: Array<Call>) -> felt252;
-// fn is_valid_signature(self: @TContractState, hash: felt252, signature: Array<felt252>) -> felt252;
+// fn is_valid_signature(self: @TContractState, hash: felt252, signature: Array<felt252>) ->
+// felt252;
 }
+
+#[starknet::interface]
+pub trait ISRC6<TState> {
+    fn __execute__(self: @TState, calls: Array<Call>) -> Array<Span<felt252>>;
+    fn __validate__(self: @TState, calls: Array<Call>) -> felt252;
+    fn is_valid_signature(self: @TState, hash: felt252, signature: Array<felt252>) -> felt252;
+}
+
 
 #[starknet::contract(account)]
 pub mod SocialAccount {
     use core::num::traits::Zero;
     use joyboy::bip340;
-    use openzeppelin::account::interface::ISRC6;
-    use openzeppelin::account::utils::{
+    use joyboy::erc20::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use joyboy::utils::{
         MIN_TRANSACTION_VERSION, QUERY_VERSION, QUERY_OFFSET, execute_calls,
         is_valid_stark_signature
     };
-    use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
     use starknet::account::Call;
     use starknet::{get_caller_address, get_contract_address, get_tx_info, ContractAddress};
+    use super::ISRC6;
 
     use super::super::request::{
         SocialRequest, SocialRequestImpl, SocialRequestTrait, Encode, Signature
@@ -66,9 +76,8 @@ pub mod SocialAccount {
             // TODO: is this check necessary
             assert!(request.public_key == self.public_key.read(), "wrong sender");
 
-            let erc20 = ERC20ABIDispatcher { contract_address: request.content.token_address };
-            // disable symbol check for now, does not work with deployed tokens
-            // assert!(erc20.symbol() == request.content.token, "wrong token");
+            let erc20 = IERC20Dispatcher { contract_address: request.content.token_address };
+            assert!(erc20.symbol() == request.content.token, "wrong token");
 
             let recipient = ISocialAccountDispatcher {
                 contract_address: request.content.recipient_address
@@ -148,11 +157,7 @@ pub mod SocialAccount {
 mod tests {
     use core::array::SpanTrait;
     use core::traits::Into;
-
-    use openzeppelin::account::interface::{ISRC6Dispatcher, ISRC6DispatcherTrait};
-    use openzeppelin::presets::ERC20Upgradeable;
-    use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
-    use openzeppelin::utils::serde::SerializedAppend;
+    use joyboy::erc20::{ERC20, IERC20Dispatcher, IERC20DispatcherTrait};
     use snforge_std::{
         declare, ContractClass, ContractClassTrait, spy_events, SpyOn, EventSpy, EventFetcher,
         Event, EventAssertions, cheat_transaction_hash_global, cheat_signature_global,
@@ -170,12 +175,14 @@ mod tests {
         ISocialAccountSafeDispatcherTrait
     };
 
+    use super::{ISRC6Dispatcher, ISRC6DispatcherTrait};
+
     fn declare_account() -> ContractClass {
         declare("SocialAccount").unwrap()
     }
 
     fn declare_erc20() -> ContractClass {
-        declare("ERC20Upgradeable").unwrap()
+        declare("ERC20").unwrap()
     }
 
     fn deploy_account(class: ContractClass, public_key: u256) -> ISocialAccountDispatcher {
@@ -208,24 +215,22 @@ mod tests {
 
     fn deploy_erc20(
         class: ContractClass,
-        name: ByteArray,
-        symbol: ByteArray,
+        name: felt252,
+        symbol: felt252,
         initial_supply: u256,
         recipient: ContractAddress
-    ) -> ERC20ABIDispatcher {
+    ) -> IERC20Dispatcher {
         let mut calldata = array![];
 
         name.serialize(ref calldata);
-
-        // calldata.append_serde(name);
-        calldata.append_serde(symbol);
-        calldata.append_serde(2 * initial_supply);
-        calldata.append_serde(recipient);
-        calldata.append_serde(recipient);
+        symbol.serialize(ref calldata);
+        (2 * initial_supply).serialize(ref calldata);
+        recipient.serialize(ref calldata);
+        18_u8.serialize(ref calldata);
 
         let (contract_address, _) = class.deploy(@calldata).unwrap();
 
-        ERC20ABIDispatcher { contract_address }
+        IERC20Dispatcher { contract_address }
     }
 
     fn request_fixture_custom_classes(
@@ -234,7 +239,7 @@ mod tests {
         SocialRequest<Transfer>,
         ISocialAccountDispatcher,
         ISocialAccountDispatcher,
-        ERC20ABIDispatcher
+        IERC20Dispatcher
     ) {
         // sender private key: 70aca2a9ab722bd56a9a1aadae7f39bc747c7d6735a04d677e0bc5dbefa71d47
         // just for testing, do not use for anything else
@@ -251,7 +256,7 @@ mod tests {
 
         let joyboy_public_key = 0x84603b4e300840036ca8cc812befcc8e240c09b73812639d5cdd8ece7d6eba40;
 
-        let erc20 = deploy_erc20(erc20_class, "USDC token", "USDC", 100, sender.contract_address);
+        let erc20 = deploy_erc20(erc20_class, 'USDC token', 'USDC', 100, sender.contract_address);
 
         let transfer = Transfer {
             amount: 1,
@@ -285,7 +290,7 @@ mod tests {
         SocialRequest<Transfer>,
         ISocialAccountDispatcher,
         ISocialAccountDispatcher,
-        ERC20ABIDispatcher
+        IERC20Dispatcher
     ) {
         let erc20_class = declare_erc20();
         let account_class = declare_account();
@@ -355,11 +360,9 @@ mod tests {
         let erc20_class = declare_erc20();
         let account_class = declare_account();
 
-        let dai = deploy_erc20(erc20_class, "DAI token", "DAI", 100, 21.try_into().unwrap());
+        let dai = deploy_erc20(erc20_class, 'DAI token', 'DAI', 100, 21.try_into().unwrap());
 
         let (request, sender, _, _) = request_fixture_custom_classes(erc20_class, account_class);
-
-        // let content = request.content.clone();
 
         let request = SocialRequest {
             content: Transfer { token_address: dai.contract_address, ..request.content.clone() },

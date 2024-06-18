@@ -2,72 +2,13 @@
 version = 1
 
 [[package]]
-name = "alexandria_bytes"
-version = "0.1.0"
-source = "git+https://github.com/keep-starknet-strange/alexandria.git#78b0d5114e7dbd71e79c4504e8ecb56d9b5c6995"
-dependencies = [
- "alexandria_data_structures",
- "alexandria_math",
-]
-
-[[package]]
-name = "alexandria_data_structures"
-version = "0.2.0"
-source = "git+https://github.com/keep-starknet-strange/alexandria.git#78b0d5114e7dbd71e79c4504e8ecb56d9b5c6995"
-dependencies = [
- "alexandria_encoding",
-]
-
-[[package]]
-name = "alexandria_encoding"
-version = "0.1.0"
-source = "git+https://github.com/keep-starknet-strange/alexandria.git#78b0d5114e7dbd71e79c4504e8ecb56d9b5c6995"
-dependencies = [
- "alexandria_bytes",
- "alexandria_math",
- "alexandria_numeric",
-]
-
-[[package]]
-name = "alexandria_math"
-version = "0.2.0"
-source = "git+https://github.com/keep-starknet-strange/alexandria.git#78b0d5114e7dbd71e79c4504e8ecb56d9b5c6995"
-dependencies = [
- "alexandria_data_structures",
-]
-
-[[package]]
-name = "alexandria_numeric"
-version = "0.1.0"
-source = "git+https://github.com/keep-starknet-strange/alexandria.git#78b0d5114e7dbd71e79c4504e8ecb56d9b5c6995"
-dependencies = [
- "alexandria_math",
- "alexandria_searching",
-]
-
-[[package]]
-name = "alexandria_searching"
-version = "0.1.0"
-source = "git+https://github.com/keep-starknet-strange/alexandria.git#78b0d5114e7dbd71e79c4504e8ecb56d9b5c6995"
-dependencies = [
- "alexandria_data_structures",
-]
-
-[[package]]
 name = "joyboy"
 version = "0.1.0"
 dependencies = [
- "alexandria_math",
- "openzeppelin",
  "snforge_std",
 ]
 
 [[package]]
-name = "openzeppelin"
-version = "0.13.0"
-source = "git+https://github.com/openzeppelin/cairo-contracts?branch=main#978b4e75209da355667d8954d2450e32bd71fe49"
-
-[[package]]
 name = "snforge_std"
-version = "0.24.0"
-source = "git+https://github.com/foundry-rs/starknet-foundry?tag=v0.24.0#95e9fb09cb91b3c05295915179ee1b55bf923653"
+version = "0.25.0"
+source = "git+https://github.com/foundry-rs/starknet-foundry?tag=v0.25.0#5b366e24821e530fea97f11b211d220e8493fbea"
