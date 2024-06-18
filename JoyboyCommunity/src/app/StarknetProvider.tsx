@@ -2,7 +2,7 @@ import {sepolia} from '@starknet-react/chains';
 import {
   argent,
   braavos,
-  publicProvider,
+  infuraProvider,
   StarknetConfig,
   useInjectedConnectors,
   voyager,
@@ -28,10 +28,12 @@ export const StarknetReactProvider: React.FC<React.PropsWithChildren> = ({childr
 
   const argentMobileConnector = useArgentMobileConnector();
 
+  const provider = infuraProvider({apiKey: '98f462b6b2644cadae88bdb695e467bf'});
+
   return (
     <StarknetConfig
       chains={[sepolia]}
-      provider={publicProvider()}
+      provider={provider}
       connectors={[
         argentMobileConnector({
           chain: constants.NetworkName.SN_SEPOLIA,
@@ -40,6 +42,7 @@ export const StarknetReactProvider: React.FC<React.PropsWithChildren> = ({childr
           dappName: 'Joyboy',
           description: 'Joyboy Starknet dApp',
           url: 'https://joyboy.community',
+          provider: provider(sepolia),
         }),
 
         ...(Platform.OS === 'web' ? connectors : []),

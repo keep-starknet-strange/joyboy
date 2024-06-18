@@ -9,7 +9,7 @@ import {Avatar, Button, Input, Modalize, Picker, Text} from '../../components';
 import {ESCROW_ADDRESSES} from '../../constants/contracts';
 import {DEFAULT_TIMELOCK, Entrypoint} from '../../constants/misc';
 import {TOKENS, TokenSymbol} from '../../constants/tokens';
-import {useChainId, useStyles, useWalletModal} from '../../hooks';
+import {useChainId, useStyles, useTransaction, useWalletModal} from '../../hooks';
 import stylesheet from './styles';
 
 export const TipToken = forwardRef<RNModalize>((props, ref) => {
@@ -21,6 +21,7 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
   const chainId = useChainId();
   const account = useAccount();
   const walletModal = useWalletModal();
+  const sendTransaction = useTransaction();
 
   const recipient = 'cd576d93bcc79acc48146e96fee40c9775d12fa5e86036498b52ddfc70fb8dcf';
 
@@ -46,20 +47,32 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
       DEFAULT_TIMELOCK, // timelock // 7 days
     ]);
 
-    const txHash = await account.account.execute([
-      {
-        contractAddress: TOKENS[token][chainId].address,
-        entrypoint: Entrypoint.APPROVE,
-        calldata: approveCallData,
-      },
-      {
-        contractAddress: ESCROW_ADDRESSES[chainId],
-        entrypoint: Entrypoint.DEPOSIT,
-        calldata: depositCallData,
-      },
-    ]);
+    const receipt = await sendTransaction({
+      calls: [
+        {
+          contractAddress: TOKENS[token][chainId].address,
+          entrypoint: Entrypoint.APPROVE,
+          calldata: approveCallData,
+        },
+        {
+          contractAddress: ESCROW_ADDRESSES[chainId],
+          entrypoint: Entrypoint.DEPOSIT,
+          calldata: depositCallData,
+        },
+      ],
+    });
 
     alert('Tip sent!');
+
+    if (receipt.isSuccess()) {
+      const transferEvent = receipt.events.find((event) =>
+        event.keys.includes('0x1dcde06aabdbca2f80aa51392b345d7549d7757aa855f7e37f5d335ac8243b1'),
+      );
+
+      console.log(transferEvent, Number(transferEvent.data[5]));
+    }
+
+    console.log(receipt);
   };
 
   return (

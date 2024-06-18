@@ -10,4 +10,6 @@ export {useRootNotes} from './useRootNotes';
 export {useSendNote} from './useSendNote';
 export {useStyles} from './useStyles';
 export {useTheme} from './useTheme';
+export {useTransaction} from './useTransaction';
+export {useTransactionModal} from './useTransactionModal';
 export {useWalletModal} from './useWalletModal';
