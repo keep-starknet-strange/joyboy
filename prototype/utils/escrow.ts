@@ -67,19 +67,21 @@ export const createEscrowAccount = async () => {
     // const AAaccount = new Account(provider, AAcontractAddress, AAprivateKey);
     /** @description uncomment this to declare your account */
     // console.log("declare account");
-    console.log("try declare account");
-    const declareResponse = await account0.declare({
-      contract: compiledSierraAAaccount,
-      casm: compiledAACasm,
-    });
-    console.log("Declare deploy", declareResponse?.transaction_hash);
-    await provider.waitForTransaction(declareResponse?.transaction_hash);
-    const contractClassHash = declareResponse.class_hash;
-    EscrowClassHash = contractClassHash;
 
+    if(process.env.REDECLARE_ACCOUNT) {
+      console.log("try declare account");
+      const declareResponse = await account0.declare({
+        contract: compiledSierraAAaccount,
+        casm: compiledAACasm,
+      });
+      console.log("Declare deploy", declareResponse?.transaction_hash);
+      await provider.waitForTransaction(declareResponse?.transaction_hash);
+      const contractClassHash = declareResponse.class_hash;
+      EscrowClassHash = contractClassHash;
 
-    const nonce = await account0?.getNonce();
-    console.log("nonce", nonce);
+      const nonce = await account0?.getNonce();
+      console.log("nonce", nonce);
+    }
 
     const { transaction_hash, contract_address } =
       await account0.deployContract({
@@ -122,7 +124,9 @@ export const deposit = async (props: {
   try {
     const { escrow, account, amount, tokenAddress, timelock, alicePublicKey } = props
     const depositParams = {
-      amount: cairo.uint256(amount), // amount int. Float need to be convert with bnToUint
+      amount: uint256.bnToUint256(BigInt("0x"+amount)), // amount float. cairo.uint256(amount) for Int
+      // Float need to be convert with bnToUint
+
       token_address: tokenAddress, // token address
       nostr_recipient: cairo.uint256(BigInt("0x" + alicePublicKey)),
       timelock: timelock,
@@ -233,4 +237,3 @@ export const cancel = async (props: {
     console.log("Error cancel", e)
   }
 }
-

@@ -24,7 +24,7 @@ dotenv.config();
 const currentId = 1
 const idToClaim = 1
 const idToCancel = 1
-let escrow_address = ACCOUNT_TEST_PROFILE.escrow.contract // change default address
+let escrow_address:string|undefined = ACCOUNT_TEST_PROFILE.escrow.contract // change default address
 let token_used_address = TOKENS_ADDRESS.DEVNET.ETH;
 
 describe("Escrow End to end test", () => {
@@ -38,6 +38,10 @@ describe("Escrow End to end test", () => {
       let escrowContract = await createEscrowAccount();
 
       console.log("escrow address", escrowContract?.contract_address)
+
+      if(escrowContract?.contract_address) {
+        escrow_address=escrowContract?.contract_address
+      }
       escrow = await prepareAndConnectContract(
         escrowContract?.contract_address ?? ACCOUNT_TEST_PROFILE?.escrow?.contract, // uncomment if you recreate a contract
         account
@@ -57,20 +61,10 @@ describe("Escrow End to end test", () => {
     const account = new Account(provider, accountAddress0, privateKey0, "1");
     const alicePublicKey = ACCOUNT_TEST_PROFILE?.alice?.nostrPublicKey;
 
-    let escrow;
-    if (process.env.IS_DEPLOY_CONTRACT == "true") {
-      let escrowContract = await createEscrowAccount();
-
-      escrow = await prepareAndConnectContract(
-        escrowContract?.contract_address ?? ACCOUNT_TEST_PROFILE?.escrow?.contract, // uncomment if you recreate a contract
-        account
-      );
-    } else {
-      escrow = await prepareAndConnectContract(
-        escrow_address ?? ACCOUNT_TEST_PROFILE?.escrow?.contract,
-        account
-      );
-    }
+    let escrow =  await prepareAndConnectContract(
+      escrow_address ?? ACCOUNT_TEST_PROFILE?.escrow?.contract,
+      account
+    );
 
     /** Send a note */
     let amount: number = 1;
@@ -116,24 +110,18 @@ describe("Escrow End to end test", () => {
     let privateKeyAlice = ACCOUNT_TEST_PROFILE?.alice?.nostrPrivateKey as any;
     const alicePublicKey = ACCOUNT_TEST_PROFILE?.alice?.nostrPublicKey;
 
-    let escrow;
-    if (process.env.IS_DEPLOY_CONTRACT == "true") {
-      let escrowContract = await createEscrowAccount();
-      escrow = await prepareAndConnectContract(
-        escrowContract?.contract_address ?? ACCOUNT_TEST_PROFILE?.escrow?.contract, // uncomment if you recreate a contract
-        account
-      );
-    } else {
-      escrow = await prepareAndConnectContract(
+    let escrow= await prepareAndConnectContract(
         escrow_address ?? ACCOUNT_TEST_PROFILE?.escrow?.contract,
         account
       );
-    }
     /** Claim */
     let timestamp = 1716285235;
+
+    let depositToClaim = await escrow.get_deposit(idToClaim)
+    console.log("deposit to claim",depositToClaim)
     // let timestamp = new Date().getTime();
 
-    let content = `claim ${cairo.felt(currentId)}`;
+    let content = `claim ${cairo.felt(idToClaim)}`;
     let txClaim = await claimDeposit({
       escrow,
       account,
