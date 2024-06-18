@@ -67,19 +67,21 @@ export const createEscrowAccount = async () => {
     // const AAaccount = new Account(provider, AAcontractAddress, AAprivateKey);
     /** @description uncomment this to declare your account */
     // console.log("declare account");
-    console.log("try declare account");
-    const declareResponse = await account0.declare({
-      contract: compiledSierraAAaccount,
-      casm: compiledAACasm,
-    });
-    console.log("Declare deploy", declareResponse?.transaction_hash);
-    await provider.waitForTransaction(declareResponse?.transaction_hash);
-    const contractClassHash = declareResponse.class_hash;
-    EscrowClassHash = contractClassHash;
 
-
-    const nonce = await account0?.getNonce();
-    console.log("nonce", nonce);
+    if(process.env.REDECLARE_ACCOUNT) {
+      console.log("try declare account");
+      const declareResponse = await account0.declare({
+        contract: compiledSierraAAaccount,
+        casm: compiledAACasm,
+      });
+      console.log("Declare deploy", declareResponse?.transaction_hash);
+      await provider.waitForTransaction(declareResponse?.transaction_hash);
+      const contractClassHash = declareResponse.class_hash;
+      EscrowClassHash = contractClassHash;
+  
+      const nonce = await account0?.getNonce();
+      console.log("nonce", nonce);
+    }
 
     const { transaction_hash, contract_address } =
       await account0.deployContract({

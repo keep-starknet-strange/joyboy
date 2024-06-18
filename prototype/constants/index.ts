@@ -23,8 +23,9 @@ export const ACCOUNT_TEST_PROFILE = {
       "0x1b5f5bee60ce25d6979c5b88cfbb74ad1dae197dba11719b2e06a5efa7e666d",
   },
   escrow: {
-    contract: "0x53327953bddcb4ae216b14ea0b84261c6c1ad0af112a29be2dab11cf2e76c48",
-    SEPOLIA: "0x53327953bddcb4ae216b14ea0b84261c6c1ad0af112a29be2dab11cf2e76c48"
+    contract:"0x2d8281937c8f815a53ae4d02252154b225f87973ec96d3f08bdd624bf6e685d"
+    // contract: "0x53327953bddcb4ae216b14ea0b84261c6c1ad0af112a29be2dab11cf2e76c48",
+    // SEPOLIA: "0x53327953bddcb4ae216b14ea0b84261c6c1ad0af112a29be2dab11cf2e76c48"
   }
 };
 export const ERROR_MESSAGES = {
