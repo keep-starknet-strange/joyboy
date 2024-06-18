@@ -53,30 +53,26 @@ export default ThemedStyleSheet((theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  sendingText: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xsmall,
+  },
 
   recipient: {
     flexDirection: 'row',
     gap: 4,
     alignItems: 'center',
-    paddingBottom: Spacing.small,
   },
   card: {
     width: '100%',
-    height: 112,
     backgroundColor: theme.colors.primaryLight,
     borderRadius: 16,
-    paddingLeft: Spacing.small,
-    paddingRight: Spacing.small,
-    paddingTop: Spacing.medium,
-    justifyContent: 'center',
-    paddingBottom: Spacing.medium,
+    padding: Spacing.medium,
   },
 
   comment: {
     paddingTop: Spacing.small,
-    fontSize: 13,
-    fontWeight: 400,
-    color: theme.colors.inputPlaceholder,
   },
 
   pickerContainer: {
