@@ -6,6 +6,7 @@ import {
   Contract,
   cairo,
   uint256,
+  byteArray,
 } from "starknet";
 import fs from "fs";
 import dotenv from "dotenv";
@@ -13,6 +14,7 @@ import { nostrPubkeyToUint256 } from "./format";
 import { provider } from "./starknet";
 import { transferToken } from "./token";
 import path from "path";
+import { finalizeEvent } from "nostr-tools";
 
 dotenv.config();
 const PATH_SOCIAL_ACCOUNT = path.resolve(
@@ -92,7 +94,7 @@ export const createEscrowAccount = async () => {
     console.log("Tx deploy", tx);
     await provider.waitForTransaction(transaction_hash);
     console.log(
-      "✅ New contract Social created.\n   address =",
+      "✅ New contract Escrow created.\n   address =",
       contract_address
     );
 
@@ -106,4 +108,129 @@ export const createEscrowAccount = async () => {
     console.log("Error createEscrowAccount= ", error);
   }
 };
+
+
+export const deposit = async (props: {
+  escrow: Contract,
+  account: Account,
+  amount: number,
+  tokenAddress: string,
+  timelock: number,
+  alicePublicKey: string,
+
+}) => {
+  try {
+    const { escrow, account, amount, tokenAddress, timelock, alicePublicKey } = props
+    const depositParams = {
+      amount: cairo.uint256(amount), // amount int. Float need to be convert with bnToUint
+      token_address: tokenAddress, // token address
+      nostr_recipient: cairo.uint256(BigInt("0x" + alicePublicKey)),
+      timelock: timelock,
+    };
+    console.log("depositParams", depositParams);
+    const tx = await account.execute({
+      contractAddress: escrow?.address,
+      calldata: depositParams,
+      entrypoint: "deposit",
+    });
+
+    await account.waitForTransaction(tx.transaction_hash)
+
+    return tx;
+
+  } catch (e) {
+    console.log("Error deposit", e)
+
+  }
+
+
+
+}
+
+export const claimDeposit = async (props: {
+  escrow: Contract,
+  account: Account,
+  depositId: number,
+  content: string,
+  timestamp: number,
+  alicePublicKey: string,
+  privateKey: any,
+}
+) => {
+  try {
+    const { escrow, account, depositId, content, timestamp, alicePublicKey, privateKey } = props
+    const event = finalizeEvent(
+      {
+        kind: 1,
+        tags: [],
+        content: content,
+        created_at: timestamp,
+      },
+      privateKey
+    );
+
+    console.log(
+      "event",
+      event
+    );
+    const signature = event.sig;
+    const signatureR = "0x" + signature.slice(0, signature.length / 2);
+    const signatureS = "0x" + signature.slice(signature.length / 2);
+    console.log("signature", signature);
+    console.log("signatureR", signatureR);
+    console.log("signatureS", signatureS);
+    let public_key = cairo.uint256(BigInt("0x" + alicePublicKey))
+    // expect(depositCurrentId?.recipient).to.eq(BigInt("0x" + alicePublicKey))
+    const claimParams = {
+      public_key: public_key,
+      created_at: timestamp,
+      kind: 1,
+      tags: byteArray.byteArrayFromString("[]"), // tags
+      // content: content, // currentId in felt
+      content: cairo.felt(depositId),
+      signature: {
+        r: cairo.uint256(signatureR),
+        s: cairo.uint256(signatureS),
+      },
+    };
+    console.log("claimParams", claimParams);
+    const tx = await account.execute({
+      contractAddress: escrow?.address,
+      calldata: claimParams,
+      entrypoint: "claim",
+    });
+
+    await account.waitForTransaction(tx.transaction_hash)
+
+    return tx;
+
+  } catch (e) {
+    console.log("Error claim deposit", e)
+
+  }
+
+}
+
+export const cancel = async (props: {
+  escrow: Contract,
+  account: Account,
+  depositId: number,
+}) => {
+  try {
+    const { escrow, account, depositId } = props
+    const cancelParams = {
+      deposit_id: cairo.felt(depositId),
+    };
+    console.log("cancelParams", cancelParams);
+    const tx = await account.execute({
+      contractAddress: escrow?.address,
+      calldata: cancelParams,
+      entrypoint: "cancel",
+    });
+    await account.waitForTransaction(tx.transaction_hash)
+    return tx;
+  } catch (e) {
+    console.log("Error cancel", e)
+  }
+}
 
