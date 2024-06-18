@@ -45,8 +45,7 @@ pub trait IDepositEscrow<TContractState> {
 pub mod DepositEscrow {
     use core::num::traits::Zero;
     use joyboy::bip340;
-
-    use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
+    use joyboy::erc20::{IERC20Dispatcher, IERC20DispatcherTrait};
     use starknet::account::Call;
     use starknet::{
         get_block_timestamp, get_caller_address, get_contract_address, get_tx_info, ContractAddress
@@ -100,7 +99,7 @@ pub mod DepositEscrow {
             let recipient = self.nostr_to_sn.read(nostr_recipient);
 
             if (!recipient.is_zero()) {
-                let erc20 = ERC20ABIDispatcher { contract_address: token_address };
+                let erc20 = IERC20Dispatcher { contract_address: token_address };
                 erc20.transfer_from(get_caller_address(), recipient, amount);
                 return DepositResult::Transfer(recipient);
             }
@@ -108,7 +107,7 @@ pub mod DepositEscrow {
             let deposit_id = self.next_deposit_id.read();
             self.next_deposit_id.write(deposit_id + 1);
 
-            let erc20 = ERC20ABIDispatcher { contract_address: token_address };
+            let erc20 = IERC20Dispatcher { contract_address: token_address };
             erc20.transfer_from(get_caller_address(), get_contract_address(), amount);
 
             self
@@ -135,7 +134,7 @@ pub mod DepositEscrow {
                 deposit.ttl <= get_block_timestamp(), "can't cancel before timelock expiration"
             );
 
-            let erc20 = ERC20ABIDispatcher { contract_address: deposit.token_address };
+            let erc20 = IERC20Dispatcher { contract_address: deposit.token_address };
 
             erc20.transfer(get_caller_address(), deposit.amount);
 
@@ -149,7 +148,7 @@ pub mod DepositEscrow {
             assert!(request.public_key == deposit.recipient, "invalid recipient");
             request.verify().expect('can\'t verify signature');
 
-            let erc20 = ERC20ABIDispatcher { contract_address: deposit.token_address };
+            let erc20 = IERC20Dispatcher { contract_address: deposit.token_address };
             erc20.transfer(get_caller_address(), deposit.amount);
 
             self.nostr_to_sn.write(request.public_key, get_caller_address());
@@ -163,10 +162,7 @@ mod tests {
     use core::array::SpanTrait;
     use core::traits::Into;
 
-    use openzeppelin::account::interface::{ISRC6Dispatcher, ISRC6DispatcherTrait};
-    use openzeppelin::presets::ERC20Upgradeable;
-    use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
-    use openzeppelin::utils::serde::SerializedAppend;
+    use joyboy::erc20::{ERC20, IERC20Dispatcher, IERC20DispatcherTrait};
     use snforge_std::{
         declare, ContractClass, ContractClassTrait, spy_events, SpyOn, EventSpy, EventFetcher,
         Event, EventAssertions, start_cheat_caller_address, cheat_caller_address_global,
@@ -187,7 +183,7 @@ mod tests {
     }
 
     fn declare_erc20() -> ContractClass {
-        declare("ERC20Upgradeable").unwrap()
+        declare("ERC20").unwrap()
     }
 
     fn deploy_escrow(class: ContractClass) -> IDepositEscrowDispatcher {
@@ -200,24 +196,22 @@ mod tests {
 
     fn deploy_erc20(
         class: ContractClass,
-        name: ByteArray,
-        symbol: ByteArray,
+        name: felt252,
+        symbol: felt252,
         initial_supply: u256,
         recipient: ContractAddress
-    ) -> ERC20ABIDispatcher {
+    ) -> IERC20Dispatcher {
         let mut calldata = array![];
 
         name.serialize(ref calldata);
-
-        // calldata.append_serde(name);
-        calldata.append_serde(symbol);
-        calldata.append_serde(2 * initial_supply);
-        calldata.append_serde(recipient);
-        calldata.append_serde(recipient);
+        symbol.serialize(ref calldata);
+        (2 * initial_supply).serialize(ref calldata);
+        recipient.serialize(ref calldata);
+        18_u8.serialize(ref calldata);
 
         let (contract_address, _) = class.deploy(@calldata).unwrap();
 
-        ERC20ABIDispatcher { contract_address }
+        IERC20Dispatcher { contract_address }
     }
 
     fn request_fixture_custom_classes(
@@ -226,7 +220,7 @@ mod tests {
         SocialRequest<DepositId>,
         NostrPublicKey,
         ContractAddress,
-        ERC20ABIDispatcher,
+        IERC20Dispatcher,
         IDepositEscrowDispatcher
     ) {
         // recipient private key: 59a772c0e643e4e2be5b8bac31b2ab5c5582b03a84444c81d6e2eec34a5e6c35
@@ -236,7 +230,7 @@ mod tests {
 
         let sender_address: ContractAddress = 123.try_into().unwrap();
 
-        let erc20 = deploy_erc20(erc20_class, "USDC token", "USDC", 100, sender_address);
+        let erc20 = deploy_erc20(erc20_class, 'USDC token', 'USDC', 100, sender_address);
 
         let escrow = deploy_escrow(escrow_class);
 
@@ -261,7 +255,7 @@ mod tests {
         SocialRequest<DepositId>,
         NostrPublicKey,
         ContractAddress,
-        ERC20ABIDispatcher,
+        IERC20Dispatcher,
         IDepositEscrowDispatcher
     ) {
         let erc20_class = declare_erc20();
