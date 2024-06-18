@@ -40,6 +40,33 @@ pub trait IDepositEscrow<TContractState> {
     fn claim(ref self: TContractState, request: SocialRequest<DepositId>);
 }
 
+#[derive(Drop, starknet::Event)]
+struct ClaimEvent {
+    #[key]
+    sender: ContractAddress,
+    amount: u256,
+    token_address: ContractAddress,
+    recipient: NostrPublicKey,
+}
+
+#[derive(Drop, starknet::Event)]
+struct DepositEvent {
+    #[key]
+    sender: ContractAddress,
+    amount: u256,
+    token_address: ContractAddress,
+    recipient: NostrPublicKey,
+}
+
+#[derive(Drop, starknet::Event)]
+struct CancelEvent {
+    #[key]
+    sender: ContractAddress,
+    amount: u256,
+    token_address: ContractAddress,
+    recipient: NostrPublicKey,
+}
+
 
 #[starknet::contract]
 pub mod DepositEscrow {
@@ -55,7 +82,8 @@ pub mod DepositEscrow {
     };
 
     use super::{
-        Deposit, DepositId, DepositResult, IDepositEscrow, NostrPublicKey, DepositIdEncodeImpl
+        Deposit, DepositId, DepositResult, IDepositEscrow, NostrPublicKey, DepositIdEncodeImpl,
+        CancelEvent, DepositEvent, ClaimEvent
     };
 
     impl DepositDefault of Default<Deposit> {
@@ -76,6 +104,14 @@ pub mod DepositEscrow {
         next_deposit_id: DepositId,
         deposits: LegacyMap<DepositId, Deposit>,
         nostr_to_sn: LegacyMap<NostrPublicKey, ContractAddress>
+    }
+
+    #[event]
+    #[derive(Drop, starknet::Event)]
+    enum Event {
+        ClaimEvent: ClaimEvent,
+        DepositEvent: DepositEvent,
+        CancelEvent: CancelEvent,
     }
 
     #[constructor]
@@ -122,6 +158,7 @@ pub mod DepositEscrow {
                         ttl: get_block_timestamp() + timelock
                     }
                 );
+            self.emit(DepositEvent { sender:get_caller_address(), recipient:nostr_recipient, amount:amount, token_address:token_address });
 
             DepositResult::Deposit(deposit_id)
         }
@@ -137,7 +174,7 @@ pub mod DepositEscrow {
             let erc20 = IERC20Dispatcher { contract_address: deposit.token_address };
 
             erc20.transfer(get_caller_address(), deposit.amount);
-
+            self.emit(CancelEvent { sender:get_caller_address(), recipient:deposit.recipient, amount:deposit.amount, token_address:deposit.token_address });
             self.deposits.write(deposit_id, Default::default());
         }
 
@@ -152,6 +189,7 @@ pub mod DepositEscrow {
             erc20.transfer(get_caller_address(), deposit.amount);
 
             self.nostr_to_sn.write(request.public_key, get_caller_address());
+            self.emit(ClaimEvent { sender:get_caller_address(), recipient:request.public_key, amount:deposit.amount, token_address:deposit.token_address });
             self.deposits.write(deposit_id, Default::default());
         }
     }
