@@ -1,6 +1,6 @@
 import {Platform} from 'react-native';
 
-import {Spacing, ThemedStyleSheet} from '../../styles';
+import {Spacing, ThemedStyleSheet, Typography} from '../../styles';
 
 export default ThemedStyleSheet((theme) => ({
   modal: {
@@ -95,17 +95,13 @@ export default ThemedStyleSheet((theme) => ({
     color: theme.colors.primary,
   },
   pickerSelect: {
-    fontSize: 16,
-    paddingVertical: Spacing.medium,
-    paddingHorizontal: Spacing.medium,
+    paddingVertical: Platform.OS === 'android' ? Spacing.none : Spacing.medium,
+    paddingHorizontal: Platform.OS === 'android' ? Spacing.medium : Spacing.large,
     borderWidth: 1,
     borderColor: theme.colors.inputBorder,
     backgroundColor: theme.colors.inputBackground,
-    borderRadius: 80,
+    borderRadius: 99,
     color: theme.colors.inputPlaceholder,
-    paddingRight: 0,
-    paddingLeft: Spacing.normal,
-    fontWeight: 600,
   },
 
   content: {

@@ -5,14 +5,14 @@ import {Modalize as RNModalize} from 'react-native-modalize';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {LikeFillIcon} from '../../assets/icons';
-import {Avatar, Button, Input, Modalize} from '../../components';
+import {Avatar, Button, Input, Modalize, PickerContainer} from '../../components';
 import {Text} from '../../components/Text';
 import {useStyles} from '../../hooks';
 import stylesheet from './styles';
 
 export const TipToken = forwardRef<RNModalize>((props, ref) => {
   const styles = useStyles(stylesheet);
-  const [token, setToken] = useState<string>('');
+  const [token, setToken] = useState<string>('JBY');
   const [amount, setAmount] = useState<string>('');
 
   const isActive = useMemo(() => {
@@ -58,14 +58,17 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
 
         <View style={styles.pickerContainer}>
           <View>
-            <Picker
-              style={styles.pickerSelect}
+            <PickerContainer
               selectedValue={token}
-              onValueChange={(itemValue) => setToken(itemValue)}
+              modalizeTitle="Please select a token"
+              containerStyle={styles.pickerSelect}
+              textProps={{fontSize: 15, weight: 'semiBold', color: 'inputText'}}
             >
-              <Picker.Item label="JYB" value="JYB" />
-              <Picker.Item label="STRK" value="STRK" />
-            </Picker>
+              <Picker selectedValue={token} onValueChange={(itemValue) => setToken(itemValue)}>
+                <Picker.Item label="JYB" value="JYB" />
+                <Picker.Item label="STRK" value="STRK" />
+              </Picker>
+            </PickerContainer>
           </View>
 
           <Input value={amount} onChangeText={setAmount} placeholder="Amount" />
