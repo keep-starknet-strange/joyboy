@@ -6,6 +6,8 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {CallData, uint256} from 'starknet';
 
 import {Avatar, Button, Input, Modalize, Picker, Text} from '../../components';
+import {ESCROW_ADDRESSES} from '../../constants/contracts';
+import {DEFAULT_TIMELOCK, Entrypoint} from '../../constants/misc';
 import {TOKENS, TokenSymbol} from '../../constants/tokens';
 import {useChainId, useStyles, useWalletModal} from '../../hooks';
 import stylesheet from './styles';
@@ -20,6 +22,8 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
   const account = useAccount();
   const walletModal = useWalletModal();
 
+  const recipient = 'cd576d93bcc79acc48146e96fee40c9775d12fa5e86036498b52ddfc70fb8dcf';
+
   const isActive = !!amount && !!token;
 
   const onTipPress = async () => {
@@ -28,14 +32,30 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
       return;
     }
 
-    await account.account.execute([
+    const amountUint256 = uint256.bnToUint256(Number(amount) * 10 ** 18); // TODO: use fraction
+
+    const approveCallData = CallData.compile([
+      ESCROW_ADDRESSES[chainId], // Contract address
+      amountUint256, // Amount
+    ]);
+
+    const depositCallData = CallData.compile([
+      amountUint256, // Amount
+      TOKENS[token][chainId].address, // Token address
+      uint256.bnToUint256(`0x${recipient}`), // Recipient nostr pubkey
+      DEFAULT_TIMELOCK, // timelock // 7 days
+    ]);
+
+    const txHash = await account.account.execute([
       {
-        contractAddress: '0x53327953bddcb4ae216b14ea0b84261c6c1ad0af112a29be2dab11cf2e76c48',
-        entrypoint: 'transfer',
-        calldata: CallData.compile([
-          '0x028446b7625A071Bd169022eE8C77c1aaD1E13D40994f54B2D84F8cDe6AA458D',
-          uint256.bnToUint256(BigInt(amount) * BigInt(10 ** 18)),
-        ]),
+        contractAddress: TOKENS[token][chainId].address,
+        entrypoint: Entrypoint.APPROVE,
+        calldata: approveCallData,
+      },
+      {
+        contractAddress: ESCROW_ADDRESSES[chainId],
+        entrypoint: Entrypoint.DEPOSIT,
+        calldata: depositCallData,
       },
     ]);
 

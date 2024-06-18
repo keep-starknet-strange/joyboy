@@ -1,4 +1,4 @@
-import {mainnet} from '@starknet-react/chains';
+import {sepolia} from '@starknet-react/chains';
 import {
   argent,
   braavos,
@@ -30,7 +30,7 @@ export const StarknetReactProvider: React.FC<React.PropsWithChildren> = ({childr
 
   return (
     <StarknetConfig
-      chains={[mainnet]}
+      chains={[sepolia]}
       provider={publicProvider()}
       connectors={[
         argentMobileConnector({
