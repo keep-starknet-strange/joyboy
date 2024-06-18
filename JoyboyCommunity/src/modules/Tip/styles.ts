@@ -53,30 +53,26 @@ export default ThemedStyleSheet((theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  sendingText: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xsmall,
+  },
 
   recipient: {
     flexDirection: 'row',
     gap: 4,
     alignItems: 'center',
-    paddingBottom: Spacing.small,
   },
   card: {
     width: '100%',
-    height: 112,
     backgroundColor: theme.colors.primaryLight,
     borderRadius: 16,
-    paddingLeft: Spacing.small,
-    paddingRight: Spacing.small,
-    paddingTop: Spacing.medium,
-    justifyContent: 'center',
-    paddingBottom: Spacing.medium,
+    padding: Spacing.medium,
   },
 
   comment: {
     paddingTop: Spacing.small,
-    fontSize: 13,
-    fontWeight: 400,
-    color: theme.colors.inputPlaceholder,
   },
 
   pickerContainer: {
@@ -93,19 +89,6 @@ export default ThemedStyleSheet((theme) => ({
 
   likeIcon: {
     color: theme.colors.primary,
-  },
-  pickerSelect: {
-    fontSize: 16,
-    paddingVertical: Spacing.medium,
-    paddingHorizontal: Spacing.medium,
-    borderWidth: 1,
-    borderColor: theme.colors.inputBorder,
-    backgroundColor: theme.colors.inputBackground,
-    borderRadius: 80,
-    color: theme.colors.inputPlaceholder,
-    paddingRight: 0,
-    paddingLeft: Spacing.normal,
-    fontWeight: 600,
   },
 
   content: {

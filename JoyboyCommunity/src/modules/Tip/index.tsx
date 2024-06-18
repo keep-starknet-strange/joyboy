@@ -1,26 +1,18 @@
-import {Picker} from '@react-native-picker/picker';
-import {forwardRef, useMemo, useState} from 'react';
+import {forwardRef, useState} from 'react';
 import {Platform, View} from 'react-native';
 import {Modalize as RNModalize} from 'react-native-modalize';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
-import {LikeFillIcon} from '../../assets/icons';
-import {Avatar, Button, Input, Modalize} from '../../components';
-import {Text} from '../../components/Text';
+import {Avatar, Button, Input, Modalize, Picker, Text} from '../../components';
 import {useStyles} from '../../hooks';
 import stylesheet from './styles';
 
 export const TipToken = forwardRef<RNModalize>((props, ref) => {
   const styles = useStyles(stylesheet);
-  const [token, setToken] = useState<string>('');
+  const [token, setToken] = useState<string>('JBY');
   const [amount, setAmount] = useState<string>('');
 
-  const isActive = useMemo(() => {
-    if (amount.length > 0 && token.length > 0) {
-      return true;
-    }
-    return false;
-  }, [amount, token]);
+  const isActive = !!amount && !!token;
 
   return (
     <Modalize
@@ -35,6 +27,7 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
           <View style={styles.cardHeader}>
             <View style={styles.cardContent}>
               <Avatar size={48} source={require('../../assets/joyboy-logo.png')} />
+
               <View>
                 <Text fontSize={15} color="text" weight="bold">
                   Abdel 全快 Zenkai 🐉🐺
@@ -46,7 +39,6 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
             </View>
 
             <View style={styles.likes}>
-              <LikeFillIcon />
               <Text fontSize={11}>16 likes</Text>
             </View>
           </View>
@@ -59,7 +51,7 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
         <View style={styles.pickerContainer}>
           <View>
             <Picker
-              style={styles.pickerSelect}
+              label="Please select a token"
               selectedValue={token}
               onValueChange={(itemValue) => setToken(itemValue)}
             >
@@ -72,18 +64,21 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
         </View>
 
         <View style={styles.sending}>
-          <Text color="textSecondary" fontSize={16} weight="medium">
-            Sending
+          <View style={styles.sendingText}>
+            <Text color="textSecondary" fontSize={16} weight="medium">
+              Sending
+            </Text>
+
             {amount.length > 0 && token.length > 0 ? (
-              <Text style={styles.more} fontSize={16} weight="bold">
+              <Text color="primary" fontSize={16} weight="bold">
                 {amount} {token}
               </Text>
             ) : (
-              <Text style={styles.more} fontSize={16} weight="bold">
+              <Text color="primary" fontSize={16} weight="bold">
                 ...
               </Text>
             )}
-          </Text>
+          </View>
 
           <View style={styles.recipient}>
             <Text fontSize={16} weight="regular">
@@ -96,10 +91,18 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
         </View>
 
         <View style={styles.submitButton}>
-          <Button variant={isActive ? 'secondary' : 'default'}>Tip</Button>
+          <Button variant="secondary" disabled={!isActive}>
+            Tip
+          </Button>
         </View>
 
-        <Text style={styles.comment}>
+        <Text
+          weight="semiBold"
+          color="inputPlaceholder"
+          fontSize={13}
+          align="center"
+          style={styles.comment}
+        >
           Tip friends and support creators with your favorite tokens.
         </Text>
       </SafeAreaView>
