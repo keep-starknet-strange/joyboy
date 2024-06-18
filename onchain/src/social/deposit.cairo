@@ -97,7 +97,7 @@ pub mod DepositEscrow {
 
     use super::{
         Deposit, DepositId, DepositResult, IDepositEscrow, NostrPublicKey, DepositIdEncodeImpl,
-        CancelEvent, DepositEvent, ClaimEvent
+        CancelEvent, DepositEvent, ClaimEvent, TransferEvent
     };
 
     impl DepositDefault of Default<Deposit> {
