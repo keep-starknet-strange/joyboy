@@ -11,6 +11,7 @@ export {useSendNote} from './useSendNote';
 export {useSendTip} from './useSendTip';
 export {useStyles} from './useStyles';
 export {useTheme} from './useTheme';
+export {useTips} from './useTips';
 export {useTransaction} from './useTransaction';
 export {useTransactionModal} from './useTransactionModal';
 export {useWalletModal} from './useWalletModal';
