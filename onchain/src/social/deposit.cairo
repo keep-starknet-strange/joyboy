@@ -85,6 +85,8 @@ pub mod DepositEscrow {
         sender: ContractAddress,
         #[key]
         recipient: NostrPublicKey,
+        #[key]
+        starknet_recipient: ContractAddress,
         amount: u256,
         token_address: ContractAddress,
     }
@@ -109,6 +111,8 @@ pub mod DepositEscrow {
         sender: ContractAddress,
         #[key]
         recipient: NostrPublicKey,
+        #[key]
+        starknet_recipient: ContractAddress,
         amount: u256,
         token_address: ContractAddress,
     }
@@ -118,7 +122,9 @@ pub mod DepositEscrow {
         #[key]
         sender: ContractAddress,
         #[key]
-        recipient: NostrPublicKey,
+        nostr_recipient: NostrPublicKey,
+        #[key]
+        starknet_recipient: ContractAddress,
         amount: u256,
         token_address: ContractAddress,
     }
@@ -159,7 +165,8 @@ pub mod DepositEscrow {
                     .emit(
                         TransferEvent {
                             sender: get_caller_address(),
-                            recipient: recipient,
+                            nostr_recipient,
+                            starknet_recipient: recipient,
                             amount: amount,
                             token_address: token_address
                         }
@@ -188,7 +195,7 @@ pub mod DepositEscrow {
             self
                 .emit(
                     DepositEvent {
-                        deposit_id: deposit_id,
+                        deposit_id,
                         sender: get_caller_address(),
                         recipient: nostr_recipient,
                         amount: amount,
@@ -214,10 +221,11 @@ pub mod DepositEscrow {
             self
                 .emit(
                     CancelEvent {
-                        deposit_id: deposit_id,
+                        deposit_id,
                         sender: get_caller_address(),
                         recipient: deposit.recipient,
                         amount: deposit.amount,
+                        starknet_recipient: get_caller_address(),
                         token_address: deposit.token_address
                     }
                 );
@@ -238,10 +246,11 @@ pub mod DepositEscrow {
             self
                 .emit(
                     ClaimEvent {
-                        deposit_id: deposit_id,
+                        deposit_id,
                         sender: get_caller_address(),
                         recipient: request.public_key,
                         amount: deposit.amount,
+                        starknet_recipient: get_caller_address(),
                         token_address: deposit.token_address
                     }
                 );
