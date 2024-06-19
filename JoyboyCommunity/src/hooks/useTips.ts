@@ -26,6 +26,7 @@ export const useTips = (options?: UseTipsOptions) => {
       const tips = await ndk.fetchEvents({
         kinds: [NDKKind.Text],
         '#type': ['tip'],
+        '#p': [ndk.activeUser.pubkey],
         authors: options?.authors,
         search: options?.search,
         until: pageParam || Math.round(Date.now() / 1000),
