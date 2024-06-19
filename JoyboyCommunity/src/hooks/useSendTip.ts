@@ -13,6 +13,7 @@ export const useSendTip = () => {
       content: string;
       depositId: number;
       recipient: string;
+      eventId: string;
       symbol: TokenSymbol;
       amount: number;
     }) => {
@@ -21,8 +22,9 @@ export const useSendTip = () => {
       event.content = data.content;
       event.tags = [
         ['type', 'tip'],
+        ['p', data.recipient],
+        ['e', data.eventId],
         ['deposit_id', data.depositId.toString()],
-        ['pubkey', data.recipient],
         ['symbol', data.symbol],
         ['amount', data.amount.toString()],
       ];

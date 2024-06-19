@@ -24,6 +24,7 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
   const sendTransaction = useTransaction();
   const sendTip = useSendTip();
 
+  const eventId = '9ae37aa68f48645127299e9453eb5d908a0cbb6058ff340d528ed4d37c8994fb';
   const recipient = 'cd576d93bcc79acc48146e96fee40c9775d12fa5e86036498b52ddfc70fb8dcf';
 
   const isActive = !!amount && !!token;
@@ -74,6 +75,7 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
         content: '',
         depositId,
         recipient,
+        eventId,
         amount: Number(amount),
         symbol: token,
       });
