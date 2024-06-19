@@ -3,7 +3,7 @@ import {forwardRef, useState} from 'react';
 import {Platform, View} from 'react-native';
 import {Modalize as RNModalize} from 'react-native-modalize';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {CallData, uint256} from 'starknet';
+import {CallData, uint256, validateAndParseAddress} from 'starknet';
 
 import {Avatar, Button, Input, Modalize, Picker, Text} from '../../components';
 import {ESCROW_ADDRESSES} from '../../constants/contracts';
@@ -25,7 +25,7 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
   const sendTip = useSendTip();
 
   const eventId = '9ae37aa68f48645127299e9453eb5d908a0cbb6058ff340d528ed4d37c8994fb';
-  const recipient = 'cd576d93bcc79acc48146e96fee40c9775d12fa5e86036498b52ddfc70fb8dcf';
+  const recipient = 'c90efa19a56bf8ee8624abe09a662ce7ad32840d13ccd9d4a1d59408c6b539a4';
 
   const isActive = !!amount && !!token;
 
@@ -69,7 +69,11 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
         event.keys.includes('0x1dcde06aabdbca2f80aa51392b345d7549d7757aa855f7e37f5d335ac8243b1'),
       );
 
-      const depositId = Number(transferEvent.data[5]);
+      let depositId: number | undefined = undefined;
+      if (Number(transferEvent.data[4]) === 1) {
+        // Only pass the deposit ID if it's not a direct transfer
+        depositId = Number(transferEvent.data[5]);
+      }
 
       await sendTip.mutateAsync({
         content: '',

@@ -11,7 +11,7 @@ export const useSendTip = () => {
     mutationKey: ['sendTip'],
     mutationFn: async (data: {
       content: string;
-      depositId: number;
+      depositId?: number;
       recipient: string;
       eventId: string;
       symbol: TokenSymbol;
@@ -24,9 +24,9 @@ export const useSendTip = () => {
         ['type', 'tip'],
         ['p', data.recipient],
         ['e', data.eventId],
-        ['deposit_id', data.depositId.toString()],
         ['symbol', data.symbol],
         ['amount', data.amount.toString()],
+        ...(data.depositId ? [['deposit_id', data.depositId.toString()]] : []),
       ];
 
       return event.publish();

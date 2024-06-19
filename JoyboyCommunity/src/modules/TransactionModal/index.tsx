@@ -50,7 +50,9 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
         {status === 'failure' && 'failed'}
       </Text>
 
-      <ActivityIndicator size="large" color={theme.colors.primary} />
+      {(status === 'confirmation' || status === 'processing') && (
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+      )}
 
       <Button onPress={hide}>Close</Button>
     </Modal>
