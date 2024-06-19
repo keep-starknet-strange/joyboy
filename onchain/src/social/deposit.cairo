@@ -40,47 +40,6 @@ pub trait IDepositEscrow<TContractState> {
     fn claim(ref self: TContractState, request: SocialRequest<DepositId>);
 }
 
-#[derive(Drop, starknet::Event)]
-struct ClaimEvent {
-    #[key]
-    deposit_id: DepositId,
-    sender: ContractAddress,
-    amount: u256,
-    token_address: ContractAddress,
-    recipient: NostrPublicKey,
-}
-
-#[derive(Drop, starknet::Event)]
-struct DepositEvent {
-    #[key]
-    deposit_id: DepositId,
-    sender: ContractAddress,
-    amount: u256,
-    token_address: ContractAddress,
-    recipient: NostrPublicKey,
-}
-
-#[derive(Drop, starknet::Event)]
-struct CancelEvent {
-    #[key]
-    deposit_id: DepositId,
-    sender: ContractAddress,
-    amount: u256,
-    token_address: ContractAddress,
-    recipient: NostrPublicKey,
-}
-
-#[derive(Drop, starknet::Event)]
-struct TransferEvent {
-    #[key]
-    deposit_id: DepositId,
-    sender: ContractAddress,
-    amount: u256,
-    token_address: ContractAddress,
-    recipient: NostrPublicKey,
-}
-
-
 #[starknet::contract]
 pub mod DepositEscrow {
     use core::num::traits::Zero;
@@ -96,7 +55,6 @@ pub mod DepositEscrow {
 
     use super::{
         Deposit, DepositId, DepositResult, IDepositEscrow, NostrPublicKey, DepositIdEncodeImpl,
-        CancelEvent, DepositEvent, ClaimEvent, TransferEvent
     };
 
     impl DepositDefault of Default<Deposit> {
@@ -117,6 +75,52 @@ pub mod DepositEscrow {
         next_deposit_id: DepositId,
         deposits: LegacyMap<DepositId, Deposit>,
         nostr_to_sn: LegacyMap<NostrPublicKey, ContractAddress>
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct ClaimEvent {
+        #[key]
+        deposit_id: DepositId,
+        #[key]
+        sender: ContractAddress,
+        #[key]
+        recipient: NostrPublicKey,
+        amount: u256,
+        token_address: ContractAddress,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct DepositEvent {
+        #[key]
+        deposit_id: DepositId,
+        #[key]
+        sender: ContractAddress,
+        #[key]
+        recipient: NostrPublicKey,
+        amount: u256,
+        token_address: ContractAddress,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct CancelEvent {
+        #[key]
+        deposit_id: DepositId,
+        #[key]
+        sender: ContractAddress,
+        #[key]
+        recipient: NostrPublicKey,
+        amount: u256,
+        token_address: ContractAddress,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct TransferEvent {
+        #[key]
+        sender: ContractAddress,
+        #[key]
+        recipient: NostrPublicKey,
+        amount: u256,
+        token_address: ContractAddress,
     }
 
     #[event]
@@ -151,6 +155,15 @@ pub mod DepositEscrow {
             if (!recipient.is_zero()) {
                 let erc20 = IERC20Dispatcher { contract_address: token_address };
                 erc20.transfer_from(get_caller_address(), recipient, amount);
+                self
+                    .emit(
+                        TransferEvent {
+                            sender: get_caller_address(),
+                            recipient: recipient,
+                            amount: amount,
+                            token_address: token_address
+                        }
+                    );
                 return DepositResult::Transfer(recipient);
             }
 
@@ -175,7 +188,7 @@ pub mod DepositEscrow {
             self
                 .emit(
                     DepositEvent {
-                        deposit_id: deposit_id + 1,
+                        deposit_id: deposit_id,
                         sender: get_caller_address(),
                         recipient: nostr_recipient,
                         amount: amount,
