@@ -1,7 +1,8 @@
+import {NDKEvent} from '@nostr-dev-kit/ndk';
 import {useAccount} from '@starknet-react/core';
 import {Fraction} from '@uniswap/sdk-core';
 import {forwardRef, useState} from 'react';
-import {Platform, View} from 'react-native';
+import {View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {CallData, uint256} from 'starknet';
 
@@ -9,22 +10,28 @@ import {Avatar, Button, Input, Modalize, Picker, Text} from '../../components';
 import {ESCROW_ADDRESSES} from '../../constants/contracts';
 import {DEFAULT_TIMELOCK, Entrypoint} from '../../constants/misc';
 import {TOKENS, TokenSymbol} from '../../constants/tokens';
-import {useChainId, useStyles, useTransaction, useWalletModal} from '../../hooks';
+import {useChainId, useProfile, useStyles, useTransaction, useWalletModal} from '../../hooks';
 import {decimalsScale} from '../../utils/helpers';
 import stylesheet from './styles';
 
-export const TipModal = forwardRef<Modalize>((props, ref) => {
+export type TipModal = Modalize;
+
+export type TipModalProps = {
+  event?: NDKEvent;
+};
+
+export const TipModal = forwardRef<Modalize, TipModalProps>(({event}, ref) => {
   const styles = useStyles(stylesheet);
 
   const [token, setToken] = useState<TokenSymbol>(TokenSymbol.JBY);
   const [amount, setAmount] = useState<string>('');
 
+  const {data: profile} = useProfile({publicKey: event?.pubkey});
+
   const chainId = useChainId();
   const account = useAccount();
   const walletModal = useWalletModal();
   const sendTransaction = useTransaction();
-
-  const recipient = '855a6c52f5cfdbd3b1293487ce5c5ca6899f9e9417441d9f1bb27697321b8249';
 
   const isActive = !!amount && !!token;
 
@@ -48,7 +55,7 @@ export const TipModal = forwardRef<Modalize>((props, ref) => {
     const depositCallData = CallData.compile([
       amountUint256, // Amount
       TOKENS[token][chainId].address, // Token address
-      uint256.bnToUint256(`0x${recipient}`), // Recipient nostr pubkey
+      uint256.bnToUint256(`0x${event.pubkey}`), // Recipient nostr pubkey
       DEFAULT_TIMELOCK, // timelock // 7 days
     ]);
 
@@ -75,13 +82,7 @@ export const TipModal = forwardRef<Modalize>((props, ref) => {
   };
 
   return (
-    <Modalize
-      handlePosition={Platform.OS === 'ios' ? 'inside' : 'outside'}
-      adjustToContentHeight
-      title="Tip"
-      ref={ref}
-      modalStyle={styles.modal}
-    >
+    <Modalize title="Tip" ref={ref} modalStyle={styles.modal}>
       <SafeAreaView edges={['bottom', 'left', 'right']}>
         <View style={styles.card}>
           <View style={styles.cardHeader}>
@@ -89,12 +90,21 @@ export const TipModal = forwardRef<Modalize>((props, ref) => {
               <Avatar size={48} source={require('../../assets/joyboy-logo.png')} />
 
               <View>
-                <Text fontSize={15} color="text" weight="bold">
-                  Abdel 全快 Zenkai 🐉🐺
+                <Text
+                  fontSize={15}
+                  color="text"
+                  weight="bold"
+                  numberOfLines={1}
+                  ellipsizeMode="middle"
+                >
+                  {profile?.displayName ?? profile?.name ?? event?.pubkey}
                 </Text>
-                <Text fontSize={11} color="textLight" weight="regular">
-                  @zenkai
-                </Text>
+
+                {profile?.nip05 && (
+                  <Text fontSize={11} color="textLight" weight="regular">
+                    @{profile?.nip05}
+                  </Text>
+                )}
               </View>
             </View>
 
@@ -103,8 +113,15 @@ export const TipModal = forwardRef<Modalize>((props, ref) => {
             </View>
           </View>
 
-          <Text fontSize={13} weight="medium" color="text" style={styles.cardContentText}>
-            Live at Miami Stark Conf 2.0...
+          <Text
+            fontSize={13}
+            weight="medium"
+            color="text"
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={styles.cardContentText}
+          >
+            {event?.content}
           </Text>
         </View>
 

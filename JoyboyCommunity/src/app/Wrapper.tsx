@@ -3,11 +3,13 @@ import {useEffect, useState} from 'react';
 import {useColorScheme} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Host as PortalizeProvider} from 'react-native-portalize';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {ThemeProvider as StyledThemeProvider} from 'styled-components/native';
 
 import {RootScreenContainer} from '../components';
 import {NostrProvider} from '../context/NostrContext';
 import {ThemeProvider} from '../context/Theme';
+import {TipModalProvider} from '../context/TipModal';
 import {TransactionModalProvider} from '../context/TransactionModal';
 import {WalletModalProvider} from '../context/WalletModal';
 import {darkModeColors, lightModeColors} from '../tokens/colors';
@@ -36,17 +38,21 @@ export const Wrapper: React.FC = () => {
         <ThemeProvider>
           <NostrProvider>
             <QueryClientProvider client={queryClient}>
-              <PortalizeProvider>
-                <StarknetProvider>
+              <StarknetProvider>
+                <SafeAreaProvider>
                   <WalletModalProvider>
                     <TransactionModalProvider>
-                      <RootScreenContainer>
-                        <App />
-                      </RootScreenContainer>
+                      <PortalizeProvider>
+                        <TipModalProvider>
+                          <RootScreenContainer>
+                            <App />
+                          </RootScreenContainer>
+                        </TipModalProvider>
+                      </PortalizeProvider>
                     </TransactionModalProvider>
                   </WalletModalProvider>
-                </StarknetProvider>
-              </PortalizeProvider>
+                </SafeAreaProvider>
+              </StarknetProvider>
             </QueryClientProvider>
           </NostrProvider>
         </ThemeProvider>

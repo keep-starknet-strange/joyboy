@@ -1,4 +1,3 @@
-import {MaterialIcons} from '@expo/vector-icons';
 import {NDKEvent} from '@nostr-dev-kit/ndk';
 import {useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
@@ -13,8 +12,8 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import {CommentIcon, LikeFillIcon, LikeIcon, RepostIcon} from '../../assets/icons';
-import {Avatar, Text} from '../../components';
-import {useProfile, useStyles, useTheme} from '../../hooks';
+import {Avatar, IconButton, Menu, Text} from '../../components';
+import {useProfile, useStyles, useTheme, useTipModal} from '../../hooks';
 import {MainStackNavigationProps} from '../../types';
 import {getElapsedTimeStringFull} from '../../utils/timestamp';
 import stylesheet from './styles';
@@ -31,12 +30,14 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
   const navigation = useNavigation<MainStackNavigationProps>();
 
   const {data: profile} = useProfile({publicKey: event?.pubkey});
+  const {show: showTipModal} = useTipModal();
 
   const theme = useTheme();
   const styles = useStyles(stylesheet);
 
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState(12); // static value for now
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const scale = useSharedValue(1); // Control scale for icon animation
 
@@ -181,12 +182,23 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
             </View>
           </Pressable>
 
-          <MaterialIcons
-            name="more-horiz"
-            size={24}
-            color={theme.colors.textSecondary}
-            onPress={handleMore}
-          />
+          <Menu
+            open={menuOpen}
+            onClose={() => setMenuOpen(false)}
+            handle={
+              <IconButton icon="more-horizontal" size={20} onPress={() => setMenuOpen(true)} />
+            }
+          >
+            <Menu.Item label="Share" icon="share" />
+            <Menu.Item
+              label={profile?.username ? `Tip @${profile.username}` : 'Tip'}
+              icon="dollar-sign"
+              onPress={() => {
+                showTipModal(event);
+                setMenuOpen(false);
+              }}
+            />
+          </Menu>
         </View>
       )}
     </View>

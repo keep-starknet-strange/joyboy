@@ -5,7 +5,6 @@ import {AddPostIcon} from '../../assets/icons';
 import {Button, Header, Modalize, Story} from '../../components';
 import {useRootNotes, useStyles, useTheme} from '../../hooks';
 import {PostCard} from '../../modules/PostCard';
-import {TipModal} from '../../modules/TipModal';
 import {FeedScreenProps} from '../../types';
 import stylesheet from './styles';
 
@@ -56,7 +55,6 @@ export const Feed: React.FC<FeedScreenProps> = ({navigation}) => {
       />
 
       <Button onPress={() => tippingRef.current?.open()}>View Tipping Screen</Button>
-      <TipModal ref={tippingRef} />
 
       <Pressable
         style={styles.createPostButton}
