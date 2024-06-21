@@ -53,20 +53,24 @@ export default ThemedStyleSheet((theme) => ({
   },
 
   sending: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
   sendingText: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.xsmall,
   },
 
   recipient: {
+    flex: 1,
     flexDirection: 'row',
     gap: 4,
     alignItems: 'center',
+    justifyContent: 'flex-end',
   },
   card: {
     width: '100%',

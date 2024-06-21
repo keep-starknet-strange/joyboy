@@ -166,8 +166,11 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(({event}, ref) => {
             <Text fontSize={16} weight="regular">
               to
             </Text>
-            <Text fontSize={16} weight="medium">
-              @zenkai
+            <Text numberOfLines={1} ellipsizeMode="middle" fontSize={16} weight="medium">
+              {(profile?.nip05 && `@${profile.nip05}`) ??
+                profile?.displayName ??
+                profile?.name ??
+                event?.pubkey}
             </Text>
           </View>
         </View>
