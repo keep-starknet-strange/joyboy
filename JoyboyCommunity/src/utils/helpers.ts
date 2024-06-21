@@ -38,3 +38,5 @@ export const getArgentAppStoreURL = () => {
   // Fallback to Google Play URL
   return ARGENT_GOOGLE_PLAY_URL_FALLBACK;
 };
+
+export const decimalsScale = (decimals: number) => `1${Array(decimals).fill('0').join('')}`;

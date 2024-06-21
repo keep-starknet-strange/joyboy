@@ -1,4 +1,5 @@
 import {useAccount} from '@starknet-react/core';
+import {Fraction} from '@uniswap/sdk-core';
 import {forwardRef, useState} from 'react';
 import {Platform, View} from 'react-native';
 import {Modalize as RNModalize} from 'react-native-modalize';
@@ -10,6 +11,7 @@ import {ESCROW_ADDRESSES} from '../../constants/contracts';
 import {DEFAULT_TIMELOCK, Entrypoint} from '../../constants/misc';
 import {TOKENS, TokenSymbol} from '../../constants/tokens';
 import {useChainId, useStyles, useTransaction, useWalletModal} from '../../hooks';
+import {decimalsScale} from '../../utils/helpers';
 import stylesheet from './styles';
 
 export const TipToken = forwardRef<RNModalize>((props, ref) => {
@@ -34,8 +36,10 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
     }
 
     const amountUint256 = uint256.bnToUint256(
-      Number(amount) * 10 ** TOKENS[token][chainId].decimals,
-    ); // TODO: use fraction
+      new Fraction(1, Math.ceil(1 / Number(amount)))
+        .multiply(decimalsScale(TOKENS[token][chainId].decimals))
+        .toFixed(0),
+    );
 
     const approveCallData = CallData.compile([
       ESCROW_ADDRESSES[chainId], // Contract address
