@@ -2,7 +2,6 @@ import {useAccount} from '@starknet-react/core';
 import {Fraction} from '@uniswap/sdk-core';
 import {forwardRef, useState} from 'react';
 import {Platform, View} from 'react-native';
-import {Modalize as RNModalize} from 'react-native-modalize';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {CallData, uint256} from 'starknet';
 
@@ -14,7 +13,7 @@ import {useChainId, useStyles, useTransaction, useWalletModal} from '../../hooks
 import {decimalsScale} from '../../utils/helpers';
 import stylesheet from './styles';
 
-export const TipToken = forwardRef<RNModalize>((props, ref) => {
+export const TipModal = forwardRef<Modalize>((props, ref) => {
   const styles = useStyles(stylesheet);
 
   const [token, setToken] = useState<TokenSymbol>(TokenSymbol.JBY);
@@ -175,4 +174,4 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
     </Modalize>
   );
 });
-TipToken.displayName = 'TipToken';
+TipModal.displayName = 'TipModal';

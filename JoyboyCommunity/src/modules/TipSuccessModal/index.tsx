@@ -5,14 +5,14 @@ import {Button, Modal, Text} from '../../components';
 import {useStyles} from '../../hooks';
 import stylesheet from './styles';
 
-export type TippingModalProps = {
+export type TipSuccessModalProps = {
   user: string;
   symbol: string;
   amount: number;
   visible?: boolean;
 };
 
-export const TippingModal: React.FC<TippingModalProps> = ({
+export const TipSuccessModal: React.FC<TipSuccessModalProps> = ({
   user,
   symbol,
   amount,
