@@ -1,14 +1,16 @@
 import {NDKEvent, NDKKind} from '@nostr-dev-kit/ndk';
 import {useAccount} from '@starknet-react/core';
+import {Fraction} from '@uniswap/sdk-core';
 import {FlatList, RefreshControl, View} from 'react-native';
-import {byteArray, cairo, CallData, getChecksumAddress, uint256} from 'starknet';
+import {byteArray, cairo, CallData, uint256} from 'starknet';
 
 import {Button, Header, Text} from '../../components';
 import {ESCROW_ADDRESSES} from '../../constants/contracts';
-import {Entrypoint, EventKey} from '../../constants/misc';
-import {TOKEN_ADDRESSES} from '../../constants/tokens';
+import {Entrypoint} from '../../constants/misc';
 import {useNostrContext} from '../../context/NostrContext';
 import {useChainId, useTips, useTransaction, useWalletModal} from '../../hooks';
+import {parseDepositEvents} from '../../utils/events';
+import {decimalsScale} from '../../utils/helpers';
 
 export const Tips: React.FC = () => {
   const tips = useTips();
@@ -95,29 +97,21 @@ export const Tips: React.FC = () => {
             .flat()}
           keyExtractor={(item) => item.transaction_hash}
           renderItem={({item}) => {
-            if (item.keys[0] === EventKey.DepositEvent) {
-              return (
-                <View style={{padding: 12}}>
-                  <Text>Tip</Text>
-                  <Text>Sender: {item.keys[2]}</Text>
-                  <Text>
-                    Token: {TOKEN_ADDRESSES[chainId][getChecksumAddress(item.data[2])].symbol}
-                  </Text>
-                  <Text>Amount: {Number(item.data[0])}</Text>
-
-                  <Button onPress={() => onClaimPress(Number(item.keys[1]))}>Claim</Button>
-                </View>
-              );
-            }
+            const event = parseDepositEvents(item, chainId);
+            const amount = new Fraction(event.amount, decimalsScale(event.token.decimals)).toFixed(
+              6,
+            );
 
             return (
               <View style={{padding: 12}}>
                 <Text>Tip</Text>
-                <Text>Sender: {item.keys[1]}</Text>
-                <Text>
-                  Token: {TOKEN_ADDRESSES[chainId][getChecksumAddress(item.data[2])].symbol}
-                </Text>
-                <Text>Amount: {Number(item.data[0])}</Text>
+                <Text>Sender: {event.sender}</Text>
+                <Text>Token: {event.token.symbol}</Text>
+                <Text>Amount: {amount}</Text>
+
+                {event.depositId ? (
+                  <Button onPress={() => onClaimPress(event.depositId)}>Claim</Button>
+                ) : null}
               </View>
             );
           }}
