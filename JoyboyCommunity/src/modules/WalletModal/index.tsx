@@ -1,5 +1,5 @@
 import {useConnect} from '@starknet-react/core';
-import {Pressable, View} from 'react-native';
+import {Platform, Pressable, View} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 
 import {Button, Modal, Text} from '../../components';
@@ -32,7 +32,9 @@ export const WalletModal: React.FC<WalletModalProps> = ({hide}) => {
             }}
             style={styles.connector}
           >
-            <SvgXml xml={connector.icon[theme.dark ? 'dark' : 'light']} width={32} height={32} />
+            {Platform.OS !== 'web' && (
+              <SvgXml xml={connector.icon[theme.dark ? 'dark' : 'light']} width={32} height={32} />
+            )}
 
             <Text weight="semiBold">{connector.name}</Text>
           </Pressable>

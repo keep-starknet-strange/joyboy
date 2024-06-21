@@ -1,3 +1,4 @@
+export {useChainId} from './useChainId';
 export {useColor} from './useColor';
 export {useEditProfile} from './useEditProfile';
 export {useNote} from './useNote';
@@ -9,4 +10,9 @@ export {useRootNotes} from './useRootNotes';
 export {useSendNote} from './useSendNote';
 export {useStyles} from './useStyles';
 export {useTheme} from './useTheme';
+export {useTipModal} from './useTipModal';
+export {useTips} from './useTips';
+export {useTransaction} from './useTransaction';
+export {useTransactionModal} from './useTransactionModal';
+export {useWaitConnection} from './useWaitConnection';
 export {useWalletModal} from './useWalletModal';

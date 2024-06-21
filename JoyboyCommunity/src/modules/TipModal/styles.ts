@@ -4,7 +4,6 @@ import {Spacing, ThemedStyleSheet} from '../../styles';
 
 export default ThemedStyleSheet((theme) => ({
   modal: {
-    backgroundColor: theme.colors.surface,
     paddingBottom: Spacing.xxlarge,
   },
 
@@ -28,11 +27,15 @@ export default ThemedStyleSheet((theme) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-
   cardContent: {
+    flex: 1,
     flexDirection: 'row',
     gap: 5,
     alignItems: 'center',
+  },
+  cardInfo: {
+    flex: 1,
+    paddingRight: Spacing.small,
   },
 
   title: {
@@ -41,6 +44,7 @@ export default ThemedStyleSheet((theme) => ({
 
   cardContentText: {
     paddingTop: Spacing.small,
+    paddingRight: Spacing.small,
   },
   likes: {
     flexDirection: 'row',
@@ -49,20 +53,24 @@ export default ThemedStyleSheet((theme) => ({
   },
 
   sending: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
   sendingText: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.xsmall,
   },
 
   recipient: {
+    flex: 1,
     flexDirection: 'row',
     gap: 4,
     alignItems: 'center',
+    justifyContent: 'flex-end',
   },
   card: {
     width: '100%',
