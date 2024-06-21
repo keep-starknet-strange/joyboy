@@ -8,7 +8,6 @@ export {useReplyNotes} from './useReplyNotes';
 export {useReposts} from './useReposts';
 export {useRootNotes} from './useRootNotes';
 export {useSendNote} from './useSendNote';
-export {useSendTip} from './useSendTip';
 export {useStyles} from './useStyles';
 export {useTheme} from './useTheme';
 export {useTips} from './useTips';

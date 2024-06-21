@@ -1,40 +1,38 @@
-import {NDKEvent, NDKKind} from '@nostr-dev-kit/ndk';
 import {useInfiniteQuery} from '@tanstack/react-query';
 
-import {useNostrContext} from '../context/NostrContext';
+import {ESCROW_ADDRESSES} from '../constants/contracts';
+import {EventKey} from '../constants/misc';
+import {useChainId} from './useChainId';
+import {useRpcProvider} from './useRpcProvider';
 
-export type UseTipsOptions = {
-  authors?: string[];
-  search?: string;
-};
-
-export const useTips = (options?: UseTipsOptions) => {
-  const {ndk} = useNostrContext();
+export const useTips = () => {
+  const chainId = useChainId();
+  const provider = useRpcProvider();
 
   return useInfiniteQuery({
-    initialPageParam: 0,
-    queryKey: ['tips', options?.authors, options?.search],
-    getNextPageParam: (lastPage: NDKEvent[], allPages, lastPageParam) => {
-      if (!lastPage?.length) return undefined;
+    initialPageParam: undefined as string | undefined,
+    queryKey: ['tips', chainId],
+    getNextPageParam: (
+      lastPage: Awaited<ReturnType<typeof provider.getEvents>>,
+      allPages,
+      lastPageParam,
+    ) => {
+      if (!lastPage?.continuation_token) return undefined;
 
-      const pageParam = lastPage[lastPage.length - 1].created_at;
+      const pageParam = lastPage.continuation_token;
 
       if (!pageParam || pageParam === lastPageParam) return undefined;
       return pageParam;
     },
     queryFn: async ({pageParam}) => {
-      const tips = await ndk.fetchEvents({
-        kinds: [NDKKind.Text],
-        '#type': ['tip'],
-        '#p': [ndk.activeUser.pubkey],
-        authors: options?.authors,
-        search: options?.search,
-        until: pageParam || Math.round(Date.now() / 1000),
-        limit: 20,
+      const tips = await provider.getEvents({
+        address: ESCROW_ADDRESSES[chainId],
+        keys: [[EventKey.DepositEvent, EventKey.TransferEvent]],
+        chunk_size: 1000,
+        continuation_token: pageParam,
       });
 
-      // Only return tips with deposit_id tag
-      return [...tips].filter((tip) => tip.tags.some((tag) => tag[0] === 'deposit_id'));
+      return tips;
     },
     placeholderData: {pages: [], pageParams: []},
   });

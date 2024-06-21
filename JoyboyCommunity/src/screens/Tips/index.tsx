@@ -1,11 +1,11 @@
 import {NDKEvent, NDKKind} from '@nostr-dev-kit/ndk';
 import {useAccount} from '@starknet-react/core';
-import {FlatList, View} from 'react-native';
+import {FlatList, RefreshControl, View} from 'react-native';
 import {byteArray, cairo, CallData, uint256} from 'starknet';
 
 import {Button, Header, Text} from '../../components';
 import {ESCROW_ADDRESSES} from '../../constants/contracts';
-import {Entrypoint} from '../../constants/misc';
+import {Entrypoint, EventKey} from '../../constants/misc';
 import {useNostrContext} from '../../context/NostrContext';
 import {useChainId, useTips, useTransaction, useWalletModal} from '../../hooks';
 
@@ -18,15 +18,9 @@ export const Tips: React.FC = () => {
   const sendTransaction = useTransaction();
   const walletModal = useWalletModal();
 
-  const onClaimPress = async (tip: NDKEvent) => {
+  const onClaimPress = async (depositId: number) => {
     if (!account.address) {
       walletModal.show();
-      return;
-    }
-
-    const depositId = tip.tags.find((tag) => tag[0] === 'deposit_id')?.[1];
-    if (!depositId) {
-      alert("This tip doesn't have a deposit ID");
       return;
     }
 
@@ -76,28 +70,53 @@ export const Tips: React.FC = () => {
     }
   };
 
+  console.log(
+    tips.data.pages
+      .flat()
+      .map((page) => page.events)
+      .flat(),
+  );
+
   return (
-    <View>
+    <View style={{flex: 1}}>
       <Header showLogo />
 
-      <View style={{padding: 16}}>
+      <View style={{flex: 1, padding: 16}}>
         <Text weight="bold" fontSize={18}>
           Tips
         </Text>
 
         <FlatList
-          data={tips.data.pages.flat()}
-          keyExtractor={(item) => item.id}
-          renderItem={({item}) => (
-            <View style={{padding: 12}}>
-              <Text>Tip</Text>
-              <Text>Sender: {item.pubkey}</Text>
-              <Text>Token: {item.tags.find((tag) => tag[0] === 'symbol')[1]}</Text>
-              <Text>Amount: {item.tags.find((tag) => tag[0] === 'amount')[1]}</Text>
+          style={{flex: 1}}
+          data={tips.data.pages
+            .flat()
+            .map((page) => page.events)
+            .flat()}
+          keyExtractor={(item) => item.transaction_hash}
+          renderItem={({item}) => {
+            if (item.keys[0] === EventKey.DepositEvent) {
+              return (
+                <View style={{padding: 12}}>
+                  <Text>Tip</Text>
+                  <Text>Sender: {item.keys[2]}</Text>
+                  <Text>Token: {item.data[2]}</Text>
+                  <Text>Amount: {Number(item.data[0])}</Text>
 
-              <Button onPress={() => onClaimPress(item)}>Claim</Button>
-            </View>
-          )}
+                  <Button onPress={() => onClaimPress(Number(item.keys[1]))}>Claim</Button>
+                </View>
+              );
+            }
+
+            return (
+              <View style={{padding: 12}}>
+                <Text>Tip</Text>
+                <Text>Sender: {item.keys[1]}</Text>
+                <Text>Token: {item.data[2]}</Text>
+                <Text>Amount: {Number(item.data[0])}</Text>
+              </View>
+            );
+          }}
+          refreshControl={<RefreshControl refreshing={tips.isFetching} onRefresh={tips.refetch} />}
         />
       </View>
     </View>

@@ -3,13 +3,13 @@ import {forwardRef, useState} from 'react';
 import {Platform, View} from 'react-native';
 import {Modalize as RNModalize} from 'react-native-modalize';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {CallData, uint256, validateAndParseAddress} from 'starknet';
+import {CallData, uint256} from 'starknet';
 
 import {Avatar, Button, Input, Modalize, Picker, Text} from '../../components';
 import {ESCROW_ADDRESSES} from '../../constants/contracts';
 import {DEFAULT_TIMELOCK, Entrypoint} from '../../constants/misc';
 import {TOKENS, TokenSymbol} from '../../constants/tokens';
-import {useChainId, useSendTip, useStyles, useTransaction, useWalletModal} from '../../hooks';
+import {useChainId, useStyles, useTransaction, useWalletModal} from '../../hooks';
 import stylesheet from './styles';
 
 export const TipToken = forwardRef<RNModalize>((props, ref) => {
@@ -22,10 +22,8 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
   const account = useAccount();
   const walletModal = useWalletModal();
   const sendTransaction = useTransaction();
-  const sendTip = useSendTip();
 
-  const eventId = '9ae37aa68f48645127299e9453eb5d908a0cbb6058ff340d528ed4d37c8994fb';
-  const recipient = 'c90efa19a56bf8ee8624abe09a662ce7ad32840d13ccd9d4a1d59408c6b539a4';
+  const recipient = '855a6c52f5cfdbd3b1293487ce5c5ca6899f9e9417441d9f1bb27697321b8249';
 
   const isActive = !!amount && !!token;
 
@@ -35,7 +33,9 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
       return;
     }
 
-    const amountUint256 = uint256.bnToUint256(Number(amount) * 10 ** 18); // TODO: use fraction
+    const amountUint256 = uint256.bnToUint256(
+      Number(amount) * 10 ** TOKENS[token][chainId].decimals,
+    ); // TODO: use fraction
 
     const approveCallData = CallData.compile([
       ESCROW_ADDRESSES[chainId], // Contract address
@@ -65,25 +65,6 @@ export const TipToken = forwardRef<RNModalize>((props, ref) => {
     });
 
     if (receipt.isSuccess()) {
-      const transferEvent = receipt.events.find((event) =>
-        event.keys.includes('0x1dcde06aabdbca2f80aa51392b345d7549d7757aa855f7e37f5d335ac8243b1'),
-      );
-
-      let depositId: number | undefined = undefined;
-      if (Number(transferEvent.data[4]) === 1) {
-        // Only pass the deposit ID if it's not a direct transfer
-        depositId = Number(transferEvent.data[5]);
-      }
-
-      await sendTip.mutateAsync({
-        content: '',
-        depositId,
-        recipient,
-        eventId,
-        amount: Number(amount),
-        symbol: token,
-      });
-
       alert('Tip sent!');
     } else {
       alert('Failed to send tip');

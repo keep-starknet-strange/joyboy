@@ -14,6 +14,7 @@ import {
 import {Platform} from 'react-native';
 import {constants} from 'starknet';
 
+import {RpcProviderProvider} from '../context/RpcProvider';
 import {WalletQRModal} from '../modules/WalletQRModal';
 
 export const StarknetReactProvider: React.FC<React.PropsWithChildren> = ({children}) => {
@@ -28,29 +29,32 @@ export const StarknetReactProvider: React.FC<React.PropsWithChildren> = ({childr
 
   const argentMobileConnector = useArgentMobileConnector();
 
-  const provider = infuraProvider({apiKey: '98f462b6b2644cadae88bdb695e467bf'});
+  const providers = infuraProvider({apiKey: '98f462b6b2644cadae88bdb695e467bf'});
+  const provider = providers(sepolia);
 
   return (
-    <StarknetConfig
-      chains={[sepolia]}
-      provider={provider}
-      connectors={[
-        argentMobileConnector({
-          chain: constants.NetworkName.SN_SEPOLIA,
-          // TODO: Move this to ENV
-          wcProjectId: 'a9b4b052eb741f95a54c90ac5bdb343e',
-          dappName: 'Joyboy',
-          description: 'Joyboy Starknet dApp',
-          url: 'https://joyboy.community',
-          provider: provider(sepolia),
-        }),
+    <RpcProviderProvider provider={provider}>
+      <StarknetConfig
+        chains={[sepolia]}
+        provider={providers}
+        connectors={[
+          argentMobileConnector({
+            chain: constants.NetworkName.SN_SEPOLIA,
+            // TODO: Move this to ENV
+            wcProjectId: 'a9b4b052eb741f95a54c90ac5bdb343e',
+            dappName: 'Joyboy',
+            description: 'Joyboy Starknet dApp',
+            url: 'https://joyboy.community',
+            provider,
+          }),
 
-        ...(Platform.OS === 'web' ? connectors : []),
-      ]}
-      explorer={voyager}
-    >
-      {children}
-    </StarknetConfig>
+          ...(Platform.OS === 'web' ? connectors : []),
+        ]}
+        explorer={voyager}
+      >
+        {children}
+      </StarknetConfig>
+    </RpcProviderProvider>
   );
 };
 
