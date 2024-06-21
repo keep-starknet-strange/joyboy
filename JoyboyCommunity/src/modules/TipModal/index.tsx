@@ -10,7 +10,14 @@ import {Avatar, Button, Input, Modalize, Picker, Text} from '../../components';
 import {ESCROW_ADDRESSES} from '../../constants/contracts';
 import {DEFAULT_TIMELOCK, Entrypoint} from '../../constants/misc';
 import {TOKENS, TokenSymbol} from '../../constants/tokens';
-import {useChainId, useProfile, useStyles, useTransaction, useWalletModal} from '../../hooks';
+import {
+  useChainId,
+  useProfile,
+  useStyles,
+  useTransaction,
+  useWaitConnection,
+  useWalletModal,
+} from '../../hooks';
 import {decimalsScale} from '../../utils/helpers';
 import stylesheet from './styles';
 
@@ -32,13 +39,16 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(({event}, ref) => {
   const account = useAccount();
   const walletModal = useWalletModal();
   const sendTransaction = useTransaction();
+  const waitConnection = useWaitConnection();
 
   const isActive = !!amount && !!token;
 
   const onTipPress = async () => {
     if (!account.address) {
       walletModal.show();
-      return;
+
+      const result = await waitConnection();
+      if (!result) return;
     }
 
     const amountUint256 = uint256.bnToUint256(

@@ -14,4 +14,5 @@ export {useTipModal} from './useTipModal';
 export {useTips} from './useTips';
 export {useTransaction} from './useTransaction';
 export {useTransactionModal} from './useTransactionModal';
+export {useWaitConnection} from './useWaitConnection';
 export {useWalletModal} from './useWalletModal';
