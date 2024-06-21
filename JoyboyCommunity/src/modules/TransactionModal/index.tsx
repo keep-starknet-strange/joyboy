@@ -47,7 +47,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
       <Text fontSize={16} weight="semiBold">
         Your transaction is {status === 'confirmation' && 'waiting for your confirmation'}
         {status === 'processing' && 'processing'}
-        {status === 'success' && 'proccessed successfully'}
+        {status === 'success' && 'processed successfully'}
         {status === 'failure' && 'failed'}
       </Text>
 
