@@ -69,7 +69,7 @@ export const SaveKeys: React.FC<AuthSaveKeysScreenProps> = ({route}) => {
       </View>
 
       <View style={styles.warning}>
-        <InfoIcon color={theme.colors.primary} />
+        <InfoIcon width={20} height={20} color={theme.colors.primary} />
 
         <Text color="primary" weight="medium" fontSize={13}>
           Your private key is your password, if you lose this key, you will lose access to your
