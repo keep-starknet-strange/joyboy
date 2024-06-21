@@ -14,6 +14,7 @@ import {
   useChainId,
   useProfile,
   useStyles,
+  useTipModal,
   useTransaction,
   useWaitConnection,
   useWalletModal,
@@ -40,6 +41,8 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(({event}, ref) => {
   const walletModal = useWalletModal();
   const sendTransaction = useTransaction();
   const waitConnection = useWaitConnection();
+
+  const {hide, showSuccess, hideSuccess} = useTipModal();
 
   const isActive = !!amount && !!token;
 
@@ -86,6 +89,17 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(({event}, ref) => {
 
     if (receipt?.isSuccess()) {
       alert('Tip sent!');
+      showSuccess({
+        amount: Number(amount),
+        symbol: token,
+        user:
+          (profile?.nip05 && `@${profile.nip05}`) ??
+          profile?.displayName ??
+          profile?.name ??
+          event?.pubkey,
+        hide: hideSuccess,
+      });
+      hide();
     } else {
       alert('Failed to send tip');
     }
