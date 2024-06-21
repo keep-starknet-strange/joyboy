@@ -28,9 +28,14 @@ export default ThemedStyleSheet((theme) => ({
     alignItems: 'center',
   },
   cardContent: {
+    flex: 1,
     flexDirection: 'row',
     gap: 5,
     alignItems: 'center',
+  },
+  cardInfo: {
+    flex: 1,
+    paddingRight: Spacing.small,
   },
 
   title: {

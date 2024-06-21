@@ -89,7 +89,7 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(({event}, ref) => {
             <View style={styles.cardContent}>
               <Avatar size={48} source={require('../../assets/joyboy-logo.png')} />
 
-              <View>
+              <View style={styles.cardInfo}>
                 <Text
                   fontSize={15}
                   color="text"

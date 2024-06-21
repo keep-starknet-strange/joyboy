@@ -40,17 +40,17 @@ export const Wrapper: React.FC = () => {
             <QueryClientProvider client={queryClient}>
               <StarknetProvider>
                 <SafeAreaProvider>
-                  <WalletModalProvider>
-                    <TransactionModalProvider>
-                      <PortalizeProvider>
+                  <PortalizeProvider>
+                    <WalletModalProvider>
+                      <TransactionModalProvider>
                         <TipModalProvider>
                           <RootScreenContainer>
                             <App />
                           </RootScreenContainer>
                         </TipModalProvider>
-                      </PortalizeProvider>
-                    </TransactionModalProvider>
-                  </WalletModalProvider>
+                      </TransactionModalProvider>
+                    </WalletModalProvider>
+                  </PortalizeProvider>
                 </SafeAreaProvider>
               </StarknetProvider>
             </QueryClientProvider>
