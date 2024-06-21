@@ -1,3 +1,5 @@
+import '@walletconnect/react-native-compat';
+
 import Entypo from '@expo/vector-icons/Entypo';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
