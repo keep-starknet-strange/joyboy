@@ -8,7 +8,7 @@ import {Button, Header, Text} from '../../components';
 import {ESCROW_ADDRESSES} from '../../constants/contracts';
 import {Entrypoint} from '../../constants/misc';
 import {useNostrContext} from '../../context/NostrContext';
-import {useChainId, useTips, useTransaction, useWalletModal} from '../../hooks';
+import {useChainId, useTips, useTransaction, useWaitConnection, useWalletModal} from '../../hooks';
 import {parseDepositEvents} from '../../utils/events';
 import {decimalsScale} from '../../utils/helpers';
 
@@ -20,11 +20,14 @@ export const Tips: React.FC = () => {
   const chainId = useChainId();
   const sendTransaction = useTransaction();
   const walletModal = useWalletModal();
+  const waitConnection = useWaitConnection();
 
   const onClaimPress = async (depositId: number) => {
     if (!account.address) {
       walletModal.show();
-      return;
+
+      const result = await waitConnection();
+      if (!result) return;
     }
 
     const kind = NDKKind.Text;
