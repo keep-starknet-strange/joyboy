@@ -1,8 +1,7 @@
-import {useRef} from 'react';
 import {FlatList, Image, Pressable, RefreshControl, View} from 'react-native';
 
 import {AddPostIcon} from '../../assets/icons';
-import {Button, Header, Modalize, Story} from '../../components';
+import {Header, Story} from '../../components';
 import {useRootNotes, useStyles, useTheme} from '../../hooks';
 import {PostCard} from '../../modules/PostCard';
 import {FeedScreenProps} from '../../types';
@@ -10,7 +9,6 @@ import stylesheet from './styles';
 
 export const Feed: React.FC<FeedScreenProps> = ({navigation}) => {
   const theme = useTheme();
-  const tippingRef = useRef<Modalize>(null);
   const styles = useStyles(stylesheet);
   const notes = useRootNotes();
 
@@ -53,8 +51,6 @@ export const Feed: React.FC<FeedScreenProps> = ({navigation}) => {
           <RefreshControl refreshing={notes.isFetching} onRefresh={() => notes.refetch()} />
         }
       />
-
-      <Button onPress={() => tippingRef.current?.open()}>View Tipping Screen</Button>
 
       <Pressable
         style={styles.createPostButton}
