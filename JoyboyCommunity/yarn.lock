@@ -8860,20 +8860,15 @@ stacktrace-parser@^0.1.10:
   dependencies:
     type-fest "^0.7.1"
 
-"starknet-types-07@npm:@starknet-io/types-js@^0.7.7":
-  version "0.7.7"
-  resolved "https://registry.yarnpkg.com/@starknet-io/types-js/-/types-js-0.7.7.tgz#444be5e4e585ec6f599d42d3407280d98b2dfdf8"
-  integrity sha512-WLrpK7LIaIb8Ymxu6KF/6JkGW1sso988DweWu7p5QY/3y7waBIiPvzh27D9bX5KIJNRDyOoOVoHVEKYUYWZ/RQ==
-
-starknet-types@^0.7.1:
+"starknet-types-07@npm:starknet-types@^0.7.2", starknet-types@^0.7.1:
   version "0.7.2"
   resolved "https://registry.yarnpkg.com/starknet-types/-/starknet-types-0.7.2.tgz#2a1be2392e6e568484afabdc1e83411b5105713b"
   integrity sha512-r3JJ0rrK0g3FnVRGcFiLY+9YT5WZgxB4TKBfR44wYGevHtKEM6BM5B+Gn1eou1zV7xEAwz3GpmvLSQTUAzDhsw==
 
-starknet@^6.9.0:
-  version "6.10.0"
-  resolved "https://registry.yarnpkg.com/starknet/-/starknet-6.10.0.tgz#ceaf31ec9c21f78bdc8203241d3ccb7b67dd3ac2"
-  integrity sha512-Zlo39V37dytBcqHlWpyLkEH4lXGRMaH7ST4yDGSGxkgxlJ11xW7P7abpWnB87Qn9SdgEzUEDLyM3TeBVTsdtYA==
+starknet@6.9.0:
+  version "6.9.0"
+  resolved "https://registry.yarnpkg.com/starknet/-/starknet-6.9.0.tgz#34ee94790787749a3d88681b386c2dcfc71e5f54"
+  integrity sha512-8860J7sGUr5UO/BDl3pjCZNUs/vgUM75wVoI93iOYLbTGF0f6MvFZsMOd73tsPKjEcG8V5BTSx6I7seDhQ9osw==
   dependencies:
     "@noble/curves" "~1.4.0"
     "@noble/hashes" "^1.4.0"
@@ -8885,7 +8880,7 @@ starknet@^6.9.0:
     isomorphic-fetch "^3.0.0"
     lossless-json "^4.0.1"
     pako "^2.0.4"
-    starknet-types-07 "npm:@starknet-io/types-js@^0.7.7"
+    starknet-types-07 "npm:starknet-types@^0.7.2"
     ts-mixer "^6.0.3"
     url-join "^4.0.1"
 
