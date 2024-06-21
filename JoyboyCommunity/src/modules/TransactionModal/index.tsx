@@ -1,10 +1,11 @@
 import {useWaitForTransaction} from '@starknet-react/core';
 import {useEffect, useState} from 'react';
-import {ActivityIndicator} from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
 import {GetTransactionReceiptResponse} from 'starknet';
 
 import {Button, Modal, Text} from '../../components';
 import {useTheme} from '../../hooks';
+import styles from './styles';
 
 export type TransactionModalProps = {
   transactionHash?: string;
@@ -50,9 +51,11 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
         {status === 'failure' && 'failed'}
       </Text>
 
-      {(status === 'confirmation' || status === 'processing') && (
-        <ActivityIndicator size="large" color={theme.colors.primary} />
-      )}
+      <View style={styles.indicator}>
+        {(status === 'confirmation' || status === 'processing') && (
+          <ActivityIndicator size="large" color={theme.colors.primary} />
+        )}
+      </View>
 
       <Button onPress={hide}>Close</Button>
     </Modal>

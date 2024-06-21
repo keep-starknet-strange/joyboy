@@ -4,7 +4,7 @@ import {GetTransactionReceiptResponse} from 'starknet';
 import {useTransactionModal} from './useTransactionModal';
 
 export const useTransaction = () => {
-  const {show: showTransactionModal, shown} = useTransactionModal();
+  const {show: showTransactionModal, hide: hideTransactionModal, shown} = useTransactionModal();
   const {writeAsync} = useContractWrite({});
 
   const sendTransaction = async (args: ContractWriteVariables) => {
@@ -12,11 +12,16 @@ export const useTransaction = () => {
 
     showTransactionModal();
 
-    const {transaction_hash} = await writeAsync(args);
+    try {
+      const {transaction_hash} = await writeAsync(args);
 
-    return new Promise<GetTransactionReceiptResponse>((resolve) => {
-      showTransactionModal(transaction_hash, resolve);
-    });
+      return new Promise<GetTransactionReceiptResponse>((resolve) => {
+        showTransactionModal(transaction_hash, resolve);
+      });
+    } catch (error) {
+      hideTransactionModal();
+      return undefined;
+    }
   };
 
   return sendTransaction;

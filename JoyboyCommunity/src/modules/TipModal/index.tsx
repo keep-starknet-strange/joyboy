@@ -84,7 +84,7 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(({event}, ref) => {
       ],
     });
 
-    if (receipt.isSuccess()) {
+    if (receipt?.isSuccess()) {
       alert('Tip sent!');
     } else {
       alert('Failed to send tip');
