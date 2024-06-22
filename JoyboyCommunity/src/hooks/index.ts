@@ -13,6 +13,7 @@ export {useStyles} from './useStyles';
 export {useTheme} from './useTheme';
 export {useTipModal} from './useTipModal';
 export {useTips} from './useTips';
+export {useToast} from './useToast';
 export {useTransaction} from './useTransaction';
 export {useTransactionModal} from './useTransactionModal';
 export {useWaitConnection} from './useWaitConnection';

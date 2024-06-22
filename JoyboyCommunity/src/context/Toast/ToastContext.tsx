@@ -1,0 +1,53 @@
+import {randomUUID} from 'expo-crypto';
+import {createContext, useCallback, useMemo, useState} from 'react';
+import {SafeAreaView} from 'react-native-safe-area-context';
+
+import {ToastProps} from '../../components/Toast';
+import {AnimatedToast} from './AnimatedToast';
+import styles from './styles';
+
+export type ToastConfig = ToastProps & {
+  key: string;
+};
+
+export type ToastContextType = {
+  showToast: (toast: ToastProps) => () => void;
+  hideToast: (key: string) => void;
+};
+
+export const ToastContext = createContext<ToastContextType | null>(null);
+
+export const ToastProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
+  const [toasts, setToasts] = useState<ToastConfig[]>([]);
+
+  const hideToast = useCallback((key: string) => {
+    setToasts((prev) => prev.filter((t) => t.key !== key));
+  }, []);
+
+  const showToast = useCallback(
+    (toast: ToastProps) => {
+      const key = randomUUID();
+
+      setToasts((prev) => [...prev, {...toast, key}]);
+
+      return () => hideToast(key);
+    },
+    [hideToast],
+  );
+
+  const context = useMemo(() => ({showToast, hideToast}), [showToast, hideToast]);
+
+  return (
+    <ToastContext.Provider value={context}>
+      {children}
+
+      {toasts.length > 0 && (
+        <SafeAreaView style={styles.container}>
+          {toasts.map((toast) => (
+            <AnimatedToast key={toast.key} toast={toast} />
+          ))}
+        </SafeAreaView>
+      )}
+    </ToastContext.Provider>
+  );
+};

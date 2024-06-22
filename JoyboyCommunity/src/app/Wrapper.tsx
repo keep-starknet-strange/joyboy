@@ -11,6 +11,7 @@ import {DialogProvider} from '../context/Dialog';
 import {NostrProvider} from '../context/NostrContext';
 import {ThemeProvider} from '../context/Theme';
 import {TipModalProvider} from '../context/TipModal';
+import {ToastProvider} from '../context/Toast/ToastContext';
 import {TransactionModalProvider} from '../context/TransactionModal';
 import {WalletModalProvider} from '../context/WalletModal';
 import {darkModeColors, lightModeColors} from '../tokens/colors';
@@ -42,17 +43,19 @@ export const Wrapper: React.FC = () => {
               <StarknetProvider>
                 <SafeAreaProvider>
                   <PortalizeProvider>
-                    <DialogProvider>
-                      <WalletModalProvider>
-                        <TransactionModalProvider>
-                          <TipModalProvider>
-                            <RootScreenContainer>
-                              <App />
-                            </RootScreenContainer>
-                          </TipModalProvider>
-                        </TransactionModalProvider>
-                      </WalletModalProvider>
-                    </DialogProvider>
+                    <ToastProvider>
+                      <DialogProvider>
+                        <WalletModalProvider>
+                          <TransactionModalProvider>
+                            <TipModalProvider>
+                              <RootScreenContainer>
+                                <App />
+                              </RootScreenContainer>
+                            </TipModalProvider>
+                          </TransactionModalProvider>
+                        </WalletModalProvider>
+                      </DialogProvider>
+                    </ToastProvider>
                   </PortalizeProvider>
                 </SafeAreaProvider>
               </StarknetProvider>
