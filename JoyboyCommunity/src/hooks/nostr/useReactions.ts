@@ -1,20 +1,19 @@
 import {NDKKind} from '@nostr-dev-kit/ndk';
 import {useInfiniteQuery} from '@tanstack/react-query';
 
-import {useNostrContext} from '../context/NostrContext';
+import {useNostrContext} from '../../context/NostrContext';
 
-export type UseReplyNotesOptions = {
-  noteId?: string;
+export type UseReactionsOptions = {
   authors?: string[];
   search?: string;
 };
 
-export const useReplyNotes = (options?: UseReplyNotesOptions) => {
+export const useReactions = (options?: UseReactionsOptions) => {
   const {ndk} = useNostrContext();
 
   return useInfiniteQuery({
     initialPageParam: 0,
-    queryKey: ['replyNotes', options?.noteId, options?.authors, options?.search],
+    queryKey: ['reactions', options?.authors, options?.search],
     getNextPageParam: (lastPage: any, allPages, lastPageParam) => {
       if (!lastPage?.length) return undefined;
 
@@ -25,16 +24,14 @@ export const useReplyNotes = (options?: UseReplyNotesOptions) => {
     },
     queryFn: async ({pageParam}) => {
       const notes = await ndk.fetchEvents({
-        kinds: [NDKKind.Text],
+        kinds: [NDKKind.Reaction],
         authors: options?.authors,
         search: options?.search,
         until: pageParam || Math.round(Date.now() / 1000),
         limit: 20,
-
-        '#e': options?.noteId ? [options.noteId] : undefined,
       });
 
-      return [...notes].filter((note) => note.tags.every((tag) => tag[0] === 'e'));
+      return [...notes];
     },
     placeholderData: {pages: [], pageParams: []},
   });
