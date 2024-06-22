@@ -1,6 +1,6 @@
 import {useContext} from 'react';
 
-import {TipModalContext} from '../context/TipModal';
+import {TipModalContext} from '../../context/TipModal';
 
 export const useTipModal = () => {
   const context = useContext(TipModalContext);

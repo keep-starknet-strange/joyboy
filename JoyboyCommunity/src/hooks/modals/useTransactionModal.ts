@@ -1,6 +1,6 @@
 import {useContext} from 'react';
 
-import {TransactionModalContext, TransactionModalContextType} from '../context/TransactionModal';
+import {TransactionModalContext, TransactionModalContextType} from '../../context/TransactionModal';
 
 export const useTransactionModal = (): TransactionModalContextType => {
   const context = useContext(TransactionModalContext);

@@ -22,6 +22,20 @@ const queryClient = new QueryClient({
   defaultOptions: {queries: {retry: 2}},
 });
 
+const ModalProviders = ({children}: {children: React.ReactNode}) => {
+  return (
+    <ToastProvider>
+      <DialogProvider>
+        <WalletModalProvider>
+          <TransactionModalProvider>
+            <TipModalProvider>{children}</TipModalProvider>
+          </TransactionModalProvider>
+        </WalletModalProvider>
+      </DialogProvider>
+    </ToastProvider>
+  );
+};
+
 export const Wrapper: React.FC = () => {
   const colorScheme = useColorScheme();
 
@@ -43,19 +57,11 @@ export const Wrapper: React.FC = () => {
               <StarknetProvider>
                 <SafeAreaProvider>
                   <PortalizeProvider>
-                    <ToastProvider>
-                      <DialogProvider>
-                        <WalletModalProvider>
-                          <TransactionModalProvider>
-                            <TipModalProvider>
-                              <RootScreenContainer>
-                                <App />
-                              </RootScreenContainer>
-                            </TipModalProvider>
-                          </TransactionModalProvider>
-                        </WalletModalProvider>
-                      </DialogProvider>
-                    </ToastProvider>
+                    <ModalProviders>
+                      <RootScreenContainer>
+                        <App />
+                      </RootScreenContainer>
+                    </ModalProviders>
                   </PortalizeProvider>
                 </SafeAreaProvider>
               </StarknetProvider>
