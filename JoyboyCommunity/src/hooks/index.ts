@@ -1,5 +1,6 @@
 export {useChainId} from './useChainId';
 export {useColor} from './useColor';
+export {useDialog} from './useDialog';
 export {useEditProfile} from './useEditProfile';
 export {useNote} from './useNote';
 export {useProfile} from './useProfile';

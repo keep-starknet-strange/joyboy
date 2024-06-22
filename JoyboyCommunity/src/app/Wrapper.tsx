@@ -7,6 +7,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {ThemeProvider as StyledThemeProvider} from 'styled-components/native';
 
 import {RootScreenContainer} from '../components';
+import {DialogProvider} from '../context/Dialog';
 import {NostrProvider} from '../context/NostrContext';
 import {ThemeProvider} from '../context/Theme';
 import {TipModalProvider} from '../context/TipModal';
@@ -41,15 +42,17 @@ export const Wrapper: React.FC = () => {
               <StarknetProvider>
                 <SafeAreaProvider>
                   <PortalizeProvider>
-                    <WalletModalProvider>
-                      <TransactionModalProvider>
-                        <TipModalProvider>
-                          <RootScreenContainer>
-                            <App />
-                          </RootScreenContainer>
-                        </TipModalProvider>
-                      </TransactionModalProvider>
-                    </WalletModalProvider>
+                    <DialogProvider>
+                      <WalletModalProvider>
+                        <TransactionModalProvider>
+                          <TipModalProvider>
+                            <RootScreenContainer>
+                              <App />
+                            </RootScreenContainer>
+                          </TipModalProvider>
+                        </TransactionModalProvider>
+                      </WalletModalProvider>
+                    </DialogProvider>
                   </PortalizeProvider>
                 </SafeAreaProvider>
               </StarknetProvider>
