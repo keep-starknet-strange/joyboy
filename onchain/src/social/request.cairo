@@ -153,7 +153,8 @@ mod tests {
 
     #[test]
     fn verify_invalid_content() {
-        // valid content = "nprofile1qys8wumn8ghj7un9d3shjtn2daukymme9e3k7mtdw4hxjare9e3k7mgqyzzxqw6wxqyyqqmv4rxgz2l0ej8zgrqfkuupycuatnwcannad6ayqx7zdcy
+        // valid content =
+        // "nprofile1qys8wumn8ghj7un9d3shjtn2daukymme9e3k7mtdw4hxjare9e3k7mgqyzzxqw6wxqyyqqmv4rxgz2l0ej8zgrqfkuupycuatnwcannad6ayqx7zdcy
         // send 1 USDC to nprofile1qqs2sa3zk4a49umxg4lgvlsaenrqaf33ejkffd78f2cgy4xy38h393s2w22mm"
         let r: SocialRequest<ByteArray> = SocialRequest {
             public_key: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256,
@@ -172,7 +173,8 @@ mod tests {
 
     #[test]
     fn verify_invalid_public_key() {
-        // valid public_key = 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256
+        // valid public_key =
+        // 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f5_u256
         let r: SocialRequest<ByteArray> = SocialRequest {
             public_key: 0xa2611fdbcbcc1e43ef809341ddef4a98c15ff6e6410ff7ed0c2b1c4f2a2cc2f4_u256,
             created_at: 1716380267_u64,
