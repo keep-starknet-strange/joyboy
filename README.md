@@ -76,8 +76,8 @@ sequenceDiagram
     deactivate Bob 
 ```
 
-```mermaid
 ##### Tip to a recipient that earlier accepted the tip
+```mermaid
 sequenceDiagram
     actor Alice
     participant transfer as Transfer Contract
