@@ -4,15 +4,25 @@ import {Fraction} from '@uniswap/sdk-core';
 import {FlatList, RefreshControl, View} from 'react-native';
 import {byteArray, cairo, CallData, uint256} from 'starknet';
 
-import {Button, Header, Text} from '../../components';
+import {Button, Divider, Header, Text} from '../../components';
 import {ESCROW_ADDRESSES} from '../../constants/contracts';
 import {Entrypoint} from '../../constants/misc';
 import {useNostrContext} from '../../context/NostrContext';
-import {useChainId, useTips, useTransaction, useWaitConnection, useWalletModal} from '../../hooks';
+import {
+  useChainId,
+  useStyles,
+  useTips,
+  useTransaction,
+  useWaitConnection,
+  useWalletModal,
+} from '../../hooks';
 import {parseDepositEvents} from '../../utils/events';
 import {decimalsScale} from '../../utils/helpers';
+import stylesheet from './styles';
 
 export const Tips: React.FC = () => {
+  const styles = useStyles(stylesheet);
+
   const tips = useTips();
   const {ndk} = useNostrContext();
 
@@ -84,43 +94,62 @@ export const Tips: React.FC = () => {
   );
 
   return (
-    <View style={{flex: 1}}>
+    <View style={styles.container}>
       <Header showLogo />
 
-      <View style={{flex: 1, padding: 16}}>
-        <Text weight="bold" fontSize={18}>
-          Tips
-        </Text>
+      <FlatList
+        contentContainerStyle={styles.flatListContent}
+        data={tips.data.pages
+          .flat()
+          .map((page) => page.events)
+          .flat()}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        keyExtractor={(item) => item.transaction_hash}
+        renderItem={({item}) => {
+          const event = parseDepositEvents(item, chainId);
+          const amount = new Fraction(event.amount, decimalsScale(event.token.decimals)).toFixed(6);
 
-        <FlatList
-          style={{flex: 1}}
-          data={tips.data.pages
-            .flat()
-            .map((page) => page.events)
-            .flat()}
-          keyExtractor={(item) => item.transaction_hash}
-          renderItem={({item}) => {
-            const event = parseDepositEvents(item, chainId);
-            const amount = new Fraction(event.amount, decimalsScale(event.token.decimals)).toFixed(
-              6,
-            );
+          return (
+            <View style={styles.tip}>
+              <View style={styles.tokenInfo}>
+                <View style={styles.token}>
+                  <Text weight="semiBold" fontSize={17}>
+                    {amount}
+                  </Text>
+                  <Text weight="bold" fontSize={17}>
+                    {event.token.symbol}
+                  </Text>
+                </View>
 
-            return (
-              <View style={{padding: 12}}>
-                <Text>Tip</Text>
-                <Text>Sender: {event.sender}</Text>
-                <Text>Token: {event.token.symbol}</Text>
-                <Text>Amount: {amount}</Text>
-
-                {event.depositId ? (
-                  <Button onPress={() => onClaimPress(event.depositId)}>Claim</Button>
-                ) : null}
+                <View>
+                  {event.depositId ? (
+                    <Button small variant="primary" onPress={() => onClaimPress(event.depositId)}>
+                      Claim
+                    </Button>
+                  ) : null}
+                </View>
               </View>
-            );
-          }}
-          refreshControl={<RefreshControl refreshing={tips.isFetching} onRefresh={tips.refetch} />}
-        />
-      </View>
+
+              <Divider direction="horizontal" />
+
+              <View style={styles.senderInfo}>
+                <View style={styles.sender}>
+                  <Text weight="semiBold" color="text" numberOfLines={1} ellipsizeMode="middle">
+                    {event.sender}
+                  </Text>
+                </View>
+
+                {/* <View>
+                  <Text weight="semiBold" color="textSecondary" fontSize={11}>
+                    24/06/2024
+                  </Text>
+                </View> */}
+              </View>
+            </View>
+          );
+        }}
+        refreshControl={<RefreshControl refreshing={tips.isFetching} onRefresh={tips.refetch} />}
+      />
     </View>
   );
 };
