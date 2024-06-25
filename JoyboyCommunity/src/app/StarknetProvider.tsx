@@ -1,8 +1,8 @@
 import {sepolia} from '@starknet-react/chains';
 import {
   argent,
+  blastProvider,
   braavos,
-  infuraProvider,
   StarknetConfig,
   useInjectedConnectors,
   voyager,
@@ -29,7 +29,7 @@ export const StarknetReactProvider: React.FC<React.PropsWithChildren> = ({childr
 
   const argentMobileConnector = useArgentMobileConnector();
 
-  const providers = infuraProvider({apiKey: '98f462b6b2644cadae88bdb695e467bf'});
+  const providers = blastProvider({apiKey: '798a58fa-a3d6-4e14-869c-a4c3494c10b4'});
   const provider = providers(sepolia);
 
   return (
