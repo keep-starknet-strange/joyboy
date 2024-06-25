@@ -19,7 +19,7 @@ export const Notification: React.FC<NotificationProps> = ({post}) => {
       <View style={{flex: 1}}>
         <Image
           style={{width: 44, height: 44}}
-          source={require('../../../../assets/joyboy-logo.png')}
+          source={require('../../../assets/joyboy-logo.png')}
         />
       </View>
 

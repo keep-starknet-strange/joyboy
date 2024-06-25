@@ -26,7 +26,7 @@ export const Avatar: React.FC<AvatarProps> = ({size, source}) => {
             width="96"
             height="96"
             preserveAspectRatio="xMinYMin slice"
-            xlinkHref={source}
+            href={source}
           />
         </Pattern>
       </Defs>
