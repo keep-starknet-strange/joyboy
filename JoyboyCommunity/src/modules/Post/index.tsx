@@ -101,10 +101,7 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
       <View style={styles.info}>
         <View style={styles.infoUser}>
           <Pressable onPress={() => handleProfilePress(event?.pubkey)}>
-            <Avatar
-              size={asComment ? 40 : 50}
-              source={require('../../../assets/joyboy-logo.png')}
-            />
+            <Avatar size={asComment ? 40 : 50} source={require('../../assets/joyboy-logo.png')} />
           </Pressable>
 
           <Pressable style={styles.infoProfile} onPress={handleNavigateToPostDetails}>
