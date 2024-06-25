@@ -1,7 +1,19 @@
 use starknet::{get_caller_address, get_contract_address, get_tx_info, ContractAddress};
 use super::request::{SocialRequest, SocialRequestImpl, SocialRequestTrait, Encode, Signature};
+use core::to_byte_array::FormatAsByteArray;
+use core::fmt::Display;
 
 pub type DepositId = felt252;
+
+// TODO add starknet_recipient as a Contract address
+// Find a way to format ContractAddress
+#[derive(Clone, Debug, Drop, Serde)]
+pub struct ClaimContent {
+    pub deposit_id: DepositId,
+    pub starknet_recipient: felt252
+    // pub starknet_recipient: ContractAddress
+}
+
 
 impl DepositIdEncodeImpl of Encode<DepositId> {
     fn encode(self: @DepositId) -> @ByteArray {
@@ -9,12 +21,22 @@ impl DepositIdEncodeImpl of Encode<DepositId> {
     }
 }
 
+// TODO: Find a way to format ContractAddress
+// Implement Display trait for Contract address
+impl ClaimContentEncodeImpl of Encode<ClaimContent> {
+    fn encode(self: @ClaimContent) -> @ByteArray {
+        // let felt_recipient:felt252=self.starknet_recipient.format_as_byte_array(16);
+        @format!("claim {} to {:?}", self.deposit_id, self.starknet_recipient)
+    }
+}
+
+
 type NostrPublicKey = u256;
 
 #[derive(Copy, Debug, Drop, Serde)]
 pub enum DepositResult {
     Transfer: ContractAddress,
-    Deposit: DepositId,
+    Deposit: DepositId
 }
 
 #[derive(Copy, Debug, Drop, PartialEq, starknet::Store, Serde)]
@@ -38,6 +60,7 @@ pub trait IDepositEscrow<TContractState> {
     ) -> DepositResult;
     fn cancel(ref self: TContractState, deposit_id: DepositId);
     fn claim(ref self: TContractState, request: SocialRequest<DepositId>);
+    fn claim_to(ref self: TContractState, request: SocialRequest<ClaimContent>, starknet_recipient:ContractAddress);
 }
 
 #[starknet::contract]
@@ -55,6 +78,7 @@ pub mod DepositEscrow {
 
     use super::{
         Deposit, DepositId, DepositResult, IDepositEscrow, NostrPublicKey, DepositIdEncodeImpl,
+        ClaimContent
     };
 
     impl DepositDefault of Default<Deposit> {
@@ -252,6 +276,35 @@ pub mod DepositEscrow {
                     }
                 );
         }
+
+        
+        fn claim_to(ref self: ContractState, request: SocialRequest<ClaimContent>, starknet_recipient:ContractAddress) {
+            let deposit_content = request.content.clone();
+            let deposit_id = deposit_content.deposit_id;
+            let starket_content_recipient:ContractAddress = deposit_content.starknet_recipient.try_into().unwrap();
+            let deposit = self.deposits.read(deposit_id);
+            assert!(deposit != Default::default(), "can't find deposit");
+            assert!(request.public_key == deposit.recipient, "invalid recipient");
+            assert!(starket_content_recipient == starknet_recipient, "invalid strk recipient");
+            request.verify().expect('can\'t verify signature');
+
+            let erc20 = IERC20Dispatcher { contract_address: deposit.token_address };
+            erc20.transfer(starknet_recipient, deposit.amount);
+
+            self.nostr_to_sn.write(request.public_key,starknet_recipient);
+            self.deposits.write(deposit_id, Default::default());
+            self
+                .emit(
+                    ClaimEvent {
+                        deposit_id,
+                        sender: get_caller_address(),
+                        nostr_recipient: request.public_key,
+                        amount: deposit.amount,
+                        starknet_recipient: get_caller_address(),
+                        token_address: deposit.token_address
+                    }
+                );
+        }
     }
 }
 
@@ -273,7 +326,7 @@ mod tests {
 
     use super::super::request::{SocialRequest, Signature, Encode};
     use super::super::transfer::Transfer;
-    use super::{Deposit, DepositId, DepositResult, IDepositEscrow, NostrPublicKey};
+    use super::{Deposit, DepositId, DepositResult, IDepositEscrow, NostrPublicKey, ClaimContent};
     use super::{IDepositEscrowDispatcher, IDepositEscrowDispatcherTrait};
 
     fn declare_escrow() -> ContractClass {
@@ -319,7 +372,8 @@ mod tests {
         NostrPublicKey,
         ContractAddress,
         IERC20Dispatcher,
-        IDepositEscrowDispatcher
+        IDepositEscrowDispatcher,
+        SocialRequest<ClaimContent>
     ) {
         // recipient private key: 59a772c0e643e4e2be5b8bac31b2ab5c5582b03a84444c81d6e2eec34a5e6c35
         // just for testing, do not use for anything else
@@ -331,6 +385,8 @@ mod tests {
         let erc20 = deploy_erc20(erc20_class, 'USDC token', 'USDC', 100, sender_address);
 
         let escrow = deploy_escrow(escrow_class);
+
+        let recipient_address_user: ContractAddress = 678.try_into().unwrap();
 
         // for test data see: https://replit.com/@maciejka/WanIndolentKilobyte-2
 
@@ -346,7 +402,28 @@ mod tests {
             }
         };
 
-        (request, recipient_public_key, sender_address, erc20, escrow)
+
+        // TODO change with the correct signature with the content deposit id and strk recipient
+        // for test data see claim to: https://replit.com/@msghais135/WanIndolentKilobyte-claimto#index.js
+       
+        let claim_content = ClaimContent {
+            deposit_id:1,
+            starknet_recipient:recipient_address_user.try_into().unwrap()
+        };
+
+        let request_claim_to = SocialRequest {
+            public_key: recipient_public_key,
+            created_at: 1716285235_u64,
+            kind: 1_u16,
+            tags: "[]",
+            content: claim_content,
+            sig: Signature {
+                r: 0x907f347d751aa7866221b29efe316b362e5f7fbc5f8c9adf9cf137ee70a56b63_u256,
+                s: 0xe3212c02316ab9bc122e05c105acb1eb9e09992a4d23abb2bc2b54af2e8283a7_u256,
+            }
+        };
+
+        (request, recipient_public_key, sender_address, erc20, escrow, request_claim_to)
     }
 
     fn request_fixture() -> (
@@ -354,7 +431,8 @@ mod tests {
         NostrPublicKey,
         ContractAddress,
         IERC20Dispatcher,
-        IDepositEscrowDispatcher
+        IDepositEscrowDispatcher,
+        SocialRequest<ClaimContent>
     ) {
         let erc20_class = declare_erc20();
         let escrow_class = declare_escrow();
@@ -363,7 +441,7 @@ mod tests {
 
     #[test]
     fn deposit_claim() {
-        let (request, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
+        let (request, recipient_nostr_key, sender_address, erc20, escrow, _) = request_fixture();
         let recipient_address: ContractAddress = 345.try_into().unwrap();
         let amount = 100_u256;
 
@@ -379,9 +457,29 @@ mod tests {
     }
 
     #[test]
+    fn deposit_claim_to() {
+        let (request, recipient_nostr_key, sender_address, erc20, escrow, request_claim_to) = request_fixture();
+        let recipient_address: ContractAddress = 345.try_into().unwrap();
+        let recipient_address_user: ContractAddress = 678.try_into().unwrap();
+        let amount = 100_u256;
+
+    
+
+        cheat_caller_address_global(sender_address);
+        erc20.approve(escrow.contract_address, amount);
+        stop_cheat_caller_address_global();
+
+        start_cheat_caller_address(escrow.contract_address, sender_address);
+        escrow.deposit(amount, erc20.contract_address, recipient_nostr_key, 0_u64);
+
+        start_cheat_caller_address(escrow.contract_address, recipient_address);
+        escrow.claim_to(request_claim_to, recipient_address_user);
+    }
+
+    #[test]
     #[should_panic(expected: 'can\'t verify signature')]
     fn claim_incorrect_signature() {
-        let (request, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
+        let (request, recipient_nostr_key, sender_address, erc20, escrow, _) = request_fixture();
         let recipient_address: ContractAddress = 345.try_into().unwrap();
         let amount = 100_u256;
 
@@ -406,8 +504,67 @@ mod tests {
     }
 
     #[test]
+    #[should_panic(expected: 'can\'t verify signature')]
+    fn claim_incorrect_signature_claim_to() {
+        let (request, recipient_nostr_key, sender_address, erc20, escrow, request_claim_to) = request_fixture();
+        let recipient_address: ContractAddress = 345.try_into().unwrap();
+        let recipient_address_user: ContractAddress = 678.try_into().unwrap();
+
+        let amount = 100_u256;
+
+        cheat_caller_address_global(sender_address);
+        erc20.approve(escrow.contract_address, amount);
+        stop_cheat_caller_address_global();
+
+        start_cheat_caller_address(escrow.contract_address, sender_address);
+        escrow.deposit(amount, erc20.contract_address, recipient_nostr_key, 0_u64);
+
+        start_cheat_caller_address(escrow.contract_address, recipient_address);
+
+        let request = SocialRequest {
+            sig: Signature {
+                r: 0x2570a9a0c92c180bd4ac826c887e63844b043e3b65da71a857d2aa29e7cd3a4e_u256,
+                s: 0x1c0c0a8b7a8330b6b8915985c9cd498a407587213c2e7608e7479b4ef966605f_u256,
+            },
+            ..request_claim_to,
+        };
+
+        escrow.claim_to(request, recipient_address_user);
+    }
+
+    
+    #[test]
+    #[should_panic(expected: 'invalid strk recipient')]
+    fn claim_incorrect_signature_claim_to_incorrect_recipient() {
+        let (request, recipient_nostr_key, sender_address, erc20, escrow, request_claim_to) = request_fixture();
+        let recipient_address: ContractAddress = 345.try_into().unwrap();
+        let recipient_address_user: ContractAddress = 789.try_into().unwrap();
+
+        let amount = 100_u256;
+
+        cheat_caller_address_global(sender_address);
+        erc20.approve(escrow.contract_address, amount);
+        stop_cheat_caller_address_global();
+
+        start_cheat_caller_address(escrow.contract_address, sender_address);
+        escrow.deposit(amount, erc20.contract_address, recipient_nostr_key, 0_u64);
+
+        start_cheat_caller_address(escrow.contract_address, recipient_address);
+
+        let request = SocialRequest {
+            sig: Signature {
+                r: 0x2570a9a0c92c180bd4ac826c887e63844b043e3b65da71a857d2aa29e7cd3a4e_u256,
+                s: 0x1c0c0a8b7a8330b6b8915985c9cd498a407587213c2e7608e7479b4ef966605f_u256,
+            },
+            ..request_claim_to,
+        };
+
+        escrow.claim_to(request, recipient_address_user);
+    }
+
+    #[test]
     fn deposit_cancel_no_timelock() {
-        let (_, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
+        let (_, recipient_nostr_key, sender_address, erc20, escrow, _) = request_fixture();
 
         let amount = 100_u256;
 
@@ -429,7 +586,7 @@ mod tests {
     #[test]
     #[should_panic(expected: "can't cancel before timelock expiration")]
     fn deposit_cancel_before_timelock() {
-        let (_, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
+        let (_, recipient_nostr_key, sender_address, erc20, escrow, _) = request_fixture();
 
         let amount = 100_u256;
 
@@ -448,7 +605,7 @@ mod tests {
 
     #[test]
     fn deposit_cancel_timelock() {
-        let (_, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
+        let (_, recipient_nostr_key, sender_address, erc20, escrow, _) = request_fixture();
 
         let amount = 100_u256;
 
@@ -471,7 +628,7 @@ mod tests {
     #[test]
     #[should_panic(expected: "not authorized")]
     fn not_authorized_cancel() {
-        let (_, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
+        let (_, recipient_nostr_key, sender_address, erc20, escrow, _) = request_fixture();
 
         let amount = 100_u256;
 
@@ -490,7 +647,7 @@ mod tests {
     }
 
     fn deposit_claim_deposit() {
-        let (request, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
+        let (request, recipient_nostr_key, sender_address, erc20, escrow, _) = request_fixture();
         let recipient_address: ContractAddress = 345.try_into().unwrap();
         let amount = 100_u256;
 
