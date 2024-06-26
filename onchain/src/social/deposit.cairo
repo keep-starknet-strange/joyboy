@@ -8,10 +8,9 @@ pub type DepositId = felt252;
 // TODO add starknet_recipient as a Contract address
 // Find a way to format ContractAddress
 #[derive(Clone, Debug, Drop, Serde)]
-pub struct ClaimContent {
+pub struct ClaimToContent {
     pub deposit_id: DepositId,
-    pub starknet_recipient: felt252
-// pub starknet_recipient: ContractAddress
+    pub starknet_recipient: ContractAddress
 }
 
 
@@ -22,10 +21,8 @@ impl DepositIdEncodeImpl of Encode<DepositId> {
 }
 
 // TODO: Find a way to format ContractAddress
-// Implement Display trait for Contract address
-impl ClaimContentEncodeImpl of Encode<ClaimContent> {
-    fn encode(self: @ClaimContent) -> @ByteArray {
-        // let felt_recipient:felt252=self.starknet_recipient.format_as_byte_array(16);
+impl ClaimToContentEncodeImpl of Encode<ClaimToContent> {
+    fn encode(self: @ClaimToContent) -> @ByteArray {
         @format!("claim {} to {:?}", self.deposit_id, self.starknet_recipient)
     }
 }
@@ -60,7 +57,7 @@ pub trait IDepositEscrow<TContractState> {
     ) -> DepositResult;
     fn cancel(ref self: TContractState, deposit_id: DepositId);
     fn claim(ref self: TContractState, request: SocialRequest<DepositId>);
-    fn claim_to(ref self: TContractState, request: SocialRequest<ClaimContent>);
+    fn claim_to(ref self: TContractState, request: SocialRequest<ClaimToContent>);
 }
 
 #[starknet::contract]
@@ -78,7 +75,7 @@ pub mod DepositEscrow {
 
     use super::{
         Deposit, DepositId, DepositResult, IDepositEscrow, NostrPublicKey, DepositIdEncodeImpl,
-        ClaimContent
+        ClaimToContent
     };
 
     impl DepositDefault of Default<Deposit> {
@@ -278,15 +275,10 @@ pub mod DepositEscrow {
         }
 
 
-        fn claim_to(ref self: ContractState, request: SocialRequest<ClaimContent>,// starknet_recipient:ContractAddress // Maybe not needed
-
-        ) {
+        fn claim_to(ref self: ContractState, request: SocialRequest<ClaimToContent>) {
             let deposit_content = request.content.clone();
             let deposit_id = deposit_content.deposit_id;
-            let starknet_recipient: ContractAddress = deposit_content
-                .starknet_recipient
-                .try_into()
-                .unwrap();
+            let starknet_recipient: ContractAddress = deposit_content.starknet_recipient;
             let deposit = self.deposits.read(deposit_id);
             assert!(deposit != Default::default(), "can't find deposit");
             assert!(request.public_key == deposit.recipient, "invalid recipient");
@@ -331,7 +323,7 @@ mod tests {
 
     use super::super::request::{SocialRequest, Signature, Encode};
     use super::super::transfer::Transfer;
-    use super::{Deposit, DepositId, DepositResult, IDepositEscrow, NostrPublicKey, ClaimContent};
+    use super::{Deposit, DepositId, DepositResult, IDepositEscrow, NostrPublicKey, ClaimToContent};
     use super::{IDepositEscrowDispatcher, IDepositEscrowDispatcherTrait};
 
     fn declare_escrow() -> ContractClass {
@@ -378,7 +370,7 @@ mod tests {
         ContractAddress,
         IERC20Dispatcher,
         IDepositEscrowDispatcher,
-        SocialRequest<ClaimContent>
+        SocialRequest<ClaimToContent>
     ) {
         // recipient private key: 59a772c0e643e4e2be5b8bac31b2ab5c5582b03a84444c81d6e2eec34a5e6c35
         // just for testing, do not use for anything else
@@ -412,7 +404,7 @@ mod tests {
         // TODO change with the correct signature with the content deposit id and strk recipient
         // for test data see claim to: https://replit.com/@msghais135/WanIndolentKilobyte-claimto#index.js
 
-        let claim_content = ClaimContent {
+        let claim_content = ClaimToContent {
             deposit_id: 1, starknet_recipient: recipient_address_user.try_into().unwrap()
         };
 
@@ -443,7 +435,7 @@ mod tests {
         ContractAddress,
         IERC20Dispatcher,
         IDepositEscrowDispatcher,
-        SocialRequest<ClaimContent>
+        SocialRequest<ClaimToContent>
     ) {
         let erc20_class = declare_erc20();
         let escrow_class = declare_escrow();
