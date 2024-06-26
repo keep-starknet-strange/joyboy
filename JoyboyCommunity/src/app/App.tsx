@@ -30,8 +30,6 @@ export default function App() {
           'Poppins-SemiBold': require('../../assets/fonts/Poppins/Poppins-SemiBold.ttf'),
           'Poppins-Bold': require('../../assets/fonts/Poppins/Poppins-Bold.ttf'),
         });
-
-        await ndk.connect();
       } catch (e) {
         console.warn(e);
       } finally {

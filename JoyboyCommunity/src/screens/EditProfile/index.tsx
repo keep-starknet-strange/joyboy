@@ -42,7 +42,7 @@ export const EditProfile: React.FC<EditProfileScreenProps> = () => {
   const editProfile = useEditProfile();
   const queryClient = useQueryClient();
 
-  if (profile.isLoading || !profile.data) return null;
+  if (profile.isLoading) return null;
 
   const onPublicKeyCopyPress = async () => {
     await Clipboard.setStringAsync(publicKey);
@@ -79,12 +79,12 @@ export const EditProfile: React.FC<EditProfileScreenProps> = () => {
   };
 
   const initialFormValues: FormValues = {
-    username: profile.data.nip05,
-    displayName: profile.data.displayName ?? profile.data.name,
-    bio: profile.data.about,
-    telegram: profile.data.telegram?.toString(),
-    github: profile.data.github?.toString(),
-    twitter: profile.data.twitter?.toString(),
+    username: profile.data?.nip05,
+    displayName: profile.data?.displayName ?? profile.data?.name,
+    bio: profile.data?.about,
+    telegram: profile.data?.telegram?.toString(),
+    github: profile.data?.github?.toString(),
+    twitter: profile.data?.twitter?.toString(),
   };
 
   const onSubmitPress = () => {
@@ -121,11 +121,11 @@ export const EditProfile: React.FC<EditProfileScreenProps> = () => {
         onCoverPhotoUpload={onCoverPhotoUpload}
         profilePhoto={
           (profilePhoto?.uri && {uri: profilePhoto.uri}) ||
-          (profile.data.image && {uri: profile.data.image})
+          (profile.data?.image && {uri: profile.data?.image})
         }
         coverPhoto={
           (coverPhoto?.uri && {uri: coverPhoto.uri}) ||
-          (profile.data.banner && {uri: profile.data.banner})
+          (profile.data?.banner && {uri: profile.data?.banner})
         }
         buttons={
           <Button variant="secondary" small onPress={onSubmitPress}>
