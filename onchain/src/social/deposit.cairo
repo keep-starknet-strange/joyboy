@@ -20,7 +20,11 @@ impl DepositIdEncodeImpl of Encode<DepositId> {
 
 impl ClaimToContentEncodeImpl of Encode<ClaimToContent> {
     fn encode(self: @ClaimToContent) -> @ByteArray {
-        let recipient_address_user_felt:felt252=self.starknet_recipient.clone().try_into().unwrap();
+        let recipient_address_user_felt: felt252 = self
+            .starknet_recipient
+            .clone()
+            .try_into()
+            .unwrap();
         @format!("claim {} to {:?}", self.deposit_id, recipient_address_user_felt)
     }
 }
@@ -277,7 +281,10 @@ pub mod DepositEscrow {
             let deposit_content = request.content.clone();
             let deposit_id = deposit_content.deposit_id;
             // let starknet_recipient: ContractAddress = deposit_content.starknet_recipient;
-            let starknet_recipient: ContractAddress = deposit_content.starknet_recipient.try_into().unwrap();
+            let starknet_recipient: ContractAddress = deposit_content
+                .starknet_recipient
+                .try_into()
+                .unwrap();
             let deposit = self.deposits.read(deposit_id);
             assert!(deposit != Default::default(), "can't find deposit");
             assert!(request.public_key == deposit.recipient, "invalid recipient");
@@ -384,7 +391,7 @@ mod tests {
 
         let recipient_address_user: ContractAddress = 678.try_into().unwrap();
 
-        let recipient_address_user_felt:felt252=recipient_address_user.try_into().unwrap();
+        let recipient_address_user_felt: felt252 = recipient_address_user.try_into().unwrap();
 
         // TODO how format it to use this starknet address on the test data Nostr event
         // for test data see: https://replit.com/@maciejka/WanIndolentKilobyte-2
@@ -405,8 +412,7 @@ mod tests {
         // for test data see claim to: https://replit.com/@msghais135/WanIndolentKilobyte-claimto#index.js
 
         let claim_content = ClaimToContent {
-            deposit_id: 1, 
-            starknet_recipient: recipient_address_user
+            deposit_id: 1, starknet_recipient: recipient_address_user
         };
 
         // @TODO format the content and get the correct signature
@@ -417,10 +423,10 @@ mod tests {
             tags: "[]",
             content: claim_content,
             sig: Signature {
-                r:0x3d9628eeb7ff7333bdea8e48e2371279363a4aac5c8da19144e909d9744ebc82_u256,
-                s:0xe9f41be1e8f1719ab1da3b69c74cad3045fcc06b0020d989eb8b42f1e88574da_u256
-                // r: 0xf61fa9ab434b047a13a6b679fa8b2152ed20f6859bf566987b2e6430dae8a0c2_u256,
-                // s: 0xafdfd907640f7d17805541429e7da3633ae4a39d9ad091edf283e9500a689c81_u256,
+                r: 0x3d9628eeb7ff7333bdea8e48e2371279363a4aac5c8da19144e909d9744ebc82_u256,
+                s: 0xe9f41be1e8f1719ab1da3b69c74cad3045fcc06b0020d989eb8b42f1e88574da_u256
+            // r: 0xf61fa9ab434b047a13a6b679fa8b2152ed20f6859bf566987b2e6430dae8a0c2_u256,
+            // s: 0xafdfd907640f7d17805541429e7da3633ae4a39d9ad091edf283e9500a689c81_u256,
             }
         };
 
