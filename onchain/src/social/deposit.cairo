@@ -5,8 +5,6 @@ use super::request::{SocialRequest, SocialRequestImpl, SocialRequestTrait, Encod
 
 pub type DepositId = felt252;
 
-// TODO add starknet_recipient as a Contract address
-// Find a way to format ContractAddress
 #[derive(Clone, Debug, Drop, Serde)]
 pub struct ClaimToContent {
     pub deposit_id: DepositId,
@@ -20,10 +18,10 @@ impl DepositIdEncodeImpl of Encode<DepositId> {
     }
 }
 
-// TODO: Find a way to format ContractAddress
 impl ClaimToContentEncodeImpl of Encode<ClaimToContent> {
     fn encode(self: @ClaimToContent) -> @ByteArray {
-        @format!("claim {} to {:?}", self.deposit_id, self.starknet_recipient)
+        let recipient_address_user_felt:felt252=self.starknet_recipient.clone().try_into().unwrap();
+        @format!("claim {} to {:?}", self.deposit_id, recipient_address_user_felt)
     }
 }
 
@@ -278,7 +276,8 @@ pub mod DepositEscrow {
         fn claim_to(ref self: ContractState, request: SocialRequest<ClaimToContent>) {
             let deposit_content = request.content.clone();
             let deposit_id = deposit_content.deposit_id;
-            let starknet_recipient: ContractAddress = deposit_content.starknet_recipient;
+            // let starknet_recipient: ContractAddress = deposit_content.starknet_recipient;
+            let starknet_recipient: ContractAddress = deposit_content.starknet_recipient.try_into().unwrap();
             let deposit = self.deposits.read(deposit_id);
             assert!(deposit != Default::default(), "can't find deposit");
             assert!(request.public_key == deposit.recipient, "invalid recipient");
@@ -385,8 +384,9 @@ mod tests {
 
         let recipient_address_user: ContractAddress = 678.try_into().unwrap();
 
+        let recipient_address_user_felt:felt252=recipient_address_user.try_into().unwrap();
+
         // TODO how format it to use this starknet address on the test data Nostr event
-        println!("recipient address user {:?}", recipient_address_user);
         // for test data see: https://replit.com/@maciejka/WanIndolentKilobyte-2
 
         let request = SocialRequest {
@@ -405,7 +405,8 @@ mod tests {
         // for test data see claim to: https://replit.com/@msghais135/WanIndolentKilobyte-claimto#index.js
 
         let claim_content = ClaimToContent {
-            deposit_id: 1, starknet_recipient: recipient_address_user.try_into().unwrap()
+            deposit_id: 1, 
+            starknet_recipient: recipient_address_user
         };
 
         // @TODO format the content and get the correct signature
@@ -416,13 +417,10 @@ mod tests {
             tags: "[]",
             content: claim_content,
             sig: Signature {
-                r: 0xdc5921d5b29513a54275c5a20c45ca9019d9f7d2aeb86a0ed310085cb09700e8_u256,
-                s: 0x8cade98ff9bd616d7ca44eb65dc2076f8a7ced12342a63e3ae6cb5a8703b3e02_u256,
-                // r: 0x99e90b00b5723381d282c21c5f8194073b07a1185a4cf434c97a3a54ae4c6af0_u256,
-                // s: 0x2b7de814895c58d4ae7c1a68e808468fd5f6bdd141e60b0f9627bb09d4e9f0e8_u256,
-            // r:0x69cd096c4abe8dda207c38926fbd01b3cf082d3b1426d5f5102b77df50af6b7e_u256,
-            // s:0x2728e70fa797fa227c34ec34025a30cdef0187846fd8ebcaecd26a03ca6f90b1_u256,
-
+                r:0x3d9628eeb7ff7333bdea8e48e2371279363a4aac5c8da19144e909d9744ebc82_u256,
+                s:0xe9f41be1e8f1719ab1da3b69c74cad3045fcc06b0020d989eb8b42f1e88574da_u256
+                // r: 0xf61fa9ab434b047a13a6b679fa8b2152ed20f6859bf566987b2e6430dae8a0c2_u256,
+                // s: 0xafdfd907640f7d17805541429e7da3633ae4a39d9ad091edf283e9500a689c81_u256,
             }
         };
 
