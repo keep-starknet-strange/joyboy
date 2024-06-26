@@ -12,7 +12,6 @@ type AddressId = felt252;
 
 #[derive(Clone, Debug, Drop, Serde)]
 pub struct LinkedStarknetAddress {
-    pub nostr_address: NostrPublicKey,
     pub starknet_address: ContractAddress
 }
 
@@ -32,10 +31,7 @@ impl LinkedStarknetAddressEncodeImpl of Encode<LinkedStarknetAddress> {
             .try_into()
             .unwrap();
 
-        // let nostr_pubkey: felt252 = self.nostr_address.into();
-        // let nostr_pubkey: felt252 = self.nostr_address.try_into().unwrap();
-
-        @format!("link {:?} to {:?}", self.nostr_address, recipient_address_user_felt)
+        @format!("link to {:?}", recipient_address_user_felt)
     }
 }
 
@@ -165,7 +161,8 @@ pub mod Namespace {
             ref self: ContractState, recipient: ContractAddress, role: felt252, is_enable: bool
         ) {
             self.accesscontrol.assert_only_role(ADMIN_ROLE);
-            assert!(role == ADMIN_ROLE || role == OPERATOR_ROLE, "role not enable");
+            assert!(role == ADMIN_ROLE || role == OPERATOR_ROLE// Think and Add others roles needed on the protocol
+            , "role not enable");
             if is_enable {
                 self.accesscontrol._grant_role(role, recipient);
             } else {
@@ -179,6 +176,8 @@ pub mod Namespace {
         ) -> ContractAddress {
             self.nostr_to_sn.read(nostr_public_key)
         }
+
+        // Create list getter
 
         // Protocol request with OPERATOR_ROLE
         // Call by Deposit Escrow at this stage in claim or deposit functions
@@ -203,7 +202,8 @@ pub mod Namespace {
             ref self: ContractState, request: SocialRequest<LinkedStarknetAddress>
         ) {
             let profile_default = request.content.clone();
-            let starknet_address = profile_default.starknet_address;
+            let starknet_address: ContractAddress = profile_default.starknet_address;
+
             assert!(starknet_address == get_caller_address(), "invalid caller");
             request.verify().expect('can\'t verify signature');
             self.nostr_to_sn.write(request.public_key, profile_default.starknet_address);
@@ -307,7 +307,6 @@ mod tests {
         // for test data see claim to:   https://replit.com/@msghais135/WanIndolentKilobyte-claimto#linked_to.js
 
         let linked_wallet = LinkedStarknetAddress {
-            nostr_address: recipient_public_key.try_into().unwrap(),
             starknet_address: sender_address.try_into().unwrap()
         };
 
@@ -319,13 +318,12 @@ mod tests {
             tags: "[]",
             content: linked_wallet.clone(),
             sig: Signature {
-                r: 0x6b9c2a66f8831d66c8946a4853e5d5d2c0c15d88fcaff7c048a1a9a85969d827_u256,
-                s: 0x83842fdc55429ae2181fadd12ec9d03335b44508de77ec2f423c167835c4824d_u256
+                r: 0x5343008a0105eca5c98de96f6259ea27c31ce6ec1c843e32b1471d32dde13a4f_u256,
+                s: 0xbbcb4dd31c569fcb6d01c789181aa957f29ce652054a2aded6b37d86a694c76b_u256
             }
         };
 
         let linked_wallet_not_caller = LinkedStarknetAddress {
-            nostr_address: recipient_public_key.try_into().unwrap(),
             starknet_address: recipient_address_user.try_into().unwrap()
         };
 
@@ -374,6 +372,9 @@ mod tests {
         cheat_caller_address_global(sender_address);
         start_cheat_caller_address(namespace.contract_address, sender_address);
         namespace.linked_nostr_default_account(request);
+
+        let nostr_linked = namespace.get_nostr_to_sn_default(recipient_nostr_key);
+        assert!(nostr_linked == sender_address, "nostr not linked");
     }
 
     #[test]
