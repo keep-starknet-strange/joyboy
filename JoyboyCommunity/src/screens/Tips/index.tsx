@@ -12,6 +12,7 @@ import {
   useChainId,
   useStyles,
   useTips,
+  useToast,
   useTransaction,
   useWaitConnection,
   useWalletModal,
@@ -31,6 +32,7 @@ export const Tips: React.FC = () => {
   const sendTransaction = useTransaction();
   const walletModal = useWalletModal();
   const waitConnection = useWaitConnection();
+  const {showToast} = useToast();
 
   const onClaimPress = async (depositId: number) => {
     if (!account.address) {
@@ -80,9 +82,14 @@ export const Tips: React.FC = () => {
     });
 
     if (receipt.isSuccess()) {
-      alert('Claimed successfully');
+      showToast({type: 'success', title: 'Tip claimed successfully'});
     } else {
-      alert('Claim failed');
+      let description = 'Please Try Again Later.';
+      if (receipt.isRejected()) {
+        description = receipt.transaction_failure_reason.error_message;
+      }
+
+      showToast({type: 'error', title: `Failed to send the tip. ${description}`});
     }
   };
 

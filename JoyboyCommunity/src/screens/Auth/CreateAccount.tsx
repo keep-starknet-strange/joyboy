@@ -1,10 +1,10 @@
 import {canUseBiometricAuthentication} from 'expo-secure-store';
 import {useState} from 'react';
-import {Alert, Platform} from 'react-native';
+import {Platform} from 'react-native';
 
 import {LockIcon} from '../../assets/icons';
 import {Button, Input, TextButton} from '../../components';
-import {useTheme} from '../../hooks';
+import {useDialog, useTheme, useToast} from '../../hooks';
 import {Auth} from '../../modules/Auth';
 import {AuthCreateAccountScreenProps} from '../../types';
 import {generateRandomKeypair} from '../../utils/keypair';
@@ -16,9 +16,12 @@ export const CreateAccount: React.FC<AuthCreateAccountScreenProps> = ({navigatio
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
 
+  const {showToast} = useToast();
+  const {showDialog, hideDialog} = useDialog();
+
   const handleCreateAccount = async () => {
     if (password?.length == 0 || !password) {
-      alert('Enter password');
+      showToast({type: 'error', title: 'Password is required'});
       return;
     }
 
@@ -29,19 +32,25 @@ export const CreateAccount: React.FC<AuthCreateAccountScreenProps> = ({navigatio
 
     const biometySupported = Platform.OS !== 'web' && canUseBiometricAuthentication();
     if (biometySupported) {
-      Alert.alert('Easy login', 'Would you like to use biometrics to login?', [
-        {
-          text: 'No',
-          style: 'cancel',
-        },
-        {
-          text: 'Yes',
-          style: 'default',
-          onPress: async () => {
-            storePassword(password);
+      showDialog({
+        title: 'Easy login',
+        description: 'Would you like to use biometrics to login?',
+        buttons: [
+          {
+            type: 'primary',
+            label: 'Yes',
+            onPress: async () => {
+              await storePassword(password);
+              hideDialog();
+            },
           },
-        },
-      ]);
+          {
+            type: 'default',
+            label: 'No',
+            onPress: hideDialog,
+          },
+        ],
+      });
     }
 
     navigation.navigate('SaveKeys', {privateKey, publicKey});
