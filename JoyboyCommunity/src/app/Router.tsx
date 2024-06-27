@@ -1,10 +1,10 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {View} from 'react-native';
-import {useTheme} from 'styled-components/native';
+import {StyleSheet, View} from 'react-native';
 
 import {Icon} from '../components';
+import {useTheme} from '../hooks';
 import {CreateAccount} from '../screens/Auth/CreateAccount';
 import {Login} from '../screens/Auth/Login';
 import {SaveKeys} from '../screens/Auth/SaveKeys';
@@ -29,15 +29,15 @@ const HomeBottomTabNavigator: React.FC = () => {
   return (
     <HomeBottomTabsStack.Navigator
       sceneContainerStyle={{
-        backgroundColor: theme.black[100],
+        backgroundColor: theme.colors.background,
       }}
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: theme.black[100],
-          borderTopColor: '#E4E4E7',
-          borderTopWidth: 1,
+          backgroundColor: theme.colors.surface,
+          borderTopColor: theme.colors.divider,
+          borderTopWidth: StyleSheet.hairlineWidth,
         },
       }}
     >
@@ -146,17 +146,9 @@ const MainNavigator: React.FC = () => {
 
 const RootNavigator: React.FC = () => {
   const {publicKey} = useAuth();
-  const theme = useTheme();
 
   return (
-    <RootStack.Navigator
-      screenOptions={{
-        headerShown: false,
-        contentStyle: {
-          backgroundColor: theme.black[100],
-        },
-      }}
-    >
+    <RootStack.Navigator screenOptions={{headerShown: false}}>
       {publicKey ? (
         <RootStack.Screen name="MainStack" component={MainNavigator} />
       ) : (
