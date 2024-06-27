@@ -19,10 +19,10 @@ impl ClaimEncodeImpl of Encode<Claim> {
         let recipient_address: felt252 = (*self.starknet_recipient).into();
         let gas_token_address: felt252 = (*self.gas_token_address).into();
         @format!(
-            "claim: {},{},{},{}", 
-            self.deposit_id, 
-            recipient_address, 
-            gas_token_address, 
+            "claim: {},{},{},{}",
+            self.deposit_id,
+            recipient_address,
+            gas_token_address,
             *self.gas_amount
         )
     }
@@ -72,10 +72,7 @@ pub mod DepositEscrow {
         SocialRequest, SocialRequestImpl, SocialRequestTrait, Encode, Signature
     };
 
-    use super::{
-        Deposit, DepositId, DepositResult, IDepositEscrow, NostrPublicKey,
-        Claim
-    };
+    use super::{Deposit, DepositId, DepositResult, IDepositEscrow, NostrPublicKey, Claim};
 
     impl DepositDefault of Default<Deposit> {
         #[inline(always)]
@@ -271,26 +268,26 @@ pub mod DepositEscrow {
             gas_token.transfer(get_caller_address(), gas_amount);
 
             self
-            .emit(
-                ClaimEvent {
-                    deposit_id: *claim.deposit_id,
-                    sender: get_caller_address(),
-                    nostr_recipient: request.public_key,
-                    amount: deposit.amount,
-                    starknet_recipient: *claim.starknet_recipient,
-                    token_address: deposit.token_address,
-                    gas_token_address: *claim.gas_token_address,
-                    gas_amount: *claim.gas_amount
-                }
-            );            
+                .emit(
+                    ClaimEvent {
+                        deposit_id: *claim.deposit_id,
+                        sender: get_caller_address(),
+                        nostr_recipient: request.public_key,
+                        amount: deposit.amount,
+                        starknet_recipient: *claim.starknet_recipient,
+                        token_address: deposit.token_address,
+                        gas_token_address: *claim.gas_token_address,
+                        gas_amount: *claim.gas_amount
+                    }
+                );
         }
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use core::array::SpanTrait;
     use core::option::OptionTrait;
-use core::array::SpanTrait;
     use core::traits::Into;
 
     use joyboy::erc20::{ERC20, IERC20Dispatcher, IERC20DispatcherTrait};
@@ -369,9 +366,10 @@ use core::array::SpanTrait;
 
         // for test data see claim to: https://replit.com/@msghais135/WanIndolentKilobyte-claimto#index.js
         let claim = Claim {
-            deposit_id: 1, starknet_recipient: recipient_address,
+            deposit_id: 1,
+            starknet_recipient: recipient_address,
             gas_amount: 0,
-            gas_token_address: erc20.contract_address 
+            gas_token_address: erc20.contract_address
         };
 
         let request = SocialRequest {
@@ -403,8 +401,7 @@ use core::array::SpanTrait;
 
     #[test]
     fn deposit_claim() {
-        let (request, recipient_nostr_key, sender_address, erc20, escrow) =
-            request_fixture();
+        let (request, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
         let recipient_address: ContractAddress = 678.try_into().unwrap();
         let amount = 100_u256;
 
@@ -422,8 +419,7 @@ use core::array::SpanTrait;
     #[test]
     #[should_panic(expected: 'can\'t verify signature')]
     fn claim_incorrect_signature_claim_to() {
-        let (request, recipient_nostr_key, sender_address, erc20, escrow) =
-            request_fixture();
+        let (request, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
         let recipient_address: ContractAddress = 678.try_into().unwrap();
 
         let amount = 100_u256;
