@@ -1,6 +1,7 @@
 export {useEditProfile} from './useEditProfile';
 export {useNote} from './useNote';
 export {useProfile} from './useProfile';
+export {useReact} from './useReact';
 export {useReactions} from './useReactions';
 export {useReplyNotes} from './useReplyNotes';
 export {useReposts} from './useReposts';
