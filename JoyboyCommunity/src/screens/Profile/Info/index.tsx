@@ -54,7 +54,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                 onClose={() => setMenuOpen(false)}
                 handle={
                   <IconButton
-                    icon="more-vertical"
+                    icon="MoreVerticalIcon"
                     size={20}
                     style={styles.iconButton}
                     onPress={() => setMenuOpen(true)}
@@ -63,9 +63,9 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
               >
                 <Menu.Item
                   label={profile?.username ? `Share @${profile.username}` : 'Share'}
-                  icon="share"
+                  icon="ShareIcon"
                 />
-                <Menu.Item label="About" icon="info" />
+                <Menu.Item label="About" icon="InfoIconCircular" />
               </Menu>
             </>
           ) : (
@@ -80,14 +80,14 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                 Connect
               </Button>
 
-              <IconButton icon="message-square" size={20} style={styles.iconButton} />
+              <IconButton icon="DoubleMessageIcon" size={20} style={styles.iconButton} />
 
               <Menu
                 open={menuOpen}
                 onClose={() => setMenuOpen(false)}
                 handle={
                   <IconButton
-                    icon="more-vertical"
+                    icon="MoreVerticalIcon"
                     size={20}
                     style={styles.iconButton}
                     onPress={() => setMenuOpen(true)}
@@ -96,14 +96,14 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
               >
                 <Menu.Item
                   label={profile?.username ? `Tip @${profile.username}` : 'Tip'}
-                  icon="dollar-sign"
+                  icon="CoinIcon"
                 />
                 <Menu.Item
                   label={profile?.username ? `Share @${profile.username}` : 'Share'}
-                  icon="share"
+                  icon="ShareIcon"
                 />
-                <Menu.Item label="About" icon="info" />
-                <Menu.Item label="Report user" icon="flag" />
+                <Menu.Item label="About" icon="InfoIconCircular" />
+                <Menu.Item label="Report user" icon="FlagIcon" />
               </Menu>
             </>
           )
@@ -132,7 +132,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
               {userPublicKey}
             </Text>
 
-            <IconButton size={16} icon="copy" color="primary" />
+            <IconButton size={16} icon="CopyIcon" color="primary" />
           </Pressable>
         </View>
 

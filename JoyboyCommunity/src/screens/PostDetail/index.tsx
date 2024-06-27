@@ -50,8 +50,8 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
     <View style={styles.container}>
       <Header
         showLogo={false}
-        left={<IconButton icon="chevron-left" size={24} onPress={navigation.goBack} />}
-        right={<IconButton icon="more-horizontal" size={24} />}
+        left={<IconButton icon="ChevronLeftIcon" size={24} onPress={navigation.goBack} />}
+        right={<IconButton icon="MoreHorizontalIcon" size={24} />}
         title="Conversation"
       />
 
@@ -94,7 +94,7 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
             placeholder="Comment"
           />
 
-          <IconButton icon="send" size={24} onPress={handleSendComment} />
+          <IconButton icon="SendIcon" size={24} onPress={handleSendComment} />
         </View>
       </KeyboardFixedView>
     </View>

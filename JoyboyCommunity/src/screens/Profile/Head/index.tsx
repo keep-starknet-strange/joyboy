@@ -47,7 +47,7 @@ export const ProfileHead: React.FC<ProfileHeadProps> = ({
           <View style={styles.coverButtons}>
             {showBackButton && (
               <IconButton
-                icon="chevron-left"
+                icon="ChevronLeftIcon"
                 size={20}
                 style={styles.backButton}
                 onPress={navigation.goBack}

@@ -41,7 +41,7 @@ export const Header: React.FC<HeaderProps> = ({showLogo = true, left, right, tit
 
         {right ?? (
           <View style={styles.buttons}>
-            <IconButton icon="bell" size={20} />
+            <IconButton icon="BellIcon" size={20} />
           </View>
         )}
       </View>

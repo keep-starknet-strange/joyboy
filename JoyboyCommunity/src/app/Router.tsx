@@ -4,7 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {View} from 'react-native';
 import {useTheme} from 'styled-components/native';
 
-import {HomeIcon, IndicatorIcon, MessageIcon, SearchIcon, UserIcon} from '../assets/icons';
+import {Icon} from '../components';
 import {CreateAccount} from '../screens/Auth/CreateAccount';
 import {Login} from '../screens/Auth/Login';
 import {SaveKeys} from '../screens/Auth/SaveKeys';
@@ -47,14 +47,16 @@ const HomeBottomTabNavigator: React.FC = () => {
         options={{
           tabBarActiveTintColor: 'white',
           tabBarInactiveTintColor: '',
-          tabBarIcon: ({focused}) => {
-            return (
-              <View style={{flex: 1, alignItems: 'center', gap: 2, justifyContent: 'center'}}>
-                <HomeIcon width={24} height={24} fill={focused ? '#14142C' : '#1E2F3D80'} />
-                {focused && <IndicatorIcon color="#EC796B" width={6} height={6} />}
-              </View>
-            );
-          },
+          tabBarIcon: ({focused}) => (
+            <View style={{flex: 1, alignItems: 'center', gap: 2, justifyContent: 'center'}}>
+              <Icon
+                name="HomeIcon"
+                size={24}
+                color={focused ? 'bottomBarActive' : 'bottomBarInactive'}
+              />
+              {focused && <Icon name="IndicatorIcon" color="primary" size={6} />}
+            </View>
+          ),
         }}
       />
 
@@ -65,14 +67,16 @@ const HomeBottomTabNavigator: React.FC = () => {
         options={{
           tabBarActiveTintColor: 'white',
           tabBarInactiveTintColor: '',
-          tabBarIcon: ({focused}) => {
-            return (
-              <View style={{flex: 1, alignItems: 'center', gap: 1, justifyContent: 'center'}}>
-                <SearchIcon width={24} height={24} color={focused ? '#14142C' : '#1E2F3D80'} />
-                {focused && <IndicatorIcon color="#EC796B" width={6} height={6} />}
-              </View>
-            );
-          },
+          tabBarIcon: ({focused}) => (
+            <View style={{flex: 1, alignItems: 'center', gap: 1, justifyContent: 'center'}}>
+              <Icon
+                name="SearchIcon"
+                size={24}
+                color={focused ? 'bottomBarActive' : 'bottomBarInactive'}
+              />
+              {focused && <Icon name="IndicatorIcon" color="primary" size={6} />}
+            </View>
+          ),
         }}
       />
 
@@ -82,14 +86,16 @@ const HomeBottomTabNavigator: React.FC = () => {
         options={{
           tabBarActiveTintColor: 'white',
           tabBarInactiveTintColor: 'grey',
-          tabBarIcon: ({focused}) => {
-            return (
-              <View style={{flex: 1, alignItems: 'center', gap: 4, justifyContent: 'center'}}>
-                <MessageIcon width={24} height={24} color={focused ? '#14142C' : '#1E2F3D80'} />
-                {focused && <IndicatorIcon color="#EC796B" width={6} height={6} />}
-              </View>
-            );
-          },
+          tabBarIcon: ({focused}) => (
+            <View style={{flex: 1, alignItems: 'center', gap: 4, justifyContent: 'center'}}>
+              <Icon
+                name="MessageIcon"
+                size={24}
+                color={focused ? 'bottomBarActive' : 'bottomBarInactive'}
+              />
+              {focused && <Icon name="IndicatorIcon" color="primary" size={6} />}
+            </View>
+          ),
         }}
       />
 
@@ -100,14 +106,16 @@ const HomeBottomTabNavigator: React.FC = () => {
         options={{
           tabBarActiveTintColor: 'white',
           tabBarInactiveTintColor: 'grey',
-          tabBarIcon: ({focused}) => {
-            return (
-              <View style={{flex: 1, alignItems: 'center', gap: 1, justifyContent: 'center'}}>
-                <UserIcon width={24} height={24} color={focused ? '#14142C' : '#1E2F3D80'} />
-                {focused && <IndicatorIcon color="#EC796B" width={6} height={6} />}
-              </View>
-            );
-          },
+          tabBarIcon: ({focused}) => (
+            <View style={{flex: 1, alignItems: 'center', gap: 1, justifyContent: 'center'}}>
+              <Icon
+                name="UserIcon"
+                size={24}
+                color={focused ? 'bottomBarActive' : 'bottomBarInactive'}
+              />
+              {focused && <Icon name="IndicatorIcon" color="primary" size={6} />}
+            </View>
+          ),
         }}
       />
     </HomeBottomTabsStack.Navigator>
