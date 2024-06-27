@@ -256,7 +256,7 @@ pub mod DepositEscrow {
             request.verify().expect('can\'t verify signature');
 
             let erc20 = IERC20Dispatcher { contract_address: deposit.token_address };
-            erc20.transfer(*claim.starknet_recipient, deposit.amount);
+            erc20.transfer(*claim.starknet_recipient, deposit.amount - gas_amount);
 
             self.nostr_to_sn.write(request.public_key, *claim.starknet_recipient);
             self.deposits.write(*claim.deposit_id, Default::default());
