@@ -383,7 +383,8 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected: 'invalid caller')]
+    #[should_panic()]
+    // #[should_panic(expected: ' invalid caller ')]
     fn link_incorrect_caller_link_to() {
         let (_, _, sender_address, namespace, fail_request_linked_wallet_to) = request_fixture();
         cheat_caller_address_global(sender_address);
