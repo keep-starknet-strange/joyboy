@@ -13,7 +13,15 @@ import Animated, {
 
 import {CommentIcon, LikeFillIcon, LikeIcon, RepostIcon} from '../../assets/icons';
 import {Avatar, IconButton, Menu, Text} from '../../components';
-import {useProfile, useReact, useReactions, useStyles, useTheme, useTipModal} from '../../hooks';
+import {
+  useProfile,
+  useReact,
+  useReactions,
+  useReplyNotes,
+  useStyles,
+  useTheme,
+  useTipModal,
+} from '../../hooks';
 import {useAuth} from '../../store/auth';
 import {MainStackNavigationProps} from '../../types';
 import {getElapsedTimeStringFull} from '../../utils/timestamp';
@@ -38,6 +46,7 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
   const {data: profile} = useProfile({publicKey: event?.pubkey});
   const reactions = useReactions({noteId: event?.id});
   const userReaction = useReactions({authors: [publicKey], noteId: event?.id});
+  const comments = useReplyNotes({noteId: event?.id});
   const react = useReact();
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -180,7 +189,7 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
               <CommentIcon height={20} color={theme.colors.textSecondary} />
 
               <Text color="textSecondary" fontSize={11} lineHeight={16}>
-                16 comments
+                {comments.data?.pages.flat().length} comments
               </Text>
             </View>
           </Pressable>
