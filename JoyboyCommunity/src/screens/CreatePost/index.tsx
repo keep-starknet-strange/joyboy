@@ -3,7 +3,7 @@ import {useState} from 'react';
 import {KeyboardAvoidingView, Pressable, TextInput, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
-import {CopyIcon, GalleryIcon, GifIcon, SendIcon} from '../../assets/icons';
+import {CopyIcon, GalleryIcon, GifIcon, SendIconContained} from '../../assets/icons';
 import {TextButton} from '../../components';
 import {useSendNote, useStyles, useTheme, useToast} from '../../hooks';
 import stylesheet from './styles';
@@ -76,7 +76,7 @@ export const CreatePost: React.FC = () => {
             </View>
 
             <Pressable style={styles.sendButton} onPress={handleSendNote}>
-              <SendIcon width="56" height="56" color={theme.colors.primary} />
+              <SendIconContained width="56" height="56" color={theme.colors.primary} />
             </Pressable>
           </View>
         </SafeAreaView>

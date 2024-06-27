@@ -176,13 +176,13 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
             open={menuOpen}
             onClose={() => setMenuOpen(false)}
             handle={
-              <IconButton icon="more-horizontal" size={20} onPress={() => setMenuOpen(true)} />
+              <IconButton icon="MoreHorizontalIcon" size={20} onPress={() => setMenuOpen(true)} />
             }
           >
-            <Menu.Item label="Share" icon="share" />
+            <Menu.Item label="Share" icon="ShareIcon" />
             <Menu.Item
               label={profile?.username ? `Tip @${profile.username}` : 'Tip'}
-              icon="dollar-sign"
+              icon="CoinIcon"
               onPress={() => {
                 showTipModal(event);
                 setMenuOpen(false);
