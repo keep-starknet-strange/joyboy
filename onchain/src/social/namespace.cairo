@@ -259,7 +259,7 @@ mod tests {
     }
 
     fn request_fixture_custom_classes(
-         namespace_class: ContractClass
+        namespace_class: ContractClass
     ) -> (
         SocialRequest<LinkedStarknetAddress>,
         NostrPublicKey,
@@ -304,7 +304,7 @@ mod tests {
         };
 
         // @TODO format the content and get the correct signature
-        let fail_request_linked_wallet_to = SocialRequest {
+        let fail_request_linked_wallet_to_caller = SocialRequest {
             public_key: recipient_public_key,
             created_at: 1716285235_u64,
             kind: 1_u16,
@@ -321,7 +321,7 @@ mod tests {
             recipient_public_key,
             sender_address,
             namespace,
-            fail_request_linked_wallet_to
+            fail_request_linked_wallet_to_caller
         )
     }
 
@@ -333,15 +333,12 @@ mod tests {
         SocialRequest<LinkedStarknetAddress>
     ) {
         let namespace_class = declare_namespace();
-        request_fixture_custom_classes( namespace_class)
+        request_fixture_custom_classes(namespace_class)
     }
 
     #[test]
     fn linked_wallet_to() {
-        let (
-            request, recipient_nostr_key, sender_address, namespace, _
-        ) =
-            request_fixture();
+        let (request, recipient_nostr_key, sender_address, namespace, _) = request_fixture();
         cheat_caller_address_global(sender_address);
         start_cheat_caller_address(namespace.contract_address, sender_address);
         namespace.linked_nostr_default_account(request);
@@ -353,14 +350,7 @@ mod tests {
     #[test]
     #[should_panic(expected: 'can\'t verify signature')]
     fn link_incorrect_signature() {
-        let (
-            _,
-            _,
-            sender_address,
-            namespace,
-            fail_request_linked_wallet_to
-        ) =
-            request_fixture();
+        let (request, _, sender_address, namespace, _) = request_fixture();
         stop_cheat_caller_address_global();
         start_cheat_caller_address(namespace.contract_address, sender_address);
 
@@ -369,7 +359,7 @@ mod tests {
                 r: 0x2570a9a0c92c180bd4ac826c887e63844b043e3b65da71a857d2aa29e7cd3a4e_u256,
                 s: 0x1c0c0a8b7a8330b6b8915985c9cd498a407587213c2e7608e7479b4ef966605f_u256,
             },
-            ..fail_request_linked_wallet_to,
+            ..request,
         };
         namespace.linked_nostr_default_account(request_test_failed_sig);
     }
@@ -377,14 +367,7 @@ mod tests {
     #[test]
     #[should_panic(expected: 'can\'t verify signature')]
     fn link_incorrect_signature_link_to() {
-        let (
-            _,
-            _,
-            sender_address,
-            namespace,
-            fail_request_linked_wallet_to
-        ) =
-            request_fixture();
+        let (request, _, sender_address, namespace, _) = request_fixture();
         cheat_caller_address_global(sender_address);
         stop_cheat_caller_address_global();
         start_cheat_caller_address(namespace.contract_address, sender_address);
@@ -393,9 +376,19 @@ mod tests {
                 r: 0x2570a9a0c92c180bd4ac826c887e63844b043e3b65da71a857d2aa29e7cd3a4e_u256,
                 s: 0x1c0c0a8b7a8330b6b8915985c9cd498a407587213c2e7608e7479b4ef966605f_u256,
             },
-            ..fail_request_linked_wallet_to,
+            ..request,
         };
 
         namespace.linked_nostr_default_account(request_test_failed_sig);
+    }
+
+    #[test]
+    #[should_panic(expected: 'invalid caller')]
+    fn link_incorrect_caller_link_to() {
+        let (_, _, sender_address, namespace, fail_request_linked_wallet_to) = request_fixture();
+        cheat_caller_address_global(sender_address);
+        stop_cheat_caller_address_global();
+        start_cheat_caller_address(namespace.contract_address, sender_address);
+        namespace.linked_nostr_default_account(fail_request_linked_wallet_to);
     }
 }
