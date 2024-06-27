@@ -3,6 +3,7 @@ export {Button} from './Button';
 export {Dialog} from './Dialog';
 export {Divider} from './Divider';
 export {Header} from './Header';
+export {Icon} from './Icon';
 export {IconButton} from './IconButton';
 export {Input} from './Input';
 export {Menu} from './Menu';
