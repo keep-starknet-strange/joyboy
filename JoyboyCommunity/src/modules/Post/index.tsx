@@ -55,16 +55,9 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
   /** @TODO comment in Nostr */
   const handleComment = () => {};
 
-  /** @TODO repost in Nostr */
-  const handleRepostNote = () => {
-    alert('Handle repost');
-  };
-
   const handleNavigateToPostDetails = () => {
     navigation.navigate('PostDetail', {postId: event?.id, post: event});
   };
-
-  const handleMore = () => {};
 
   /** @TODO comment in Nostr */
   const toggleLike = () => {

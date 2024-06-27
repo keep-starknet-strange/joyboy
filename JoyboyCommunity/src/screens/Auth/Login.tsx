@@ -4,7 +4,7 @@ import {Platform} from 'react-native';
 
 import {LockIcon} from '../../assets/icons';
 import {Button, Input, TextButton} from '../../components';
-import {useTheme} from '../../hooks';
+import {useTheme, useToast} from '../../hooks';
 import {Auth} from '../../modules/Auth';
 import {useAuth} from '../../store/auth';
 import {AuthLoginScreenProps} from '../../types';
@@ -20,6 +20,7 @@ export const Login: React.FC<AuthLoginScreenProps> = ({navigation}) => {
   const setAuth = useAuth((state) => state.setAuth);
 
   const [password, setPassword] = useState(null);
+  const {showToast} = useToast();
 
   useEffect(() => {
     (async () => {
@@ -34,13 +35,13 @@ export const Login: React.FC<AuthLoginScreenProps> = ({navigation}) => {
 
   const handleLogin = async () => {
     if (password?.length == 0 || !password) {
-      alert('Enter password');
+      showToast({type: 'error', title: 'Password is required'});
       return;
     }
 
     const privateKey = await retrieveAndDecryptPrivateKey(password);
     if (!privateKey || privateKey.length !== 32) {
-      alert('Invalid password');
+      showToast({type: 'error', title: 'Invalid password'});
       return;
     }
     const privateKeyHex = privateKey.toString('hex');
@@ -49,7 +50,7 @@ export const Login: React.FC<AuthLoginScreenProps> = ({navigation}) => {
     const publicKey = getPublicKeyFromSecret(privateKeyHex);
 
     if (publicKey !== storedPublicKey) {
-      alert('Invalid password');
+      showToast({type: 'error', title: 'Invalid password'});
       return;
     }
 
