@@ -161,8 +161,12 @@ pub mod Namespace {
             ref self: ContractState, recipient: ContractAddress, role: felt252, is_enable: bool
         ) {
             self.accesscontrol.assert_only_role(ADMIN_ROLE);
-            assert!(role == ADMIN_ROLE || role == OPERATOR_ROLE// Think and Add others roles needed on the protocol
-            , "role not enable");
+            assert!(
+                role == ADMIN_ROLE
+                    || role == OPERATOR_ROLE // Think and Add others roles needed on the protocol
+                    ,
+                "role not enable"
+            );
             if is_enable {
                 self.accesscontrol._grant_role(role, recipient);
             } else {
