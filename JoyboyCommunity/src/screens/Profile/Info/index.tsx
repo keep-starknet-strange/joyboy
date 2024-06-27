@@ -1,8 +1,8 @@
-import {Feather} from '@expo/vector-icons';
 import {useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
 import {Pressable, View} from 'react-native';
 
+import {UserPlusIcon} from '../../../assets/icons';
 import {Button, IconButton, Menu, Text} from '../../../components';
 import {useProfile, useStyles, useTheme} from '../../../hooks';
 import {useAuth} from '../../../store/auth';
@@ -74,7 +74,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                 small
                 variant="secondary"
                 left={
-                  <Feather name="user-plus" size={16} color="white" style={styles.buttonIcon} />
+                  <UserPlusIcon width={16} height={16} color="white" style={styles.buttonIcon} />
                 }
               >
                 Connect
@@ -143,7 +143,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
         ) : null}
 
         <View style={styles.connections}>
-          <Feather name="user-plus" size={16} color={theme.colors.text} />
+          <UserPlusIcon width={16} height={16} color={theme.colors.text} />
 
           <Text weight="semiBold">13 Connections</Text>
         </View>

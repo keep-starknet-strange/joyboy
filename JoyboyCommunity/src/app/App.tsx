@@ -1,6 +1,5 @@
 import '@walletconnect/react-native-compat';
 
-import Entypo from '@expo/vector-icons/Entypo';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import {useCallback, useEffect, useState} from 'react';
@@ -17,9 +16,6 @@ export default function App() {
   useEffect(() => {
     (async () => {
       try {
-        // Pre-load fonts, make any API calls you need to do here
-        await Font.loadAsync(Entypo.font);
-
         await Font.loadAsync({
           'Poppins-Light': require('../../assets/fonts/Poppins/Poppins-Light.ttf'),
           'Poppins-Regular': require('../../assets/fonts/Poppins/Poppins-Regular.ttf'),
