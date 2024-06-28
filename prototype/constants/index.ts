@@ -1,3 +1,5 @@
+import { constants } from "starknet";
+
 export const ACCOUNT_TEST_PROFILE = {
   alice: {
     name: "alice.xyz",
@@ -23,8 +25,8 @@ export const ACCOUNT_TEST_PROFILE = {
       "0x1b5f5bee60ce25d6979c5b88cfbb74ad1dae197dba11719b2e06a5efa7e666d",
   },
   escrow: {
-    contract: "0x53327953bddcb4ae216b14ea0b84261c6c1ad0af112a29be2dab11cf2e76c48",
-    SEPOLIA: "0x53327953bddcb4ae216b14ea0b84261c6c1ad0af112a29be2dab11cf2e76c48"
+    [constants.NetworkName.SN_SEPOLIA]: "0x78a022e6906c83e049a30f7464b939b831ecbe47029480d7e89684f20c8d263",
+    SEPOLIA: "0x78a022e6906c83e049a30f7464b939b831ecbe47029480d7e89684f20c8d263"
   }
 };
 export const ERROR_MESSAGES = {

@@ -1,8 +1,6 @@
 import {
   Account,
   json,
-  hash,
-  CallData,
   Contract,
   cairo,
   uint256,
@@ -68,7 +66,7 @@ export const createEscrowAccount = async () => {
     /** @description uncomment this to declare your account */
     // console.log("declare account");
 
-    if(process.env.REDECLARE_ACCOUNT) {
+    if(process.env.REDECLARE_CONTRACT == "true") {
       console.log("try declare account");
       const declareResponse = await account0.declare({
         contract: compiledSierraAAaccount,
