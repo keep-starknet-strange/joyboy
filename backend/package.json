@@ -2,8 +2,8 @@
   "name": "backend",
   "version": "0.0.0",
   "scripts": {
-    "start": "tsx src/index.ts",
-    "watch": "tsx watch src/index.ts",
+    "start": "tsx --env-file=.env src/index.ts",
+    "watch": "tsx watch --env-file=.env src/index.ts",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "format:check": "prettier -c \"src/**/*.{ts,tsx}\"",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
