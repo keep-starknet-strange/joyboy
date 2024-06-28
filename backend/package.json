@@ -16,7 +16,9 @@
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "helmet": "^7.1.0",
-    "starknet": "6.9.0"
+    "nostr-tools": "^2.7.0",
+    "starknet": "6.9.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
