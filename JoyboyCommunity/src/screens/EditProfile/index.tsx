@@ -7,7 +7,7 @@ import {ScrollView, TouchableOpacity, View} from 'react-native';
 
 import {CopyIconStack} from '../../assets/icons';
 import {Button, SquareInput, Text} from '../../components';
-import {useEditProfile, useProfile, useStyles, useTheme} from '../../hooks';
+import {useEditProfile, useProfile, useStyles, useTheme, useToast} from '../../hooks';
 import {useAuth} from '../../store/auth';
 import {EditProfileScreenProps} from '../../types';
 import {ProfileHead} from '../Profile/Head';
@@ -41,12 +41,13 @@ export const EditProfile: React.FC<EditProfileScreenProps> = () => {
   const profile = useProfile({publicKey});
   const editProfile = useEditProfile();
   const queryClient = useQueryClient();
+  const {showToast} = useToast();
 
-  if (profile.isLoading || !profile.data) return null;
+  if (profile.isLoading) return null;
 
   const onPublicKeyCopyPress = async () => {
     await Clipboard.setStringAsync(publicKey);
-    alert('Copied to clipboard');
+    showToast({type: 'info', title: 'Public Key Copied to clipboard'});
   };
 
   const handlePhotoUpload = async (type: 'profile' | 'cover') => {
@@ -79,12 +80,12 @@ export const EditProfile: React.FC<EditProfileScreenProps> = () => {
   };
 
   const initialFormValues: FormValues = {
-    username: profile.data.nip05,
-    displayName: profile.data.displayName ?? profile.data.name,
-    bio: profile.data.about,
-    telegram: profile.data.telegram?.toString(),
-    github: profile.data.github?.toString(),
-    twitter: profile.data.twitter?.toString(),
+    username: profile.data?.nip05,
+    displayName: profile.data?.displayName ?? profile.data?.name,
+    bio: profile.data?.about,
+    telegram: profile.data?.telegram?.toString(),
+    github: profile.data?.github?.toString(),
+    twitter: profile.data?.twitter?.toString(),
   };
 
   const onSubmitPress = () => {
@@ -111,7 +112,7 @@ export const EditProfile: React.FC<EditProfileScreenProps> = () => {
 
     queryClient.invalidateQueries({queryKey: ['profile', publicKey]});
 
-    alert('Profile updated');
+    showToast({type: 'success', title: 'Profile updated successfully'});
   };
 
   return (
@@ -121,11 +122,11 @@ export const EditProfile: React.FC<EditProfileScreenProps> = () => {
         onCoverPhotoUpload={onCoverPhotoUpload}
         profilePhoto={
           (profilePhoto?.uri && {uri: profilePhoto.uri}) ||
-          (profile.data.image && {uri: profile.data.image})
+          (profile.data?.image && {uri: profile.data?.image})
         }
         coverPhoto={
           (coverPhoto?.uri && {uri: coverPhoto.uri}) ||
-          (profile.data.banner && {uri: profile.data.banner})
+          (profile.data?.banner && {uri: profile.data?.banner})
         }
         buttons={
           <Button variant="secondary" small onPress={onSubmitPress}>

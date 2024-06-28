@@ -1,4 +1,3 @@
-import {Feather} from '@expo/vector-icons';
 import {useEffect} from 'react';
 import {
   Pressable,
@@ -18,6 +17,7 @@ import Animated, {
 
 import {useColor, useStyles} from '../../hooks';
 import {ColorProp} from '../../styles';
+import {Icon, IconNames} from '../Icon';
 import {Text} from '../Text';
 import stylesheet from './styles';
 
@@ -34,7 +34,7 @@ export type MenuSubComponents = {
 
 export type MenuItemProps = PressableProps & {
   label: string;
-  icon?: React.ComponentProps<typeof Feather>['name'];
+  icon?: IconNames;
   color?: ColorProp;
 };
 
@@ -114,7 +114,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({
     <Pressable style={styles.menuItem} {...pressableProps}>
       <Text style={styles.menuItemLabel}>{label}</Text>
 
-      {icon ? <Feather name={icon} color={color} size={24} /> : null}
+      {icon ? <Icon name={icon} color={color} size={24} /> : null}
     </Pressable>
   );
 };

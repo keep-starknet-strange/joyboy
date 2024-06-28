@@ -49,9 +49,53 @@ Tech stack:
 
 ## Architecture
 
-### SocialPay
+### Tips
+There are two alternatives: WalletConnect one which expects Nostr users to setup oridinary Starknet wallet like Argent or Bravvos and so called SocialPay which uses custom Account Abstraction contract based on bip340 signature scheme (Nostr native one).
 
-#### Alice sends tokens to Bob
+#### Wallet Connect
+##### Tip to a recipient that never accepted the tip
+```mermaid
+sequenceDiagram
+    actor Alice
+    actor Bob
+    participant transfer as Transfer Contract
+    participant erc20 as ERC20
+    
+    Note over Alice,erc20: Alice tip is escrowed by the Transfer Contract
+    activate Alice
+    Alice->>erc20: approve(Transfer Contract, x)
+    Alice->>transfer: transfer(Bob Nostr Address, x)
+    transfer->>erc20: transferFrom(Alice, Transfer Contract, x)
+    transfer->>Alice: deposit_id
+    deactivate Alice
+
+
+    Note over Alice,erc20: Bob claims the tip with his Nostr identity
+    activate Bob
+    Bob->>transfer: claim(deposit_id)
+    Note right of Bob: deposit_id is signed<br/> with Nostr key
+    transfer->>erc20: transferFrom(Transfer Contract, Bob, x)
+    deactivate Bob 
+```
+
+##### Tip to a recipient that earlier accepted the tip
+```mermaid
+sequenceDiagram
+    actor Alice
+    participant transfer as Transfer Contract
+    participant erc20 as ERC20
+    
+    activate Alice
+    Alice->>erc20: approve(Transfer Contract, x)
+    Alice->>transfer: transfer(Bob Nostr Address, x)
+    Note left of transfer: Transfer Contract knows<br/> Bob's SN address
+    transfer->>erc20: transferFrom(Alice, Bob, x)
+    deactivate Alice
+```
+
+#### SocialPay
+
+##### Alice sends tokens to Bob
 
 ```mermaid
 sequenceDiagram

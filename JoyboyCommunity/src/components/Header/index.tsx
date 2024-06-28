@@ -25,7 +25,7 @@ export const Header: React.FC<HeaderProps> = ({showLogo = true, left, right, tit
 
         {showLogo && (
           <View style={styles.logoContainer}>
-            <Image style={styles.logo} source={require('../../../assets/joyboy-logo.png')} />
+            <Image style={styles.logo} source={require('../../assets/joyboy-logo.png')} />
 
             <JoyboyIcon color={theme.colors.text} width={96} height={16} />
           </View>
@@ -41,7 +41,7 @@ export const Header: React.FC<HeaderProps> = ({showLogo = true, left, right, tit
 
         {right ?? (
           <View style={styles.buttons}>
-            <IconButton icon="bell" size={20} />
+            <IconButton icon="BellIcon" size={20} />
           </View>
         )}
       </View>

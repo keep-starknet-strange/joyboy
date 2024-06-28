@@ -3,10 +3,9 @@ import {useState} from 'react';
 import {KeyboardAvoidingView, Pressable, TextInput, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
-import {CopyIcon, GalleryIcon, GifIcon, SendIcon} from '../../assets/icons';
+import {CopyIcon, GalleryIcon, GifIcon, SendIconContained} from '../../assets/icons';
 import {TextButton} from '../../components';
-import {useSendNote, useStyles, useTheme} from '../../hooks';
-import {useAuth} from '../../store/auth';
+import {useSendNote, useStyles, useTheme, useToast} from '../../hooks';
 import stylesheet from './styles';
 
 export const CreatePost: React.FC = () => {
@@ -15,32 +14,27 @@ export const CreatePost: React.FC = () => {
   const theme = useTheme();
   const styles = useStyles(stylesheet);
 
-  const sendNote = useSendNote();
-  const {privateKey} = useAuth();
   const [note, setNote] = useState<string | undefined>();
+  const sendNote = useSendNote();
+  const {showToast} = useToast();
 
   const handleSendNote = () => {
     if (!note || note?.length == 0) {
-      alert('Write your note');
-      return;
-    }
-    alert('Note sending, please wait.');
-
-    if (!privateKey) {
-      alert('Please login before send a note');
+      showToast({type: 'error', title: 'Please write your note'});
       return;
     }
 
     sendNote.mutate(
       {content: note},
       {
-        onSuccess(data) {
-          if (data) {
-            alert('Note sent');
-          }
+        onSuccess() {
+          showToast({type: 'success', title: 'Note sent successfully'});
         },
-        onError(error) {
-          console.log('Error send note', error);
+        onError() {
+          showToast({
+            type: 'error',
+            title: 'Error! Note could not be sent. Please try again later.',
+          });
         },
       },
     );
@@ -82,7 +76,7 @@ export const CreatePost: React.FC = () => {
             </View>
 
             <Pressable style={styles.sendButton} onPress={handleSendNote}>
-              <SendIcon width="56" height="56" color={theme.colors.primary} />
+              <SendIconContained width="56" height="56" color={theme.colors.primary} />
             </Pressable>
           </View>
         </SafeAreaView>

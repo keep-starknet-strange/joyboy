@@ -4,7 +4,7 @@ import {TouchableOpacity, View} from 'react-native';
 import {CopyIconStack} from '../../assets/icons';
 import {InfoIcon} from '../../assets/icons';
 import {Button, Input, Text} from '../../components';
-import {useStyles, useTheme} from '../../hooks';
+import {useStyles, useTheme, useToast} from '../../hooks';
 import {Auth} from '../../modules/Auth';
 import {useAuth} from '../../store/auth';
 import {AuthSaveKeysScreenProps} from '../../types';
@@ -16,10 +16,11 @@ export const SaveKeys: React.FC<AuthSaveKeysScreenProps> = ({route}) => {
   const theme = useTheme();
   const styles = useStyles(stylesheet);
   const setAuth = useAuth((state) => state.setAuth);
+  const {showToast} = useToast();
 
   const handleCopy = async (type: 'privateKey' | 'publicKey') => {
     await Clipboard.setStringAsync(type === 'privateKey' ? privateKey : publicKey);
-    alert('Copied to clipboard');
+    showToast({type: 'info', title: 'Copied to clipboard'});
   };
 
   const handleContinue = () => {
@@ -69,7 +70,7 @@ export const SaveKeys: React.FC<AuthSaveKeysScreenProps> = ({route}) => {
       </View>
 
       <View style={styles.warning}>
-        <InfoIcon color={theme.colors.primary} />
+        <InfoIcon width={20} height={20} color={theme.colors.primary} />
 
         <Text color="primary" weight="medium" fontSize={13}>
           Your private key is your password, if you lose this key, you will lose access to your

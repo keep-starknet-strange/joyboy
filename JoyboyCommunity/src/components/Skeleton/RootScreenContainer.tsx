@@ -1,7 +1,9 @@
-import {View} from 'react-native';
-import {styled} from 'styled-components/native';
+import {View, ViewProps} from 'react-native';
 
-export const RootScreenContainer = styled(View)`
-  flex: 1;
-  background-color: ${({theme}) => theme.black[100]};
-`;
+import {useTheme} from '../../hooks';
+
+export const RootScreenContainer: React.FC<ViewProps> = ({style, ...props}) => {
+  const theme = useTheme();
+
+  return <View style={[{flex: 1, backgroundColor: theme.colors.background}, style]} {...props} />;
+};

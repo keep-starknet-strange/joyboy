@@ -1,8 +1,8 @@
-import {mainnet} from '@starknet-react/chains';
+import {sepolia} from '@starknet-react/chains';
 import {
   argent,
+  blastProvider,
   braavos,
-  publicProvider,
   StarknetConfig,
   useInjectedConnectors,
   voyager,
@@ -14,6 +14,7 @@ import {
 import {Platform} from 'react-native';
 import {constants} from 'starknet';
 
+import {RpcProviderProvider} from '../context/RpcProvider';
 import {WalletQRModal} from '../modules/WalletQRModal';
 
 export const StarknetReactProvider: React.FC<React.PropsWithChildren> = ({children}) => {
@@ -28,26 +29,32 @@ export const StarknetReactProvider: React.FC<React.PropsWithChildren> = ({childr
 
   const argentMobileConnector = useArgentMobileConnector();
 
-  return (
-    <StarknetConfig
-      chains={[mainnet]}
-      provider={publicProvider()}
-      connectors={[
-        argentMobileConnector({
-          chain: constants.NetworkName.SN_MAIN,
-          // TODO: Move this to ENV
-          wcProjectId: 'a9b4b052eb741f95a54c90ac5bdb343e',
-          dappName: 'Joyboy',
-          description: 'Joyboy Starknet dApp',
-          url: 'https://joyboy.community',
-        }),
+  const providers = blastProvider({apiKey: '798a58fa-a3d6-4e14-869c-a4c3494c10b4'});
+  const provider = providers(sepolia);
 
-        ...(Platform.OS === 'web' ? connectors : []),
-      ]}
-      explorer={voyager}
-    >
-      {children}
-    </StarknetConfig>
+  return (
+    <RpcProviderProvider provider={provider}>
+      <StarknetConfig
+        chains={[sepolia]}
+        provider={providers}
+        connectors={[
+          argentMobileConnector({
+            chain: constants.NetworkName.SN_SEPOLIA,
+            // TODO: Move this to ENV
+            wcProjectId: 'a9b4b052eb741f95a54c90ac5bdb343e',
+            dappName: 'Joyboy',
+            description: 'Joyboy Starknet dApp',
+            url: 'https://joyboy.community',
+            provider,
+          }),
+
+          ...(Platform.OS === 'web' ? connectors : []),
+        ]}
+        explorer={voyager}
+      >
+        {children}
+      </StarknetConfig>
+    </RpcProviderProvider>
   );
 };
 

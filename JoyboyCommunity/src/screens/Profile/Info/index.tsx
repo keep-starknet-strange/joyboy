@@ -1,8 +1,8 @@
-import {Feather} from '@expo/vector-icons';
 import {useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
 import {Pressable, View} from 'react-native';
 
+import {UserPlusIcon} from '../../../assets/icons';
 import {Button, IconButton, Menu, Text} from '../../../components';
 import {useProfile, useStyles, useTheme} from '../../../hooks';
 import {useAuth} from '../../../store/auth';
@@ -54,7 +54,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                 onClose={() => setMenuOpen(false)}
                 handle={
                   <IconButton
-                    icon="more-vertical"
+                    icon="MoreVerticalIcon"
                     size={20}
                     style={styles.iconButton}
                     onPress={() => setMenuOpen(true)}
@@ -63,9 +63,9 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
               >
                 <Menu.Item
                   label={profile?.username ? `Share @${profile.username}` : 'Share'}
-                  icon="share"
+                  icon="ShareIcon"
                 />
-                <Menu.Item label="About" icon="info" />
+                <Menu.Item label="About" icon="InfoIconCircular" />
               </Menu>
             </>
           ) : (
@@ -74,20 +74,20 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                 small
                 variant="secondary"
                 left={
-                  <Feather name="user-plus" size={16} color="white" style={styles.buttonIcon} />
+                  <UserPlusIcon width={16} height={16} color="white" style={styles.buttonIcon} />
                 }
               >
                 Connect
               </Button>
 
-              <IconButton icon="message-square" size={20} style={styles.iconButton} />
+              <IconButton icon="DoubleMessageIcon" size={20} style={styles.iconButton} />
 
               <Menu
                 open={menuOpen}
                 onClose={() => setMenuOpen(false)}
                 handle={
                   <IconButton
-                    icon="more-vertical"
+                    icon="MoreVerticalIcon"
                     size={20}
                     style={styles.iconButton}
                     onPress={() => setMenuOpen(true)}
@@ -96,14 +96,14 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
               >
                 <Menu.Item
                   label={profile?.username ? `Tip @${profile.username}` : 'Tip'}
-                  icon="dollar-sign"
+                  icon="CoinIcon"
                 />
                 <Menu.Item
                   label={profile?.username ? `Share @${profile.username}` : 'Share'}
-                  icon="share"
+                  icon="ShareIcon"
                 />
-                <Menu.Item label="About" icon="info" />
-                <Menu.Item label="Report user" icon="flag" />
+                <Menu.Item label="About" icon="InfoIconCircular" />
+                <Menu.Item label="Report user" icon="FlagIcon" />
               </Menu>
             </>
           )
@@ -132,7 +132,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
               {userPublicKey}
             </Text>
 
-            <IconButton size={16} icon="copy" color="primary" />
+            <IconButton size={16} icon="CopyIcon" color="primary" />
           </Pressable>
         </View>
 
@@ -143,7 +143,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
         ) : null}
 
         <View style={styles.connections}>
-          <Feather name="user-plus" size={16} color={theme.colors.text} />
+          <UserPlusIcon width={16} height={16} color={theme.colors.text} />
 
           <Text weight="semiBold">13 Connections</Text>
         </View>

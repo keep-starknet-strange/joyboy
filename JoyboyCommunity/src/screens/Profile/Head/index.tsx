@@ -1,9 +1,8 @@
-import {Feather} from '@expo/vector-icons';
 import {useNavigation} from '@react-navigation/native';
 import {Image, ImageSourcePropType, Pressable, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
-import {UploadIcon} from '../../../assets/icons';
+import {SettingsIcon, UploadIcon} from '../../../assets/icons';
 import {Avatar, IconButton, Text} from '../../../components';
 import {useStyles, useTheme} from '../../../hooks';
 import stylesheet, {AVATAR_SIZE} from './styles';
@@ -48,7 +47,7 @@ export const ProfileHead: React.FC<ProfileHeadProps> = ({
           <View style={styles.coverButtons}>
             {showBackButton && (
               <IconButton
-                icon="chevron-left"
+                icon="ChevronLeftIcon"
                 size={20}
                 style={styles.backButton}
                 onPress={navigation.goBack}
@@ -57,7 +56,7 @@ export const ProfileHead: React.FC<ProfileHeadProps> = ({
 
             {showSettingsButton && (
               <Pressable style={styles.settingsButton} onPress={goToSettings}>
-                <Feather name="settings" size={20} />
+                <SettingsIcon width={20} height={20} color={theme.colors.text} />
                 <Text weight="semiBold" fontSize={14} style={styles.settingsButtonText}>
                   Settings
                 </Text>

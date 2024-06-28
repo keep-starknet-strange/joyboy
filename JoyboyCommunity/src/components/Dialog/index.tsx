@@ -1,9 +1,9 @@
 import React from 'react';
 import {View} from 'react-native';
-import {Portal} from 'react-native-portalize';
 
 import {useStyles} from '../../hooks';
 import {Button, ButtonProps} from '../Button';
+import {Modal} from '../Modal';
 import {Text} from '../Text';
 import stylesheet from './styles';
 
@@ -11,7 +11,6 @@ export type DialogProps = {
   title: string;
   description: string;
   icon?: React.ReactNode;
-  visible?: boolean;
   buttons: {
     label: string;
     type: ButtonProps['variant'];
@@ -19,48 +18,30 @@ export type DialogProps = {
   }[];
 };
 
-export const Dialog: React.FC<DialogProps> = ({
-  title,
-  icon,
-  description,
-  visible = true,
-  buttons,
-}) => {
+export const Dialog: React.FC<DialogProps> = ({title, icon, description, buttons}) => {
   const styles = useStyles(stylesheet);
 
-  if (!visible) return null;
-
   return (
-    <Portal>
-      <View style={styles.container}>
-        <View style={styles.modal}>
-          <View style={styles.content}>
-            {icon && <View style={styles.icon}>{icon}</View>}
+    <Modal style={styles.modal}>
+      <View style={styles.content}>
+        {icon && <View style={styles.icon}>{icon}</View>}
 
-            <Text weight="bold" fontSize={21} lineHeight={24} style={styles.title}>
-              {title}
-            </Text>
+        <Text weight="bold" fontSize={21} lineHeight={24} style={styles.title}>
+          {title}
+        </Text>
 
-            <Text
-              weight="semiBold"
-              color="textSecondary"
-              align="center"
-              fontSize={15}
-              lineHeight={20}
-            >
-              {description}
-            </Text>
-          </View>
-
-          <View style={styles.buttons}>
-            {buttons.map((button, index) => (
-              <Button key={index.toString()} block variant={button.type} onPress={button.onPress}>
-                {button.label}
-              </Button>
-            ))}
-          </View>
-        </View>
+        <Text weight="semiBold" color="textSecondary" align="center" fontSize={15} lineHeight={20}>
+          {description}
+        </Text>
       </View>
-    </Portal>
+
+      <View style={styles.buttons}>
+        {buttons.map((button, index) => (
+          <Button key={index.toString()} block variant={button.type} onPress={button.onPress}>
+            {button.label}
+          </Button>
+        ))}
+      </View>
+    </Modal>
   );
 };

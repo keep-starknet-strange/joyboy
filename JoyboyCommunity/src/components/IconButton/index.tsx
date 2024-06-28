@@ -1,12 +1,12 @@
-import {Feather} from '@expo/vector-icons';
 import {Pressable, PressableProps, StyleProp, TextStyle} from 'react-native';
 
 import {useColor, useStyles} from '../../hooks';
 import {ColorProp} from '../../styles';
+import {Icon, IconNames} from '../Icon';
 import stylesheet from './styles';
 
 export type IconButtonProps = PressableProps & {
-  icon: React.ComponentProps<typeof Feather>['name'];
+  icon: IconNames;
   size?: number;
   color?: ColorProp;
   backgroundColor?: ColorProp;
@@ -38,12 +38,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
       }
       {...pressableProps}
     >
-      <Feather
-        name={icon}
-        size={size}
-        color={color}
-        style={[{width: size, height: size}, iconStyle]}
-      />
+      <Icon name={icon} size={size} color={color} style={iconStyle} />
     </Pressable>
   );
 };
