@@ -71,7 +71,6 @@
     "react-native-tab-view": "^3.5.2",
     "react-native-web": "~0.19.6",
     "starknet": "6.9.0",
-    "styled-components": "^6.1.11",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
