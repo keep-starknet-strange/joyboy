@@ -6,6 +6,7 @@ import {ESCROW_ADDRESSES} from '../constants/contracts';
 import {Entrypoint} from '../constants/misc';
 import {account} from '../services/account';
 import {provider} from '../services/provider';
+import {ErrorCode} from '../utils/errors';
 import {HTTPStatus} from '../utils/http';
 import {DepositClaimSchema} from '../utils/validation';
 
@@ -14,18 +15,18 @@ const Router = express.Router();
 Router.post('/claim', async (req, res) => {
   const body = DepositClaimSchema.safeParse(req.body);
   if (!body.success) {
-    res.status(HTTPStatus.BadRequest).send(body.error);
+    res.status(HTTPStatus.BadRequest).send({code: ErrorCode.BAD_REQUEST, error: body.error});
     return;
   }
 
   if (!verifyEvent(body.data.event)) {
-    res.status(HTTPStatus.BadRequest).send('Invalid event');
+    res.status(HTTPStatus.BadRequest).send({code: ErrorCode.INVALID_EVENT_SIGNATURE});
     return;
   }
 
   const content = body.data.event.content.replace('claim: ', '').split(',');
   if (content.length !== 4) {
-    res.status(HTTPStatus.BadRequest).send('Invalid event content');
+    res.status(HTTPStatus.BadRequest).send({code: ErrorCode.INVALID_EVENT_CONTENT});
     return;
   }
 
@@ -38,7 +39,7 @@ Router.post('/claim', async (req, res) => {
     validateAndParseAddress(recipientAddress);
     validateAndParseAddress(tokenAddress);
   } catch {
-    res.status(HTTPStatus.BadRequest).send('Invalid address');
+    res.status(HTTPStatus.BadRequest).send({code: ErrorCode.INVALID_ADDRESS});
     return;
   }
 
@@ -52,12 +53,12 @@ Router.post('/claim', async (req, res) => {
   const amount = uint256.uint256ToBN({low: amountLow, high: amountHigh});
 
   if (sender === '0x0') {
-    res.status(HTTPStatus.NotFound).send('Deposit not found');
+    res.status(HTTPStatus.NotFound).send({code: ErrorCode.DEPOSIT_NOT_FOUND});
     return;
   }
 
   if (amount > gasAmount) {
-    res.status(HTTPStatus.BadRequest).send('Invalid gas amount');
+    res.status(HTTPStatus.BadRequest).send({code: ErrorCode.INVALID_GAS_AMOUNT});
     return;
   }
 
@@ -80,15 +81,20 @@ Router.post('/claim', async (req, res) => {
     uint256.bnToUint256(gasAmount),
   ]);
 
-  const result = await account.execute([
-    {
-      contractAddress: ESCROW_ADDRESSES[await provider.getChainId()],
-      entrypoint: Entrypoint.CLAIM,
-      calldata: claimCallData,
-    },
-  ]);
+  try {
+    const result = await account.execute([
+      {
+        contractAddress: ESCROW_ADDRESSES[await provider.getChainId()],
+        entrypoint: Entrypoint.CLAIM,
+        calldata: claimCallData,
+      },
+    ]);
 
-  res.status(HTTPStatus.OK).send(result);
+    res.status(HTTPStatus.OK).send(result);
+  } catch (error) {
+    res.status(HTTPStatus.InternalServerError).send({code: ErrorCode.TRANSACTION_ERROR, error});
+    return;
+  }
 });
 
 export default Router;
