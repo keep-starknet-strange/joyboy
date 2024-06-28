@@ -468,17 +468,17 @@ mod tests {
         start_cheat_caller_address(escrow.contract_address, joyboy_address);
 
         let balance_before_claim = erc20.balance_of(joyboy_address);
-        assert!(balance_before_claim ==0, "balance not 0 before");
+        assert!(balance_before_claim == 0, "balance not 0 before");
 
         escrow.claim(request_gas_amount, gas_amount);
 
         let balance_after_claim = erc20.balance_of(joyboy_address);
         let recipient_balance_after_claim = erc20.balance_of(recipient_address);
-        assert!(recipient_balance_after_claim == amount-gas_amount, "amount - gas not received");
+        assert!(recipient_balance_after_claim == amount - gas_amount, "amount - gas not received");
 
         // Check gas amount receive by Joyboy account
 
-        assert!(balance_before_claim ==0, "balance below");
+        assert!(balance_before_claim == 0, "balance below");
         assert!(balance_after_claim == gas_amount, "not equal gas amount received");
     }
 
