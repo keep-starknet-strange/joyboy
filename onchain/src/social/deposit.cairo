@@ -410,10 +410,94 @@ mod tests {
         stop_cheat_caller_address_global();
 
         start_cheat_caller_address(escrow.contract_address, sender_address);
+        let balance_before_deposit = erc20.balance_of(sender_address);
+
         escrow.deposit(amount, erc20.contract_address, recipient_nostr_key, 0_u64);
 
+        let balance_after_deposit = erc20.balance_of(sender_address);
+        assert!(balance_before_deposit - amount == balance_after_deposit, "deposit not send");
+
         start_cheat_caller_address(escrow.contract_address, recipient_address);
+
+        let balance_before_claim = erc20.balance_of(recipient_address);
+
         escrow.claim(request, 0_u256);
+
+        let balance_after_claim = erc20.balance_of(sender_address);
+
+        assert!(balance_before_claim < balance_after_claim, "balance below");
+        assert!(balance_after_claim == amount, "not equal amount");
+    }
+
+    #[test]
+    fn deposit_claim_gas_fee() {
+        let (_, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
+
+        let recipient_address: ContractAddress = 678.try_into().unwrap();
+        let joyboy_address: ContractAddress = 159.try_into().unwrap();
+        let amount = 100_u256;
+        let gas_amount = 1_u256;
+
+        let claim_gas_amount = Claim {
+            deposit_id: 1,
+            starknet_recipient: recipient_address,
+            gas_amount: gas_amount,
+            gas_token_address: erc20.contract_address
+        };
+
+        let request_gas_amount = SocialRequest {
+            public_key: recipient_nostr_key,
+            created_at: 1716285235_u64,
+            kind: 1_u16,
+            tags: "[]",
+            content: claim_gas_amount,
+            sig: Signature {
+                r: 0x68e441c1f8756b5278c815cc110efb302c2a08bcf0349328ba7bd7683e8b0b29_u256,
+                s: 0xd592a5a5e9fc85334ab6801d6dde984c85d67fcd726fce38b9fb06874c25832e_u256
+            }
+        };
+
+        cheat_caller_address_global(sender_address);
+        erc20.approve(escrow.contract_address, amount);
+        stop_cheat_caller_address_global();
+
+        start_cheat_caller_address(escrow.contract_address, sender_address);
+        let balance_before_deposit = erc20.balance_of(sender_address);
+
+        escrow.deposit(amount, erc20.contract_address, recipient_nostr_key, 0_u64);
+
+        let balance_after_deposit = erc20.balance_of(sender_address);
+        assert!(balance_before_deposit - amount == balance_after_deposit, "deposit not send");
+
+        start_cheat_caller_address(escrow.contract_address, joyboy_address);
+
+        let balance_before_claim = erc20.balance_of(joyboy_address);
+
+        escrow.claim(request_gas_amount, gas_amount);
+
+        let balance_after_claim = erc20.balance_of(joyboy_address);
+
+        // Check gas amount receive by Joyboy account
+
+        assert!(balance_before_claim < balance_after_claim, "balance below");
+        assert!(balance_after_claim == gas_amount, "not equal amount");
+    }
+
+    #[test]
+    #[should_panic(expected: "gas_amount to big")]
+    fn claim_incorrect_gas_amount() {
+        let (request, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
+
+        let amount = 100_u256;
+
+        cheat_caller_address_global(sender_address);
+        erc20.approve(escrow.contract_address, amount);
+        stop_cheat_caller_address_global();
+
+        start_cheat_caller_address(escrow.contract_address, sender_address);
+        escrow.deposit(amount, erc20.contract_address, recipient_nostr_key, 10_u64);
+
+        escrow.claim(request, 1_u256);
     }
 
     #[test]
