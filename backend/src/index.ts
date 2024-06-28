@@ -13,6 +13,8 @@ app.use(express.json());
 
 app.use('/', router);
 
-app.listen(3001, () => {
-  console.info(`Express server started listening on port ${3001}`);
+const PORT = Number(process.env.PORT) || 3001;
+
+app.listen(PORT, () => {
+  console.info(`Express server started listening on port ${PORT}`);
 });
