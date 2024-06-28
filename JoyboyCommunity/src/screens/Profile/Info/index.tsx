@@ -98,7 +98,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                 }
                 onPress={onConnectionPress}
               >
-                {isConnected ? 'Remove Connection' : 'Connect'}
+                {isConnected ? 'UnFollow' : 'Follow'}
               </Button>
 
               <IconButton icon="DoubleMessageIcon" size={20} style={styles.iconButton} />
