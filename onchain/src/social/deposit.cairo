@@ -424,14 +424,13 @@ mod tests {
         escrow.claim(request, 0_u256);
 
         let balance_after_claim = erc20.balance_of(sender_address);
-
-        assert!(balance_before_claim < balance_after_claim, "balance below");
+        assert!(balance_before_claim == 0, "balance before not 0");
         assert!(balance_after_claim == amount, "not equal amount");
     }
 
     #[test]
     fn deposit_claim_gas_fee() {
-        let (_, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
+        let (request, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
 
         let recipient_address: ContractAddress = 678.try_into().unwrap();
         let joyboy_address: ContractAddress = 159.try_into().unwrap();
@@ -446,15 +445,12 @@ mod tests {
         };
 
         let request_gas_amount = SocialRequest {
-            public_key: recipient_nostr_key,
-            created_at: 1716285235_u64,
-            kind: 1_u16,
-            tags: "[]",
             content: claim_gas_amount,
             sig: Signature {
                 r: 0x68e441c1f8756b5278c815cc110efb302c2a08bcf0349328ba7bd7683e8b0b29_u256,
                 s: 0xd592a5a5e9fc85334ab6801d6dde984c85d67fcd726fce38b9fb06874c25832e_u256
-            }
+            },
+            ..request
         };
 
         cheat_caller_address_global(sender_address);
@@ -472,15 +468,18 @@ mod tests {
         start_cheat_caller_address(escrow.contract_address, joyboy_address);
 
         let balance_before_claim = erc20.balance_of(joyboy_address);
+        assert!(balance_before_claim ==0, "balance not 0 before");
 
         escrow.claim(request_gas_amount, gas_amount);
 
         let balance_after_claim = erc20.balance_of(joyboy_address);
+        let recipient_balance_after_claim = erc20.balance_of(recipient_address);
+        assert!(recipient_balance_after_claim == amount-gas_amount, "amount - gas not received");
 
         // Check gas amount receive by Joyboy account
 
-        assert!(balance_before_claim < balance_after_claim, "balance below");
-        assert!(balance_after_claim == gas_amount, "not equal amount");
+        assert!(balance_before_claim ==0, "balance below");
+        assert!(balance_after_claim == gas_amount, "not equal gas amount received");
     }
 
     #[test]
