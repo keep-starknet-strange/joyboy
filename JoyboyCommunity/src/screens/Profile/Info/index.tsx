@@ -132,7 +132,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
               {userPublicKey}
             </Text>
 
-            <IconButton size={16} icon="CopyIcon" color="primary" />
+            <IconButton size={16} icon="CopyIconStack" color="primary" />
           </Pressable>
         </View>
 
