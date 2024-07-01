@@ -1,11 +1,11 @@
-import { About } from "./components/About";
-import { ContributeSection } from "./components/ContributeSection";
-import { DescriptionSection } from "./components/DescriptionSection";
-import { DownloadSection } from "./components/DownloadSection";
-import { Faq } from "./components/Faq";
-import { Footer } from "./components/Footer";
-import { HeroSection } from "./components/HeroSection";
-import { Navbar } from "./components/Navbar";
+import {About} from './components/About';
+import {ContributeSection} from './components/ContributeSection';
+import {DescriptionSection} from './components/DescriptionSection';
+import {DownloadSection} from './components/DownloadSection';
+import {Faq} from './components/Faq';
+import {Footer} from './components/Footer';
+import {HeroSection} from './components/HeroSection';
+import {Navbar} from './components/Navbar';
 
 export default function App() {
   return (
