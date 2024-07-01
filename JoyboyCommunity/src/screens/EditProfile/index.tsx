@@ -7,7 +7,7 @@ import {ScrollView, TouchableOpacity, View} from 'react-native';
 
 import {CopyIconStack} from '../../assets/icons';
 import {Button, SquareInput, Text} from '../../components';
-import {useEditProfile, useProfile, useStyles, useTheme} from '../../hooks';
+import {useEditProfile, useProfile, useStyles, useTheme, useToast} from '../../hooks';
 import {useAuth} from '../../store/auth';
 import {EditProfileScreenProps} from '../../types';
 import {ProfileHead} from '../Profile/Head';
@@ -41,12 +41,13 @@ export const EditProfile: React.FC<EditProfileScreenProps> = () => {
   const profile = useProfile({publicKey});
   const editProfile = useEditProfile();
   const queryClient = useQueryClient();
+  const {showToast} = useToast();
 
   if (profile.isLoading) return null;
 
   const onPublicKeyCopyPress = async () => {
     await Clipboard.setStringAsync(publicKey);
-    alert('Copied to clipboard');
+    showToast({type: 'info', title: 'Public Key Copied to clipboard'});
   };
 
   const handlePhotoUpload = async (type: 'profile' | 'cover') => {
@@ -111,7 +112,7 @@ export const EditProfile: React.FC<EditProfileScreenProps> = () => {
 
     queryClient.invalidateQueries({queryKey: ['profile', publicKey]});
 
-    alert('Profile updated');
+    showToast({type: 'success', title: 'Profile updated successfully'});
   };
 
   return (

@@ -1,10 +1,11 @@
-import {Feather} from '@expo/vector-icons';
 import {useNavigation} from '@react-navigation/native';
+import {useQueryClient} from '@tanstack/react-query';
 import {useState} from 'react';
 import {Pressable, View} from 'react-native';
 
+import {UserPlusIcon} from '../../../assets/icons';
 import {Button, IconButton, Menu, Text} from '../../../components';
-import {useProfile, useStyles, useTheme} from '../../../hooks';
+import {useContacts, useEditContacts, useProfile, useStyles, useTheme} from '../../../hooks';
 import {useAuth} from '../../../store/auth';
 import {ProfileScreenProps} from '../../../types';
 import {ProfileHead} from '../Head';
@@ -25,10 +26,29 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
   const [menuOpen, setMenuOpen] = useState(false);
   const publicKey = useAuth((state) => state.publicKey);
 
+  const queryClient = useQueryClient();
+  const userContacts = useContacts({authors: [userPublicKey]});
+  const contacts = useContacts({authors: [publicKey]});
+  const editContacts = useEditContacts();
+
   const isSelf = publicKey === userPublicKey;
+  const isConnected = contacts.data?.includes(userPublicKey);
 
   const onEditProfilePress = () => {
     navigation.navigate('EditProfile');
+  };
+
+  const onConnectionPress = () => {
+    editContacts.mutateAsync(
+      {pubkey: publicKey, type: isConnected ? 'remove' : 'add'},
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({queryKey: ['contacts']});
+          userContacts.refetch();
+          contacts.refetch();
+        },
+      },
+    );
   };
 
   return (
@@ -54,7 +74,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                 onClose={() => setMenuOpen(false)}
                 handle={
                   <IconButton
-                    icon="more-vertical"
+                    icon="MoreVerticalIcon"
                     size={20}
                     style={styles.iconButton}
                     onPress={() => setMenuOpen(true)}
@@ -63,31 +83,32 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
               >
                 <Menu.Item
                   label={profile?.username ? `Share @${profile.username}` : 'Share'}
-                  icon="share"
+                  icon="ShareIcon"
                 />
-                <Menu.Item label="About" icon="info" />
+                <Menu.Item label="About" icon="InfoIconCircular" />
               </Menu>
             </>
           ) : (
             <>
               <Button
                 small
-                variant="secondary"
+                variant={isConnected ? 'default' : 'secondary'}
                 left={
-                  <Feather name="user-plus" size={16} color="white" style={styles.buttonIcon} />
+                  <UserPlusIcon width={16} height={16} color="white" style={styles.buttonIcon} />
                 }
+                onPress={onConnectionPress}
               >
-                Connect
+                {isConnected ? 'UnFollow' : 'Follow'}
               </Button>
 
-              <IconButton icon="message-square" size={20} style={styles.iconButton} />
+              <IconButton icon="DoubleMessageIcon" size={20} style={styles.iconButton} />
 
               <Menu
                 open={menuOpen}
                 onClose={() => setMenuOpen(false)}
                 handle={
                   <IconButton
-                    icon="more-vertical"
+                    icon="MoreVerticalIcon"
                     size={20}
                     style={styles.iconButton}
                     onPress={() => setMenuOpen(true)}
@@ -96,14 +117,14 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
               >
                 <Menu.Item
                   label={profile?.username ? `Tip @${profile.username}` : 'Tip'}
-                  icon="dollar-sign"
+                  icon="CoinIcon"
                 />
                 <Menu.Item
                   label={profile?.username ? `Share @${profile.username}` : 'Share'}
-                  icon="share"
+                  icon="ShareIcon"
                 />
-                <Menu.Item label="About" icon="info" />
-                <Menu.Item label="Report user" icon="flag" />
+                <Menu.Item label="About" icon="InfoIconCircular" />
+                <Menu.Item label="Report user" icon="FlagIcon" />
               </Menu>
             </>
           )
@@ -132,7 +153,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
               {userPublicKey}
             </Text>
 
-            <IconButton size={16} icon="copy" color="primary" />
+            <IconButton size={16} icon="CopyIconStack" color="primary" />
           </Pressable>
         </View>
 
@@ -143,9 +164,9 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
         ) : null}
 
         <View style={styles.connections}>
-          <Feather name="user-plus" size={16} color={theme.colors.text} />
+          <UserPlusIcon width={16} height={16} color={theme.colors.text} />
 
-          <Text weight="semiBold">13 Connections</Text>
+          <Text weight="semiBold">{userContacts.data?.length} Connections</Text>
         </View>
       </View>
     </View>

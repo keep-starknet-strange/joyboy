@@ -12,6 +12,7 @@ import {DEFAULT_TIMELOCK, Entrypoint} from '../../constants/misc';
 import {TOKENS, TokenSymbol} from '../../constants/tokens';
 import {
   useChainId,
+  useDialog,
   useProfile,
   useStyles,
   useTipModal,
@@ -42,7 +43,8 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(({event}, ref) => {
   const sendTransaction = useTransaction();
   const waitConnection = useWaitConnection();
 
-  const {hide, showSuccess, hideSuccess} = useTipModal();
+  const {hide: hideTipModal, showSuccess, hideSuccess} = useTipModal();
+  const {showDialog, hideDialog} = useDialog();
 
   const isActive = !!amount && !!token;
 
@@ -88,7 +90,7 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(({event}, ref) => {
     });
 
     if (receipt?.isSuccess()) {
-      alert('Tip sent!');
+      hideTipModal();
       showSuccess({
         amount: Number(amount),
         symbol: token,
@@ -99,9 +101,17 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(({event}, ref) => {
           event?.pubkey,
         hide: hideSuccess,
       });
-      hide();
     } else {
-      alert('Failed to send tip');
+      let description = 'Please Try Again Later.';
+      if (receipt.isRejected()) {
+        description = receipt.transaction_failure_reason.error_message;
+      }
+
+      showDialog({
+        title: 'Failed to send the tip',
+        description,
+        buttons: [{type: 'secondary', label: 'Close', onPress: () => hideDialog()}],
+      });
     }
   };
 

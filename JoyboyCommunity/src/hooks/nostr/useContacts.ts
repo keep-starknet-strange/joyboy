@@ -3,27 +3,24 @@ import {useQuery} from '@tanstack/react-query';
 
 import {useNostrContext} from '../../context/NostrContext';
 
-export type UseReactionsOptions = {
+export type UseContactsOptions = {
   authors?: string[];
   search?: string;
-  noteId?: string;
 };
 
-export const useReactions = (options?: UseReactionsOptions) => {
+export const useContacts = (options?: UseContactsOptions) => {
   const {ndk} = useNostrContext();
 
   return useQuery({
-    queryKey: ['reactions', options?.authors, options?.search, options?.noteId],
+    queryKey: ['contacts', options?.authors, options?.search],
     queryFn: async () => {
-      const notes = await ndk.fetchEvents({
-        kinds: [NDKKind.Reaction],
+      const contacts = await ndk.fetchEvent({
+        kinds: [NDKKind.Contacts],
         authors: options?.authors,
         search: options?.search,
-
-        '#e': options?.noteId ? [options.noteId] : undefined,
       });
 
-      return [...notes];
+      return contacts.tags.filter((tag) => tag[0] === 'p').map((tag) => tag[1]);
     },
     placeholderData: [],
   });

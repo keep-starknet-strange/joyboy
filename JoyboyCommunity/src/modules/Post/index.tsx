@@ -1,6 +1,6 @@
 import {NDKEvent} from '@nostr-dev-kit/ndk';
 import {useNavigation} from '@react-navigation/native';
-import {useState} from 'react';
+import {useMemo, useState} from 'react';
 import {Image, Pressable, View} from 'react-native';
 import Animated, {
   Easing,
@@ -13,7 +13,16 @@ import Animated, {
 
 import {CommentIcon, LikeFillIcon, LikeIcon, RepostIcon} from '../../assets/icons';
 import {Avatar, IconButton, Menu, Text} from '../../components';
-import {useProfile, useStyles, useTheme, useTipModal} from '../../hooks';
+import {
+  useProfile,
+  useReact,
+  useReactions,
+  useReplyNotes,
+  useStyles,
+  useTheme,
+  useTipModal,
+} from '../../hooks';
+import {useAuth} from '../../store/auth';
 import {MainStackNavigationProps} from '../../types';
 import {getElapsedTimeStringFull} from '../../utils/timestamp';
 import stylesheet from './styles';
@@ -27,19 +36,38 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
   const repostedEvent = undefined;
   const postSource = undefined;
 
-  const navigation = useNavigation<MainStackNavigationProps>();
-
-  const {data: profile} = useProfile({publicKey: event?.pubkey});
-  const {show: showTipModal} = useTipModal();
-
   const theme = useTheme();
   const styles = useStyles(stylesheet);
 
-  const [isLiked, setIsLiked] = useState(false);
-  const [likes, setLikes] = useState(12); // static value for now
+  const navigation = useNavigation<MainStackNavigationProps>();
+
+  const {publicKey} = useAuth();
+  const {show: showTipModal} = useTipModal();
+  const {data: profile} = useProfile({publicKey: event?.pubkey});
+  const reactions = useReactions({noteId: event?.id});
+  const userReaction = useReactions({authors: [publicKey], noteId: event?.id});
+  const comments = useReplyNotes({noteId: event?.id});
+  const react = useReact();
+
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const scale = useSharedValue(1); // Control scale for icon animation
+  const scale = useSharedValue(1);
+
+  const isLiked = useMemo(
+    () =>
+      Array.isArray(userReaction.data) &&
+      userReaction.data[0] &&
+      userReaction.data[0]?.content !== '-',
+    [userReaction.data],
+  );
+
+  const likes = useMemo(() => {
+    if (!reactions.data) return 0;
+
+    const likesCount = reactions.data.filter((reaction) => reaction.content !== '-').length;
+    const dislikesCount = reactions.data.length - likesCount;
+    return likesCount - dislikesCount;
+  }, [reactions.data]);
 
   // Animated style for the icon
   const animatedIconStyle = useAnimatedStyle(() => ({
@@ -52,39 +80,26 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
     }
   };
 
-  /** @TODO comment in Nostr */
-  const handleComment = () => {};
-
-  /** @TODO repost in Nostr */
-  const handleRepostNote = () => {
-    alert('Handle repost');
-  };
-
   const handleNavigateToPostDetails = () => {
     navigation.navigate('PostDetail', {postId: event?.id, post: event});
   };
 
-  const handleMore = () => {};
-
   /** @TODO comment in Nostr */
-  const toggleLike = () => {
-    setIsLiked((prevIsLiked) => {
-      const newIsLiked = !prevIsLiked;
-      setLikes((prevLikes) => {
-        const newLikes = newIsLiked ? prevLikes + 1 : prevLikes - 1;
+  const toggleLike = async () => {
+    await react.mutateAsync(
+      {event, type: isLiked ? 'dislike' : 'like'},
+      {
+        onSuccess: () => {
+          reactions.refetch();
+          userReaction.refetch();
 
-        // Only trigger the animation if not unliking from 1 like to zero
-        if (!(prevLikes === 1 && !newIsLiked)) {
           scale.value = withSequence(
             withTiming(1.5, {duration: 100, easing: Easing.out(Easing.ease)}), // Scale up
             withSpring(1, {damping: 6, stiffness: 200}), // Bounce back
           );
-        }
-
-        return newLikes;
-      });
-      return newIsLiked;
-    });
+        },
+      },
+    );
   };
 
   return (
@@ -171,10 +186,10 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
         <View style={styles.footer}>
           <Pressable onPress={handleNavigateToPostDetails}>
             <View style={styles.footerComments}>
-              <CommentIcon height={20} color={theme.colors.textSecondary} onPress={handleComment} />
+              <CommentIcon height={20} color={theme.colors.textSecondary} />
 
               <Text color="textSecondary" fontSize={11} lineHeight={16}>
-                16 comments
+                {comments.data?.pages.flat().length} comments
               </Text>
             </View>
           </Pressable>
@@ -183,13 +198,13 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
             open={menuOpen}
             onClose={() => setMenuOpen(false)}
             handle={
-              <IconButton icon="more-horizontal" size={20} onPress={() => setMenuOpen(true)} />
+              <IconButton icon="MoreHorizontalIcon" size={20} onPress={() => setMenuOpen(true)} />
             }
           >
-            <Menu.Item label="Share" icon="share" />
+            <Menu.Item label="Share" icon="ShareIcon" />
             <Menu.Item
               label={profile?.username ? `Tip @${profile.username}` : 'Tip'}
-              icon="dollar-sign"
+              icon="CoinIcon"
               onPress={() => {
                 showTipModal(event);
                 setMenuOpen(false);

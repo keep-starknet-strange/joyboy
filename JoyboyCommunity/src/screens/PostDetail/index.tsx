@@ -2,7 +2,7 @@ import {useCallback, useState} from 'react';
 import {FlatList, RefreshControl, View} from 'react-native';
 
 import {Divider, Header, IconButton, Input, KeyboardFixedView} from '../../components';
-import {useNote, useReplyNotes, useSendNote, useStyles} from '../../hooks';
+import {useNote, useReplyNotes, useSendNote, useStyles, useToast} from '../../hooks';
 import {Post} from '../../modules/Post';
 import {PostDetailScreenProps} from '../../types';
 import stylesheet from './styles';
@@ -17,40 +17,41 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
   const sendNote = useSendNote();
   const {data: note = post} = useNote({noteId: postId});
   const comments = useReplyNotes({noteId: note.id});
+  const {showToast} = useToast();
 
   const handleSendComment = useCallback(async () => {
     try {
       if (!comment || comment?.length == 0) {
-        alert('Write your note');
+        showToast({type: 'error', title: 'Please write your note'});
         return;
       }
 
       sendNote.mutate(
         {content: comment, tags: [['e', note.id, '', 'root', note.pubkey]]},
         {
-          async onSuccess(data) {
-            if (data) alert('Note sent');
-
-            await comments.refetch();
+          onSuccess() {
+            showToast({type: 'success', title: 'Comment sent successfully'});
+            comments.refetch();
           },
-          onError(error) {
-            console.log('Error send note', error);
+          onError() {
+            showToast({
+              type: 'error',
+              title: 'Error! Comment could not be sent. Please try again later.',
+            });
           },
         },
       );
     } catch (e) {
       console.log('Error send note', e);
     }
-  }, [comment, note.id, note.pubkey, sendNote, comments]);
-
-  console.log(comments.data);
+  }, [comment, note.id, note.pubkey, sendNote, comments, showToast]);
 
   return (
     <View style={styles.container}>
       <Header
         showLogo={false}
-        left={<IconButton icon="chevron-left" size={24} onPress={navigation.goBack} />}
-        right={<IconButton icon="more-horizontal" size={24} />}
+        left={<IconButton icon="ChevronLeftIcon" size={24} onPress={navigation.goBack} />}
+        right={<IconButton icon="MoreHorizontalIcon" size={24} />}
         title="Conversation"
       />
 
@@ -93,7 +94,7 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
             placeholder="Comment"
           />
 
-          <IconButton icon="send" size={24} onPress={handleSendComment} />
+          <IconButton icon="SendIcon" size={24} onPress={handleSendComment} />
         </View>
       </KeyboardFixedView>
     </View>
