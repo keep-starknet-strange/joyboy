@@ -418,14 +418,24 @@ mod tests {
         assert!(balance_before_deposit - amount == balance_after_deposit, "deposit not send");
 
         start_cheat_caller_address(escrow.contract_address, recipient_address);
+        let escrow_balance_before_claim = erc20.balance_of(escrow.contract_address);
+
 
         let balance_before_claim = erc20.balance_of(recipient_address);
 
         escrow.claim(request, 0_u256);
 
+        // Sender check
+
         let balance_after_claim = erc20.balance_of(sender_address);
         assert!(balance_before_claim == 0, "balance before not 0");
         assert!(balance_after_claim == amount, "not equal amount");
+
+
+        // Escrow balance 
+        assert!(escrow_balance_before_claim == amount, "escrow not equal amount");
+        let escrow_balance_after_claim = erc20.balance_of(escrow.contract_address);
+        assert!(escrow_balance_after_claim == 0, "balance after claim != 0");
     }
 
     #[test]
@@ -469,6 +479,8 @@ mod tests {
 
         let balance_before_claim = erc20.balance_of(joyboy_address);
         assert!(balance_before_claim == 0, "balance not 0 before");
+        let escrow_balance_before_claim = erc20.balance_of(escrow.contract_address);
+
 
         escrow.claim(request_gas_amount, gas_amount);
 
@@ -480,6 +492,13 @@ mod tests {
 
         assert!(balance_before_claim == 0, "balance below");
         assert!(balance_after_claim == gas_amount, "not equal gas amount received");
+
+
+        // Escrow balance
+ 
+        assert!(escrow_balance_before_claim == amount, "escrow not equal amount");
+        let escrow_balance_after_claim = erc20.balance_of(escrow.contract_address);
+        assert!(escrow_balance_after_claim == 0, "balance after claim != 0");
     }
 
     #[test]
