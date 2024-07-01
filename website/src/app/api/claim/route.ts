@@ -2,13 +2,13 @@ import {NextRequest, NextResponse} from 'next/server';
 import {verifyEvent} from 'nostr-tools/pure';
 import {byteArray, cairo, CallData, uint256, validateAndParseAddress} from 'starknet';
 
-import {ESCROW_ADDRESSES} from '../../../constants/contracts';
-import {Entrypoint} from '../../../constants/misc';
-import {account} from '../../../services/account';
-import {provider} from '../../../services/provider';
-import {ErrorCode} from '../../../utils/errors';
-import {HTTPStatus} from '../../../utils/http';
-import {ClaimSchema} from '../../../utils/validation';
+import {ESCROW_ADDRESSES} from '@/constants/contracts';
+import {Entrypoint} from '@/constants/misc';
+import {account} from '@/services/account';
+import {provider} from '@/services/provider';
+import {ErrorCode} from '@/utils/errors';
+import {HTTPStatus} from '@/utils/http';
+import {ClaimSchema} from '@/utils/validation';
 
 export async function POST(request: NextRequest) {
   const requestBody = await request.json();
