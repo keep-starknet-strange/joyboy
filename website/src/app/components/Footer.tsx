@@ -3,11 +3,7 @@ export function Footer() {
     <div className="bg-footerBg bg-no-repeat bg-contain bg-black mt-0 tab:mt-[140px] pt-[200px] tab:pt-[514px] tab:px-[73px] px-6 pb-[42px] text-white">
       <div className="flex tab:flex-row flex-col items-center tab:items-start justify-between border-b-[1px] border-b-[#484040] border-b-solid pb-[30px]">
         <div className="flex flex-col items-center tab:items-start text-center tab:text-left">
-          <img
-            src="/assets/logo.svg"
-            className="w-[80px] h-[80px] tab:h-auto tab:w-auto"
-            alt=""
-          />
+          <img src="/assets/logo.svg" className="w-[80px] h-[80px] tab:h-auto tab:w-auto" alt="" />
           <p className="text-base leading-[18px] font-normal mt-[15px] tab:mb-[66px] mb-6 w-[278px]">
             Free, open-source decentralized social media platform.
           </p>
@@ -45,4 +41,4 @@ export function Footer() {
       </h6>
     </div>
   );
-};
+}
