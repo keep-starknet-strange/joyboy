@@ -410,30 +410,37 @@ mod tests {
         stop_cheat_caller_address_global();
 
         start_cheat_caller_address(escrow.contract_address, sender_address);
-        let balance_before_deposit = erc20.balance_of(sender_address);
+        let sender_balance_before_deposit = erc20.balance_of(sender_address);
+
+        // Deposit by sender to recipient
 
         escrow.deposit(amount, erc20.contract_address, recipient_nostr_key, 0_u64);
 
-        let balance_after_deposit = erc20.balance_of(sender_address);
-        assert!(balance_before_deposit - amount == balance_after_deposit, "deposit not send");
+        let sender_balance_after_deposit = erc20.balance_of(sender_address);
 
         start_cheat_caller_address(escrow.contract_address, recipient_address);
         let escrow_balance_before_claim = erc20.balance_of(escrow.contract_address);
 
-        let balance_before_claim = erc20.balance_of(recipient_address);
-
+        // Recipient user claim deposit
+        let recipient_balance_before_claim = erc20.balance_of(recipient_address);
         escrow.claim(request, 0_u256);
 
         // Sender check
+        assert!(
+            sender_balance_before_deposit - amount == sender_balance_after_deposit,
+            "sender amount to deposit not send"
+        );
 
-        let balance_after_claim = erc20.balance_of(sender_address);
-        assert!(balance_before_claim == 0, "balance before not 0");
-        assert!(balance_after_claim == amount, "not equal amount");
+        // Recipient check
+
+        let recipient_balance_after_claim = erc20.balance_of(recipient_address);
+        assert!(recipient_balance_before_claim == 0, "recipient balance before claim != 0");
+        assert!(recipient_balance_after_claim == amount, "recipient balance after claim != 0");
 
         // Escrow balance 
-        assert!(escrow_balance_before_claim == amount, "escrow not equal amount");
+        assert!(escrow_balance_before_claim == amount, "escrow before claim != amount");
         let escrow_balance_after_claim = erc20.balance_of(escrow.contract_address);
-        assert!(escrow_balance_after_claim == 0, "balance after claim != 0");
+        assert!(escrow_balance_after_claim == 0, "escrow balance after claim != 0");
     }
 
     #[test]
@@ -466,35 +473,46 @@ mod tests {
         stop_cheat_caller_address_global();
 
         start_cheat_caller_address(escrow.contract_address, sender_address);
-        let balance_before_deposit = erc20.balance_of(sender_address);
+        let sender_balance_before_deposit = erc20.balance_of(sender_address);
 
         escrow.deposit(amount, erc20.contract_address, recipient_nostr_key, 0_u64);
 
-        let balance_after_deposit = erc20.balance_of(sender_address);
-        assert!(balance_before_deposit - amount == balance_after_deposit, "deposit not send");
+        let sender_balance_after_deposit = erc20.balance_of(sender_address);
 
         start_cheat_caller_address(escrow.contract_address, joyboy_address);
 
-        let balance_before_claim = erc20.balance_of(joyboy_address);
-        assert!(balance_before_claim == 0, "balance not 0 before");
-        let escrow_balance_before_claim = erc20.balance_of(escrow.contract_address);
+        let joyboy_balance_before_claim = erc20.balance_of(joyboy_address);
 
+        // Sender check
+        assert!(
+            sender_balance_before_deposit - amount == sender_balance_after_deposit,
+            "sender deposit amount not send"
+        );
+
+        // Joyboy account claim user for recipient with gas fees paid by the claim deposit
+        let escrow_balance_before_claim = erc20.balance_of(escrow.contract_address);
+        let recipient_balance_before_claim = erc20.balance_of(recipient_address);
         escrow.claim(request_gas_amount, gas_amount);
 
-        let balance_after_claim = erc20.balance_of(joyboy_address);
+        // Recipient check
         let recipient_balance_after_claim = erc20.balance_of(recipient_address);
-        assert!(recipient_balance_after_claim == amount - gas_amount, "amount - gas not received");
+        assert!(recipient_balance_before_claim == 0, "recipient balance before claim != 0");
+        assert!(
+            recipient_balance_after_claim == amount - gas_amount,
+            "recipient after claim != (amount - gas)"
+        );
 
         // Check gas amount receive by Joyboy account
-
-        assert!(balance_before_claim == 0, "balance below");
-        assert!(balance_after_claim == gas_amount, "not equal gas amount received");
+        let joyboy_balance_after_claim = erc20.balance_of(joyboy_address);
+        assert!(joyboy_balance_before_claim == 0, "joy balance before claim != 0");
+        assert!(
+            joyboy_balance_after_claim == gas_amount, "joyboy balance not equal gas amount received"
+        );
 
         // Escrow balance
-
-        assert!(escrow_balance_before_claim == amount, "escrow not equal amount");
+        assert!(escrow_balance_before_claim == amount, "escrow before claim != amount deposit");
         let escrow_balance_after_claim = erc20.balance_of(escrow.contract_address);
-        assert!(escrow_balance_after_claim == 0, "balance after claim != 0");
+        assert!(escrow_balance_after_claim == 0, "escrow balance after claim != 0");
     }
 
     #[test]
