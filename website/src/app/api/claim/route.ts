@@ -1,4 +1,5 @@
-import {verifyEvent} from 'nostr-tools';
+import {NextRequest, NextResponse} from 'next/server';
+import {verifyEvent} from 'nostr-tools/pure';
 import {byteArray, cairo, CallData, uint256, validateAndParseAddress} from 'starknet';
 
 import {ESCROW_ADDRESSES} from '../../../constants/contracts';
@@ -9,19 +10,19 @@ import {ErrorCode} from '../../../utils/errors';
 import {HTTPStatus} from '../../../utils/http';
 import {ClaimSchema} from '../../../utils/validation';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const requestBody = await request.json();
 
   const body = ClaimSchema.safeParse(requestBody);
   if (!body.success) {
-    return Response.json(
+    return NextResponse.json(
       {code: ErrorCode.BAD_REQUEST, error: body.error},
       {status: HTTPStatus.BadRequest},
     );
   }
 
   if (!verifyEvent(body.data.event)) {
-    return Response.json(
+    return NextResponse.json(
       {code: ErrorCode.INVALID_EVENT_SIGNATURE},
       {status: HTTPStatus.BadRequest},
     );
@@ -29,7 +30,10 @@ export async function POST(request: Request) {
 
   const content = body.data.event.content.replace('claim: ', '').split(',');
   if (content.length !== 4) {
-    return Response.json({code: ErrorCode.INVALID_EVENT_CONTENT}, {status: HTTPStatus.BadRequest});
+    return NextResponse.json(
+      {code: ErrorCode.INVALID_EVENT_CONTENT},
+      {status: HTTPStatus.BadRequest},
+    );
   }
 
   const depositId = cairo.felt(content[0]);
@@ -41,7 +45,7 @@ export async function POST(request: Request) {
     validateAndParseAddress(recipientAddress);
     validateAndParseAddress(tokenAddress);
   } catch {
-    return Response.json({code: ErrorCode.INVALID_ADDRESS}, {status: HTTPStatus.BadRequest});
+    return NextResponse.json({code: ErrorCode.INVALID_ADDRESS}, {status: HTTPStatus.BadRequest});
   }
 
   const deposit = await provider.callContract({
@@ -54,11 +58,11 @@ export async function POST(request: Request) {
   const amount = uint256.uint256ToBN({low: amountLow, high: amountHigh});
 
   if (sender === '0x0') {
-    return Response.json({code: ErrorCode.DEPOSIT_NOT_FOUND}, {status: HTTPStatus.NotFound});
+    return NextResponse.json({code: ErrorCode.DEPOSIT_NOT_FOUND}, {status: HTTPStatus.NotFound});
   }
 
   if (amount < gasAmount) {
-    return Response.json({code: ErrorCode.INVALID_GAS_AMOUNT}, {status: HTTPStatus.BadRequest});
+    return NextResponse.json({code: ErrorCode.INVALID_GAS_AMOUNT}, {status: HTTPStatus.BadRequest});
   }
 
   const {event} = body.data;
@@ -89,9 +93,9 @@ export async function POST(request: Request) {
       },
     ]);
 
-    return Response.json({transaction_hash}, {status: HTTPStatus.OK});
+    return NextResponse.json({transaction_hash}, {status: HTTPStatus.OK});
   } catch (error) {
-    return Response.json(
+    return NextResponse.json(
       {code: ErrorCode.TRANSACTION_ERROR, error},
       {status: HTTPStatus.InternalServerError},
     );
