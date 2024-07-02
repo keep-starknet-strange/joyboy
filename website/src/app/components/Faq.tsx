@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { FaqBar } from "./FaqBar";
+import {FaqBar} from './FaqBar';
 
 export function Faq() {
   return (
@@ -11,10 +11,7 @@ export function Faq() {
       <div className="flex flex-col gap-y-[24px] items-center w-full">
         <FaqBar question="How do i Join Joyboy?" answer="Joyboy" />
         <FaqBar question="What kind of contents can i post?" answer="" />
-        <FaqBar
-          question="How can i contribute to the Joyboy project?"
-          answer=""
-        />
+        <FaqBar question="How can i contribute to the Joyboy project?" answer="" />
         <FaqBar question="How can I jointhe Joyboy community?" answer="" />
       </div>
     </div>

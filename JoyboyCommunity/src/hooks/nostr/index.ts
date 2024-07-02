@@ -1,3 +1,5 @@
+export {useContacts} from './useContacts';
+export {useEditContacts} from './useEditContacts';
 export {useEditProfile} from './useEditProfile';
 export {useNote} from './useNote';
 export {useProfile} from './useProfile';

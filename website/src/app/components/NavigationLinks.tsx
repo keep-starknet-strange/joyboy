@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 export function NavigationLinks() {
   return (
@@ -9,4 +9,4 @@ export function NavigationLinks() {
       <li>Developers</li>
     </ul>
   );
-};
+}
