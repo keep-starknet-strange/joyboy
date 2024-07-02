@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+import {BACKEND_URL} from '../constants/env';
+
 export const ApiInstance = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: BACKEND_URL,
   timeout: 10_000,
   headers: {
     'Content-Type': 'application/json',

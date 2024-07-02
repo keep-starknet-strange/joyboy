@@ -1,8 +1,7 @@
-import {sepolia} from '@starknet-react/chains';
+import {mainnet, sepolia} from '@starknet-react/chains';
 import {
   argent,
   braavos,
-  infuraProvider,
   StarknetConfig,
   useInjectedConnectors,
   voyager,
@@ -12,12 +11,20 @@ import {
   useArgentMobileConnector,
 } from '@starknet-wc/react';
 import {Platform} from 'react-native';
-import {constants} from 'starknet';
 
+import {NETWORK_NAME, WALLET_CONNECT_ID} from '../constants/env';
 import {RpcProviderProvider} from '../context/RpcProvider';
 import {WalletQRModal} from '../modules/WalletQRModal';
+import {providers} from '../services/provider';
 
 export const StarknetReactProvider: React.FC<React.PropsWithChildren> = ({children}) => {
+  const chain = {
+    SN_MAIN: mainnet,
+    SN_SEPOLIA: sepolia,
+  }[NETWORK_NAME];
+
+  const provider = providers(chain);
+
   const {connectors} = useInjectedConnectors({
     // Show these connectors if the user has no connector installed.
     recommended: [argent(), braavos()],
@@ -29,19 +36,16 @@ export const StarknetReactProvider: React.FC<React.PropsWithChildren> = ({childr
 
   const argentMobileConnector = useArgentMobileConnector();
 
-  const providers = infuraProvider({apiKey: '98f462b6b2644cadae88bdb695e467bf'});
-  const provider = providers(sepolia);
-
   return (
     <RpcProviderProvider provider={provider}>
       <StarknetConfig
-        chains={[sepolia]}
+        chains={[chain]}
         provider={providers}
         connectors={[
           argentMobileConnector({
-            chain: constants.NetworkName.SN_SEPOLIA,
+            chain: NETWORK_NAME,
             // TODO: Move this to ENV
-            wcProjectId: 'a9b4b052eb741f95a54c90ac5bdb343e',
+            wcProjectId: WALLET_CONNECT_ID,
             dappName: 'Joyboy',
             description: 'Joyboy Starknet dApp',
             url: 'https://joyboy.community',
