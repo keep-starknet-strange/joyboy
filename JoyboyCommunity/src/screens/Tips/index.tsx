@@ -2,18 +2,19 @@ import {NDKEvent, NDKKind} from '@nostr-dev-kit/ndk';
 import {useAccount} from '@starknet-react/core';
 import {Fraction} from '@uniswap/sdk-core';
 import {FlatList, RefreshControl, View} from 'react-native';
-import {byteArray, cairo, CallData, uint256} from 'starknet';
+import {cairo} from 'starknet';
 
 import {Button, Divider, Header, Text} from '../../components';
-import {ESCROW_ADDRESSES} from '../../constants/contracts';
-import {Entrypoint} from '../../constants/misc';
+import {STRK} from '../../constants/tokens';
 import {useNostrContext} from '../../context/NostrContext';
 import {
   useChainId,
+  useClaim,
+  useEstimateClaim,
   useStyles,
   useTips,
   useToast,
-  useTransaction,
+  useTransactionModal,
   useWaitConnection,
   useWalletModal,
 } from '../../hooks';
@@ -29,76 +30,54 @@ export const Tips: React.FC = () => {
 
   const account = useAccount();
   const chainId = useChainId();
-  const sendTransaction = useTransaction();
+  const claim = useClaim();
+  const estimateClaim = useEstimateClaim();
   const walletModal = useWalletModal();
   const waitConnection = useWaitConnection();
+  const {show: showTransactionModal} = useTransactionModal();
   const {showToast} = useToast();
 
   const onClaimPress = async (depositId: number) => {
     if (!account.address) {
       walletModal.show();
-
-      const result = await waitConnection();
-      if (!result) return;
     }
 
-    const kind = NDKKind.Text;
-    const content = cairo.felt(depositId);
-    const tags = [];
-    const createdAt = Date.now();
+    const connectedAccount = await waitConnection();
+    if (!connectedAccount) return;
 
-    const event = new NDKEvent(ndk);
-    event.kind = kind;
-    event.content = `claim ${content}`;
-    event.tags = tags;
-    event.created_at = createdAt;
+    const getNostrEvent = async (gasAmount: bigint) => {
+      const event = new NDKEvent(ndk);
+      event.kind = NDKKind.Text;
+      event.content = `claim: ${cairo.felt(depositId)},${cairo.felt(
+        connectedAccount.address,
+      )},${cairo.felt(STRK[chainId].address)},${gasAmount.toString()}`;
+      event.tags = [];
 
-    const signature = await event.sign();
-    const signatureR = `0x${signature.slice(0, signature.length / 2)}`;
-    const signatureS = `0x${signature.slice(signature.length / 2)}`;
+      await event.sign();
+      return event.rawEvent();
+    };
 
-    const publicKey = event.pubkey;
+    const feeResult = await estimateClaim.mutateAsync(
+      await getNostrEvent(BigInt(0.0004 * Number(decimalsScale(18)))),
+    );
+    const fee = BigInt(feeResult.data.fee);
 
-    const claimCallData = CallData.compile([
-      uint256.bnToUint256(`0x${publicKey}`), // public_key
-      createdAt, // created_at
-      kind, // kind
-      byteArray.byteArrayFromString(JSON.stringify(tags)), // tags
-      content, // content
-      {
-        r: uint256.bnToUint256(signatureR), // signature R
-        s: uint256.bnToUint256(signatureS), // signature S
-      }, // signature
-    ]);
+    const claimResult = await claim.mutateAsync(await getNostrEvent(fee));
+    const txHash = claimResult.data.transaction_hash;
 
-    const receipt = await sendTransaction({
-      calls: [
-        {
-          contractAddress: ESCROW_ADDRESSES[chainId],
-          entrypoint: Entrypoint.CLAIM,
-          calldata: claimCallData,
-        },
-      ],
-    });
+    showTransactionModal(txHash, async (receipt) => {
+      if (receipt.isSuccess()) {
+        showToast({type: 'success', title: 'Tip claimed successfully'});
+      } else {
+        let description = 'Please Try Again Later.';
+        if (receipt.isRejected()) {
+          description = receipt.transaction_failure_reason.error_message;
+        }
 
-    if (receipt.isSuccess()) {
-      showToast({type: 'success', title: 'Tip claimed successfully'});
-    } else {
-      let description = 'Please Try Again Later.';
-      if (receipt.isRejected()) {
-        description = receipt.transaction_failure_reason.error_message;
+        showToast({type: 'error', title: `Failed to claim the tip. ${description}`});
       }
-
-      showToast({type: 'error', title: `Failed to send the tip. ${description}`});
-    }
+    });
   };
-
-  console.log(
-    tips.data.pages
-      .flat()
-      .map((page) => page.events)
-      .flat(),
-  );
 
   return (
     <View style={styles.container}>

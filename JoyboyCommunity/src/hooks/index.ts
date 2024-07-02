@@ -1,3 +1,4 @@
+export * from './api';
 export * from './modals';
 export * from './nostr';
 export {useChainId} from './useChainId';

@@ -1,24 +1,24 @@
-import {useAccount} from '@starknet-react/core';
+import {useAccount, UseAccountResult} from '@starknet-react/core';
 import {useEffect, useRef} from 'react';
 
 export const useWaitConnection = () => {
-  const {address} = useAccount();
+  const account = useAccount();
 
-  const promise = useRef<Promise<boolean>>();
-  const promiseResolve = useRef<(value: boolean) => void>();
+  const promise = useRef<Promise<false | UseAccountResult>>();
+  const promiseResolve = useRef<(value: false | UseAccountResult) => void>();
 
   useEffect(() => {
-    if (address && promise.current) {
-      promiseResolve.current(true);
+    if (account.address && promise.current) {
+      promiseResolve.current(account);
 
       promise.current = undefined;
       promiseResolve.current = undefined;
     }
-  }, [address]);
+  }, [account]);
 
   const waitConnection = () => {
-    if (address) {
-      return true;
+    if (account.address) {
+      return account;
     }
 
     if (promise.current) {
