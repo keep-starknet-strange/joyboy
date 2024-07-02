@@ -1,5 +1,5 @@
 import {NextRequest, NextResponse} from 'next/server';
-import {Calldata} from 'starknet';
+import {Calldata, stark} from 'starknet';
 
 import {ESCROW_ADDRESSES} from '@/constants/contracts';
 import {Entrypoint} from '@/constants/misc';
@@ -43,7 +43,8 @@ export async function POST(request: NextRequest) {
       },
     ]);
 
-    const fee = result.suggestedMaxFee.toString();
+    // Using 1.2 as a multiplier to ensure the fee is enough
+    const fee = stark.estimatedFeeToMaxFee(result.overall_fee, 1.2).toString();
 
     return NextResponse.json({fee}, {status: HTTPStatus.OK});
   } catch (error) {
