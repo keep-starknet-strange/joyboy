@@ -4,7 +4,7 @@ import {Platform} from 'react-native';
 
 import {LockIcon} from '../../assets/icons';
 import {Button, Input, TextButton} from '../../components';
-import {useTheme, useToast} from '../../hooks';
+import {useDialog, useTheme, useToast} from '../../hooks';
 import {Auth} from '../../modules/Auth';
 import {useAuth} from '../../store/auth';
 import {AuthLoginScreenProps} from '../../types';
@@ -20,7 +20,9 @@ export const Login: React.FC<AuthLoginScreenProps> = ({navigation}) => {
   const setAuth = useAuth((state) => state.setAuth);
 
   const [password, setPassword] = useState('');
+
   const {showToast} = useToast();
+  const {showDialog, hideDialog} = useDialog();
 
   useEffect(() => {
     (async () => {
@@ -57,6 +59,25 @@ export const Login: React.FC<AuthLoginScreenProps> = ({navigation}) => {
     setAuth(publicKey, privateKeyHex);
   };
 
+  const handleCreateAccount = () => {
+    showDialog({
+      title: 'WARNING',
+      description:
+        'Creating a new account will delete your current account. Are you sure you want to continue?',
+      buttons: [
+        {type: 'default', label: 'Cancel', onPress: hideDialog},
+        {
+          type: 'primary',
+          label: 'Continue',
+          onPress: () => {
+            navigation.navigate('CreateAccount');
+            hideDialog();
+          },
+        },
+      ],
+    });
+  };
+
   return (
     <Auth title="Login">
       <Input
@@ -71,7 +92,7 @@ export const Login: React.FC<AuthLoginScreenProps> = ({navigation}) => {
         Login
       </Button>
 
-      <TextButton onPress={() => navigation.navigate('CreateAccount')}>Create Account</TextButton>
+      <TextButton onPress={handleCreateAccount}>Create Account</TextButton>
     </Auth>
   );
 };

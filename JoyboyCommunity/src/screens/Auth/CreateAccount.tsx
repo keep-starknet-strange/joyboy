@@ -3,7 +3,7 @@ import {useState} from 'react';
 import {Platform} from 'react-native';
 
 import {LockIcon} from '../../assets/icons';
-import {Button, Input, TextButton} from '../../components';
+import {Button, Input} from '../../components';
 import {useDialog, useTheme, useToast} from '../../hooks';
 import {Auth} from '../../modules/Auth';
 import {AuthCreateAccountScreenProps} from '../../types';
@@ -76,8 +76,6 @@ export const CreateAccount: React.FC<AuthCreateAccountScreenProps> = ({navigatio
       >
         Create Account
       </Button>
-
-      <TextButton onPress={() => navigation.navigate('Login')}>Login</TextButton>
     </Auth>
   );
 };

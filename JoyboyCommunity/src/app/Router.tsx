@@ -1,6 +1,7 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 
 import {Icon} from '../components';
@@ -17,6 +18,7 @@ import {Tips} from '../screens/Tips';
 import {useAuth} from '../store/auth';
 import {ThemedStyleSheet} from '../styles';
 import {AuthStackParams, HomeBottomStackParams, MainStackParams, RootStackParams} from '../types';
+import {retrievePublicKey} from '../utils/storage';
 
 const RootStack = createNativeStackNavigator<RootStackParams>();
 const AuthStack = createNativeStackNavigator<AuthStackParams>();
@@ -99,9 +101,19 @@ const HomeBottomTabNavigator: React.FC = () => {
 };
 
 const AuthNavigator: React.FC = () => {
+  const [publicKey, setPublicKey] = useState<string | null | undefined>(undefined);
+
+  useEffect(() => {
+    retrievePublicKey().then((key) => {
+      setPublicKey(key);
+    });
+  });
+
+  if (publicKey === undefined) return null;
+
   return (
     <AuthStack.Navigator screenOptions={{headerShown: false}}>
-      <AuthStack.Screen name="Login" component={Login} />
+      {publicKey && <AuthStack.Screen name="Login" component={Login} />}
       <AuthStack.Screen name="CreateAccount" component={CreateAccount} />
       <AuthStack.Screen name="SaveKeys" component={SaveKeys} />
     </AuthStack.Navigator>
