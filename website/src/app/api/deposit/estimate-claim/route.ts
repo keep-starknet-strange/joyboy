@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
     ]);
 
     // Using 1.2 as a multiplier to ensure the fee is enough
-    const fee = stark.estimatedFeeToMaxFee(result.overall_fee, 0.2).toString();
+    const fee = ((result.overall_fee * BigInt(12)) / BigInt(10)).toString();
 
     return NextResponse.json({fee}, {status: HTTPStatus.OK});
   } catch (error) {
