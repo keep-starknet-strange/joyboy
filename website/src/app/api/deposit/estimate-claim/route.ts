@@ -43,8 +43,8 @@ export async function POST(request: NextRequest) {
       },
     ]);
 
-    // Using 1.2 as a multiplier to ensure the fee is enough
-    const fee = ((result.overall_fee * BigInt(12)) / BigInt(10)).toString();
+    // Using 1.1 as a multiplier to ensure the fee is enough
+    const fee = ((result.overall_fee * BigInt(11)) / BigInt(10)).toString();
 
     return NextResponse.json({fee}, {status: HTTPStatus.OK});
   } catch (error) {
