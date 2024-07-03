@@ -3,6 +3,7 @@
 import {constants} from 'starknet';
 
 export const NETWORK_NAME = process.env.EXPO_PUBLIC_NETWORK as constants.NetworkName;
+export const CHAIN_ID = constants.StarknetChainId[NETWORK_NAME];
 export const PROVIDER_URL = process.env.EXPO_PUBLIC_PROVIDER_URL!;
 
 export const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL!;

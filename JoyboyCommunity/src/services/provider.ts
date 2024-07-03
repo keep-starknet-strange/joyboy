@@ -1,11 +1,11 @@
 import {Chain} from '@starknet-react/chains';
-import {constants, RpcProvider} from 'starknet';
+import {RpcProvider} from 'starknet';
 
-import {NETWORK_NAME, PROVIDER_URL} from '../constants/env';
+import {CHAIN_ID, PROVIDER_URL} from '../constants/env';
 
 export const provider = new RpcProvider({
   nodeUrl: PROVIDER_URL,
-  chainId: constants.StarknetChainId[NETWORK_NAME],
+  chainId: CHAIN_ID,
 });
 
 export const providers = (_chain: Chain) => provider;

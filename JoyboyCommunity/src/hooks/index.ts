@@ -1,7 +1,6 @@
 export * from './api';
 export * from './modals';
 export * from './nostr';
-export {useChainId} from './useChainId';
 export {useColor} from './useColor';
 export {useStyles} from './useStyles';
 export {useTheme} from './useTheme';

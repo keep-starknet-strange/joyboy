@@ -8,10 +8,10 @@ import {CallData, uint256} from 'starknet';
 
 import {Avatar, Button, Input, Modalize, Picker, Text} from '../../components';
 import {ESCROW_ADDRESSES} from '../../constants/contracts';
+import {CHAIN_ID} from '../../constants/env';
 import {DEFAULT_TIMELOCK, Entrypoint} from '../../constants/misc';
 import {TOKENS, TokenSymbol} from '../../constants/tokens';
 import {
-  useChainId,
   useDialog,
   useProfile,
   useStyles,
@@ -37,7 +37,6 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(({event}, ref) => {
 
   const {data: profile} = useProfile({publicKey: event?.pubkey});
 
-  const chainId = useChainId();
   const account = useAccount();
   const walletModal = useWalletModal();
   const sendTransaction = useTransaction();
@@ -58,18 +57,18 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(({event}, ref) => {
 
     const amountUint256 = uint256.bnToUint256(
       new Fraction(1, Math.ceil(1 / Number(amount)))
-        .multiply(decimalsScale(TOKENS[token][chainId].decimals))
+        .multiply(decimalsScale(TOKENS[token][CHAIN_ID].decimals))
         .toFixed(0),
     );
 
     const approveCallData = CallData.compile([
-      ESCROW_ADDRESSES[chainId], // Contract address
+      ESCROW_ADDRESSES[CHAIN_ID], // Contract address
       amountUint256, // Amount
     ]);
 
     const depositCallData = CallData.compile([
       amountUint256, // Amount
-      TOKENS[token][chainId].address, // Token address
+      TOKENS[token][CHAIN_ID].address, // Token address
       uint256.bnToUint256(`0x${event?.pubkey}`), // Recipient nostr pubkey
       DEFAULT_TIMELOCK, // timelock
     ]);
@@ -77,12 +76,12 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(({event}, ref) => {
     const receipt = await sendTransaction({
       calls: [
         {
-          contractAddress: TOKENS[token][chainId].address,
+          contractAddress: TOKENS[token][CHAIN_ID].address,
           entrypoint: Entrypoint.APPROVE,
           calldata: approveCallData,
         },
         {
-          contractAddress: ESCROW_ADDRESSES[chainId],
+          contractAddress: ESCROW_ADDRESSES[CHAIN_ID],
           entrypoint: Entrypoint.DEPOSIT,
           calldata: depositCallData,
         },
@@ -168,9 +167,9 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(({event}, ref) => {
             >
               {Object.values(TOKENS).map((tkn) => (
                 <Picker.Item
-                  key={tkn[chainId].symbol}
-                  label={tkn[chainId].name}
-                  value={tkn[chainId].symbol}
+                  key={tkn[CHAIN_ID].symbol}
+                  label={tkn[CHAIN_ID].name}
+                  value={tkn[CHAIN_ID].symbol}
                 />
               ))}
             </Picker>

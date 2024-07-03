@@ -5,10 +5,10 @@ import {FlatList, RefreshControl, View} from 'react-native';
 import {cairo} from 'starknet';
 
 import {Button, Divider, Header, Text} from '../../components';
+import {CHAIN_ID} from '../../constants/env';
 import {ETH} from '../../constants/tokens';
 import {useNostrContext} from '../../context/NostrContext';
 import {
-  useChainId,
   useClaim,
   useEstimateClaim,
   useStyles,
@@ -29,7 +29,6 @@ export const Tips: React.FC = () => {
   const {ndk} = useNostrContext();
 
   const account = useAccount();
-  const chainId = useChainId();
   const claim = useClaim();
   const estimateClaim = useEstimateClaim();
   const walletModal = useWalletModal();
@@ -50,7 +49,7 @@ export const Tips: React.FC = () => {
       event.kind = NDKKind.Text;
       event.content = `claim: ${cairo.felt(depositId)},${cairo.felt(
         connectedAccount.address!,
-      )},${cairo.felt(ETH[chainId].address)},${gasAmount.toString()}`;
+      )},${cairo.felt(ETH[CHAIN_ID].address)},${gasAmount.toString()}`;
       event.tags = [];
 
       await event.sign();
@@ -90,7 +89,7 @@ export const Tips: React.FC = () => {
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         keyExtractor={(item) => item.transaction_hash}
         renderItem={({item}) => {
-          const event = parseDepositEvents(item, chainId);
+          const event = parseDepositEvents(item);
           if (!event) return null;
 
           const amount = new Fraction(event.amount, decimalsScale(event.token.decimals)).toFixed(6);
