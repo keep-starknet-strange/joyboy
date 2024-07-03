@@ -17,9 +17,9 @@ Decentralized social built with Nostr and powered by Starknet account abstractio
 
 ## Origin story
 
-The name "Joyboy" is inspired by the character from the manga series "One Piece". Joyboy is a mysterious figure from the Void Century who left behind a treasure called the "One Piece". What if the treasure are the friends we made along the way? A decentralized social network should be a treasure trove of memories and connections.
+The name "Joyboy" is inspired by the character from the manga series "One Piece". Joyboy is a mysterious figure from the Void Century who left behind a treasure called the "One Piece". What if the treasure is the friends we made along the way? A decentralized social network should be a treasure trove of memories and connections.
 
-Also Joyboy refers to a figure in the Caribbean mythology, a dancing god with a constant smile.
+Also, Joyboy refers to a figure in the Caribbean mythology, a dancing god with a constant smile.
 
 > Joyboy is considered as the personification of freedom and joy.
 
@@ -50,7 +50,7 @@ Tech stack:
 ## Architecture
 
 ### Tips
-There are two alternatives: WalletConnect one which expects Nostr users to setup oridinary Starknet wallet like Argent or Bravvos and so called SocialPay which uses custom Account Abstraction contract based on bip340 signature scheme (Nostr native one).
+There are two alternatives: WalletConnect, one which expects Nostr users to set up oridinary Starknet wallet like Argent or Braavos, and so called SocialPay which uses custom Account Abstraction contract based on bip340 signature scheme (Nostr native).
 
 #### Wallet Connect
 ##### Tip to a recipient that never accepted the tip
@@ -184,8 +184,8 @@ yarn start
 Select Expo web, Android or IOS. You can scan it with Expo GO on your phone.
 
 ### Screens of the mobile app
-Recent implementation PoC on React Native.
-Here is what we have on the mobile app on the first days, contributions welcome! 
+Recent implementation PoC on React Native:
+Here is what we have on the mobile app in the first days. Contributions welcome! 
 Check the issues with the "mobile" labels.
  
 You can see more details on the README here:
