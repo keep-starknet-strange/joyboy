@@ -81,7 +81,7 @@ const HomeBottomTabNavigator: React.FC = () => {
       />
 
       <HomeBottomTabsStack.Screen
-        name="Messages"
+        name="Tips"
         component={Tips}
         options={{
           tabBarActiveTintColor: 'white',
@@ -89,7 +89,7 @@ const HomeBottomTabNavigator: React.FC = () => {
           tabBarIcon: ({focused}) => (
             <View style={{flex: 1, alignItems: 'center', gap: 4, justifyContent: 'center'}}>
               <Icon
-                name="MessageIcon"
+                name="CoinIcon"
                 size={24}
                 color={focused ? 'bottomBarActive' : 'bottomBarInactive'}
               />

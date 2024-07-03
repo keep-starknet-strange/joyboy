@@ -1,9 +1,11 @@
 import {useConnect} from '@starknet-react/core';
+import * as Linking from 'expo-linking';
 import {Platform, Pressable, View} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 
 import {Button, Modal, Text} from '../../components';
-import {useStyles, useTheme} from '../../hooks';
+import {ARGENT_X_INSTALL_URL, BRAAVOS_INSTALL_URL} from '../../constants/urls';
+import {useDialog, useStyles, useTheme} from '../../hooks';
 import stylesheet from './styles';
 
 export type WalletModalProps = {
@@ -15,6 +17,7 @@ export const WalletModal: React.FC<WalletModalProps> = ({hide}) => {
   const styles = useStyles(stylesheet);
 
   const {connect, connectors} = useConnect();
+  const {showDialog, hideDialog} = useDialog();
 
   return (
     <Modal>
@@ -27,6 +30,33 @@ export const WalletModal: React.FC<WalletModalProps> = ({hide}) => {
           <Pressable
             key={connector.id}
             onPress={() => {
+              if (
+                (connector.id === 'argentX' || connector.id === 'braavos') &&
+                !globalThis[`starknet_${connector.id}`]
+              ) {
+                showDialog({
+                  title: 'Wallet is not available',
+                  description: `${connector.name} is not available to use. Please install the wallet and try again.`,
+                  buttons: [
+                    {
+                      type: 'secondary',
+                      label: `Install ${connector.name}`,
+                      onPress: () => {
+                        if (connector.id === 'argentX') Linking.openURL(ARGENT_X_INSTALL_URL);
+                        if (connector.id === 'braavos') Linking.openURL(BRAAVOS_INSTALL_URL);
+                        hideDialog();
+                      },
+                    },
+                    {
+                      type: 'default',
+                      label: 'Close',
+                      onPress: hideDialog,
+                    },
+                  ],
+                });
+                hide();
+                return;
+              }
               connect({connector});
               hide();
             }}

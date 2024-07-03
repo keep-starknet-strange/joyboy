@@ -1,5 +1,6 @@
 import {randomUUID} from 'expo-crypto';
 import {createContext, useCallback, useMemo, useState} from 'react';
+import {View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {ToastProps} from '../../components/Toast';
@@ -43,9 +44,11 @@ export const ToastProvider: React.FC<{children: React.ReactNode}> = ({children})
 
       {toasts.length > 0 && (
         <SafeAreaView style={styles.container}>
-          {toasts.map((toast) => (
-            <AnimatedToast key={toast.key} toast={toast} />
-          ))}
+          <View style={styles.content}>
+            {toasts.map((toast) => (
+              <AnimatedToast key={toast.key} toast={toast} />
+            ))}
+          </View>
         </SafeAreaView>
       )}
     </ToastContext.Provider>

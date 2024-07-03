@@ -1,5 +1,6 @@
 import {Picker as RNPicker, PickerProps as RNPickerProps} from '@react-native-picker/picker';
 import {forwardRef} from 'react';
+import {Platform} from 'react-native';
 
 import {useStyles} from '../../hooks';
 import {PickerContainer} from '../PickerContainer';
@@ -21,7 +22,12 @@ export const _Picker = forwardRef<RNPicker<string>, PickerProps>((props, ref) =>
       containerStyle={styles.container}
       textProps={{fontSize: 15, weight: 'semiBold', color: 'inputText'}}
     >
-      <RNPicker ref={ref} selectedValue={selectedValue} {...restProps}>
+      <RNPicker
+        ref={ref}
+        selectedValue={selectedValue}
+        style={Platform.OS === 'web' && styles.web}
+        {...restProps}
+      >
         {children}
       </RNPicker>
     </PickerContainer>

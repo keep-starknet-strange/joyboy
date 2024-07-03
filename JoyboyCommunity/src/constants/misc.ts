@@ -8,6 +8,7 @@ export enum Entrypoint {
   // Escrow
   DEPOSIT = 'deposit',
   CLAIM = 'claim',
+  GET_DEPOSIT = 'get_deposit',
 }
 
 export enum EventKey {

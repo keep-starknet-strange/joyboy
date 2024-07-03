@@ -32,7 +32,7 @@ export type TipModalProps = {
 export const TipModal = forwardRef<Modalize, TipModalProps>(({event}, ref) => {
   const styles = useStyles(stylesheet);
 
-  const [token, setToken] = useState<TokenSymbol>(TokenSymbol.JBY);
+  const [token, setToken] = useState<TokenSymbol>(TokenSymbol.ETH);
   const [amount, setAmount] = useState<string>('');
 
   const {data: profile} = useProfile({publicKey: event?.pubkey});
@@ -71,7 +71,7 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(({event}, ref) => {
       amountUint256, // Amount
       TOKENS[token][chainId].address, // Token address
       uint256.bnToUint256(`0x${event.pubkey}`), // Recipient nostr pubkey
-      DEFAULT_TIMELOCK, // timelock // 7 days
+      DEFAULT_TIMELOCK, // timelock
     ]);
 
     const receipt = await sendTransaction({
