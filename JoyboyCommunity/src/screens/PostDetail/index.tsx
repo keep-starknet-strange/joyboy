@@ -80,6 +80,7 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
           refreshControl={
             <RefreshControl refreshing={comments.isFetching} onRefresh={() => comments.refetch()} />
           }
+          onEndReached={() => comments.fetchNextPage()}
         />
       </View>
 

@@ -30,6 +30,7 @@ export const Feed: React.FC<FeedScreenProps> = ({navigation}) => {
         refreshControl={
           <RefreshControl refreshing={notes.isFetching} onRefresh={() => notes.refetch()} />
         }
+        onEndReached={() => notes.fetchNextPage()}
       />
 
       <Pressable
