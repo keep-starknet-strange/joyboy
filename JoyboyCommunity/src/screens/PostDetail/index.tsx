@@ -16,7 +16,7 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
 
   const sendNote = useSendNote();
   const {data: note = post} = useNote({noteId: postId});
-  const comments = useReplyNotes({noteId: note.id});
+  const comments = useReplyNotes({noteId: note?.id});
   const {showToast} = useToast();
 
   const handleSendComment = useCallback(async () => {
@@ -27,7 +27,7 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
       }
 
       sendNote.mutate(
-        {content: comment, tags: [['e', note.id, '', 'root', note.pubkey]]},
+        {content: comment, tags: [['e', note?.id ?? '', '', 'root', note?.pubkey ?? '']]},
         {
           onSuccess() {
             showToast({type: 'success', title: 'Comment sent successfully'});
@@ -44,7 +44,7 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
     } catch (e) {
       console.log('Error send note', e);
     }
-  }, [comment, note.id, note.pubkey, sendNote, comments, showToast]);
+  }, [comment, note?.id, note?.pubkey, sendNote, comments, showToast]);
 
   return (
     <View style={styles.container}>
@@ -60,7 +60,7 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
       <View style={styles.content}>
         <FlatList
           style={styles.content}
-          data={comments.data.pages.flat()}
+          data={comments.data?.pages.flat()}
           automaticallyAdjustKeyboardInsets
           ListHeaderComponent={
             <>

@@ -54,8 +54,8 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
   return (
     <View>
       <ProfileHead
-        profilePhoto={profile?.image && {uri: profile.image}}
-        coverPhoto={profile?.banner && {uri: profile.banner}}
+        profilePhoto={profile?.image ? {uri: profile.image} : undefined}
+        coverPhoto={profile?.banner ? {uri: profile.banner} : undefined}
         showSettingsButton={isSelf}
         buttons={
           isSelf ? (

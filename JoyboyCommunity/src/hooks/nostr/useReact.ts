@@ -15,7 +15,7 @@ export const useReact = () => {
       event.tags = [
         ['e', data.event.id],
         ['p', data.event.pubkey],
-        ['k', data.event.kind.toString()],
+        ['k', (data.event.kind ?? 1).toString()],
       ];
 
       return event.publish();

@@ -26,49 +26,51 @@ export const WalletModal: React.FC<WalletModalProps> = ({hide}) => {
       </Text>
 
       <View style={styles.connectors}>
-        {connectors.map((connector) => (
-          <Pressable
-            key={connector.id}
-            onPress={() => {
-              if (
-                (connector.id === 'argentX' || connector.id === 'braavos') &&
-                !globalThis[`starknet_${connector.id}`]
-              ) {
-                showDialog({
-                  title: 'Wallet is not available',
-                  description: `${connector.name} is not available to use. Please install the wallet and try again.`,
-                  buttons: [
-                    {
-                      type: 'secondary',
-                      label: `Install ${connector.name}`,
-                      onPress: () => {
-                        if (connector.id === 'argentX') Linking.openURL(ARGENT_X_INSTALL_URL);
-                        if (connector.id === 'braavos') Linking.openURL(BRAAVOS_INSTALL_URL);
-                        hideDialog();
-                      },
-                    },
-                    {
-                      type: 'default',
-                      label: 'Close',
-                      onPress: hideDialog,
-                    },
-                  ],
-                });
-                hide();
-                return;
-              }
-              connect({connector});
-              hide();
-            }}
-            style={styles.connector}
-          >
-            {Platform.OS !== 'web' && (
-              <SvgXml xml={connector.icon[theme.dark ? 'dark' : 'light']} width={32} height={32} />
-            )}
+        {connectors.map((connector) => {
+          const icon = connector.icon[theme.dark ? 'dark' : 'light'];
 
-            <Text weight="semiBold">{connector.name}</Text>
-          </Pressable>
-        ))}
+          return (
+            <Pressable
+              key={connector.id}
+              onPress={() => {
+                if (
+                  (connector.id === 'argentX' || connector.id === 'braavos') &&
+                  !(globalThis as any)[`starknet_${connector.id}`]
+                ) {
+                  showDialog({
+                    title: 'Wallet is not available',
+                    description: `${connector.name} is not available to use. Please install the wallet and try again.`,
+                    buttons: [
+                      {
+                        type: 'secondary',
+                        label: `Install ${connector.name}`,
+                        onPress: () => {
+                          if (connector.id === 'argentX') Linking.openURL(ARGENT_X_INSTALL_URL);
+                          if (connector.id === 'braavos') Linking.openURL(BRAAVOS_INSTALL_URL);
+                          hideDialog();
+                        },
+                      },
+                      {
+                        type: 'default',
+                        label: 'Close',
+                        onPress: hideDialog,
+                      },
+                    ],
+                  });
+                  hide();
+                  return;
+                }
+                connect({connector});
+                hide();
+              }}
+              style={styles.connector}
+            >
+              {Platform.OS !== 'web' && icon ? <SvgXml xml={icon} width={32} height={32} /> : null}
+
+              <Text weight="semiBold">{connector.name}</Text>
+            </Pressable>
+          );
+        })}
       </View>
 
       <Button variant="default" onPress={hide}>

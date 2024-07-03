@@ -13,14 +13,14 @@ import {storePassword, storePrivateKey, storePublicKey} from '../../utils/storag
 export const CreateAccount: React.FC<AuthCreateAccountScreenProps> = ({navigation}) => {
   const theme = useTheme();
 
-  const [username, setUsername] = useState(null);
-  const [password, setPassword] = useState(null);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   const {showToast} = useToast();
   const {showDialog, hideDialog} = useDialog();
 
   const handleCreateAccount = async () => {
-    if (password?.length == 0 || !password) {
+    if (password.length == 0 || !password) {
       showToast({type: 'error', title: 'Password is required'});
       return;
     }

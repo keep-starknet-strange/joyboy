@@ -26,7 +26,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
   const color = useColor(colorProp);
   const backgroundColor = useColor(backgroundColorProp);
 
-  const styles = useStyles(stylesheet, disabled, backgroundColor);
+  const styles = useStyles(stylesheet, !!disabled, backgroundColor);
 
   return (
     <Pressable

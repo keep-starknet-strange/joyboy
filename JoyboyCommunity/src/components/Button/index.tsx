@@ -26,7 +26,7 @@ export const Button: React.FC<ButtonProps> = ({
   style: styleProp,
   ...pressableProps
 }) => {
-  const styles = useStyles(stylesheet, variant, block, disabled, small);
+  const styles = useStyles(stylesheet, variant, !!block, !!disabled, !!small);
 
   return (
     <Pressable

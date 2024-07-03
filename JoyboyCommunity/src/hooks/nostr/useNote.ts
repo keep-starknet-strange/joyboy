@@ -18,7 +18,7 @@ export const useNote = (options: UseNoteOptions) => {
         ids: [options.noteId],
       });
 
-      return note;
+      return note ?? undefined;
     },
   });
 };

@@ -61,26 +61,6 @@ const HomeBottomTabNavigator: React.FC = () => {
       />
 
       <HomeBottomTabsStack.Screen
-        name="Notifications"
-        component={Profile}
-        initialParams={{publicKey}}
-        options={{
-          tabBarActiveTintColor: 'white',
-          tabBarInactiveTintColor: '',
-          tabBarIcon: ({focused}) => (
-            <View style={{flex: 1, alignItems: 'center', gap: 1, justifyContent: 'center'}}>
-              <Icon
-                name="SearchIcon"
-                size={24}
-                color={focused ? 'bottomBarActive' : 'bottomBarInactive'}
-              />
-              {focused && <Icon name="IndicatorIcon" color="primary" size={6} />}
-            </View>
-          ),
-        }}
-      />
-
-      <HomeBottomTabsStack.Screen
         name="Tips"
         component={Tips}
         options={{
@@ -101,7 +81,7 @@ const HomeBottomTabNavigator: React.FC = () => {
 
       <HomeBottomTabsStack.Screen
         name="UserProfile"
-        component={Profile}
+        component={Profile as any}
         initialParams={{publicKey}}
         options={{
           tabBarActiveTintColor: 'white',

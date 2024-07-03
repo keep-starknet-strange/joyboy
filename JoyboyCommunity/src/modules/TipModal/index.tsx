@@ -70,7 +70,7 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(({event}, ref) => {
     const depositCallData = CallData.compile([
       amountUint256, // Amount
       TOKENS[token][chainId].address, // Token address
-      uint256.bnToUint256(`0x${event.pubkey}`), // Recipient nostr pubkey
+      uint256.bnToUint256(`0x${event?.pubkey}`), // Recipient nostr pubkey
       DEFAULT_TIMELOCK, // timelock
     ]);
 
@@ -103,7 +103,7 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(({event}, ref) => {
       });
     } else {
       let description = 'Please Try Again Later.';
-      if (receipt.isRejected()) {
+      if (receipt?.isRejected()) {
         description = receipt.transaction_failure_reason.error_message;
       }
 

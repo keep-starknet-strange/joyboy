@@ -6,7 +6,7 @@ import {useStyles} from '../../hooks';
 import stylesheet from './styles';
 
 export type TipSuccessModalProps = {
-  user: string;
+  user?: string;
   symbol: string;
   amount: number;
   hide: () => void;

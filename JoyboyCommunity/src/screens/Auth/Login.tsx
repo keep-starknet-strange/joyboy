@@ -19,7 +19,7 @@ export const Login: React.FC<AuthLoginScreenProps> = ({navigation}) => {
   const theme = useTheme();
   const setAuth = useAuth((state) => state.setAuth);
 
-  const [password, setPassword] = useState(null);
+  const [password, setPassword] = useState('');
   const {showToast} = useToast();
 
   useEffect(() => {

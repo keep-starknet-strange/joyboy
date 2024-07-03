@@ -17,11 +17,9 @@ export const Profile: React.FC<ProfileScreenProps> = ({route}) => {
     <View style={styles.container}>
       <FlatList
         ListHeaderComponent={<ProfileInfo publicKey={publicKey} />}
-        data={notes.data.pages.flat()}
-        keyExtractor={(item) => item?.id}
-        renderItem={({item}) => {
-          return <PostCard event={item} />;
-        }}
+        data={notes.data?.pages.flat()}
+        keyExtractor={(item) => item.id}
+        renderItem={({item}) => <PostCard event={item} />}
         refreshControl={
           <RefreshControl refreshing={notes.isFetching} onRefresh={() => notes.refetch()} />
         }

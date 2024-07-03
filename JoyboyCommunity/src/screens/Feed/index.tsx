@@ -44,7 +44,7 @@ export const Feed: React.FC<FeedScreenProps> = ({navigation}) => {
             renderItem={({item}) => <Story name={item.name} image={item.img} />}
           />
         }
-        data={notes.data.pages.flat()}
+        data={notes.data?.pages.flat()}
         keyExtractor={(item) => item?.id}
         renderItem={({item}) => <PostCard event={item} />}
         refreshControl={

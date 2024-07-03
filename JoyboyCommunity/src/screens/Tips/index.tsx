@@ -43,13 +43,13 @@ export const Tips: React.FC = () => {
     }
 
     const connectedAccount = await waitConnection();
-    if (!connectedAccount) return;
+    if (!connectedAccount || !connectedAccount.address) return;
 
     const getNostrEvent = async (gasAmount: bigint) => {
       const event = new NDKEvent(ndk);
       event.kind = NDKKind.Text;
       event.content = `claim: ${cairo.felt(depositId)},${cairo.felt(
-        connectedAccount.address,
+        connectedAccount.address!,
       )},${cairo.felt(ETH[chainId].address)},${gasAmount.toString()}`;
       event.tags = [];
 
@@ -83,7 +83,7 @@ export const Tips: React.FC = () => {
 
       <FlatList
         contentContainerStyle={styles.flatListContent}
-        data={tips.data.pages
+        data={tips.data?.pages
           .flat()
           .map((page) => page.events)
           .flat()}
@@ -91,6 +91,8 @@ export const Tips: React.FC = () => {
         keyExtractor={(item) => item.transaction_hash}
         renderItem={({item}) => {
           const event = parseDepositEvents(item, chainId);
+          if (!event) return null;
+
           const amount = new Fraction(event.amount, decimalsScale(event.token.decimals)).toFixed(6);
 
           return (

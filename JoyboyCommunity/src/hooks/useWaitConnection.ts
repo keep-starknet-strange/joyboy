@@ -9,7 +9,7 @@ export const useWaitConnection = () => {
 
   useEffect(() => {
     if (account.address && promise.current) {
-      promiseResolve.current(account);
+      promiseResolve.current?.(account);
 
       promise.current = undefined;
       promiseResolve.current = undefined;
@@ -23,7 +23,7 @@ export const useWaitConnection = () => {
 
     if (promise.current) {
       // If a promise is already in progress, resolve it with false
-      promiseResolve.current(false);
+      promiseResolve.current?.(false);
 
       promise.current = undefined;
       promiseResolve.current = undefined;

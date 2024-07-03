@@ -81,11 +81,14 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
   };
 
   const handleNavigateToPostDetails = () => {
+    if (!event?.id) return;
     navigation.navigate('PostDetail', {postId: event?.id, post: event});
   };
 
   /** @TODO comment in Nostr */
   const toggleLike = async () => {
+    if (!event?.id) return;
+
     await react.mutateAsync(
       {event, type: isLiked ? 'dislike' : 'like'},
       {
@@ -143,7 +146,7 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
               )}
 
               <Text color="textLight" fontSize={11} lineHeight={16}>
-                {getElapsedTimeStringFull(event.created_at * 1000)}
+                {getElapsedTimeStringFull((event?.created_at ?? Date.now()) * 1000)}
               </Text>
             </View>
           </Pressable>
@@ -171,7 +174,7 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
       <View style={styles.content}>
         <Pressable onPress={handleNavigateToPostDetails}>
           <Text color="textStrong" fontSize={13} lineHeight={20}>
-            {repostedEvent?.content ?? event?.content}
+            {event?.content}
           </Text>
 
           {postSource && (
@@ -206,6 +209,8 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
               label={profile?.username ? `Tip @${profile.username}` : 'Tip'}
               icon="CoinIcon"
               onPress={() => {
+                if (!event) return;
+
                 showTipModal(event);
                 setMenuOpen(false);
               }}

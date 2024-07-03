@@ -23,19 +23,15 @@ export const useRootNotes = (options?: UseRootNotesOptions) => {
       return pageParam;
     },
     queryFn: async ({pageParam}) => {
-      try {
-        const notes = await ndk.fetchEvents({
-          kinds: [NDKKind.Text],
-          authors: options?.authors,
-          search: options?.search,
-          until: pageParam || Math.round(Date.now() / 1000),
-          limit: 20,
-        });
+      const notes = await ndk.fetchEvents({
+        kinds: [NDKKind.Text],
+        authors: options?.authors,
+        search: options?.search,
+        until: pageParam || Math.round(Date.now() / 1000),
+        limit: 20,
+      });
 
-        return [...notes].filter((note) => note.tags.every((tag) => tag[0] !== 'e'));
-      } catch (error) {
-        console.log('error', error);
-      }
+      return [...notes].filter((note) => note.tags.every((tag) => tag[0] !== 'e'));
     },
     placeholderData: {pages: [], pageParams: []},
   });
