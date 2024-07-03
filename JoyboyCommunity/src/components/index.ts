@@ -15,7 +15,6 @@ export {InputAccessoryView} from './Skeleton/InputAccessoryView';
 export {KeyboardFixedView} from './Skeleton/KeyboardFixedView';
 export {RootScreenContainer} from './Skeleton/RootScreenContainer';
 export {SquareInput} from './SquareInput';
-export {Story} from './Story';
 export {Text} from './Text';
 export {TextButton} from './TextButton';
 export {Toast} from './Toast';
