@@ -51,9 +51,11 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
         {status === 'failure' && 'failed'}
       </Text>
 
-      <Text fontSize={16} weight="semiBold">
-        Transaction Hash: {transactionHash}
-      </Text>
+      {transactionHash ? (
+        <Text fontSize={16} weight="semiBold">
+          Transaction Hash: {transactionHash}
+        </Text>
+      ) : null}
 
       <View style={styles.indicator}>
         {(status === 'confirmation' || status === 'processing') && (
