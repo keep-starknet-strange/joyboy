@@ -1,5 +1,5 @@
 import {NextRequest, NextResponse} from 'next/server';
-import {Calldata, stark} from 'starknet';
+import {Calldata} from 'starknet';
 
 import {ESCROW_ADDRESSES} from '@/constants/contracts';
 import {Entrypoint} from '@/constants/misc';

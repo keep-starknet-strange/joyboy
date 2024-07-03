@@ -5,7 +5,7 @@ import {FlatList, RefreshControl, View} from 'react-native';
 import {cairo} from 'starknet';
 
 import {Button, Divider, Header, Text} from '../../components';
-import {STRK} from '../../constants/tokens';
+import {ETH} from '../../constants/tokens';
 import {useNostrContext} from '../../context/NostrContext';
 import {
   useChainId,
@@ -50,7 +50,7 @@ export const Tips: React.FC = () => {
       event.kind = NDKKind.Text;
       event.content = `claim: ${cairo.felt(depositId)},${cairo.felt(
         connectedAccount.address,
-      )},${cairo.felt(STRK[chainId].address)},${gasAmount.toString()}`;
+      )},${cairo.felt(ETH[chainId].address)},${gasAmount.toString()}`;
       event.tags = [];
 
       await event.sign();
