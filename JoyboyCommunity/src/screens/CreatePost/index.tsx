@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useQueryClient} from '@tanstack/react-query';
 import {useState} from 'react';
 import {KeyboardAvoidingView, Pressable, TextInput, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -7,16 +7,17 @@ import {CopyIcon, GalleryIcon, GifIcon, SendIconContained} from '../../assets/ic
 import {TextButton} from '../../components';
 import {useSendNote, useStyles, useTheme} from '../../hooks';
 import {useToast} from '../../hooks/modals';
+import {CreatePostScreenProps} from '../../types';
 import stylesheet from './styles';
 
-export const CreatePost: React.FC = () => {
-  const navigation = useNavigation();
-
+export const CreatePost: React.FC<CreatePostScreenProps> = ({navigation}) => {
   const theme = useTheme();
   const styles = useStyles(stylesheet);
 
   const [note, setNote] = useState<string | undefined>();
+
   const sendNote = useSendNote();
+  const queryClient = useQueryClient();
   const {showToast} = useToast();
 
   const handleSendNote = () => {
@@ -30,6 +31,8 @@ export const CreatePost: React.FC = () => {
       {
         onSuccess() {
           showToast({type: 'success', title: 'Note sent successfully'});
+          queryClient.invalidateQueries({queryKey: ['rootNotes']});
+          navigation.goBack();
         },
         onError() {
           showToast({

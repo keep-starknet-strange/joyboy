@@ -1,5 +1,6 @@
 import {NDKEvent} from '@nostr-dev-kit/ndk';
 import {useNavigation} from '@react-navigation/native';
+import {useQueryClient} from '@tanstack/react-query';
 import {useMemo, useState} from 'react';
 import {Image, Pressable, View} from 'react-native';
 import Animated, {
@@ -41,6 +42,7 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
   const userReaction = useReactions({authors: [publicKey], noteId: event?.id});
   const comments = useReplyNotes({noteId: event?.id});
   const react = useReact();
+  const queryClient = useQueryClient();
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -86,8 +88,7 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
       {event, type: isLiked ? 'dislike' : 'like'},
       {
         onSuccess: () => {
-          reactions.refetch();
-          userReaction.refetch();
+          queryClient.invalidateQueries({queryKey: ['reactions', event?.id]});
 
           scale.value = withSequence(
             withTiming(1.5, {duration: 100, easing: Easing.out(Easing.ease)}), // Scale up
@@ -106,8 +107,6 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
           <Text color="textLight">Reposted</Text>
         </View>
       )}
-
-      {/* TODO: different rendering base on kind =1,6,7 and tags for kind = 1 */}
 
       <View style={styles.info}>
         <View style={styles.infoUser}>

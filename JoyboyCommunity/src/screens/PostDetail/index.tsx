@@ -1,4 +1,5 @@
-import {useCallback, useState} from 'react';
+import {useQueryClient} from '@tanstack/react-query';
+import {useState} from 'react';
 import {FlatList, RefreshControl, View} from 'react-native';
 
 import {Divider, Header, IconButton, Input, KeyboardFixedView} from '../../components';
@@ -18,34 +19,32 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
   const sendNote = useSendNote();
   const {data: note = post} = useNote({noteId: postId});
   const comments = useReplyNotes({noteId: note?.id});
+  const queryClient = useQueryClient();
   const {showToast} = useToast();
 
-  const handleSendComment = useCallback(async () => {
-    try {
-      if (!comment || comment?.length == 0) {
-        showToast({type: 'error', title: 'Please write your note'});
-        return;
-      }
-
-      sendNote.mutate(
-        {content: comment, tags: [['e', note?.id ?? '', '', 'root', note?.pubkey ?? '']]},
-        {
-          onSuccess() {
-            showToast({type: 'success', title: 'Comment sent successfully'});
-            comments.refetch();
-          },
-          onError() {
-            showToast({
-              type: 'error',
-              title: 'Error! Comment could not be sent. Please try again later.',
-            });
-          },
-        },
-      );
-    } catch (e) {
-      console.log('Error send note', e);
+  const handleSendComment = async () => {
+    if (!comment || comment?.length == 0) {
+      showToast({type: 'error', title: 'Please write your comment'});
+      return;
     }
-  }, [comment, note?.id, note?.pubkey, sendNote, comments, showToast]);
+
+    sendNote.mutate(
+      {content: comment, tags: [['e', note?.id ?? '', '', 'root', note?.pubkey ?? '']]},
+      {
+        onSuccess() {
+          showToast({type: 'success', title: 'Comment sent successfully'});
+          queryClient.invalidateQueries({queryKey: ['replyNotes', note?.id]});
+          setComment('');
+        },
+        onError() {
+          showToast({
+            type: 'error',
+            title: 'Error! Comment could not be sent. Please try again later.',
+          });
+        },
+      },
+    );
+  };
 
   return (
     <View style={styles.container}>

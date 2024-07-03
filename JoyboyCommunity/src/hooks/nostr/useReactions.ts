@@ -13,7 +13,7 @@ export const useReactions = (options?: UseReactionsOptions) => {
   const {ndk} = useNostrContext();
 
   return useQuery({
-    queryKey: ['reactions', options?.authors, options?.search, options?.noteId],
+    queryKey: ['reactions', options?.noteId, options?.authors, options?.search],
     queryFn: async () => {
       const notes = await ndk.fetchEvents({
         kinds: [NDKKind.Reaction],
