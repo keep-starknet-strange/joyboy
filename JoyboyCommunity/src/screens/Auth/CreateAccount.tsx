@@ -4,7 +4,8 @@ import {Platform} from 'react-native';
 
 import {LockIcon} from '../../assets/icons';
 import {Button, Input} from '../../components';
-import {useDialog, useTheme, useToast} from '../../hooks';
+import {useTheme} from '../../hooks';
+import {useDialog, useToast} from '../../hooks/modals';
 import {Auth} from '../../modules/Auth';
 import {AuthCreateAccountScreenProps} from '../../types';
 import {generateRandomKeypair} from '../../utils/keypair';

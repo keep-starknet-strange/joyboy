@@ -1,4 +1,4 @@
-import {constants, getChecksumAddress} from 'starknet';
+import {getChecksumAddress} from 'starknet';
 
 import {CHAIN_ID} from '../constants/env';
 import {EventKey} from '../constants/misc';

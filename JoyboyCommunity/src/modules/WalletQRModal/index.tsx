@@ -4,7 +4,8 @@ import {useWindowDimensions, View} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 
 import {Button, Modal, Text} from '../../components';
-import {useDialog, useStyles} from '../../hooks';
+import {useStyles} from '../../hooks';
+import {useDialog} from '../../hooks/modals';
 import {Spacing} from '../../styles';
 import {getArgentAppStoreURL} from '../../utils/helpers';
 import stylesheet from './styles';

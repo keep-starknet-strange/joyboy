@@ -5,7 +5,8 @@ import {SvgXml} from 'react-native-svg';
 
 import {Button, Modal, Text} from '../../components';
 import {ARGENT_X_INSTALL_URL, BRAAVOS_INSTALL_URL} from '../../constants/urls';
-import {useDialog, useStyles, useTheme} from '../../hooks';
+import {useStyles, useTheme} from '../../hooks';
+import {useDialog} from '../../hooks/modals/useDialog';
 import stylesheet from './styles';
 
 export type WalletModalProps = {

@@ -8,16 +8,9 @@ import {Button, Divider, Header, Text} from '../../components';
 import {CHAIN_ID} from '../../constants/env';
 import {ETH} from '../../constants/tokens';
 import {useNostrContext} from '../../context/NostrContext';
-import {
-  useClaim,
-  useEstimateClaim,
-  useStyles,
-  useTips,
-  useToast,
-  useTransactionModal,
-  useWaitConnection,
-  useWalletModal,
-} from '../../hooks';
+import {useStyles, useTips, useWaitConnection} from '../../hooks';
+import {useClaim, useEstimateClaim} from '../../hooks/api';
+import {useToast, useTransactionModal, useWalletModal} from '../../hooks/modals';
 import {parseDepositEvents} from '../../utils/events';
 import {decimalsScale} from '../../utils/helpers';
 import stylesheet from './styles';
