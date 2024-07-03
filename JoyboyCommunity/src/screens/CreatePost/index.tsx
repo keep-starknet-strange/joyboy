@@ -5,7 +5,8 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {CopyIcon, GalleryIcon, GifIcon, SendIconContained} from '../../assets/icons';
 import {TextButton} from '../../components';
-import {useSendNote, useStyles, useTheme, useToast} from '../../hooks';
+import {useSendNote, useStyles, useTheme} from '../../hooks';
+import {useToast} from '../../hooks/modals';
 import stylesheet from './styles';
 
 export const CreatePost: React.FC = () => {

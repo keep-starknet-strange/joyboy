@@ -2,7 +2,8 @@ import {useCallback, useState} from 'react';
 import {FlatList, RefreshControl, View} from 'react-native';
 
 import {Divider, Header, IconButton, Input, KeyboardFixedView} from '../../components';
-import {useNote, useReplyNotes, useSendNote, useStyles, useToast} from '../../hooks';
+import {useNote, useReplyNotes, useSendNote, useStyles} from '../../hooks';
+import {useToast} from '../../hooks/modals';
 import {Post} from '../../modules/Post';
 import {PostDetailScreenProps} from '../../types';
 import stylesheet from './styles';

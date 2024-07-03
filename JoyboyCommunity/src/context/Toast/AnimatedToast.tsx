@@ -10,7 +10,7 @@ import Animated, {
 import {clamp, snapPoint} from 'react-native-redash';
 
 import {Toast} from '../../components';
-import {useToast} from '../../hooks';
+import {useToast} from '../../hooks/modals';
 import {ToastConfig} from './ToastContext';
 
 export const AnimatedToast: React.FC<{toast: ToastConfig}> = ({toast}) => {

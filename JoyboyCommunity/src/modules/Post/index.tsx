@@ -13,15 +13,8 @@ import Animated, {
 
 import {CommentIcon, LikeFillIcon, LikeIcon, RepostIcon} from '../../assets/icons';
 import {Avatar, IconButton, Menu, Text} from '../../components';
-import {
-  useProfile,
-  useReact,
-  useReactions,
-  useReplyNotes,
-  useStyles,
-  useTheme,
-  useTipModal,
-} from '../../hooks';
+import {useProfile, useReact, useReactions, useReplyNotes, useStyles, useTheme} from '../../hooks';
+import {useTipModal} from '../../hooks/modals';
 import {useAuth} from '../../store/auth';
 import {MainStackNavigationProps} from '../../types';
 import {getElapsedTimeStringFull} from '../../utils/timestamp';

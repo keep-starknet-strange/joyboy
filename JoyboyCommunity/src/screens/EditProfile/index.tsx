@@ -7,7 +7,8 @@ import {ScrollView, TouchableOpacity, View} from 'react-native';
 
 import {CopyIconStack} from '../../assets/icons';
 import {Button, SquareInput, Text} from '../../components';
-import {useEditProfile, useProfile, useStyles, useTheme, useToast} from '../../hooks';
+import {useEditProfile, useProfile, useStyles, useTheme} from '../../hooks';
+import {useToast} from '../../hooks/modals';
 import {useAuth} from '../../store/auth';
 import {EditProfileScreenProps} from '../../types';
 import {ProfileHead} from '../Profile/Head';
