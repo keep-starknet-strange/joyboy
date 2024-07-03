@@ -57,9 +57,7 @@ export const Tips: React.FC = () => {
       return event.rawEvent();
     };
 
-    const feeResult = await estimateClaim.mutateAsync(
-      await getNostrEvent(BigInt(0.0004 * Number(decimalsScale(18)))),
-    );
+    const feeResult = await estimateClaim.mutateAsync(await getNostrEvent(BigInt(1)));
     const fee = BigInt(feeResult.data.fee);
 
     const claimResult = await claim.mutateAsync(await getNostrEvent(fee));

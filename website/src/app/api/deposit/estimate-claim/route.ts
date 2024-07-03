@@ -48,7 +48,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({fee}, {status: HTTPStatus.OK});
   } catch (error) {
-    console.log(error);
     return NextResponse.json(
       {code: ErrorCode.ESTIMATION_ERROR, error},
       {status: HTTPStatus.InternalServerError},
