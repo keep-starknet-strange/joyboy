@@ -410,10 +410,126 @@ mod tests {
         stop_cheat_caller_address_global();
 
         start_cheat_caller_address(escrow.contract_address, sender_address);
+        let sender_balance_before_deposit = erc20.balance_of(sender_address);
+
+        // Deposit by sender to recipient
+
         escrow.deposit(amount, erc20.contract_address, recipient_nostr_key, 0_u64);
 
+        let sender_balance_after_deposit = erc20.balance_of(sender_address);
+
         start_cheat_caller_address(escrow.contract_address, recipient_address);
+        let escrow_balance_before_claim = erc20.balance_of(escrow.contract_address);
+
+        // Recipient user claim deposit
+        let recipient_balance_before_claim = erc20.balance_of(recipient_address);
         escrow.claim(request, 0_u256);
+
+        // Sender check
+        assert!(
+            sender_balance_before_deposit - amount == sender_balance_after_deposit,
+            "sender amount to deposit not send"
+        );
+
+        // Recipient check
+
+        let recipient_balance_after_claim = erc20.balance_of(recipient_address);
+        assert!(recipient_balance_before_claim == 0, "recipient balance before claim != 0");
+        assert!(recipient_balance_after_claim == amount, "recipient balance after claim != 0");
+
+        // Escrow balance 
+        assert!(escrow_balance_before_claim == amount, "escrow before claim != amount");
+        let escrow_balance_after_claim = erc20.balance_of(escrow.contract_address);
+        assert!(escrow_balance_after_claim == 0, "escrow balance after claim != 0");
+    }
+
+    #[test]
+    fn deposit_claim_gas_fee() {
+        let (request, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
+
+        let recipient_address: ContractAddress = 678.try_into().unwrap();
+        let joyboy_address: ContractAddress = 159.try_into().unwrap();
+        let amount = 100_u256;
+        let gas_amount = 1_u256;
+
+        let claim_gas_amount = Claim {
+            deposit_id: 1,
+            starknet_recipient: recipient_address,
+            gas_amount: gas_amount,
+            gas_token_address: erc20.contract_address
+        };
+
+        let request_gas_amount = SocialRequest {
+            content: claim_gas_amount,
+            sig: Signature {
+                r: 0x68e441c1f8756b5278c815cc110efb302c2a08bcf0349328ba7bd7683e8b0b29_u256,
+                s: 0xd592a5a5e9fc85334ab6801d6dde984c85d67fcd726fce38b9fb06874c25832e_u256
+            },
+            ..request
+        };
+
+        cheat_caller_address_global(sender_address);
+        erc20.approve(escrow.contract_address, amount);
+        stop_cheat_caller_address_global();
+
+        start_cheat_caller_address(escrow.contract_address, sender_address);
+        let sender_balance_before_deposit = erc20.balance_of(sender_address);
+
+        escrow.deposit(amount, erc20.contract_address, recipient_nostr_key, 0_u64);
+
+        let sender_balance_after_deposit = erc20.balance_of(sender_address);
+
+        start_cheat_caller_address(escrow.contract_address, joyboy_address);
+
+        let joyboy_balance_before_claim = erc20.balance_of(joyboy_address);
+
+        // Sender check
+        assert!(
+            sender_balance_before_deposit - amount == sender_balance_after_deposit,
+            "sender deposit amount not send"
+        );
+
+        // Joyboy account claim user for recipient with gas fees paid by the claim deposit
+        let escrow_balance_before_claim = erc20.balance_of(escrow.contract_address);
+        let recipient_balance_before_claim = erc20.balance_of(recipient_address);
+        escrow.claim(request_gas_amount, gas_amount);
+
+        // Recipient check
+        let recipient_balance_after_claim = erc20.balance_of(recipient_address);
+        assert!(recipient_balance_before_claim == 0, "recipient balance before claim != 0");
+        assert!(
+            recipient_balance_after_claim == amount - gas_amount,
+            "recipient after claim != (amount - gas)"
+        );
+
+        // Check gas amount receive by Joyboy account
+        let joyboy_balance_after_claim = erc20.balance_of(joyboy_address);
+        assert!(joyboy_balance_before_claim == 0, "joy balance before claim != 0");
+        assert!(
+            joyboy_balance_after_claim == gas_amount, "joyboy balance not equal gas amount received"
+        );
+
+        // Escrow balance
+        assert!(escrow_balance_before_claim == amount, "escrow before claim != amount deposit");
+        let escrow_balance_after_claim = erc20.balance_of(escrow.contract_address);
+        assert!(escrow_balance_after_claim == 0, "escrow balance after claim != 0");
+    }
+
+    #[test]
+    #[should_panic(expected: "gas_amount to big")]
+    fn claim_incorrect_gas_amount() {
+        let (request, recipient_nostr_key, sender_address, erc20, escrow) = request_fixture();
+
+        let amount = 100_u256;
+
+        cheat_caller_address_global(sender_address);
+        erc20.approve(escrow.contract_address, amount);
+        stop_cheat_caller_address_global();
+
+        start_cheat_caller_address(escrow.contract_address, sender_address);
+        escrow.deposit(amount, erc20.contract_address, recipient_nostr_key, 10_u64);
+
+        escrow.claim(request, 1_u256);
     }
 
     #[test]
