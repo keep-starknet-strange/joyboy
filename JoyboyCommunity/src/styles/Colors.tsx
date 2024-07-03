@@ -27,6 +27,7 @@ export const LightTheme = {
     surface: '#FFFFFF',
     elevated: '#FFFFFF',
     overlay: 'rgba(0, 0, 0, 0.5)',
+    shadow: 'rgba(13, 13, 29, 0.2)',
 
     text: '#14142C',
     textSecondary: '#6B6B8C',
@@ -74,6 +75,7 @@ export const DarkTheme = {
     surface: '#FFFFFF',
     elevated: '#FFFFFF',
     overlay: 'rgba(0, 0, 0, 0.5)',
+    shadow: 'rgba(13, 13, 29, 0.2)',
 
     text: '#14142C',
     textSecondary: '#6B6B8C',
