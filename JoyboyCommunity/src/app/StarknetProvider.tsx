@@ -25,13 +25,9 @@ export const StarknetReactProvider: React.FC<React.PropsWithChildren> = ({childr
 
   const provider = providers(chain);
 
-  const {connectors} = useInjectedConnectors({
-    // Show these connectors if the user has no connector installed.
+  const {connectors: injected} = useInjectedConnectors({
     recommended: [argent(), braavos()],
-    // Hide recommended connectors if the user has any connector installed.
-    includeRecommended: 'onlyIfNoConnectors',
-    // Randomize the order of the connectors.
-    order: 'random',
+    includeRecommended: 'always',
   });
 
   const argentMobileConnector = useArgentMobileConnector();
@@ -44,7 +40,6 @@ export const StarknetReactProvider: React.FC<React.PropsWithChildren> = ({childr
         connectors={[
           argentMobileConnector({
             chain: NETWORK_NAME,
-            // TODO: Move this to ENV
             wcProjectId: WALLET_CONNECT_ID,
             dappName: 'Joyboy',
             description: 'Joyboy Starknet dApp',
@@ -52,7 +47,7 @@ export const StarknetReactProvider: React.FC<React.PropsWithChildren> = ({childr
             provider,
           }),
 
-          ...(Platform.OS === 'web' ? connectors : []),
+          ...(Platform.OS === 'web' ? injected : []),
         ]}
         explorer={voyager}
       >

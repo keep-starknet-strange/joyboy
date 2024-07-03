@@ -21,13 +21,11 @@ const queryClient = new QueryClient({
 const ModalProviders = ({children}: {children: React.ReactNode}) => {
   return (
     <ToastProvider>
-      <DialogProvider>
-        <WalletModalProvider>
-          <TransactionModalProvider>
-            <TipModalProvider>{children}</TipModalProvider>
-          </TransactionModalProvider>
-        </WalletModalProvider>
-      </DialogProvider>
+      <WalletModalProvider>
+        <TransactionModalProvider>
+          <TipModalProvider>{children}</TipModalProvider>
+        </TransactionModalProvider>
+      </WalletModalProvider>
     </ToastProvider>
   );
 };
@@ -38,17 +36,19 @@ export const Wrapper: React.FC = () => {
       <ThemeProvider>
         <NostrProvider>
           <QueryClientProvider client={queryClient}>
-            <StarknetProvider>
-              <SafeAreaProvider>
-                <PortalizeProvider>
-                  <ModalProviders>
-                    <RootScreenContainer>
-                      <App />
-                    </RootScreenContainer>
-                  </ModalProviders>
-                </PortalizeProvider>
-              </SafeAreaProvider>
-            </StarknetProvider>
+            <SafeAreaProvider>
+              <PortalizeProvider>
+                <DialogProvider>
+                  <StarknetProvider>
+                    <ModalProviders>
+                      <RootScreenContainer>
+                        <App />
+                      </RootScreenContainer>
+                    </ModalProviders>
+                  </StarknetProvider>
+                </DialogProvider>
+              </PortalizeProvider>
+            </SafeAreaProvider>
           </QueryClientProvider>
         </NostrProvider>
       </ThemeProvider>

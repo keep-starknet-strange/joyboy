@@ -6,3 +6,6 @@ export const ARGENT_APP_STORE_URL_FALLBACK =
 export const ARGENT_GOOGLE_PLAY_URL = 'market://details?id=im.argent.contractwalletclient';
 export const ARGENT_GOOGLE_PLAY_URL_FALLBACK =
   'https://play.google.com/store/apps/details?id=im.argent.contractwalletclient';
+
+export const ARGENT_X_INSTALL_URL = 'https://www.argent.xyz/argent-x/';
+export const BRAAVOS_INSTALL_URL = 'https://braavos.app/download-braavos-wallet/';
