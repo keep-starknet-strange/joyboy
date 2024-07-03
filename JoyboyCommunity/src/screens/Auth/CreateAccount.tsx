@@ -20,7 +20,7 @@ export const CreateAccount: React.FC<AuthCreateAccountScreenProps> = ({navigatio
   const {showDialog, hideDialog} = useDialog();
 
   const handleCreateAccount = async () => {
-    if (password.length == 0 || !password) {
+    if (!password) {
       showToast({type: 'error', title: 'Password is required'});
       return;
     }

@@ -34,7 +34,7 @@ export const Login: React.FC<AuthLoginScreenProps> = ({navigation}) => {
   }, []);
 
   const handleLogin = async () => {
-    if (password?.length == 0 || !password) {
+    if (!password) {
       showToast({type: 'error', title: 'Password is required'});
       return;
     }
