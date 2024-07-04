@@ -1,6 +1,7 @@
 import {NDKEvent, NDKKind} from '@nostr-dev-kit/ndk';
 import {useAccount} from '@starknet-react/core';
 import {Fraction} from '@uniswap/sdk-core';
+import {useMemo} from 'react';
 import {FlatList, RefreshControl, View} from 'react-native';
 import {cairo} from 'starknet';
 
@@ -8,10 +9,9 @@ import {Button, Divider, Header, Text} from '../../components';
 import {CHAIN_ID} from '../../constants/env';
 import {ETH} from '../../constants/tokens';
 import {useNostrContext} from '../../context/NostrContext';
-import {useStyles, useTips, useWaitConnection} from '../../hooks';
+import {useClaimedTips, useStyles, useTips, useWaitConnection} from '../../hooks';
 import {useClaim, useEstimateClaim} from '../../hooks/api';
 import {useToast, useTransactionModal, useWalletModal} from '../../hooks/modals';
-import {parseDepositEvents} from '../../utils/events';
 import {decimalsScale} from '../../utils/helpers';
 import stylesheet from './styles';
 
@@ -19,6 +19,7 @@ export const Tips: React.FC = () => {
   const styles = useStyles(stylesheet);
 
   const tips = useTips();
+  const claimedTips = useClaimedTips();
   const {ndk} = useNostrContext();
 
   const account = useAccount();
@@ -28,6 +29,15 @@ export const Tips: React.FC = () => {
   const waitConnection = useWaitConnection();
   const {show: showTransactionModal} = useTransactionModal();
   const {showToast} = useToast();
+
+  const allTips = useMemo(() => {
+    if (!tips.data) return [];
+
+    return tips.data.map((tip) => ({
+      ...tip,
+      claimed: claimedTips.data?.findIndex((claim) => claim.depositId === tip.depositId) !== -1,
+    }));
+  }, [tips.data, claimedTips.data]);
 
   const onClaimPress = async (depositId: number) => {
     if (!account.address) {
@@ -75,17 +85,11 @@ export const Tips: React.FC = () => {
 
       <FlatList
         contentContainerStyle={styles.flatListContent}
-        data={tips.data?.pages
-          .flat()
-          .map((page) => page.events)
-          .flat()}
+        data={allTips}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
-        keyExtractor={(item) => item.transaction_hash}
+        keyExtractor={(item) => item.event.transaction_hash}
         renderItem={({item}) => {
-          const event = parseDepositEvents(item);
-          if (!event) return null;
-
-          const amount = new Fraction(event.amount, decimalsScale(event.token.decimals)).toFixed(6);
+          const amount = new Fraction(item.amount, decimalsScale(item.token.decimals)).toFixed(6);
 
           return (
             <View style={styles.tip}>
@@ -95,15 +99,27 @@ export const Tips: React.FC = () => {
                     {amount}
                   </Text>
                   <Text weight="bold" fontSize={17}>
-                    {event.token.symbol}
+                    {item.token.symbol}
                   </Text>
                 </View>
 
                 <View>
-                  {event.depositId ? (
-                    <Button small variant="primary" onPress={() => onClaimPress(event.depositId)}>
-                      Claim
-                    </Button>
+                  {item.depositId ? (
+                    <>
+                      {item.claimed ? (
+                        <Button small variant="default" disabled>
+                          Claimed
+                        </Button>
+                      ) : (
+                        <Button
+                          small
+                          variant="primary"
+                          onPress={() => onClaimPress(item.depositId)}
+                        >
+                          Claim
+                        </Button>
+                      )}
+                    </>
                   ) : null}
                 </View>
               </View>
@@ -113,7 +129,7 @@ export const Tips: React.FC = () => {
               <View style={styles.senderInfo}>
                 <View style={styles.sender}>
                   <Text weight="semiBold" color="text" numberOfLines={1} ellipsizeMode="middle">
-                    {event.sender}
+                    {item.sender}
                   </Text>
                 </View>
 

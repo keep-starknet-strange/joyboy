@@ -13,9 +13,10 @@ export type ContractEvent = {
   transaction_hash: string;
 };
 
-export const parseDepositEvents = (event: ContractEvent) => {
+export const parseDepositEvent = (event: ContractEvent) => {
   if (event.keys[0] === EventKey.DepositEvent) {
     return {
+      event,
       sender: event.keys[2],
       token: TOKEN_ADDRESSES[CHAIN_ID][getChecksumAddress(event.data[2])],
       amount: event.data[0],
@@ -25,9 +26,25 @@ export const parseDepositEvents = (event: ContractEvent) => {
 
   if (event.keys[0] === EventKey.TransferEvent) {
     return {
+      event,
       sender: event.keys[1],
       token: TOKEN_ADDRESSES[CHAIN_ID][getChecksumAddress(event.data[2])],
       amount: event.data[0],
+    };
+  }
+
+  return undefined;
+};
+
+export const parseClaimEvent = (event: ContractEvent) => {
+  if (event.keys[0] === EventKey.ClaimEvent) {
+    return {
+      event,
+      sender: event.keys[2],
+      token: TOKEN_ADDRESSES[CHAIN_ID][getChecksumAddress(event.data[1])],
+      amount: event.data[0],
+      starknetRecipient: event.keys[5],
+      depositId: Number(event.keys[1]),
     };
   }
 
