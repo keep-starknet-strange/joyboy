@@ -22,7 +22,13 @@ export default ThemedStyleSheet((theme, type: 'success' | 'info' | 'error') => (
       backgroundColor: theme.colors.errorLight,
     }),
   },
+
   text: {
     flex: 1,
+  },
+
+  closeIcon: {
+    backgroundColor: theme.colors.transparent,
+    padding: Spacing.none,
   },
 }));

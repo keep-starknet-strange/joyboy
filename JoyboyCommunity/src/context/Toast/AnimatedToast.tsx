@@ -42,10 +42,16 @@ export const AnimatedToast: React.FC<{toast: ToastConfig; hide: () => void}> = (
     transform: [{translateY: translateY.value}],
   }));
 
+  const onDismiss = () => {
+    top.value = withTiming(1, {duration: 200}, () => {
+      runOnJS(hide)();
+    });
+  };
+
   return (
     <GestureDetector gesture={pan}>
       <Animated.View ref={containerRef} style={animatedStyle}>
-        <Toast {...toast} />
+        <Toast {...toast} onDismiss={onDismiss} />
       </Animated.View>
     </GestureDetector>
   );

@@ -510,3 +510,20 @@ export const FlagIcon: React.FC<SvgProps> = (props) => (
     />
   </Svg>
 );
+
+export const CloseIcon: React.FC<SvgProps> = (props) => (
+  <Svg viewBox="0 0 24 24" fill="none" {...props}>
+    <Path
+      d="M15.1194 14.4L9.35999 8.64M9.3606 14.4L15.12 8.64"
+      stroke="currentColor"
+      strokeWidth="1.44"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M21.84 11.52C21.84 6.21806 17.5419 1.92 12.24 1.92C6.93808 1.92 2.64001 6.21806 2.64001 11.52C2.64001 16.8219 6.93808 21.12 12.24 21.12C17.5419 21.12 21.84 16.8219 21.84 11.52Z"
+      stroke="currentColor"
+      strokeWidth="1.44"
+    />
+  </Svg>
+);
