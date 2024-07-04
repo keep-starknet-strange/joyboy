@@ -211,7 +211,7 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(
 
           <View style={styles.submitButton}>
             <Button variant="secondary" disabled={!isActive} onPress={onTipPress}>
-              {account.address ? 'Tip' : 'Connect Wallet'}
+              Tip
             </Button>
           </View>
 
