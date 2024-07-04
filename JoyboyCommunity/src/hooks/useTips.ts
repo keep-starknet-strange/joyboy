@@ -15,6 +15,8 @@ export const useTips = () => {
   return useQuery({
     queryKey: ['tips', CHAIN_ID, publicKey],
     queryFn: async () => {
+      if (!publicKey) return [];
+
       const {low, high} = uint256.bnToUint256(`0x${publicKey}`);
 
       const getTipEvents = async (

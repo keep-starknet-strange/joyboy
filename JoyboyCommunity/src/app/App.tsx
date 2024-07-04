@@ -5,12 +5,18 @@ import * as SplashScreen from 'expo-splash-screen';
 import {useCallback, useEffect, useState} from 'react';
 import {View} from 'react-native';
 
+import {useTips} from '../hooks';
+import {useToast} from '../hooks/modals';
 import {Router} from './Router';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
+  const [sentTipNotification, setSentTipNotification] = useState(false);
+
+  const tips = useTips();
+  const {showToast} = useToast();
 
   useEffect(() => {
     (async () => {
@@ -30,6 +36,26 @@ export default function App() {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => tips.refetch(), 2 * 60 * 1_000);
+    return () => clearInterval(interval);
+  }, [tips]);
+
+  useEffect(() => {
+    if (sentTipNotification) return;
+
+    const hasUnclaimedTip = (tips.data ?? []).some((tip) => !tip.claimed && tip.depositId);
+    if (hasUnclaimedTip) {
+      setSentTipNotification(true);
+      showToast({
+        type: 'info',
+        title: 'You have unclaimed tips',
+      });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tips.data]);
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
