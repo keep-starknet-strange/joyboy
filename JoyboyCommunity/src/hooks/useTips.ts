@@ -5,7 +5,7 @@ import {ESCROW_ADDRESSES} from '../constants/contracts';
 import {CHAIN_ID} from '../constants/env';
 import {EventKey} from '../constants/misc';
 import {useAuth} from '../store/auth';
-import {parseDepositEvent} from '../utils/events';
+import {parseClaimEvent, parseDepositEvent} from '../utils/events';
 import {useRpcProvider} from './useRpcProvider';
 
 export const useTips = () => {
@@ -15,11 +15,9 @@ export const useTips = () => {
   return useQuery({
     queryKey: ['tips', CHAIN_ID, publicKey],
     queryFn: async () => {
-      const {low, high} = uint256.bnToUint256(
-        `0x468a2f6cc62ec21540165fa061ba17a7067a4c28f4aa02a44781c24acb720440`,
-      );
+      const {low, high} = uint256.bnToUint256(`0x${publicKey}`);
 
-      const getEvents = async (
+      const getTipEvents = async (
         continuationToken?: string,
       ): Promise<Awaited<ReturnType<typeof provider.getEvents>>['events']> => {
         const tips = await provider.getEvents({
@@ -36,18 +34,44 @@ export const useTips = () => {
         });
 
         if (tips.continuation_token) {
-          const next = await getEvents(tips.continuation_token);
+          const next = await getTipEvents(tips.continuation_token);
           return [...tips.events, ...next];
         }
 
         return tips.events;
       };
 
-      const events = await getEvents();
-
-      return events
+      const tipEvents = (await getTipEvents())
         .map((event) => parseDepositEvent(event))
         .filter((event): event is NonNullable<ReturnType<typeof parseDepositEvent>> => !!event);
+
+      const getClaimEvents = async (
+        continuationToken?: string,
+      ): Promise<Awaited<ReturnType<typeof provider.getEvents>>['events']> => {
+        const tips = await provider.getEvents({
+          address: ESCROW_ADDRESSES[CHAIN_ID],
+          keys: [[EventKey.ClaimEvent], [], [], [low.toString()], [high.toString()]],
+          to_block: 'pending',
+          chunk_size: 1000,
+          continuation_token: continuationToken,
+        });
+
+        if (tips.continuation_token) {
+          const next = await getClaimEvents(tips.continuation_token);
+          return [...tips.events, ...next];
+        }
+
+        return tips.events;
+      };
+
+      const claimEvents = (await getClaimEvents())
+        .map((event) => parseClaimEvent(event))
+        .filter((event): event is NonNullable<ReturnType<typeof parseClaimEvent>> => !!event);
+
+      return tipEvents.map((tip) => ({
+        ...tip,
+        claimed: claimEvents.findIndex((claim) => claim.depositId === tip.depositId) !== -1,
+      }));
     },
     placeholderData: [],
   });

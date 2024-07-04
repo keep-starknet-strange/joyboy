@@ -1,7 +1,6 @@
 import {NDKEvent, NDKKind} from '@nostr-dev-kit/ndk';
 import {useAccount} from '@starknet-react/core';
 import {Fraction} from '@uniswap/sdk-core';
-import {useMemo} from 'react';
 import {FlatList, RefreshControl, View} from 'react-native';
 import {cairo} from 'starknet';
 
@@ -9,7 +8,7 @@ import {Button, Divider, Header, Text} from '../../components';
 import {CHAIN_ID} from '../../constants/env';
 import {ETH} from '../../constants/tokens';
 import {useNostrContext} from '../../context/NostrContext';
-import {useClaimedTips, useStyles, useTips, useWaitConnection} from '../../hooks';
+import {useStyles, useTips, useWaitConnection} from '../../hooks';
 import {useClaim, useEstimateClaim} from '../../hooks/api';
 import {useToast, useTransactionModal, useWalletModal} from '../../hooks/modals';
 import {decimalsScale} from '../../utils/helpers';
@@ -19,7 +18,6 @@ export const Tips: React.FC = () => {
   const styles = useStyles(stylesheet);
 
   const tips = useTips();
-  const claimedTips = useClaimedTips();
   const {ndk} = useNostrContext();
 
   const account = useAccount();
@@ -29,15 +27,6 @@ export const Tips: React.FC = () => {
   const waitConnection = useWaitConnection();
   const {show: showTransactionModal} = useTransactionModal();
   const {showToast} = useToast();
-
-  const allTips = useMemo(() => {
-    if (!tips.data) return [];
-
-    return tips.data.map((tip) => ({
-      ...tip,
-      claimed: claimedTips.data?.findIndex((claim) => claim.depositId === tip.depositId) !== -1,
-    }));
-  }, [tips.data, claimedTips.data]);
 
   const onClaimPress = async (depositId: number) => {
     if (!account.address) {
@@ -85,7 +74,7 @@ export const Tips: React.FC = () => {
 
       <FlatList
         contentContainerStyle={styles.flatListContent}
-        data={allTips}
+        data={tips.data ?? []}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         keyExtractor={(item) => item.event.transaction_hash}
         renderItem={({item}) => {

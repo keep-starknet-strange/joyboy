@@ -1,5 +1,4 @@
 export * from './nostr';
-export {useClaimedTips} from './useClaimedTips';
 export {useColor} from './useColor';
 export {useStyles} from './useStyles';
 export {useTheme} from './useTheme';
