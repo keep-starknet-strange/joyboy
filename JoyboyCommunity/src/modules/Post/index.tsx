@@ -1,5 +1,6 @@
 import {NDKEvent} from '@nostr-dev-kit/ndk';
 import {useNavigation} from '@react-navigation/native';
+import {useQueryClient} from '@tanstack/react-query';
 import {useMemo, useState} from 'react';
 import {Image, Pressable, View} from 'react-native';
 import Animated, {
@@ -13,15 +14,8 @@ import Animated, {
 
 import {CommentIcon, LikeFillIcon, LikeIcon, RepostIcon} from '../../assets/icons';
 import {Avatar, IconButton, Menu, Text} from '../../components';
-import {
-  useProfile,
-  useReact,
-  useReactions,
-  useReplyNotes,
-  useStyles,
-  useTheme,
-  useTipModal,
-} from '../../hooks';
+import {useProfile, useReact, useReactions, useReplyNotes, useStyles, useTheme} from '../../hooks';
+import {useTipModal} from '../../hooks/modals';
 import {useAuth} from '../../store/auth';
 import {MainStackNavigationProps} from '../../types';
 import {getElapsedTimeStringFull} from '../../utils/timestamp';
@@ -48,6 +42,7 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
   const userReaction = useReactions({authors: [publicKey], noteId: event?.id});
   const comments = useReplyNotes({noteId: event?.id});
   const react = useReact();
+  const queryClient = useQueryClient();
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -81,17 +76,19 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
   };
 
   const handleNavigateToPostDetails = () => {
+    if (!event?.id) return;
     navigation.navigate('PostDetail', {postId: event?.id, post: event});
   };
 
   /** @TODO comment in Nostr */
   const toggleLike = async () => {
+    if (!event?.id) return;
+
     await react.mutateAsync(
       {event, type: isLiked ? 'dislike' : 'like'},
       {
         onSuccess: () => {
-          reactions.refetch();
-          userReaction.refetch();
+          queryClient.invalidateQueries({queryKey: ['reactions', event?.id]});
 
           scale.value = withSequence(
             withTiming(1.5, {duration: 100, easing: Easing.out(Easing.ease)}), // Scale up
@@ -110,8 +107,6 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
           <Text color="textLight">Reposted</Text>
         </View>
       )}
-
-      {/* TODO: different rendering base on kind =1,6,7 and tags for kind = 1 */}
 
       <View style={styles.info}>
         <View style={styles.infoUser}>
@@ -143,7 +138,7 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
               )}
 
               <Text color="textLight" fontSize={11} lineHeight={16}>
-                {getElapsedTimeStringFull(event.created_at * 1000)}
+                {getElapsedTimeStringFull((event?.created_at ?? Date.now()) * 1000)}
               </Text>
             </View>
           </Pressable>
@@ -171,7 +166,7 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
       <View style={styles.content}>
         <Pressable onPress={handleNavigateToPostDetails}>
           <Text color="textStrong" fontSize={13} lineHeight={20}>
-            {repostedEvent?.content ?? event?.content}
+            {event?.content}
           </Text>
 
           {postSource && (
@@ -206,6 +201,8 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
               label={profile?.username ? `Tip @${profile.username}` : 'Tip'}
               icon="CoinIcon"
               onPress={() => {
+                if (!event) return;
+
                 showTipModal(event);
                 setMenuOpen(false);
               }}

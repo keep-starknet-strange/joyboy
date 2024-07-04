@@ -6,7 +6,7 @@ import {Modalize} from '../Modalize';
 import {Text, TextProps} from '../Text';
 
 export type PickerContainerProps = {
-  selectedValue: string;
+  selectedValue?: string;
   modalizeTitle: string;
 
   style?: StyleProp<ViewStyle>;

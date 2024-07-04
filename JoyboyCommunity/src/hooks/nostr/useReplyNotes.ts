@@ -18,7 +18,7 @@ export const useReplyNotes = (options?: UseReplyNotesOptions) => {
     getNextPageParam: (lastPage: any, allPages, lastPageParam) => {
       if (!lastPage?.length) return undefined;
 
-      const pageParam = lastPage[lastPage.length - 1].created_at;
+      const pageParam = lastPage[lastPage.length - 1].created_at - 1;
 
       if (!pageParam || pageParam === lastPageParam) return undefined;
       return pageParam;

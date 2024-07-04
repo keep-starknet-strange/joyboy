@@ -47,7 +47,14 @@ export const TipModalProvider: React.FC<React.PropsWithChildren> = ({children}) 
     <TipModalContext.Provider value={context}>
       {children}
 
-      <TipModal event={event} ref={tipModalRef} />
+      <TipModal
+        event={event}
+        show={show}
+        hide={hide}
+        showSuccess={showSuccess}
+        hideSuccess={hideSuccess}
+        ref={tipModalRef}
+      />
 
       {successModal && <TipSuccessModal {...successModal} />}
     </TipModalContext.Provider>

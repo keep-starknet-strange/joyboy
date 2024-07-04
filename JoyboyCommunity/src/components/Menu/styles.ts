@@ -31,6 +31,10 @@ export default ThemedStyleSheet((theme) => ({
     backgroundColor: theme.colors.background,
     borderRadius: 16,
     overflow: 'hidden',
+    shadowColor: theme.colors.shadow,
+    shadowOffset: {width: 0, height: 2},
+    shadowRadius: 4,
+    elevation: 2,
   },
 
   menuItem: {

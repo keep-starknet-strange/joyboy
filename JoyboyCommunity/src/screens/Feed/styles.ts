@@ -15,12 +15,8 @@ export default ThemedStyleSheet((theme) => ({
     height: '100%',
   },
 
-  stories: {
+  flatListContent: {
     paddingVertical: Spacing.large,
-    paddingHorizontal: Spacing.pagePadding,
-  },
-  storySeparator: {
-    width: Spacing.medium,
   },
 
   createPostButton: {

@@ -2,6 +2,7 @@ import {View} from 'react-native';
 
 import {ErrorIcon, InfoIcon, SuccessIcon} from '../../assets/icons';
 import {useStyles, useTheme} from '../../hooks';
+import {IconButton} from '../IconButton';
 import {Text} from '../Text';
 import stylesheet from './styles';
 
@@ -10,7 +11,11 @@ export type ToastProps = {
   title: string;
 };
 
-export const Toast: React.FC<ToastProps> = ({type, title}) => {
+export const Toast: React.FC<ToastProps & {onDismiss?: () => void}> = ({
+  type,
+  title,
+  onDismiss,
+}) => {
   const theme = useTheme();
   const styles = useStyles(stylesheet, type);
 
@@ -37,6 +42,14 @@ export const Toast: React.FC<ToastProps> = ({type, title}) => {
       <Text weight="semiBold" color={color} fontSize={14} style={styles.text}>
         {title}
       </Text>
+
+      <IconButton
+        icon="CloseIcon"
+        size={20}
+        color="textStrong"
+        style={styles.closeIcon}
+        onPress={onDismiss}
+      />
     </View>
   );
 };

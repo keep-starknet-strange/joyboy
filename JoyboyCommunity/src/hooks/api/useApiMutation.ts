@@ -26,7 +26,7 @@ export const useApiMutation = <
   useEffect(() => {
     if (showErrorToast && mutation.error) {
       const {response} = mutation.error;
-      if (!response || typeof response.data !== 'object' || !('code' in response.data)) {
+      if (!response?.data || typeof response.data !== 'object' || !('code' in response.data)) {
         showToast({
           type: 'error',
           title: 'Request failed with no response, please try again later.',

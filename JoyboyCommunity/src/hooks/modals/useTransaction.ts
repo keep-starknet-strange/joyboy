@@ -1,7 +1,7 @@
 import {ContractWriteVariables, useContractWrite} from '@starknet-react/core';
 import {GetTransactionReceiptResponse} from 'starknet';
 
-import {useTransactionModal} from './modals/useTransactionModal';
+import {useTransactionModal} from './useTransactionModal';
 
 export const useTransaction = () => {
   const {show: showTransactionModal, hide: hideTransactionModal, shown} = useTransactionModal();

@@ -3,8 +3,9 @@ import {useState} from 'react';
 import {Platform} from 'react-native';
 
 import {LockIcon} from '../../assets/icons';
-import {Button, Input, TextButton} from '../../components';
-import {useDialog, useTheme, useToast} from '../../hooks';
+import {Button, Input} from '../../components';
+import {useTheme} from '../../hooks';
+import {useDialog, useToast} from '../../hooks/modals';
 import {Auth} from '../../modules/Auth';
 import {AuthCreateAccountScreenProps} from '../../types';
 import {generateRandomKeypair} from '../../utils/keypair';
@@ -13,14 +14,14 @@ import {storePassword, storePrivateKey, storePublicKey} from '../../utils/storag
 export const CreateAccount: React.FC<AuthCreateAccountScreenProps> = ({navigation}) => {
   const theme = useTheme();
 
-  const [username, setUsername] = useState(null);
-  const [password, setPassword] = useState(null);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   const {showToast} = useToast();
   const {showDialog, hideDialog} = useDialog();
 
   const handleCreateAccount = async () => {
-    if (password?.length == 0 || !password) {
+    if (!password) {
       showToast({type: 'error', title: 'Password is required'});
       return;
     }
@@ -76,8 +77,6 @@ export const CreateAccount: React.FC<AuthCreateAccountScreenProps> = ({navigatio
       >
         Create Account
       </Button>
-
-      <TextButton onPress={() => navigation.navigate('Login')}>Login</TextButton>
     </Auth>
   );
 };

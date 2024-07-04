@@ -3,8 +3,8 @@ import {createStore} from 'zustand';
 import createBoundedUseStore from './createBoundedUseStore';
 
 type State = {
-  publicKey: string | null;
-  privateKey: string | null;
+  publicKey: string;
+  privateKey: string;
 };
 
 type Action = {
@@ -12,8 +12,10 @@ type Action = {
 };
 
 export const authStore = createStore<State & Action>((set, get) => ({
-  publicKey: null,
-  privateKey: null,
+  // publicKey and privateKey are set to undefined but we know they are strings
+  // so we can cast them as strings without hassle in the app
+  publicKey: undefined as unknown as string,
+  privateKey: undefined as unknown as string,
 
   setAuth: (publicKey, privateKey) => {
     set({publicKey, privateKey});

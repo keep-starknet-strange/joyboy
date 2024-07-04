@@ -1,10 +1,11 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 
 import {Icon} from '../components';
-import {useTheme} from '../hooks';
+import {useStyles} from '../hooks';
 import {CreateAccount} from '../screens/Auth/CreateAccount';
 import {Login} from '../screens/Auth/Login';
 import {SaveKeys} from '../screens/Auth/SaveKeys';
@@ -15,7 +16,9 @@ import {PostDetail} from '../screens/PostDetail';
 import {Profile} from '../screens/Profile';
 import {Tips} from '../screens/Tips';
 import {useAuth} from '../store/auth';
+import {ThemedStyleSheet} from '../styles';
 import {AuthStackParams, HomeBottomStackParams, MainStackParams, RootStackParams} from '../types';
+import {retrievePublicKey} from '../utils/storage';
 
 const RootStack = createNativeStackNavigator<RootStackParams>();
 const AuthStack = createNativeStackNavigator<AuthStackParams>();
@@ -23,22 +26,17 @@ const MainStack = createNativeStackNavigator<MainStackParams>();
 const HomeBottomTabsStack = createBottomTabNavigator<HomeBottomStackParams>();
 
 const HomeBottomTabNavigator: React.FC = () => {
-  const theme = useTheme();
+  const styles = useStyles(stylesheet);
+
   const {publicKey} = useAuth();
 
   return (
     <HomeBottomTabsStack.Navigator
-      sceneContainerStyle={{
-        backgroundColor: theme.colors.background,
-      }}
+      sceneContainerStyle={styles.sceneContainer}
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
-        tabBarStyle: {
-          backgroundColor: theme.colors.surface,
-          borderTopColor: theme.colors.divider,
-          borderTopWidth: StyleSheet.hairlineWidth,
-        },
+        tabBarStyle: styles.tabBar,
       }}
     >
       <HomeBottomTabsStack.Screen
@@ -48,29 +46,9 @@ const HomeBottomTabNavigator: React.FC = () => {
           tabBarActiveTintColor: 'white',
           tabBarInactiveTintColor: '',
           tabBarIcon: ({focused}) => (
-            <View style={{flex: 1, alignItems: 'center', gap: 2, justifyContent: 'center'}}>
+            <View style={styles.tabBarIcon}>
               <Icon
                 name="HomeIcon"
-                size={24}
-                color={focused ? 'bottomBarActive' : 'bottomBarInactive'}
-              />
-              {focused && <Icon name="IndicatorIcon" color="primary" size={6} />}
-            </View>
-          ),
-        }}
-      />
-
-      <HomeBottomTabsStack.Screen
-        name="Notifications"
-        component={Profile}
-        initialParams={{publicKey}}
-        options={{
-          tabBarActiveTintColor: 'white',
-          tabBarInactiveTintColor: '',
-          tabBarIcon: ({focused}) => (
-            <View style={{flex: 1, alignItems: 'center', gap: 1, justifyContent: 'center'}}>
-              <Icon
-                name="SearchIcon"
                 size={24}
                 color={focused ? 'bottomBarActive' : 'bottomBarInactive'}
               />
@@ -87,7 +65,7 @@ const HomeBottomTabNavigator: React.FC = () => {
           tabBarActiveTintColor: 'white',
           tabBarInactiveTintColor: 'grey',
           tabBarIcon: ({focused}) => (
-            <View style={{flex: 1, alignItems: 'center', gap: 4, justifyContent: 'center'}}>
+            <View style={styles.tabBarIcon}>
               <Icon
                 name="CoinIcon"
                 size={24}
@@ -101,13 +79,13 @@ const HomeBottomTabNavigator: React.FC = () => {
 
       <HomeBottomTabsStack.Screen
         name="UserProfile"
-        component={Profile}
+        component={Profile as any}
         initialParams={{publicKey}}
         options={{
           tabBarActiveTintColor: 'white',
           tabBarInactiveTintColor: 'grey',
           tabBarIcon: ({focused}) => (
-            <View style={{flex: 1, alignItems: 'center', gap: 1, justifyContent: 'center'}}>
+            <View style={styles.tabBarIcon}>
               <Icon
                 name="UserIcon"
                 size={24}
@@ -123,9 +101,19 @@ const HomeBottomTabNavigator: React.FC = () => {
 };
 
 const AuthNavigator: React.FC = () => {
+  const [publicKey, setPublicKey] = useState<string | null | undefined>(undefined);
+
+  useEffect(() => {
+    retrievePublicKey().then((key) => {
+      setPublicKey(key);
+    });
+  });
+
+  if (publicKey === undefined) return null;
+
   return (
     <AuthStack.Navigator screenOptions={{headerShown: false}}>
-      <AuthStack.Screen name="Login" component={Login} />
+      {publicKey && <AuthStack.Screen name="Login" component={Login} />}
       <AuthStack.Screen name="CreateAccount" component={CreateAccount} />
       <AuthStack.Screen name="SaveKeys" component={SaveKeys} />
     </AuthStack.Navigator>
@@ -165,3 +153,21 @@ export const Router: React.FC = () => {
     </NavigationContainer>
   );
 };
+
+const stylesheet = ThemedStyleSheet((theme) => ({
+  sceneContainer: {
+    backgroundColor: theme.colors.background,
+  },
+
+  tabBar: {
+    backgroundColor: theme.colors.surface,
+    borderTopColor: theme.colors.divider,
+    borderTopWidth: StyleSheet.hairlineWidth,
+  },
+  tabBarIcon: {
+    flex: 1,
+    gap: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+}));

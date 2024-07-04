@@ -5,20 +5,12 @@ import {FlatList, RefreshControl, View} from 'react-native';
 import {cairo} from 'starknet';
 
 import {Button, Divider, Header, Text} from '../../components';
+import {CHAIN_ID} from '../../constants/env';
 import {ETH} from '../../constants/tokens';
 import {useNostrContext} from '../../context/NostrContext';
-import {
-  useChainId,
-  useClaim,
-  useEstimateClaim,
-  useStyles,
-  useTips,
-  useToast,
-  useTransactionModal,
-  useWaitConnection,
-  useWalletModal,
-} from '../../hooks';
-import {parseDepositEvents} from '../../utils/events';
+import {useStyles, useTips, useWaitConnection} from '../../hooks';
+import {useClaim, useEstimateClaim} from '../../hooks/api';
+import {useToast, useTransactionModal, useWalletModal} from '../../hooks/modals';
 import {decimalsScale} from '../../utils/helpers';
 import stylesheet from './styles';
 
@@ -29,7 +21,6 @@ export const Tips: React.FC = () => {
   const {ndk} = useNostrContext();
 
   const account = useAccount();
-  const chainId = useChainId();
   const claim = useClaim();
   const estimateClaim = useEstimateClaim();
   const walletModal = useWalletModal();
@@ -43,14 +34,14 @@ export const Tips: React.FC = () => {
     }
 
     const connectedAccount = await waitConnection();
-    if (!connectedAccount) return;
+    if (!connectedAccount || !connectedAccount.address) return;
 
     const getNostrEvent = async (gasAmount: bigint) => {
       const event = new NDKEvent(ndk);
       event.kind = NDKKind.Text;
       event.content = `claim: ${cairo.felt(depositId)},${cairo.felt(
-        connectedAccount.address,
-      )},${cairo.felt(ETH[chainId].address)},${gasAmount.toString()}`;
+        connectedAccount.address!,
+      )},${cairo.felt(ETH[CHAIN_ID].address)},${gasAmount.toString()}`;
       event.tags = [];
 
       await event.sign();
@@ -65,6 +56,7 @@ export const Tips: React.FC = () => {
 
     showTransactionModal(txHash, async (receipt) => {
       if (receipt.isSuccess()) {
+        tips.refetch();
         showToast({type: 'success', title: 'Tip claimed successfully'});
       } else {
         let description = 'Please Try Again Later.';
@@ -83,15 +75,11 @@ export const Tips: React.FC = () => {
 
       <FlatList
         contentContainerStyle={styles.flatListContent}
-        data={tips.data.pages
-          .flat()
-          .map((page) => page.events)
-          .flat()}
+        data={tips.data ?? []}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
-        keyExtractor={(item) => item.transaction_hash}
+        keyExtractor={(item) => item.event.transaction_hash}
         renderItem={({item}) => {
-          const event = parseDepositEvents(item, chainId);
-          const amount = new Fraction(event.amount, decimalsScale(event.token.decimals)).toFixed(6);
+          const amount = new Fraction(item.amount, decimalsScale(item.token.decimals)).toFixed(6);
 
           return (
             <View style={styles.tip}>
@@ -101,15 +89,27 @@ export const Tips: React.FC = () => {
                     {amount}
                   </Text>
                   <Text weight="bold" fontSize={17}>
-                    {event.token.symbol}
+                    {item.token.symbol}
                   </Text>
                 </View>
 
                 <View>
-                  {event.depositId ? (
-                    <Button small variant="primary" onPress={() => onClaimPress(event.depositId)}>
-                      Claim
-                    </Button>
+                  {item.depositId ? (
+                    <>
+                      {item.claimed ? (
+                        <Button small variant="default" disabled>
+                          Claimed
+                        </Button>
+                      ) : (
+                        <Button
+                          small
+                          variant="primary"
+                          onPress={() => onClaimPress(item.depositId)}
+                        >
+                          Claim
+                        </Button>
+                      )}
+                    </>
                   ) : null}
                 </View>
               </View>
@@ -119,7 +119,7 @@ export const Tips: React.FC = () => {
               <View style={styles.senderInfo}>
                 <View style={styles.sender}>
                   <Text weight="semiBold" color="text" numberOfLines={1} ellipsizeMode="middle">
-                    {event.sender}
+                    {item.sender}
                   </Text>
                 </View>
 

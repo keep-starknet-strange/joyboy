@@ -6,16 +6,12 @@ import {useAuth} from '../../store/auth';
 
 export const useEditProfile = () => {
   const {ndk} = useNostrContext();
-  const {publicKey, privateKey} = useAuth();
+  const {publicKey} = useAuth();
 
   return useMutation({
     mutationKey: ['editProfile'],
     mutationFn: async (data: NDKUserProfile) => {
       try {
-        if (!privateKey) {
-          throw new Error('Private key is required');
-        }
-
         const user = ndk.getUser({pubkey: publicKey});
         await user.fetchProfile();
 
