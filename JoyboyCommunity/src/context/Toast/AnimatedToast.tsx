@@ -1,3 +1,4 @@
+import {useEffect} from 'react';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import Animated, {
   measure,
@@ -10,13 +11,19 @@ import Animated, {
 import {clamp, snapPoint} from 'react-native-redash';
 
 import {Toast} from '../../components';
-import {ToastConfig} from './ToastContext';
+import type {ToastConfig} from './ToastContext';
 
 export const AnimatedToast: React.FC<{toast: ToastConfig; hide: () => void}> = ({toast, hide}) => {
   const containerRef = useAnimatedRef<Animated.View>();
 
   const top = useSharedValue(0);
   const translateY = useSharedValue(0);
+
+  useEffect(() => {
+    setTimeout(onDismiss, toast.timeout ?? 10_000);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const pan = Gesture.Pan()
     .onChange(({translationY}) => {

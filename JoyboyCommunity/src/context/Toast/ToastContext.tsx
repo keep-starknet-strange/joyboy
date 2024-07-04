@@ -9,10 +9,11 @@ import styles from './styles';
 
 export type ToastConfig = ToastProps & {
   key: string;
+  timeout?: number;
 };
 
 export type ToastContextType = {
-  showToast: (toast: ToastProps) => () => void;
+  showToast: (toast: Omit<ToastConfig, 'key'>) => () => void;
   hideToast: (key: string) => void;
 };
 
@@ -26,7 +27,7 @@ export const ToastProvider: React.FC<{children: React.ReactNode}> = ({children})
   }, []);
 
   const showToast = useCallback(
-    (toast: ToastProps) => {
+    (toast: Omit<ToastConfig, 'key'>) => {
       const key = randomUUID();
 
       setToasts((prev) => [...prev, {...toast, key}]);
