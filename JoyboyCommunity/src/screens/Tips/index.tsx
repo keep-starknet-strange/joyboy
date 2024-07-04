@@ -56,6 +56,7 @@ export const Tips: React.FC = () => {
 
     showTransactionModal(txHash, async (receipt) => {
       if (receipt.isSuccess()) {
+        tips.refetch();
         showToast({type: 'success', title: 'Tip claimed successfully'});
       } else {
         let description = 'Please Try Again Later.';
