@@ -1,11 +1,5 @@
 import {useEffect} from 'react';
-import {
-  Pressable,
-  PressableProps,
-  TouchableWithoutFeedback,
-  useWindowDimensions,
-  View,
-} from 'react-native';
+import {Pressable, PressableProps, TouchableWithoutFeedback, View} from 'react-native';
 import {Portal} from 'react-native-portalize';
 import Animated, {
   measure,
@@ -15,7 +9,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import {useColor, useStyles} from '../../hooks';
+import {useColor, useStyles, useWindowDimensions} from '../../hooks';
 import {ColorProp} from '../../styles';
 import {Icon, IconNames} from '../Icon';
 import {Text} from '../Text';
@@ -51,7 +45,7 @@ const Menu: React.FC<MenuProps> & MenuSubComponents = ({handle, open, onClose, c
   }, [animation, open]);
 
   const animatedMenuStyles = useAnimatedStyle(() => {
-    const menuWidth = Math.min(width / 1.6, 320);
+    const menuWidth = Math.min(width / 1.5, 320);
 
     const menuStyle = {
       ...styles.menu,

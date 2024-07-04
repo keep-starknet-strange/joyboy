@@ -37,17 +37,17 @@ export const Wrapper: React.FC = () => {
         <NostrProvider>
           <QueryClientProvider client={queryClient}>
             <SafeAreaProvider>
-              <PortalizeProvider>
-                <DialogProvider>
-                  <StarknetProvider>
-                    <ModalProviders>
-                      <RootScreenContainer>
+              <RootScreenContainer>
+                <PortalizeProvider>
+                  <DialogProvider>
+                    <StarknetProvider>
+                      <ModalProviders>
                         <App />
-                      </RootScreenContainer>
-                    </ModalProviders>
-                  </StarknetProvider>
-                </DialogProvider>
-              </PortalizeProvider>
+                      </ModalProviders>
+                    </StarknetProvider>
+                  </DialogProvider>
+                </PortalizeProvider>
+              </RootScreenContainer>
             </SafeAreaProvider>
           </QueryClientProvider>
         </NostrProvider>

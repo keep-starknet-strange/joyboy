@@ -17,3 +17,5 @@ export enum EventKey {
 }
 
 export const DEFAULT_TIMELOCK = 7 * 24 * 60 * 60 * 1_000; // 7 days
+
+export const WEB_MAX_WIDTH = 520;
