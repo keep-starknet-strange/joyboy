@@ -10,12 +10,9 @@ import Animated, {
 import {clamp, snapPoint} from 'react-native-redash';
 
 import {Toast} from '../../components';
-import {useToast} from '../../hooks/modals';
 import {ToastConfig} from './ToastContext';
 
-export const AnimatedToast: React.FC<{toast: ToastConfig}> = ({toast}) => {
-  const {hideToast} = useToast();
-
+export const AnimatedToast: React.FC<{toast: ToastConfig; hide: () => void}> = ({toast, hide}) => {
   const containerRef = useAnimatedRef<Animated.View>();
 
   const top = useSharedValue(0);
@@ -33,7 +30,7 @@ export const AnimatedToast: React.FC<{toast: ToastConfig}> = ({toast}) => {
 
       if (snapTo < 0) {
         top.value = withTiming(1, {duration: 200}, () => {
-          runOnJS(hideToast)(toast.key);
+          runOnJS(hide)();
         });
       }
 

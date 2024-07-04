@@ -46,7 +46,7 @@ export const ToastProvider: React.FC<{children: React.ReactNode}> = ({children})
         <SafeAreaView style={styles.container}>
           <View style={styles.content}>
             {toasts.map((toast) => (
-              <AnimatedToast key={toast.key} toast={toast} />
+              <AnimatedToast key={toast.key} toast={toast} hide={() => hideToast(toast.key)} />
             ))}
           </View>
         </SafeAreaView>
