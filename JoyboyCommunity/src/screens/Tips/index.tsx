@@ -56,7 +56,7 @@ export const Tips: React.FC = () => {
     // Default min to 0 => Change to a constant or UI estimate base claim
     // Nonce first account tx => deduced it never do a tx before.
     const minAmountBalanceToClaim = BigInt(0);
-    const nonce = await connectedAccount?.account?.getNonce();
+    let nonce: undefined | string;
 
     const [balanceLow, balanceHigh] = await provider.callContract({
       contractAddress: ETH[CHAIN_ID].address,
@@ -99,15 +99,26 @@ export const Tips: React.FC = () => {
         calldata: claimCalldata,
       });
     } catch (error) {
-      console.log("Can't estimate UI fees");
+      console.log("Can't estimate UI fees", error);
     }
 
-    console.log('estimateFEe', estimateFee);
-    /** @TODO add estimate claim on the UI too? */
-    if (
+    if (!estimateFee?.overall_fee) {
+      try {
+        nonce = await connectedAccount?.account?.getNonce();
+      } catch (error) {
+        console.log('Get nonce error => maybe first tx', error);
+      }
+    }
+
+    /** @TODO better check for backed call need */
+    // - if nonce is undefined (no tx send) and no estimate fee on the UI
+    // - Balance < estimate fee
+    // - Nonce is ok (First tx send) but no balance min
+    const isBackendNeeded =
+      (!nonce && !estimateFee) ||
       (estimateFee?.overall_fee && balance < estimateFee?.overall_fee) ||
-      (balance <= minAmountBalanceToClaim && Number(nonce) == 0) // check 0 balance and 0 nonce on this account
-    ) {
+      (nonce && Number(nonce) > 0 && balance <= minAmountBalanceToClaim);
+    if (isBackendNeeded) {
       const feeResult = await estimateClaim.mutateAsync(await getNostrEvent(BigInt(1)));
       const fee = BigInt(feeResult.data.fee);
       // Send the claim through backend
