@@ -1,36 +1,36 @@
-import {NDKEvent, NDKKind} from '@nostr-dev-kit/ndk';
-import {useAccount, useProvider} from '@starknet-react/core';
-import {Fraction} from '@uniswap/sdk-core';
-import {FlatList, RefreshControl, View} from 'react-native';
-import {byteArray, cairo, CallData, uint256} from 'starknet';
+import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
+import { useAccount, useProvider } from '@starknet-react/core';
+import { Fraction } from '@uniswap/sdk-core';
+import { FlatList, RefreshControl, View } from 'react-native';
+import { byteArray, cairo, CallData, uint256 } from 'starknet';
 
-import {Button, Divider, Header, Text} from '../../components';
-import {ESCROW_ADDRESSES} from '../../constants/contracts';
-import {CHAIN_ID} from '../../constants/env';
-import {Entrypoint} from '../../constants/misc';
-import {ETH} from '../../constants/tokens';
-import {useNostrContext} from '../../context/NostrContext';
-import {useStyles, useTips, useWaitConnection} from '../../hooks';
-import {useClaim, useEstimateClaim} from '../../hooks/api';
-import {useToast, useTransaction, useTransactionModal, useWalletModal} from '../../hooks/modals';
-import {decimalsScale} from '../../utils/helpers';
+import { Button, Divider, Header, Text } from '../../components';
+import { ESCROW_ADDRESSES } from '../../constants/contracts';
+import { CHAIN_ID } from '../../constants/env';
+import { Entrypoint } from '../../constants/misc';
+import { ETH } from '../../constants/tokens';
+import { useNostrContext } from '../../context/NostrContext';
+import { useStyles, useTips, useWaitConnection } from '../../hooks';
+import { useClaim, useEstimateClaim } from '../../hooks/api';
+import { useToast, useTransaction, useTransactionModal, useWalletModal } from '../../hooks/modals';
+import { decimalsScale } from '../../utils/helpers';
 import stylesheet from './styles';
 
 export const Tips: React.FC = () => {
   const styles = useStyles(stylesheet);
 
   const tips = useTips();
-  const {ndk} = useNostrContext();
+  const { ndk } = useNostrContext();
 
-  const {provider} = useProvider();
+  const { provider } = useProvider();
   const account = useAccount();
   const sendTransaction = useTransaction();
   const claim = useClaim();
   const estimateClaim = useEstimateClaim();
   const walletModal = useWalletModal();
   const waitConnection = useWaitConnection();
-  const {show: showTransactionModal} = useTransactionModal();
-  const {showToast} = useToast();
+  const { show: showTransactionModal } = useTransactionModal();
+  const { showToast } = useToast();
 
   const onClaimPress = async (depositId: number) => {
     if (!account.address) {
@@ -52,17 +52,63 @@ export const Tips: React.FC = () => {
       return event.rawEvent();
     };
 
-    // Change to estimate base claim call
-    const minAmountBalanceToClaim= BigInt(0);
+    /** @TODO add more check for the two claim flow */
+    // Default min to 0 => Change to a constant or UI estimate base claim
+    // Nonce first account tx => deduced it never do a tx before.
+    const minAmountBalanceToClaim = BigInt(0);
+    //  const nonce=  await connectedAccount?.account?.getNonce()
 
     const [balanceLow, balanceHigh] = await provider.callContract({
       contractAddress: ETH[CHAIN_ID].address,
       entrypoint: Entrypoint.BALANCE_OF,
       calldata: [connectedAccount.address],
     });
-    const balance = uint256.uint256ToBN({low: balanceLow, high: balanceHigh});
+    const balance = uint256.uint256ToBN({ low: balanceLow, high: balanceHigh });
 
-    if (balance <= minAmountBalanceToClaim) {
+    // Send the claim through the wallet
+
+    const event = await getNostrEvent(BigInt(0));
+
+    const signature = event.sig ?? '';
+    const signatureR = signature.slice(0, signature.length / 2);
+    const signatureS = signature.slice(signature.length / 2);
+
+    const claimCalldata = CallData.compile([
+      uint256.bnToUint256(`0x${event.pubkey}`),
+      event.created_at,
+      event.kind ?? 1,
+      byteArray.byteArrayFromString(JSON.stringify(event.tags)),
+      {
+        deposit_id: cairo.felt(depositId),
+        starknet_recipient: connectedAccount.address,
+        gas_token_address: ETH[CHAIN_ID].address,
+        gas_amount: uint256.bnToUint256(0),
+      },
+      {
+        r: uint256.bnToUint256(`0x${signatureR}`),
+        s: uint256.bnToUint256(`0x${signatureS}`),
+      },
+      uint256.bnToUint256(0),
+    ]);
+
+    let estimateFee;
+    try {
+
+      estimateFee = await connectedAccount?.account?.estimateInvokeFee({
+        contractAddress: ESCROW_ADDRESSES[await provider.getChainId()],
+        entrypoint: Entrypoint.CLAIM,
+        calldata: claimCalldata,
+      },)
+    } catch (error) {
+      console.log("Can't estimate UI fees")
+    }
+
+
+    console.log("estimateFEe",estimateFee)
+    /** @TODO add estimate claim on the UI too? */
+    if ((estimateFee?.overall_fee && balance < estimateFee?.overall_fee) ||
+      balance <= minAmountBalanceToClaim
+    ) {
 
       const feeResult = await estimateClaim.mutateAsync(await getNostrEvent(BigInt(1)));
       const fee = BigInt(feeResult.data.fee);
@@ -74,42 +120,18 @@ export const Tips: React.FC = () => {
       showTransactionModal(txHash, async (receipt) => {
         if (receipt.isSuccess()) {
           tips.refetch();
-          showToast({type: 'success', title: 'Tip claimed successfully'});
+          showToast({ type: 'success', title: 'Tip claimed successfully' });
         } else {
           let description = 'Please Try Again Later.';
           if (receipt.isRejected()) {
             description = receipt.transaction_failure_reason.error_message;
           }
 
-          showToast({type: 'error', title: `Failed to claim the tip. ${description}`});
+          showToast({ type: 'error', title: `Failed to claim the tip. ${description}` });
         }
       });
     } else {
-      // Send the claim through the wallet
 
-      const event = await getNostrEvent(BigInt(0));
-
-      const signature = event.sig ?? '';
-      const signatureR = signature.slice(0, signature.length / 2);
-      const signatureS = signature.slice(signature.length / 2);
-
-      const claimCalldata = CallData.compile([
-        uint256.bnToUint256(`0x${event.pubkey}`),
-        event.created_at,
-        event.kind ?? 1,
-        byteArray.byteArrayFromString(JSON.stringify(event.tags)),
-        {
-          deposit_id: cairo.felt(depositId),
-          starknet_recipient: connectedAccount.address,
-          gas_token_address: ETH[CHAIN_ID].address,
-          gas_amount: uint256.bnToUint256(0),
-        },
-        {
-          r: uint256.bnToUint256(`0x${signatureR}`),
-          s: uint256.bnToUint256(`0x${signatureS}`),
-        },
-        uint256.bnToUint256(0),
-      ]);
 
       const receipt = await sendTransaction({
         calls: [
@@ -123,14 +145,14 @@ export const Tips: React.FC = () => {
 
       if (receipt?.isSuccess()) {
         tips.refetch();
-        showToast({type: 'success', title: 'Tip claimed successfully'});
+        showToast({ type: 'success', title: 'Tip claimed successfully' });
       } else {
         let description = 'Please Try Again Later.';
         if (receipt?.isRejected()) {
           description = receipt.transaction_failure_reason.error_message;
         }
 
-        showToast({type: 'error', title: `Failed to claim the tip. ${description}`});
+        showToast({ type: 'error', title: `Failed to claim the tip. ${description}` });
       }
     }
   };
@@ -144,7 +166,7 @@ export const Tips: React.FC = () => {
         data={tips.data ?? []}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         keyExtractor={(item) => item.event.transaction_hash}
-        renderItem={({item}) => {
+        renderItem={({ item }) => {
           const amount = new Fraction(item.amount, decimalsScale(item.token.decimals)).toFixed(6);
 
           return (
