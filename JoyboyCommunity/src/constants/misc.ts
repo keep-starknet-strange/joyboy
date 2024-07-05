@@ -4,6 +4,7 @@ export enum Entrypoint {
   SYMBOL = 'symbol',
   APPROVE = 'approve',
   TRANSFER = 'transfer',
+  BALANCE_OF = 'balance_of',
 
   // Escrow
   DEPOSIT = 'deposit',
