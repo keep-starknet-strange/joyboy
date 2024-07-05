@@ -52,8 +52,8 @@ export const Tips: React.FC = () => {
       return event.rawEvent();
     };
 
-    const feeResult = await estimateClaim.mutateAsync(await getNostrEvent(BigInt(1)));
-    const fee = BigInt(feeResult.data.fee);
+    // Change to estimate base claim call
+    const minAmountBalanceToClaim= BigInt(0);
 
     const [balanceLow, balanceHigh] = await provider.callContract({
       contractAddress: ETH[CHAIN_ID].address,
@@ -62,7 +62,10 @@ export const Tips: React.FC = () => {
     });
     const balance = uint256.uint256ToBN({low: balanceLow, high: balanceHigh});
 
-    if (balance < fee) {
+    if (balance <= minAmountBalanceToClaim) {
+
+      const feeResult = await estimateClaim.mutateAsync(await getNostrEvent(BigInt(1)));
+      const fee = BigInt(feeResult.data.fee);
       // Send the claim through backend
 
       const claimResult = await claim.mutateAsync(await getNostrEvent(fee));
