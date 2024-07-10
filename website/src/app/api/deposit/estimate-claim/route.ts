@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
       // Using 1.1 as a multiplier to ensure the fee is enough
       const fee = ((result.overall_fee * BigInt(11)) / BigInt(10)).toString();
 
-      return NextResponse.json({fee}, {status: HTTPStatus.OK});
+      return NextResponse.json({ethFee: fee, tokenFee: fee}, {status: HTTPStatus.OK});
     } else {
       // ERC20 fee estimation
 
@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({code: ErrorCode.NO_ROUTE_FOUND}, {status: HTTPStatus.BadRequest});
       }
 
-      return NextResponse.json({fee: feeQuote.buyAmount}, {status: HTTPStatus.OK});
+      return NextResponse.json({ethFee, tokenFee: feeQuote.buyAmount}, {status: HTTPStatus.OK});
     }
   } catch (error) {
     return NextResponse.json(

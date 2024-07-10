@@ -67,7 +67,8 @@ export const Tips: React.FC = () => {
     };
 
     const feeResult = await estimateClaim.mutateAsync(await getNostrEvent(BigInt(1)));
-    const fee = BigInt(feeResult.data.fee);
+    const ethFee = BigInt(feeResult.data.ethFee);
+    const tokenFee = BigInt(feeResult.data.tokenFee);
 
     const [balanceLow, balanceHigh] = await provider.callContract({
       contractAddress: ETH[CHAIN_ID].address,
@@ -76,10 +77,10 @@ export const Tips: React.FC = () => {
     });
     const balance = uint256.uint256ToBN({low: balanceLow, high: balanceHigh});
 
-    if (balance < fee) {
+    if (balance < ethFee) {
       // Send the claim through backend
 
-      const claimResult = await claim.mutateAsync(await getNostrEvent(fee));
+      const claimResult = await claim.mutateAsync(await getNostrEvent(tokenFee));
       const txHash = claimResult.data.transaction_hash;
 
       showTransactionModal(txHash, async (receipt) => {
