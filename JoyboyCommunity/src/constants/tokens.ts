@@ -11,8 +11,7 @@ export type MultiChainTokens = Record<TokenSymbol, MultiChainToken>;
 
 export enum TokenSymbol {
   ETH = 'ETH',
-  /* STRK = 'STRK',
-  JBY = 'JBY', */
+  STRK = 'STRK',
 }
 
 export const ETH: MultiChainToken = {
@@ -34,7 +33,7 @@ export const ETH: MultiChainToken = {
   },
 };
 
-/* export const STRK: MultiChainToken = {
+export const STRK: MultiChainToken = {
   [constants.StarknetChainId.SN_MAIN]: {
     name: 'Stark',
     symbol: TokenSymbol.STRK,
@@ -53,29 +52,9 @@ export const ETH: MultiChainToken = {
   },
 };
 
-export const JBY: MultiChainToken = {
-  [constants.StarknetChainId.SN_MAIN]: {
-    name: 'Joyboy',
-    symbol: TokenSymbol.JBY,
-    decimals: 18,
-    address: getChecksumAddress(
-      '0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7',
-    ),
-  },
-  [constants.StarknetChainId.SN_SEPOLIA]: {
-    name: 'Joyboy',
-    symbol: TokenSymbol.JBY,
-    decimals: 18,
-    address: getChecksumAddress(
-      '0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7',
-    ),
-  },
-}; */
-
 export const TOKENS: MultiChainTokens = {
   [TokenSymbol.ETH]: ETH,
-  /* [TokenSymbol.STRK]: STRK,
-  [TokenSymbol.JBY]: JBY, */
+  [TokenSymbol.STRK]: STRK,
 };
 
 export const TOKEN_ADDRESSES: Record<

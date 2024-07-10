@@ -1,8 +1,9 @@
+import {fetchBuildExecuteTransaction, fetchQuotes} from '@avnu/avnu-sdk';
 import {NextRequest, NextResponse} from 'next/server';
 import {Calldata} from 'starknet';
 
-import {ESCROW_ADDRESSES} from '@/constants/contracts';
-import {Entrypoint} from '@/constants/misc';
+import {ESCROW_ADDRESSES, ETH_ADDRESSES} from '@/constants/contracts';
+import {AVNU_URL, Entrypoint} from '@/constants/misc';
 import {account} from '@/services/account';
 import {provider} from '@/services/provider';
 import {ErrorCode} from '@/utils/errors';
@@ -24,10 +25,12 @@ export async function POST(request: NextRequest) {
 
   let claimCallData: Calldata;
   let gasAmount: bigint;
+  let gasTokenAddress: string;
   try {
     const result = await getClaimCallData(body.data);
     claimCallData = result.calldata;
     gasAmount = result.gasAmount;
+    gasTokenAddress = result.tokenAddress;
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({code: error.message}, {status: HTTPStatus.BadRequest});
@@ -37,18 +40,69 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const {transaction_hash} = await account.execute(
-      [
+    if (gasTokenAddress === ETH_ADDRESSES[await provider.getChainId()]) {
+      // ETH transaction
+
+      const {transaction_hash} = await account.execute([
         {
           contractAddress: ESCROW_ADDRESSES[await provider.getChainId()],
           entrypoint: Entrypoint.CLAIM,
           calldata: claimCallData,
         },
-      ],
-      {maxFee: gasAmount},
-    );
+      ]);
 
-    return NextResponse.json({transaction_hash}, {status: HTTPStatus.OK});
+      return NextResponse.json({transaction_hash}, {status: HTTPStatus.OK});
+    } else {
+      // ERC20 transaction
+
+      const result = await account.estimateInvokeFee([
+        {
+          contractAddress: ESCROW_ADDRESSES[await provider.getChainId()],
+          entrypoint: Entrypoint.CLAIM,
+          calldata: claimCallData,
+        },
+      ]);
+
+      const gasFeeQuotes = await fetchQuotes(
+        {
+          buyTokenAddress: ETH_ADDRESSES[await provider.getChainId()],
+          sellTokenAddress: gasTokenAddress,
+          sellAmount: gasAmount,
+        },
+        {baseUrl: AVNU_URL},
+      );
+      const gasFeeQuote = gasFeeQuotes[0];
+
+      if (!gasFeeQuote) {
+        return NextResponse.json({code: ErrorCode.NO_ROUTE_FOUND}, {status: HTTPStatus.BadRequest});
+      }
+
+      if (result.overall_fee > gasFeeQuote.buyAmount) {
+        return NextResponse.json(
+          {code: ErrorCode.INVALID_GAS_AMOUNT},
+          {status: HTTPStatus.BadRequest},
+        );
+      }
+
+      const {calls: swapCalls} = await fetchBuildExecuteTransaction(
+        gasFeeQuote.quoteId,
+        account.address,
+        undefined,
+        undefined,
+        {baseUrl: AVNU_URL},
+      );
+
+      const {transaction_hash} = await account.execute([
+        {
+          contractAddress: ESCROW_ADDRESSES[await provider.getChainId()],
+          entrypoint: Entrypoint.CLAIM,
+          calldata: claimCallData,
+        },
+        ...swapCalls,
+      ]);
+
+      return NextResponse.json({transaction_hash}, {status: HTTPStatus.OK});
+    }
   } catch (error) {
     return NextResponse.json(
       {code: ErrorCode.TRANSACTION_ERROR, error},

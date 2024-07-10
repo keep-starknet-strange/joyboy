@@ -8,6 +8,7 @@ const ErrorCodesArray = [
   'INVALID_GAS_AMOUNT',
   'TRANSACTION_ERROR',
   'ESTIMATION_ERROR',
+  'NO_ROUTE_FOUND',
 ] as const;
 
 export type ErrorCode = (typeof ErrorCodesArray)[number];
