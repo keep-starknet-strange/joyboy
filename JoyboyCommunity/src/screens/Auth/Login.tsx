@@ -66,7 +66,6 @@ export const Login: React.FC<AuthLoginScreenProps> = ({navigation}) => {
       description:
         'Creating a new account will delete your current account. Are you sure you want to continue?',
       buttons: [
-        {type: 'default', label: 'Cancel', onPress: hideDialog},
         {
           type: 'primary',
           label: 'Continue',
@@ -75,6 +74,7 @@ export const Login: React.FC<AuthLoginScreenProps> = ({navigation}) => {
             hideDialog();
           },
         },
+        {type: 'default', label: 'Cancel', onPress: hideDialog},
       ],
     });
   };
