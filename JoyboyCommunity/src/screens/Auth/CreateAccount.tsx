@@ -1,9 +1,11 @@
+import {NDKPrivateKeySigner} from '@nostr-dev-kit/ndk';
 import {canUseBiometricAuthentication} from 'expo-secure-store';
 import {useState} from 'react';
 import {Platform} from 'react-native';
 
 import {LockIcon} from '../../assets/icons';
 import {Button, Input} from '../../components';
+import {useNostrContext} from '../../context/NostrContext';
 import {useTheme} from '../../hooks';
 import {useDialog, useToast} from '../../hooks/modals';
 import {Auth} from '../../modules/Auth';
@@ -17,10 +19,16 @@ export const CreateAccount: React.FC<AuthCreateAccountScreenProps> = ({navigatio
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  const {ndk} = useNostrContext();
   const {showToast} = useToast();
   const {showDialog, hideDialog} = useDialog();
 
   const handleCreateAccount = async () => {
+    if (!username) {
+      showToast({type: 'error', title: 'Username is required'});
+      return;
+    }
+
     if (!password) {
       showToast({type: 'error', title: 'Password is required'});
       return;
@@ -30,6 +38,11 @@ export const CreateAccount: React.FC<AuthCreateAccountScreenProps> = ({navigatio
 
     await storePrivateKey(privateKey, password);
     await storePublicKey(publicKey);
+
+    ndk.signer = new NDKPrivateKeySigner(privateKey);
+    const ndkUser = ndk.getUser({pubkey: publicKey});
+    ndkUser.profile = {nip05: username};
+    await ndkUser.publish();
 
     const biometySupported = Platform.OS !== 'web' && canUseBiometricAuthentication();
     if (biometySupported) {
