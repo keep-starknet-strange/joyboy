@@ -9,9 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@avnu/avnu-sdk": "^2.0.0",
+    "ethers": "^6.13.1",
     "framer-motion": "^11.2.4",
     "next": "^14.2.3",
     "nostr-tools": "^2.7.0",
+    "qs": "^6.12.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "starknet": "6.9.0",

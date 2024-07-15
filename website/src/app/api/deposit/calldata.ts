@@ -74,5 +74,5 @@ export const getClaimCallData = async (data: (typeof ClaimSchema)['_output']) =>
     uint256.bnToUint256(gasAmount),
   ]);
 
-  return {calldata, gasAmount};
+  return {calldata, gasAmount, tokenAddress};
 };

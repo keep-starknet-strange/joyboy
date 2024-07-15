@@ -40,12 +40,26 @@ export const Tips: React.FC = () => {
     const connectedAccount = await waitConnection();
     if (!connectedAccount || !connectedAccount.address) return;
 
+    const deposit = await provider.callContract({
+      contractAddress: ESCROW_ADDRESSES[CHAIN_ID],
+      entrypoint: Entrypoint.GET_DEPOSIT,
+      calldata: [depositId],
+    });
+
+    if (deposit[0] === '0x0') {
+      showToast({
+        type: 'error',
+        title: 'This tip is not available anymore',
+      });
+      return;
+    }
+
     const getNostrEvent = async (gasAmount: bigint) => {
       const event = new NDKEvent(ndk);
       event.kind = NDKKind.Text;
       event.content = `claim: ${cairo.felt(depositId)},${cairo.felt(
         connectedAccount.address!,
-      )},${cairo.felt(ETH[CHAIN_ID].address)},${gasAmount.toString()}`;
+      )},${cairo.felt(deposit[3])},${gasAmount.toString()}`;
       event.tags = [];
 
       await event.sign();
@@ -53,7 +67,8 @@ export const Tips: React.FC = () => {
     };
 
     const feeResult = await estimateClaim.mutateAsync(await getNostrEvent(BigInt(1)));
-    const fee = BigInt(feeResult.data.fee);
+    const ethFee = BigInt(feeResult.data.ethFee);
+    const tokenFee = BigInt(feeResult.data.tokenFee);
 
     const [balanceLow, balanceHigh] = await provider.callContract({
       contractAddress: ETH[CHAIN_ID].address,
@@ -62,10 +77,10 @@ export const Tips: React.FC = () => {
     });
     const balance = uint256.uint256ToBN({low: balanceLow, high: balanceHigh});
 
-    if (balance < fee) {
+    if (balance < ethFee) {
       // Send the claim through backend
 
-      const claimResult = await claim.mutateAsync(await getNostrEvent(fee));
+      const claimResult = await claim.mutateAsync(await getNostrEvent(tokenFee));
       const txHash = claimResult.data.transaction_hash;
 
       showTransactionModal(txHash, async (receipt) => {
