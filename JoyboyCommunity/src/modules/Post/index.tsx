@@ -18,6 +18,7 @@ import {useProfile, useReact, useReactions, useReplyNotes, useStyles, useTheme} 
 import {useTipModal} from '../../hooks/modals';
 import {useAuth} from '../../store/auth';
 import {MainStackNavigationProps} from '../../types';
+import {shortenPubkey} from '../../utils/helpers';
 import {getElapsedTimeStringFull} from '../../utils/timestamp';
 import stylesheet from './styles';
 
@@ -123,14 +124,23 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
               numberOfLines={1}
               ellipsizeMode="middle"
             >
-              {profile?.displayName ?? profile?.name ?? event?.pubkey}
+              {profile?.displayName ??
+                profile?.name ??
+                profile?.nip05 ??
+                shortenPubkey(event?.pubkey)}
             </Text>
 
             <View style={styles.infoDetails}>
-              {profile?.nip05 && (
+              {(profile?.nip05 || profile?.name) && (
                 <>
-                  <Text color="textLight" fontSize={11} lineHeight={16}>
-                    @{profile?.nip05}
+                  <Text
+                    color="textLight"
+                    fontSize={11}
+                    lineHeight={16}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                  >
+                    @{profile?.nip05 ?? profile.name}
                   </Text>
 
                   <View style={styles.infoDetailsDivider} />
