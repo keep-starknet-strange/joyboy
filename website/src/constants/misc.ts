@@ -15,7 +15,8 @@ export enum Entrypoint {
 }
 
 export const NETWORK_NAME = process.env.NETWORK_NAME as constants.NetworkName;
-export const AVNU_URL =
-  process.env.NETWORK_NAME === 'SN_SEPOLIA' ? AVNU_SEPOLIA_BASE_URL : AVNU_BASE_URL;
-
 if (!NETWORK_NAME) throw new Error('NETWORK_NAME is not set');
+
+export const CHAIN_ID = constants.StarknetChainId[NETWORK_NAME];
+
+export const AVNU_URL = NETWORK_NAME === 'SN_SEPOLIA' ? AVNU_SEPOLIA_BASE_URL : AVNU_BASE_URL;

@@ -3,9 +3,8 @@ import {NextRequest, NextResponse} from 'next/server';
 import {Calldata} from 'starknet';
 
 import {ESCROW_ADDRESSES, ETH_ADDRESSES} from '@/constants/contracts';
-import {AVNU_URL, Entrypoint} from '@/constants/misc';
+import {AVNU_URL, CHAIN_ID, Entrypoint} from '@/constants/misc';
 import {account} from '@/services/account';
-import {provider} from '@/services/provider';
 import {ErrorCode} from '@/utils/errors';
 import {HTTPStatus} from '@/utils/http';
 import {ClaimSchema} from '@/utils/validation';
@@ -38,12 +37,12 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    if (gasTokenAddress === ETH_ADDRESSES[await provider.getChainId()]) {
+    if (gasTokenAddress === ETH_ADDRESSES[CHAIN_ID]) {
       // ETH fee estimation
 
       const result = await account.estimateInvokeFee([
         {
-          contractAddress: ESCROW_ADDRESSES[await provider.getChainId()],
+          contractAddress: ESCROW_ADDRESSES[CHAIN_ID],
           entrypoint: Entrypoint.CLAIM,
           calldata: claimCallData,
         },
@@ -58,7 +57,7 @@ export async function POST(request: NextRequest) {
 
       const quotes = await fetchQuotes(
         {
-          sellTokenAddress: ETH_ADDRESSES[await provider.getChainId()],
+          sellTokenAddress: ETH_ADDRESSES[CHAIN_ID],
           buyTokenAddress: gasTokenAddress,
           sellAmount: BigInt(1),
           takerAddress: account.address,
@@ -66,8 +65,6 @@ export async function POST(request: NextRequest) {
         {baseUrl: AVNU_URL},
       );
       const quote = quotes[0];
-
-      console.log(ETH_ADDRESSES[await provider.getChainId()], gasTokenAddress, quote);
 
       if (!quote) {
         return NextResponse.json({code: ErrorCode.NO_ROUTE_FOUND}, {status: HTTPStatus.BadRequest});
@@ -83,7 +80,7 @@ export async function POST(request: NextRequest) {
 
       const result = await account.estimateInvokeFee([
         {
-          contractAddress: ESCROW_ADDRESSES[await provider.getChainId()],
+          contractAddress: ESCROW_ADDRESSES[CHAIN_ID],
           entrypoint: Entrypoint.CLAIM,
           calldata: claimCallData,
         },
@@ -95,7 +92,7 @@ export async function POST(request: NextRequest) {
 
       const feeQuotes = await fetchQuotes(
         {
-          sellTokenAddress: ETH_ADDRESSES[await provider.getChainId()],
+          sellTokenAddress: ETH_ADDRESSES[CHAIN_ID],
           buyTokenAddress: gasTokenAddress,
           sellAmount: ethFee,
           takerAddress: account.address,

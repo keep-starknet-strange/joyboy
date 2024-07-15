@@ -1,8 +1,15 @@
 import {verifyEvent} from 'nostr-tools';
-import {byteArray, cairo, CallData, uint256, validateAndParseAddress} from 'starknet';
+import {
+  byteArray,
+  cairo,
+  CallData,
+  getChecksumAddress,
+  uint256,
+  validateAndParseAddress,
+} from 'starknet';
 
 import {ESCROW_ADDRESSES} from '@/constants/contracts';
-import {Entrypoint} from '@/constants/misc';
+import {CHAIN_ID, Entrypoint} from '@/constants/misc';
 import {provider} from '@/services/provider';
 import {ErrorCode} from '@/utils/errors';
 import {ClaimSchema} from '@/utils/validation';
@@ -22,8 +29,8 @@ export const getClaimCallData = async (data: (typeof ClaimSchema)['_output']) =>
   }
 
   const depositId = cairo.felt(content[0]);
-  const recipientAddress = `0x${BigInt(content[1]).toString(16)}`;
-  const tokenAddress = `0x${BigInt(content[2]).toString(16)}`;
+  const recipientAddress = getChecksumAddress(`0x${BigInt(content[1]).toString(16)}`);
+  const tokenAddress = getChecksumAddress(`0x${BigInt(content[2]).toString(16)}`);
   const gasAmount = BigInt(content[3]);
 
   try {
@@ -34,7 +41,7 @@ export const getClaimCallData = async (data: (typeof ClaimSchema)['_output']) =>
   }
 
   const deposit = await provider.callContract({
-    contractAddress: ESCROW_ADDRESSES[await provider.getChainId()],
+    contractAddress: ESCROW_ADDRESSES[CHAIN_ID],
     entrypoint: Entrypoint.GET_DEPOSIT,
     calldata: [depositId],
   });
