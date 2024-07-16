@@ -23,12 +23,28 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
   const [status, setStatus] = useState<'confirmation' | 'processing' | 'success' | 'failure'>(
     'confirmation',
   );
+  const [trial, setTrial] = useState(0);
+
+  const {
+    data: transactionReceipt,
+    error: transactionError,
+    isLoading,
+    refetch,
+  } = useWaitForTransaction({hash: transactionHash});
 
   useEffect(() => {
     if (transactionHash) setStatus('processing');
   }, [transactionHash]);
 
-  const {data: transactionReceipt, isLoading} = useWaitForTransaction({hash: transactionHash});
+  useEffect(() => {
+    if (transactionError) {
+      if (trial < 3) {
+        refetch().then(() => setTrial((prev) => prev + 1));
+      } else {
+        setStatus('failure');
+      }
+    }
+  }, [transactionError, refetch, trial]);
 
   useEffect(() => {
     if (transactionReceipt && !isLoading) {
