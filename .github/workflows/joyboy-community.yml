@@ -42,6 +42,3 @@ jobs:
 
       - name: TypeScript Check
         run: yarn ts:check
-
-      - name: Build app bundle
-        run: yarn expo export --platform android

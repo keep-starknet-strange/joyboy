@@ -1,12 +1,11 @@
 import NDK, {NDKPrivateKeySigner} from '@nostr-dev-kit/ndk';
-import {createContext, useContext, useMemo} from 'react';
+import {createContext, useContext, useEffect, useState} from 'react';
 
 import {useAuth} from '../store/auth';
 import {JOYBOY_RELAYS} from '../utils/relay';
 
 export type NostrContextType = {
   ndk: NDK;
-  relays: string[];
 };
 
 export const NostrContext = createContext<NostrContextType | null>(null);
@@ -14,19 +13,24 @@ export const NostrContext = createContext<NostrContextType | null>(null);
 export const NostrProvider: React.FC<React.PropsWithChildren> = ({children}) => {
   const privateKey = useAuth((state) => state.privateKey);
 
-  const relays = JOYBOY_RELAYS;
-  const ndk = useMemo(() => {
-    const ndk = new NDK({
-      explicitRelayUrls: relays,
+  const [ndk, setNdk] = useState<NDK>(
+    new NDK({
+      explicitRelayUrls: JOYBOY_RELAYS,
+    }),
+  );
+
+  useEffect(() => {
+    const newNdk = new NDK({
+      explicitRelayUrls: JOYBOY_RELAYS,
       signer: privateKey ? new NDKPrivateKeySigner(privateKey) : undefined,
     });
 
-    ndk.connect();
+    newNdk.connect().then(() => {
+      setNdk(newNdk);
+    });
+  }, [privateKey]);
 
-    return ndk;
-  }, [relays, privateKey]);
-
-  return <NostrContext.Provider value={{ndk, relays}}>{children}</NostrContext.Provider>;
+  return <NostrContext.Provider value={{ndk}}>{children}</NostrContext.Provider>;
 };
 
 export const useNostrContext = () => {

@@ -9,7 +9,7 @@ export const useEditProfile = () => {
   const {publicKey} = useAuth();
 
   return useMutation({
-    mutationKey: ['editProfile'],
+    mutationKey: ['editProfile', ndk],
     mutationFn: async (data: NDKUserProfile) => {
       try {
         const user = ndk.getUser({pubkey: publicKey});

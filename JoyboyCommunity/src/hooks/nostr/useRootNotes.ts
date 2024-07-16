@@ -13,7 +13,7 @@ export const useRootNotes = (options?: UseRootNotesOptions) => {
 
   return useInfiniteQuery({
     initialPageParam: 0,
-    queryKey: ['rootNotes', options?.authors, options?.search],
+    queryKey: ['rootNotes', ndk, options?.authors, options?.search],
     getNextPageParam: (lastPage: any, allPages, lastPageParam) => {
       if (!lastPage?.length) return undefined;
 

@@ -12,7 +12,7 @@ export const useContacts = (options?: UseContactsOptions) => {
   const {ndk} = useNostrContext();
 
   return useQuery({
-    queryKey: ['contacts', options?.authors, options?.search],
+    queryKey: ['contacts', ndk, options?.authors, options?.search],
     queryFn: async () => {
       const contacts = await ndk.fetchEvent({
         kinds: [NDKKind.Contacts],

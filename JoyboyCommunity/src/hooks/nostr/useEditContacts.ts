@@ -9,7 +9,7 @@ export const useEditContacts = () => {
   const {publicKey} = useAuth();
 
   return useMutation({
-    mutationKey: ['editContacts'],
+    mutationKey: ['editContacts', ndk],
     mutationFn: async (data: {pubkey: string; type: 'add' | 'remove'}) => {
       let contacts = await ndk.fetchEvent({
         kinds: [NDKKind.Contacts],

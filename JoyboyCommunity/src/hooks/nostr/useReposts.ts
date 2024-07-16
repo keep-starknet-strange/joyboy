@@ -13,7 +13,7 @@ export const useReposts = (options?: UseRepostsOptions) => {
 
   return useInfiniteQuery({
     initialPageParam: 0,
-    queryKey: ['reposts', options?.authors, options?.search],
+    queryKey: ['reposts', ndk, options?.authors, options?.search],
     getNextPageParam: (lastPage: any, allPages, lastPageParam) => {
       if (!lastPage?.length) return undefined;
 
