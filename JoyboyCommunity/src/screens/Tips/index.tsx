@@ -1,7 +1,8 @@
 import {NDKEvent, NDKKind} from '@nostr-dev-kit/ndk';
 import {useAccount, useProvider} from '@starknet-react/core';
 import {Fraction} from '@uniswap/sdk-core';
-import {FlatList, RefreshControl, View} from 'react-native';
+import {useState} from 'react';
+import {ActivityIndicator, FlatList, RefreshControl, View} from 'react-native';
 import {byteArray, cairo, CallData, uint256} from 'starknet';
 
 import {Button, Divider, Header, Text} from '../../components';
@@ -10,14 +11,17 @@ import {CHAIN_ID} from '../../constants/env';
 import {Entrypoint} from '../../constants/misc';
 import {ETH} from '../../constants/tokens';
 import {useNostrContext} from '../../context/NostrContext';
-import {useStyles, useTips, useWaitConnection} from '../../hooks';
+import {useStyles, useTheme, useTips, useWaitConnection} from '../../hooks';
 import {useClaim, useEstimateClaim} from '../../hooks/api';
 import {useToast, useTransaction, useTransactionModal, useWalletModal} from '../../hooks/modals';
 import {decimalsScale} from '../../utils/helpers';
 import stylesheet from './styles';
 
 export const Tips: React.FC = () => {
+  const theme = useTheme();
   const styles = useStyles(stylesheet);
+
+  const [loading, setLoading] = useState<false | number>(false);
 
   const tips = useTips();
   const {ndk} = useNostrContext();
@@ -40,6 +44,8 @@ export const Tips: React.FC = () => {
     const connectedAccount = await waitConnection();
     if (!connectedAccount || !connectedAccount.address) return;
 
+    setLoading(depositId);
+
     const deposit = await provider.callContract({
       contractAddress: ESCROW_ADDRESSES[CHAIN_ID],
       entrypoint: Entrypoint.GET_DEPOSIT,
@@ -51,6 +57,7 @@ export const Tips: React.FC = () => {
         type: 'error',
         title: 'This tip is not available anymore',
       });
+      setLoading(false);
       return;
     }
 
@@ -95,6 +102,8 @@ export const Tips: React.FC = () => {
 
           showToast({type: 'error', title: `Failed to claim the tip. ${description}`});
         }
+
+        setLoading(false);
       });
     } else {
       // Send the claim through the wallet
@@ -144,6 +153,8 @@ export const Tips: React.FC = () => {
 
         showToast({type: 'error', title: `Failed to claim the tip. ${description}`});
       }
+
+      setLoading(false);
     }
   };
 
@@ -183,6 +194,15 @@ export const Tips: React.FC = () => {
                           small
                           variant="primary"
                           onPress={() => onClaimPress(item.depositId)}
+                          left={
+                            loading === item.depositId ? (
+                              <ActivityIndicator
+                                size="small"
+                                color={theme.colors.onPrimary}
+                                style={styles.buttonIndicator}
+                              />
+                            ) : undefined
+                          }
                         >
                           Claim
                         </Button>

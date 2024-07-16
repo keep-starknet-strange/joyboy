@@ -41,4 +41,8 @@ export default ThemedStyleSheet((theme) => ({
   sender: {
     flex: 1,
   },
+
+  buttonIndicator: {
+    marginRight: Spacing.xsmall,
+  },
 }));
