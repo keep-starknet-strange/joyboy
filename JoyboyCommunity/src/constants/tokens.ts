@@ -63,7 +63,7 @@ export const USDC: MultiChainToken = {
     ),
   },
   [constants.StarknetChainId.SN_SEPOLIA]: {
-    name: 'USD Coin',
+    name: 'USDC',
     symbol: TokenSymbol.USDC,
     decimals: 6,
     address: getChecksumAddress(
