@@ -35,7 +35,7 @@ export const ETH: MultiChainToken = {
 
 export const USDC: MultiChainToken = {
   [constants.StarknetChainId.SN_MAIN]: {
-    name: 'USD Coin',
+    name: 'USDC',
     symbol: TokenSymbol.USDC,
     decimals: 6,
     address: getChecksumAddress(
