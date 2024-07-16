@@ -14,7 +14,12 @@ export const useProfile = (options: UseProfileOptions) => {
     queryFn: async () => {
       const user = ndk.getUser({pubkey: options.publicKey});
 
-      return user.fetchProfile();
+      const result = Promise.race([
+        user.fetchProfile(),
+        new Promise((_, reject) => setTimeout(() => reject(), 3_000)),
+      ]);
+
+      return result;
     },
     placeholderData: {} as any,
   });
