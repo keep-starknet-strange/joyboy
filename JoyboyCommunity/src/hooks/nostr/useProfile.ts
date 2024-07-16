@@ -10,16 +10,11 @@ export const useProfile = (options: UseProfileOptions) => {
   const {ndk} = useNostrContext();
 
   return useQuery({
-    queryKey: ['profile', options.publicKey],
+    queryKey: ['profile', ndk, options.publicKey],
     queryFn: async () => {
       const user = ndk.getUser({pubkey: options.publicKey});
 
-      const result = Promise.race([
-        user.fetchProfile(),
-        new Promise((_, reject) => setTimeout(() => reject(), 3_000)),
-      ]);
-
-      return result;
+      return user.fetchProfile();
     },
     placeholderData: {} as any,
   });

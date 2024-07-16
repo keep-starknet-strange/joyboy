@@ -7,7 +7,7 @@ export const useSendNote = () => {
   const {ndk} = useNostrContext();
 
   return useMutation({
-    mutationKey: ['sendNote'],
+    mutationKey: ['sendNote', ndk],
     mutationFn: async (data: {content: string; tags?: string[][]}) => {
       const event = new NDKEvent(ndk);
       event.kind = NDKKind.Text;

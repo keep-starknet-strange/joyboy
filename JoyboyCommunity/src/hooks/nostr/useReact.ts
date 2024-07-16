@@ -7,7 +7,7 @@ export const useReact = () => {
   const {ndk} = useNostrContext();
 
   return useMutation({
-    mutationKey: ['react'],
+    mutationKey: ['react', ndk],
     mutationFn: async (data: {event: NDKEvent; type: 'like' | 'dislike'}) => {
       const event = new NDKEvent(ndk);
       event.kind = NDKKind.Reaction;
