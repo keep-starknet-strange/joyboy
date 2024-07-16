@@ -11,6 +11,7 @@ export type MultiChainTokens = Record<TokenSymbol, MultiChainToken>;
 
 export enum TokenSymbol {
   ETH = 'ETH',
+  STRK = 'STRK',
   USDC = 'USDC',
 }
 
@@ -29,6 +30,25 @@ export const ETH: MultiChainToken = {
     decimals: 18,
     address: getChecksumAddress(
       '0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7',
+    ),
+  },
+};
+
+export const STRK: MultiChainToken = {
+  [constants.StarknetChainId.SN_MAIN]: {
+    name: 'Stark',
+    symbol: TokenSymbol.STRK,
+    decimals: 18,
+    address: getChecksumAddress(
+      '0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d',
+    ),
+  },
+  [constants.StarknetChainId.SN_SEPOLIA]: {
+    name: 'Stark',
+    symbol: TokenSymbol.STRK,
+    decimals: 18,
+    address: getChecksumAddress(
+      '0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d',
     ),
   },
 };
@@ -54,6 +74,7 @@ export const USDC: MultiChainToken = {
 
 export const TOKENS: MultiChainTokens = {
   [TokenSymbol.ETH]: ETH,
+  [TokenSymbol.STRK]: STRK,
   [TokenSymbol.USDC]: USDC,
 };
 
