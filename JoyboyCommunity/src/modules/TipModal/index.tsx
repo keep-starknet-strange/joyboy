@@ -12,6 +12,7 @@ import {CHAIN_ID} from '../../constants/env';
 import {DEFAULT_TIMELOCK, Entrypoint} from '../../constants/misc';
 import {TOKENS, TokenSymbol} from '../../constants/tokens';
 import {useProfile, useStyles, useWaitConnection} from '../../hooks';
+import {useTransactionModal} from '../../hooks/modals';
 import {useDialog} from '../../hooks/modals/useDialog';
 import {useTransaction} from '../../hooks/modals/useTransaction';
 import {useWalletModal} from '../../hooks/modals/useWalletModal';
@@ -42,6 +43,7 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(
     const account = useAccount();
     const walletModal = useWalletModal();
     const sendTransaction = useTransaction();
+    const {hide: hideTransactionModal} = useTransactionModal();
     const waitConnection = useWaitConnection();
 
     const {showDialog, hideDialog} = useDialog();
@@ -91,6 +93,7 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(
 
       if (receipt?.isSuccess()) {
         hideTipModal();
+        hideTransactionModal();
         showSuccess({
           amount: Number(amount),
           symbol: token,

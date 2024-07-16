@@ -2,10 +2,9 @@ import {fetchBuildExecuteTransaction, fetchQuotes} from '@avnu/avnu-sdk';
 import {NextRequest, NextResponse} from 'next/server';
 import {Calldata} from 'starknet';
 
-import {ESCROW_ADDRESSES, ETH_ADDRESSES} from '@/constants/contracts';
-import {AVNU_URL, Entrypoint} from '@/constants/misc';
+import {ESCROW_ADDRESSES, ETH_ADDRESSES, STRK_ADDRESSES} from '@/constants/contracts';
+import {AVNU_URL, CHAIN_ID, Entrypoint} from '@/constants/misc';
 import {account} from '@/services/account';
-import {provider} from '@/services/provider';
 import {ErrorCode} from '@/utils/errors';
 import {HTTPStatus} from '@/utils/http';
 import {ClaimSchema} from '@/utils/validation';
@@ -40,16 +39,25 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    if (gasTokenAddress === ETH_ADDRESSES[await provider.getChainId()]) {
-      // ETH transaction
+    if (
+      gasTokenAddress === ETH_ADDRESSES[CHAIN_ID] ||
+      gasTokenAddress === STRK_ADDRESSES[CHAIN_ID]
+    ) {
+      // ETH | STRK transaction
 
-      const {transaction_hash} = await account.execute([
+      const {transaction_hash} = await account.execute(
+        [
+          {
+            contractAddress: ESCROW_ADDRESSES[CHAIN_ID],
+            entrypoint: Entrypoint.CLAIM,
+            calldata: claimCallData,
+          },
+        ],
         {
-          contractAddress: ESCROW_ADDRESSES[await provider.getChainId()],
-          entrypoint: Entrypoint.CLAIM,
-          calldata: claimCallData,
+          version: gasTokenAddress === ETH_ADDRESSES[CHAIN_ID] ? 1 : 3,
+          maxFee: gasAmount,
         },
-      ]);
+      );
 
       return NextResponse.json({transaction_hash}, {status: HTTPStatus.OK});
     } else {
@@ -57,7 +65,7 @@ export async function POST(request: NextRequest) {
 
       const result = await account.estimateInvokeFee([
         {
-          contractAddress: ESCROW_ADDRESSES[await provider.getChainId()],
+          contractAddress: ESCROW_ADDRESSES[CHAIN_ID],
           entrypoint: Entrypoint.CLAIM,
           calldata: claimCallData,
         },
@@ -65,7 +73,7 @@ export async function POST(request: NextRequest) {
 
       const gasFeeQuotes = await fetchQuotes(
         {
-          buyTokenAddress: ETH_ADDRESSES[await provider.getChainId()],
+          buyTokenAddress: ETH_ADDRESSES[CHAIN_ID],
           sellTokenAddress: gasTokenAddress,
           sellAmount: gasAmount,
         },
@@ -92,18 +100,24 @@ export async function POST(request: NextRequest) {
         {baseUrl: AVNU_URL},
       );
 
-      const {transaction_hash} = await account.execute([
+      const {transaction_hash} = await account.execute(
+        [
+          {
+            contractAddress: ESCROW_ADDRESSES[CHAIN_ID],
+            entrypoint: Entrypoint.CLAIM,
+            calldata: claimCallData,
+          },
+          ...swapCalls,
+        ],
         {
-          contractAddress: ESCROW_ADDRESSES[await provider.getChainId()],
-          entrypoint: Entrypoint.CLAIM,
-          calldata: claimCallData,
+          maxFee: gasFeeQuote.buyAmount,
         },
-        ...swapCalls,
-      ]);
+      );
 
       return NextResponse.json({transaction_hash}, {status: HTTPStatus.OK});
     }
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       {code: ErrorCode.TRANSACTION_ERROR, error},
       {status: HTTPStatus.InternalServerError},
