@@ -208,7 +208,11 @@ export const Tips: React.FC = () => {
                         </Button>
                       )}
                     </>
-                  ) : null}
+                  ) : (
+                    <Button small variant="default" disabled>
+                      Received
+                    </Button>
+                  )}
                 </View>
               </View>
 
