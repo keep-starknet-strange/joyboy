@@ -8,6 +8,7 @@ import {ScrollView, TouchableOpacity, View} from 'react-native';
 import {CopyIconStack} from '../../assets/icons';
 import {Button, SquareInput, Text} from '../../components';
 import {useEditProfile, useProfile, useStyles, useTheme} from '../../hooks';
+import {useFileUpload} from '../../hooks/api';
 import {useToast} from '../../hooks/modals';
 import {useAuth} from '../../store/auth';
 import {EditProfileScreenProps} from '../../types';
@@ -21,6 +22,8 @@ const UsernameInputLeft = (
 );
 
 type FormValues = {
+  image: string | undefined;
+  banner: string | undefined;
   username: string;
   displayName: string;
   bio: string;
@@ -40,6 +43,7 @@ export const EditProfile: React.FC<EditProfileScreenProps> = () => {
 
   const publicKey = useAuth((state) => state.publicKey);
   const profile = useProfile({publicKey});
+  const fileUpload = useFileUpload();
   const editProfile = useEditProfile();
   const queryClient = useQueryClient();
   const {showToast} = useToast();
@@ -51,7 +55,7 @@ export const EditProfile: React.FC<EditProfileScreenProps> = () => {
     showToast({type: 'info', title: 'Public Key Copied to clipboard'});
   };
 
-  const handlePhotoUpload = async (type: 'profile' | 'cover') => {
+  const handlePhotoSelect = async (type: 'profile' | 'cover') => {
     const pickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       aspect: type === 'profile' ? [1, 1] : [16, 9],
@@ -67,20 +71,18 @@ export const EditProfile: React.FC<EditProfileScreenProps> = () => {
   };
 
   const onProfilePhotoUpload = async () => {
-    const file = await handlePhotoUpload('profile');
+    const file = await handlePhotoSelect('profile');
     if (file) setProfilePhoto(file);
-
-    // TODO: upload file
   };
 
   const onCoverPhotoUpload = async () => {
-    const file = await handlePhotoUpload('cover');
+    const file = await handlePhotoSelect('cover');
     if (file) setCoverPhoto(file);
-
-    // TODO: upload file
   };
 
   const initialFormValues: FormValues = {
+    image: profile.data?.image ?? undefined,
+    banner: profile.data?.banner ?? undefined,
     username: profile.data?.nip05 ?? '',
     displayName: profile.data?.displayName ?? profile.data?.name ?? '',
     bio: profile.data?.about ?? '',
@@ -102,18 +104,36 @@ export const EditProfile: React.FC<EditProfileScreenProps> = () => {
   };
 
   const onFormSubmit = async (values: FormValues) => {
-    await editProfile.mutateAsync({
-      nip05: values.username,
-      displayName: values.displayName,
-      about: values.bio,
-      telegram: values.telegram,
-      github: values.github,
-      twitter: values.twitter,
-    });
+    let {image, banner} = values;
 
-    queryClient.invalidateQueries({queryKey: ['profile', publicKey]});
+    try {
+      if (profilePhoto) {
+        const result = await fileUpload.mutateAsync(profilePhoto);
+        if (result.data.url) image = result.data.url;
+      }
 
-    showToast({type: 'success', title: 'Profile updated successfully'});
+      if (coverPhoto) {
+        const result = await fileUpload.mutateAsync(coverPhoto);
+        if (result.data.url) banner = result.data.url;
+      }
+
+      await editProfile.mutateAsync({
+        image,
+        banner,
+        nip05: values.username || undefined,
+        displayName: values.displayName || undefined,
+        about: values.bio || undefined,
+        telegram: values.telegram || undefined,
+        github: values.github || undefined,
+        twitter: values.twitter || undefined,
+      });
+
+      queryClient.invalidateQueries({queryKey: ['profile', publicKey]});
+
+      showToast({type: 'success', title: 'Profile updated successfully'});
+    } catch (error) {
+      showToast({type: 'error', title: 'Failed to update profile'});
+    }
   };
 
   return (
