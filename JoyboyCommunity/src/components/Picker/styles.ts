@@ -26,5 +26,6 @@ export default ThemedStyleSheet((theme) => ({
     borderRadius: 0,
     paddingVertical: Spacing.medium,
     paddingHorizontal: Spacing.xsmall,
+    color: theme.colors.text,
   },
 }));

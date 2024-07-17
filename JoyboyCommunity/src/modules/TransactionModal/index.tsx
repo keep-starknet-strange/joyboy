@@ -18,7 +18,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
   hide,
   onReceipt,
 }) => {
-  const theme = useTheme();
+  const {theme} = useTheme();
 
   const [status, setStatus] = useState<'confirmation' | 'processing' | 'success' | 'failure'>(
     'confirmation',

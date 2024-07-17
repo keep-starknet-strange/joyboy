@@ -1,16 +1,30 @@
-import {createContext, useMemo} from 'react';
+import {createContext, useCallback, useMemo, useState} from 'react';
 import {useColorScheme} from 'react-native';
 
 import {DarkTheme, LightTheme, Theme} from '../styles';
 
-export const ThemeContext = createContext<Theme>(LightTheme);
+export type ThemeContextType = {
+  theme: Theme;
+  toggleTheme: () => void;
+};
+
+export const ThemeContext = createContext<ThemeContextType>({
+  theme: LightTheme,
+  toggleTheme: () => {
+    //
+  },
+});
 
 export const ThemeProvider: React.FC<React.PropsWithChildren> = ({children}) => {
   const defaultColorScheme = useColorScheme();
 
-  const colorScheme = defaultColorScheme;
+  const [schemeMode, setSchemeColor] = useState(defaultColorScheme || 'light');
 
-  const theme = useMemo(() => (colorScheme === 'dark' ? DarkTheme : LightTheme), [colorScheme]);
+  const theme = useMemo(() => (schemeMode === 'dark' ? DarkTheme : LightTheme), [schemeMode]);
 
-  return <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>;
+  const toggleTheme = useCallback(() => {
+    setSchemeColor((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+  }, []);
+
+  return <ThemeContext.Provider value={{theme, toggleTheme}}>{children}</ThemeContext.Provider>;
 };

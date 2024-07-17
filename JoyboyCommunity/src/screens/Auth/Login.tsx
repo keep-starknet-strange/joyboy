@@ -17,7 +17,7 @@ import {
 } from '../../utils/storage';
 
 export const Login: React.FC<AuthLoginScreenProps> = ({navigation}) => {
-  const theme = useTheme();
+  const {theme} = useTheme();
   const setAuth = useAuth((state) => state.setAuth);
 
   const [password, setPassword] = useState('');

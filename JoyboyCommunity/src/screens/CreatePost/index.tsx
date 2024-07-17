@@ -11,7 +11,7 @@ import {CreatePostScreenProps} from '../../types';
 import stylesheet from './styles';
 
 export const CreatePost: React.FC<CreatePostScreenProps> = ({navigation}) => {
-  const theme = useTheme();
+  const {theme} = useTheme();
   const styles = useStyles(stylesheet);
 
   const [note, setNote] = useState<string | undefined>();

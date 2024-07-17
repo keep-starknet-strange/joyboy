@@ -18,10 +18,10 @@ export const LightTheme = {
     ...CommonColors,
 
     primary: '#EC796B',
-    primaryLight: '#fef2f1',
+    primaryLight: 'rgba(236,185,107, 0.1)',
 
     secondary: '#0C0C4F',
-    secondaryLight: '#e7e7ed',
+    secondaryLight: 'rgba(12,12,79, 0.1)',
 
     background: '#F4F9FF',
     surface: '#FFFFFF',
@@ -66,38 +66,38 @@ export const DarkTheme = {
     ...CommonColors,
 
     primary: '#EC796B',
-    primaryLight: '#fef2f1',
+    primaryLight: 'rgba(236,185,107, 0.1)',
 
     secondary: '#0C0C4F',
-    secondaryLight: '#e7e7ed',
+    secondaryLight: 'rgba(12,12,79, 0.1)',
 
-    background: '#F4F9FF',
-    surface: '#FFFFFF',
+    background: '#272727',
+    surface: '#242424',
     elevated: '#FFFFFF',
     overlay: 'rgba(0, 0, 0, 0.5)',
     shadow: 'rgba(13, 13, 29, 0.2)',
 
-    text: '#14142C',
-    textSecondary: '#6B6B8C',
-    textLight: '#8F979E',
-    textStrong: '#121212',
-    onPrimary: '#FFFFFF',
+    text: '#FFFFFF',
+    textSecondary: '#FFFFFF',
+    textLight: '#FFFFFF',
+    textStrong: '#FFFFFF',
+    onPrimary: '#8F979E',
     onSecondary: '#FFFFFF',
 
-    divider: '#e4e4e7',
+    divider: '#1b1b18',
 
-    bottomBarActive: '#14142C',
-    bottomBarInactive: 'rgba(30, 47, 61, 0.5)',
+    bottomBarActive: '#8F979E',
+    bottomBarInactive: 'rgb(105,105,105, 0.5)',
 
-    inputBackground: '#FCFCFF',
-    inputText: '#14142C',
-    inputBorder: '#DDDDEE',
+    inputBackground: '#272727',
+    inputText: '#8F979E',
+    inputBorder: '#222211',
     inputPlaceholder: '#A1A1C7',
 
-    buttonBackground: '#e7e7ed',
-    buttonText: '#7d7d8c',
-    buttonDisabledBackground: 'rgba(12, 12, 79, 0.1)',
-    buttonDisabledText: 'rgba(20, 20, 44, 0.5)',
+    buttonBackground: '#202020',
+    buttonText: '#FFFFFF',
+    buttonDisabledBackground: 'rgba(150, 150, 150, 0.1)',
+    buttonDisabledText: '#FFFFFF',
 
     successLight: '#E4E9FA',
     successDark: '#6B87EC',

@@ -3,6 +3,7 @@ import {Platform} from 'react-native';
 import {Spacing, ThemedStyleSheet} from '../../../styles';
 
 export const AVATAR_SIZE = 100;
+export const COVER_SIZE = Platform.OS === 'ios' ? 220 : 175;
 
 export default ThemedStyleSheet((theme) => ({
   container: {},
@@ -10,7 +11,7 @@ export default ThemedStyleSheet((theme) => ({
   coverContainer: {
     position: 'relative',
     width: '100%',
-    height: Platform.OS === 'ios' ? 220 : 175,
+    height: COVER_SIZE,
   },
   coverImage: {
     position: 'absolute',
@@ -46,11 +47,18 @@ export default ThemedStyleSheet((theme) => ({
   },
   coverUploadIcon: {
     position: 'absolute',
-    bottom: Spacing.xlarge,
     left: '50%',
     width: 44,
     height: 44,
     transform: [{translateX: -22}],
+
+    ...(Platform.OS === 'web'
+      ? {
+          top: COVER_SIZE - 44 - Spacing.xlarge,
+        }
+      : {
+          bottom: Spacing.xlarge,
+        }),
   },
 
   avatarContainer: {

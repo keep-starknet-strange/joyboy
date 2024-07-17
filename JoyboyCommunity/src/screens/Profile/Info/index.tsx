@@ -16,7 +16,7 @@ export type ProfileInfoProps = {
 };
 
 export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKey}) => {
-  const theme = useTheme();
+  const {theme} = useTheme();
   const styles = useStyles(stylesheet);
 
   const navigation = useNavigation<ProfileScreenProps['navigation']>();

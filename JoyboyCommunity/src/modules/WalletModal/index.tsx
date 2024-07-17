@@ -14,7 +14,7 @@ export type WalletModalProps = {
 };
 
 export const WalletModal: React.FC<WalletModalProps> = ({hide}) => {
-  const theme = useTheme();
+  const {theme} = useTheme();
   const styles = useStyles(stylesheet);
 
   const {connect, connectors} = useConnect();

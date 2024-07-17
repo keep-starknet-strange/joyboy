@@ -45,6 +45,7 @@ export default ThemedStyleSheet((theme) => ({
   cardContentText: {
     paddingTop: Spacing.small,
     paddingRight: Spacing.small,
+    color: theme.colors.text,
   },
   likes: {
     flexDirection: 'row',

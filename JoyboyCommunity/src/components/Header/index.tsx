@@ -15,7 +15,7 @@ export type HeaderProps = {
 };
 
 export const Header: React.FC<HeaderProps> = ({showLogo = true, left, right, title}) => {
-  const theme = useTheme();
+  const {theme} = useTheme();
   const styles = useStyles(stylesheet);
 
   return (

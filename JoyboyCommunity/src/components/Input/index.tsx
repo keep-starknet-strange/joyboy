@@ -30,7 +30,7 @@ export const Input: React.FC<InputProps> = (props) => {
     ...inputProps
   } = props;
 
-  const theme = useTheme();
+  const {theme} = useTheme();
   const styles = useStyles(stylesheet, !!error, !!left, !!right);
 
   return (

@@ -18,7 +18,7 @@ import {decimalsScale} from '../../utils/helpers';
 import stylesheet from './styles';
 
 export const Tips: React.FC = () => {
-  const theme = useTheme();
+  const {theme} = useTheme();
   const styles = useStyles(stylesheet);
 
   const [loading, setLoading] = useState<false | number>(false);

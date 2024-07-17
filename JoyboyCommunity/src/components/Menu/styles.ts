@@ -50,6 +50,6 @@ export default ThemedStyleSheet((theme) => ({
     flex: 1,
     fontSize: 17,
     lineHeight: 22,
-    color: '#14142c',
+    color: theme.colors.text,
   },
 }));
