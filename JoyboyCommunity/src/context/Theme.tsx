@@ -3,29 +3,26 @@ import {ColorSchemeName, useColorScheme} from 'react-native';
 
 import {DarkTheme, LightTheme, Theme} from '../styles';
 
-export type IThemeContext = {
+export type ThemeContextType = {
   theme: Theme;
   toggleTheme: () => void;
-  scheme: 'dark' | 'light';
+  // scheme: 'dark' | 'light';
 };
 
-export const ThemeContext = createContext<IThemeContext>({
+export const ThemeContext = createContext<ThemeContextType>({
   theme: LightTheme,
   toggleTheme: () => {},
-  scheme: 'light',
 });
 
 export const ThemeProvider: React.FC<React.PropsWithChildren> = ({children}) => {
   const defaultColorScheme = useColorScheme();
 
   const colorScheme = defaultColorScheme;
-  const [scheme, setScheme] = useState<'dark' | 'light'>('light');
-  const theme = useMemo(() => (scheme === 'dark' ? DarkTheme : LightTheme), [scheme]);
+  const [schemeMode, setSchemeColor] = useState<'dark' | 'light'>('light');
+  const theme = useMemo(() => (schemeMode === 'dark' ? DarkTheme : LightTheme), [schemeMode]);
   const toggleTheme = () => {
-    setScheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+    setSchemeColor((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
   };
 
-  return (
-    <ThemeContext.Provider value={{theme, toggleTheme, scheme}}>{children}</ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={{theme, toggleTheme}}>{children}</ThemeContext.Provider>;
 };

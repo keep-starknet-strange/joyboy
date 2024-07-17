@@ -62,14 +62,12 @@ export const ProfileHead: React.FC<ProfileHeadProps> = ({
                 open={menuOpen}
                 onClose={() => setMenuOpen(false)}
                 handle={
-                  <>
-                    <Pressable style={styles.settingsButton} onPress={goToSettings}>
-                      <SettingsIcon width={20} height={20} color={theme.colors.text} />
-                      <Text weight="semiBold" fontSize={14} style={styles.settingsButtonText}>
-                        Settings
-                      </Text>
-                    </Pressable>
-                  </>
+                  <Pressable style={styles.settingsButton} onPress={goToSettings}>
+                    <SettingsIcon width={20} height={20} color={theme.colors.text} />
+                    <Text weight="semiBold" fontSize={14} style={styles.settingsButtonText}>
+                      Settings
+                    </Text>
+                  </Pressable>
                 }
               >
                 <Menu.Item

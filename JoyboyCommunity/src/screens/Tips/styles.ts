@@ -45,10 +45,4 @@ export default ThemedStyleSheet((theme) => ({
   buttonIndicator: {
     marginRight: Spacing.xsmall,
   },
-  statusDisabledButton: {
-    backgroundColor: theme.colors.buttonDisabledBackground,
-  },
-  statusButton: {
-    backgroundColor: theme.colors.buttonBackground,
-  },
 }));
