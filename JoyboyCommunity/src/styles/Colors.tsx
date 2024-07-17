@@ -66,13 +66,13 @@ export const DarkTheme = {
     ...CommonColors,
 
     primary: '#EC796B',
-    primaryLight: '#fef2f1',
+    primaryLight: 'rgba(236,185,107, 0.1)',
 
     secondary: '#0C0C4F',
-    secondaryLight: '#e7e7ed',
+    secondaryLight: 'rgba(12,12,79, 0.1)',
 
-    background: '#000',
-    surface: '#000',
+    background: '#272727',
+    surface: '#242424',
     elevated: '#FFFFFF',
     overlay: 'rgba(0, 0, 0, 0.5)',
     shadow: 'rgba(13, 13, 29, 0.2)',
