@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@avnu/avnu-sdk": "^2.0.0",
+    "@pinata/sdk": "^2.1.0",
     "ethers": "^6.13.1",
     "framer-motion": "^11.2.4",
     "next": "^14.2.3",
