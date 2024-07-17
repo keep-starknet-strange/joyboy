@@ -16,7 +16,7 @@ export const Toast: React.FC<ToastProps & {onDismiss?: () => void}> = ({
   title,
   onDismiss,
 }) => {
-  const theme = useTheme();
+  const {theme} = useTheme();
   const styles = useStyles(stylesheet, type);
 
   const color = (

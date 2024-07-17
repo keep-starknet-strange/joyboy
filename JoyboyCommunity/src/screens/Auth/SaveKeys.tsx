@@ -14,7 +14,7 @@ import stylesheet from './styles';
 export const SaveKeys: React.FC<AuthSaveKeysScreenProps> = ({route}) => {
   const {privateKey, publicKey} = route.params;
 
-  const theme = useTheme();
+  const {theme} = useTheme();
   const styles = useStyles(stylesheet);
   const setAuth = useAuth((state) => state.setAuth);
   const {showToast} = useToast();

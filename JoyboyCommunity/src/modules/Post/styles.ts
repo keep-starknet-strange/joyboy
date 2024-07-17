@@ -44,6 +44,7 @@ export default ThemedStyleSheet((theme) => ({
 
   content: {
     marginBottom: Spacing.medium,
+    color: theme.colors.text,
   },
   contentImage: {
     width: '100%',

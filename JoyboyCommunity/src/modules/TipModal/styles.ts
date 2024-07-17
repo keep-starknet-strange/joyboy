@@ -5,6 +5,7 @@ import {Spacing, ThemedStyleSheet} from '../../styles';
 export default ThemedStyleSheet((theme) => ({
   modal: {
     paddingBottom: Spacing.xxlarge,
+    background: theme.colors.background,
   },
 
   header: {
@@ -45,6 +46,7 @@ export default ThemedStyleSheet((theme) => ({
   cardContentText: {
     paddingTop: Spacing.small,
     paddingRight: Spacing.small,
+    color: theme.colors.text,
   },
   likes: {
     flexDirection: 'row',
@@ -74,7 +76,7 @@ export default ThemedStyleSheet((theme) => ({
   },
   card: {
     width: '100%',
-    backgroundColor: theme.colors.primaryLight,
+    background: theme.colors.background,
     borderRadius: 16,
     padding: Spacing.medium,
   },
@@ -88,6 +90,8 @@ export default ThemedStyleSheet((theme) => ({
     gap: 20,
     paddingTop: Spacing.xxlarge,
     paddingBottom: Spacing.xxlarge,
+    backgroundColor: theme.colors.background,
+    color: theme.colors.text,
   },
 
   more: {

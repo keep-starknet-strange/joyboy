@@ -14,7 +14,7 @@ import {generateRandomKeypair} from '../../utils/keypair';
 import {storePassword, storePrivateKey, storePublicKey} from '../../utils/storage';
 
 export const CreateAccount: React.FC<AuthCreateAccountScreenProps> = ({navigation}) => {
-  const theme = useTheme();
+  const {theme} = useTheme();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');

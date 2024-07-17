@@ -8,7 +8,7 @@ import {FeedScreenProps} from '../../types';
 import stylesheet from './styles';
 
 export const Feed: React.FC<FeedScreenProps> = ({navigation}) => {
-  const theme = useTheme();
+  const {theme} = useTheme();
   const styles = useStyles(stylesheet);
   const notes = useRootNotes();
 

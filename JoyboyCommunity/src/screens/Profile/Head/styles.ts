@@ -20,7 +20,7 @@ export default ThemedStyleSheet((theme) => ({
     height: '100%',
   },
   coverButtons: {
-    position: 'relative',
+    // position: 'relative',
     width: '100%',
     height: '100%',
   },

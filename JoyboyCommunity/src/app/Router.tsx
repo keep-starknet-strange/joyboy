@@ -5,7 +5,7 @@ import {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 
 import {Icon} from '../components';
-import {useStyles} from '../hooks';
+import {useStyles, useTheme} from '../hooks';
 import {CreateAccount} from '../screens/Auth/CreateAccount';
 import {Login} from '../screens/Auth/Login';
 import {SaveKeys} from '../screens/Auth/SaveKeys';
@@ -29,6 +29,7 @@ const HomeBottomTabNavigator: React.FC = () => {
   const styles = useStyles(stylesheet);
 
   const {publicKey} = useAuth();
+  const {theme} = useTheme();
 
   return (
     <HomeBottomTabsStack.Navigator
@@ -44,7 +45,7 @@ const HomeBottomTabNavigator: React.FC = () => {
         component={Feed}
         options={{
           tabBarActiveTintColor: 'white',
-          tabBarInactiveTintColor: '',
+          tabBarInactiveTintColor: theme.colors.background,
           tabBarIcon: ({focused}) => (
             <View style={styles.tabBarIcon}>
               <Icon
@@ -169,5 +170,6 @@ const stylesheet = ThemedStyleSheet((theme) => ({
     gap: 2,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: theme.colors.surface,
   },
 }));

@@ -4,7 +4,7 @@ import {useTheme} from './useTheme';
 type Color = `#${string}` | `rgb${string}` | 'transparent';
 
 export const useColor = (color: ColorProp): Color => {
-  const theme = useTheme();
+  const {theme} = useTheme();
 
   if (color === 'transparent') return 'transparent';
   if (color.startsWith('#') || color.startsWith('rgb')) return color as Color;

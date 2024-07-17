@@ -31,7 +31,7 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
   const repostedEvent = undefined;
   const postSource = undefined;
 
-  const theme = useTheme();
+  const {theme} = useTheme();
   const styles = useStyles(stylesheet);
 
   const navigation = useNavigation<MainStackNavigationProps>();

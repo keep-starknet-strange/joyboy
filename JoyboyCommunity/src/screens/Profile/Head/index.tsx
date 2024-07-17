@@ -3,9 +3,10 @@ import {Image, ImageSourcePropType, Pressable, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {SettingsIcon, UploadIcon} from '../../../assets/icons';
-import {Avatar, IconButton, Text} from '../../../components';
+import {Avatar, Icon, IconButton, Menu, Text} from '../../../components';
 import {useStyles, useTheme} from '../../../hooks';
 import stylesheet, {AVATAR_SIZE} from './styles';
+import {useState} from 'react';
 
 export type ProfileHeadProps = {
   profilePhoto?: ImageSourcePropType;
@@ -26,12 +27,14 @@ export const ProfileHead: React.FC<ProfileHeadProps> = ({
   showSettingsButton,
   buttons,
 }) => {
-  const theme = useTheme();
+  const {theme, toggleTheme, scheme} = useTheme();
   const styles = useStyles(stylesheet);
 
   const navigation = useNavigation();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const goToSettings = () => {
+    setMenuOpen(menuOpen == true ? false : true);
     // navigation.navigate('Settings');
   };
 
@@ -55,12 +58,32 @@ export const ProfileHead: React.FC<ProfileHeadProps> = ({
             )}
 
             {showSettingsButton && (
-              <Pressable style={styles.settingsButton} onPress={goToSettings}>
-                <SettingsIcon width={20} height={20} color={theme.colors.text} />
-                <Text weight="semiBold" fontSize={14} style={styles.settingsButtonText}>
-                  Settings
-                </Text>
-              </Pressable>
+              <Menu
+                open={menuOpen}
+                onClose={() => setMenuOpen(false)}
+                handle={
+                  <>
+                    <Pressable style={styles.settingsButton} onPress={goToSettings}>
+                      <SettingsIcon width={20} height={20} color={theme.colors.text} />
+                      <Text weight="semiBold" fontSize={14} style={styles.settingsButtonText}>
+                        Settings
+                      </Text>
+                    </Pressable>
+                  </>
+                }
+              >
+                <Menu.Item
+                  label="Switch theme"
+                  icon={scheme == 'dark' ? 'SunIcon' : 'MoonIcon'}
+                  onPress={toggleTheme}
+                >
+                  {scheme == 'dark' ? (
+                    <Icon name="IndicatorIcon" color="primary" size={6} />
+                  ) : (
+                    <Icon name="IndicatorIcon" color="primary" size={6} />
+                  )}
+                </Menu.Item>
+              </Menu>
             )}
 
             {onCoverPhotoUpload && (

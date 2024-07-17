@@ -32,7 +32,7 @@ type FormValues = {
 export const EditProfile: React.FC<EditProfileScreenProps> = () => {
   const formikRef = useRef<FormikProps<FormValues>>(null);
 
-  const theme = useTheme();
+  const {theme} = useTheme();
   const styles = useStyles(stylesheet);
 
   const [profilePhoto, setProfilePhoto] = useState<ImagePicker.ImagePickerAsset | undefined>();
