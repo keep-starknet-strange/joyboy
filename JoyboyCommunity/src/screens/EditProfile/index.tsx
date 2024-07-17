@@ -22,8 +22,8 @@ const UsernameInputLeft = (
 );
 
 type FormValues = {
-  image: string;
-  banner: string;
+  image: string | undefined;
+  banner: string | undefined;
   username: string;
   displayName: string;
   bio: string;
@@ -81,8 +81,8 @@ export const EditProfile: React.FC<EditProfileScreenProps> = () => {
   };
 
   const initialFormValues: FormValues = {
-    image: profile.data?.image ?? '',
-    banner: profile.data?.banner ?? '',
+    image: profile.data?.image ?? undefined,
+    banner: profile.data?.banner ?? undefined,
     username: profile.data?.nip05 ?? '',
     displayName: profile.data?.displayName ?? profile.data?.name ?? '',
     bio: profile.data?.about ?? '',
@@ -120,12 +120,12 @@ export const EditProfile: React.FC<EditProfileScreenProps> = () => {
       await editProfile.mutateAsync({
         image,
         banner,
-        nip05: values.username,
-        displayName: values.displayName,
-        about: values.bio,
-        telegram: values.telegram,
-        github: values.github,
-        twitter: values.twitter,
+        nip05: values.username || undefined,
+        displayName: values.displayName || undefined,
+        about: values.bio || undefined,
+        telegram: values.telegram || undefined,
+        github: values.github || undefined,
+        twitter: values.twitter || undefined,
       });
 
       queryClient.invalidateQueries({queryKey: ['profile', publicKey]});
