@@ -18,10 +18,10 @@ export const LightTheme = {
     ...CommonColors,
 
     primary: '#EC796B',
-    primaryLight: '#fef2f1',
+    primaryLight: 'rgba(236,185,107, 0.1)',
 
     secondary: '#0C0C4F',
-    secondaryLight: '#e7e7ed',
+    secondaryLight: 'rgba(12,12,79, 0.1)',
 
     background: '#F4F9FF',
     surface: '#FFFFFF',
@@ -84,19 +84,19 @@ export const DarkTheme = {
     onPrimary: '#8F979E',
     onSecondary: '#FFFFFF',
 
-    divider: '#e4e4e7',
+    divider: '#1b1b18',
 
     bottomBarActive: '#8F979E',
     bottomBarInactive: 'rgb(105,105,105, 0.5)',
 
-    inputBackground: '#000',
+    inputBackground: '#272727',
     inputText: '#8F979E',
-    inputBorder: '#DDDDEE',
+    inputBorder: '#222211',
     inputPlaceholder: '#A1A1C7',
 
     buttonBackground: '#202020',
     buttonText: '#FFFFFF',
-    buttonDisabledBackground: 'rgb(105,105,105,0.1)',
+    buttonDisabledBackground: 'rgba(150, 150, 150, 0.1)',
     buttonDisabledText: '#FFFFFF',
 
     successLight: '#E4E9FA',

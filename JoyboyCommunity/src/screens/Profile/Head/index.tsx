@@ -1,12 +1,12 @@
 import {useNavigation} from '@react-navigation/native';
+import {useState} from 'react';
 import {Image, ImageSourcePropType, Pressable, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {SettingsIcon, UploadIcon} from '../../../assets/icons';
-import {Avatar, Icon, IconButton, Menu, Text} from '../../../components';
+import {Avatar, IconButton, Menu, Text} from '../../../components';
 import {useStyles, useTheme} from '../../../hooks';
 import stylesheet, {AVATAR_SIZE} from './styles';
-import {useState} from 'react';
 
 export type ProfileHeadProps = {
   profilePhoto?: ImageSourcePropType;
@@ -27,7 +27,7 @@ export const ProfileHead: React.FC<ProfileHeadProps> = ({
   showSettingsButton,
   buttons,
 }) => {
-  const {theme, toggleTheme, scheme} = useTheme();
+  const {theme, toggleTheme} = useTheme();
   const styles = useStyles(stylesheet);
 
   const navigation = useNavigation();
@@ -72,15 +72,9 @@ export const ProfileHead: React.FC<ProfileHeadProps> = ({
               >
                 <Menu.Item
                   label="Switch theme"
-                  icon={scheme == 'dark' ? 'SunIcon' : 'MoonIcon'}
+                  icon={theme.dark ? 'SunIcon' : 'MoonIcon'}
                   onPress={toggleTheme}
-                >
-                  {scheme == 'dark' ? (
-                    <Icon name="IndicatorIcon" color="primary" size={6} />
-                  ) : (
-                    <Icon name="IndicatorIcon" color="primary" size={6} />
-                  )}
-                </Menu.Item>
+                />
               </Menu>
             )}
 

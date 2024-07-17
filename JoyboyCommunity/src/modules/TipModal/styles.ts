@@ -5,7 +5,6 @@ import {Spacing, ThemedStyleSheet} from '../../styles';
 export default ThemedStyleSheet((theme) => ({
   modal: {
     paddingBottom: Spacing.xxlarge,
-    background: theme.colors.surface,
   },
 
   header: {
@@ -76,7 +75,7 @@ export default ThemedStyleSheet((theme) => ({
   },
   card: {
     width: '100%',
-    background: theme.colors.primaryLight,
+    backgroundColor: theme.colors.primaryLight,
     borderRadius: 16,
     padding: Spacing.medium,
   },
