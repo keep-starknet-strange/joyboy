@@ -40,11 +40,11 @@ Tech stack:
 ## Roadmap
 
 - [x] Cairo implementation of Nostr signature verification
-- [ ] Starknet account contract implementation, controlled by Nostr keypair
-- [ ] Joyboy landing page
-- [ ] SocialPay feature to send and receive tips through Nostr signed messages
-- [ ] Implement a full Nostr client application with Starknet integration
-- [ ] Run Nostr relay server
+- [x] Starknet account contract implementation, controlled by Nostr keypair
+- [ ] Joyboy landing page 
+- [x] SocialPay feature to send and receive tips through Nostr signed messages
+- [x] Implement a full Nostr client application with Starknet integration
+- [x] Run Nostr relay server
 - [ ] Crossover with [Vault](https://github.com/keep-starknet-strange/vault) to bring Social features to the Vault application
 
 ## Architecture
@@ -58,22 +58,24 @@ There are two alternatives: WalletConnect, one which expects Nostr users to set 
 sequenceDiagram
     actor Alice
     actor Bob
-    participant transfer as Transfer Contract
+    participan backend as Claim Backend
+    participant transfer as Deposit Contract
     participant erc20 as ERC20
     
-    Note over Alice,erc20: Alice tip is escrowed by the Transfer Contract
+    Note over Alice,erc20: Alice tip is escrowed by the Deposit Contract
     activate Alice
-    Alice->>erc20: approve(Transfer Contract, x)
+    Alice->>erc20: approve(Deposit Contract, x)
     Alice->>transfer: transfer(Bob Nostr Address, x)
-    transfer->>erc20: transferFrom(Alice, Transfer Contract, x)
+    transfer->>erc20: transferFrom(Alice, Deposit Contract, x)
     transfer->>Alice: deposit_id
     deactivate Alice
 
 
     Note over Alice,erc20: Bob claims the tip with his Nostr identity
     activate Bob
-    Bob->>transfer: claim(deposit_id)
+    Bob->>backend: claim(deposit_id)
     Note right of Bob: deposit_id is signed<br/> with Nostr key
+    backend->>transfer: claim(deposit_id)
     transfer->>erc20: transferFrom(Transfer Contract, Bob, x)
     deactivate Bob 
 ```
@@ -120,29 +122,6 @@ sequenceDiagram
 ## Modules
 
 <details>
-  <summary>Webapp</summary>
-
-The webapp is a simple frontend to sign and verify messages using a browser extension like [Flamingo](https://www.getflamingo.org/) or [nos2x](https://github.com/fiatjaf/nos2x). It is built using React and Tailwind CSS.
-
-### Development
-
-To start the development server, run:
-
-```bash
-npm start
-```
-
-### Build
-
-To build the project, run:
-
-```bash
-npm run build
-```
-
-</details>
-
-<details>
   <summary>Onchain</summary>
 
 The onchain components of the project are implemented as a suite of Starknet smart contracts.
@@ -168,6 +147,8 @@ snforge test
 ## Mobile
 
 The Joyboy Mobile app is built with React-native & Expo.
+[Current version](https://app.joyboy.community)
+
 [Mobile repo](https://github.com/keep-starknet-strange/joyboy/blob/main/JoyboyCommunity/README.md)
 
 Pick an issue with the labels "mobile" to start work on React-native and contribute!
@@ -182,41 +163,6 @@ yarn install
 yarn start
 ```
 Select Expo web, Android or IOS. You can scan it with Expo GO on your phone.
-
-### Screens of the mobile app
-Recent implementation PoC on React Native:
-Here is what we have on the mobile app in the first days. Contributions welcome! 
-Check the issues with the "mobile" labels.
- 
-You can see more details on the README here:
-[Mobile repo](https://github.com/keep-starknet-strange/joyboy/blob/main/JoyboyCommunity/README.md)
-
-Proposal for UI Mobile.
-[UI/UX proposal for video discussions](https://github.com/keep-starknet-strange/joyboy/discussions/48#discussion-6683225)
-
-[UI video discussions](https://t.me/JoyboyStarknet/206/397)
-
-Here are some work already merge and available for test:
-
-1. Home page: 
-
-<img src="/resources/screens/onboard.png" alt="onboard" height="300"/>
-
-2. Create Nostr account
-
-<img src="resources/screens/create-account.png" alt="create account" height="300"/>
-
-3. Feed by default:
-
-<img src="/resources/screens/feed-default.png" alt="feed default" height="300"/>
-
-4. User feed with notes:
-
-<img src="/resources/screens/user-profile-details.png" alt="user-profile-details" height="300"/>
-
-5. My profile page: WIP
-
-<img src="/resources/screens/my-profile.png" alt="my-profile" height="300"/>
 
 
 ## Resources
