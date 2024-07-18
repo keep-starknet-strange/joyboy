@@ -58,7 +58,7 @@ There are two alternatives: WalletConnect, one which expects Nostr users to set 
 sequenceDiagram
     actor Alice
     actor Bob
-    participan backend as Claim Backend
+    participant backend as Claim Backend
     participant transfer as Deposit Contract
     participant erc20 as ERC20
     
@@ -84,13 +84,13 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     actor Alice
-    participant transfer as Transfer Contract
+    participant transfer as Deposit Contract
     participant erc20 as ERC20
     
     activate Alice
-    Alice->>erc20: approve(Transfer Contract, x)
+    Alice->>erc20: approve(Deposit Contract, x)
     Alice->>transfer: transfer(Bob Nostr Address, x)
-    Note left of transfer: Transfer Contract knows<br/> Bob's SN address
+    Note left of transfer: Deposit Contract knows<br/> Bob's SN address
     transfer->>erc20: transferFrom(Alice, Bob, x)
     deactivate Alice
 ```
