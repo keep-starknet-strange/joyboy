@@ -1,89 +1,82 @@
 'use client';
 
-import {motion} from 'framer-motion';
+import { motion } from 'framer-motion';
 
-import {Feature} from './Feature';
+import { Feature } from '../Feature';
 
-export function DescriptionSection() {
+export function DescriptionFeatures() {
   return (
     <div className="flex flex-col items-center text-center text-white  px-6 desktop:px-[120px] bg-gradientBg bg-no-repeat bg-contain">
       <div className="desktop:py-[112px] py-[50px] flex flex-col items-center desktop:gap-y-[72px] gap-y-[36px]">
         <motion.div
-          initial={{opacity: 0}}
-          whileInView={{opacity: 1}}
-          transition={{ease: 'easeOut', duration: 1}}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ ease: 'easeOut', duration: 1 }}
           className="max-w-[951px] mb-6 tab:mb-[72px]"
         >
           <h1 className="text-xl tab:text-[82px] leading-5 tab:leading-[82px] font-bold">
-            Your social network
+            Freedom and Fair place
           </h1>
           <p className="text-sm tab:text-base leading-[30px] mt-4 text-[#9D9797]">
-            A decentralized and open social network. Without ads, toxic algorithms, or censorship,
-            JoyBoy grants you access to the social network that a genuinely free and healthy society
+
+            Joyboy grants you access to the social network and payment that a genuinely free and healthy society
             necessitates — and merits.
           </p>
         </motion.div>
         <motion.div
-          initial={{opacity: 0}}
-          whileInView={{opacity: 1}}
-          transition={{ease: 'easeOut', duration: 1}}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ ease: 'easeOut', duration: 1 }}
           className="flex desktop:flex-row flex-col items-center gap-6"
         >
           <Feature
             img="/assets/key.svg"
-            title="No Registration Required"
-            description="No registration required. Use passkeys to log in and sign messages securely, ensuring your interactions remain private and effortless."
+            title="Own your Keys, own your Identity"
+            description="Your need to own your Identity, Money, Content and Data. Take the control"
           />
-          <Feature
-            img="/assets/noAdIcon.svg"
-            title="No Advertisement"
-            description="No intrusive advertisements because your Data privacy is preserved and owned by you, not the protocol."
-          />
+
           <Feature
             img="/assets/money-send.svg"
-            title="Social Payment"
-            description="Tip, pay and gift your Friends in a Decentralized manner, bring with a Social graph for Bitcoin & ETH."
+            title="Payment & Finance"
+            description="You can Tips, Pay, Progammable payment and Gift using Digital identites with a Social graph for Bitcoin & ETH."
           />
             <Feature
             img="/assets/money-send.svg"
-            title="Freedom vision"
-            description="Community project that aims to bring the Freedom and Integrity world. Own your Digital Identity & Money, Content, Data"
+            title="Social graph"
+            description="Social network for Community by interests, with privacy and data management"
           />
         </motion.div>
       </div>
       <div className="desktop:pt-[140px] pt-[50px] w-full">
         <div className="flex desktop:flex-row items-center desktop:items-start flex-col-reverse justify-center gap-y-7 gap-x-[181px] mb-[100px] desktop:mb-[280px]">
           <motion.div
-            animate={{x: [-1200, 0]}}
+            animate={{ x: [-1200, 0] }}
             transition={{
-              x: {duration: 1},
+              x: { duration: 1 },
               ease: 'easeOut',
               duration: 1,
             }}
             className="desktop:w-[788px] desktop:text-left text-center"
-            initial={{opacity: 0}}
-            whileInView={{opacity: 1}}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
           >
             <h2 className="desktop:text-[82px] text-xl desktop:leading-[90px] desktop:mb-4 mb-3">
-              Absolute Freedom
+              Absolute Freedom and Ownership 
             </h2>
             <h5 className="desktop:text-[24px] text-base desktop:leading-10 text-[#9D9797] desktop:mb-6 mb-2">
-              Freedom requires censorship resistance, and Nostr provides exactly that.
+              Freedom requires censorship resistance, and Nostr provides exactly that for your Identity, Money, Data & Content.
             </h5>
             <p className="text-sm leading-7 desktop:text-base desktop:leading-10">
-              Freedom requires censorship resistance, and Nostr provides exactly that. JoyBoy
-              leverages Nostr’s decentralized and open social network to give you a platform free
-              from ads, toxic algorithms, and censorship. With Nostr, your social interactions are
-              safeguarded from any centralized control, ensuring your voice is heard without
-              interference.
+              JoyBoy leverages Nostr’s decentralized and open social network to give you a platform and marketplace of the Content, DeSci, Education. Let's bring positivity and integrity to the world.
             </p>
           </motion.div>
           <motion.img
-            src="/assets/save-your-keys.png"
+            src="/assets/home-page.png"
             alt=""
-            animate={{x: [1200, 0]}}
+            style={{borderRadius:"15px"}}
+            animate={{ x: [1200, 0] }}
             transition={{
-              x: {duration: 1},
+              x: { duration: 1 },
               ease: 'easeOut',
               duration: 1,
             }}
@@ -93,24 +86,24 @@ export function DescriptionSection() {
           <motion.img
             src="/assets/save-your-keys.png"
             alt=""
-            animate={{x: [-1200, 0]}}
+            animate={{ x: [-1200, 0] }}
             transition={{
-              x: {duration: 1},
+              x: { duration: 1 },
               ease: 'easeOut',
               duration: 1,
             }}
-            initial={{opacity: 0}}
-            whileInView={{opacity: 1}}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
           />
           <motion.div
-            animate={{x: [1200, 0]}}
+            animate={{ x: [1200, 0] }}
             transition={{
-              x: {duration: 1},
+              x: { duration: 1 },
               ease: 'easeOut',
               duration: 1,
             }}
-            initial={{opacity: 0}}
-            whileInView={{opacity: 1}}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             className="desktop:w-[788px] desktop:text-left text-center"
           >
             <h2 className="desktop:text-[82px] text-xl desktop:leading-[90px] desktop:mb-4 mb-3">
