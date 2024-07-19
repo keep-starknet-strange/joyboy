@@ -125,7 +125,7 @@ export const Tips: React.FC = () => {
         {
           deposit_id: cairo.felt(depositId),
           starknet_recipient: connectedAccount.address,
-          gas_token_address: ETH[CHAIN_ID].address,
+          gas_token_address: tokenAddress,
           gas_amount: uint256.bnToUint256(0),
         },
         {
