@@ -1,6 +1,5 @@
 import {NDKEvent} from '@nostr-dev-kit/ndk';
 import {useAccount} from '@starknet-react/core';
-import {Fraction} from '@uniswap/sdk-core';
 import {forwardRef, useState} from 'react';
 import {View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -16,7 +15,6 @@ import {useTransactionModal} from '../../hooks/modals';
 import {useDialog} from '../../hooks/modals/useDialog';
 import {useTransaction} from '../../hooks/modals/useTransaction';
 import {useWalletModal} from '../../hooks/modals/useWalletModal';
-import {decimalsScale} from '../../utils/helpers';
 import {TipSuccessModalProps} from '../TipSuccessModal';
 import stylesheet from './styles';
 
@@ -59,9 +57,7 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(
       }
 
       const amountUint256 = uint256.bnToUint256(
-        new Fraction(1, Math.ceil(1 / Number(amount)))
-          .multiply(decimalsScale(TOKENS[token][CHAIN_ID].decimals))
-          .toFixed(0),
+        Math.ceil(Number(amount) * 10 ** TOKENS[token][CHAIN_ID].decimals),
       );
 
       const approveCallData = CallData.compile([
