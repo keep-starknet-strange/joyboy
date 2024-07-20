@@ -31,8 +31,8 @@ export function DescriptionFeatures() {
         >
           <Feature
             img="/assets/key.svg"
-            title="Own your Keys, own your Identity"
-            description="Your need to own your Identity, Money, Content and Data. Take the control"
+            title="Own your keys, own your destiny"
+            description="Take the control of your own Identity, Money, Content and Data. "
           />
 
           <Feature
@@ -43,7 +43,7 @@ export function DescriptionFeatures() {
             <Feature
             img="/assets/money-send.svg"
             title="Social graph"
-            description="Social network for Community by interests, with privacy and data management"
+            description="Social network for Community by interests, with privacy and data management."
           />
         </motion.div>
       </div>

@@ -42,7 +42,7 @@ export function Footer() {
           <a
             href="https://t.me/JoyboyStarknet"
             target="_blank">
-            <img src="/assets/telegram.svg" alt="Joyboy Community Telegram " />
+            <img src="/assets/telegramIcon.svg" alt="Joyboy Community Telegram " />
           </a>
         </div>
       </div>

@@ -37,7 +37,7 @@ export function DescriptionSection() {
           <Feature
             img="/assets/noAdIcon.svg"
             title="No Advertisement"
-            description="No intrusive advertisements because your Data privacy is preserved and owned by you, not the protocol."
+            description="No intrusive advertisements. Your privacy is preserved and the Data owned by you, not the protocol."
           />
           <Feature
             img="/assets/money-send.svg"
