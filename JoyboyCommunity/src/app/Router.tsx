@@ -118,7 +118,7 @@ const AuthNavigator: React.FC = () => {
       {publicKey && <AuthStack.Screen name="Login" component={Login} />}
       <AuthStack.Screen name="CreateAccount" component={CreateAccount} />
       <AuthStack.Screen name="SaveKeys" component={SaveKeys} />
-      <AuthStack.Screen name="ImportKeys" component={ImportKeys}/>
+      <AuthStack.Screen name="ImportKeys" component={ImportKeys} />
     </AuthStack.Navigator>
   );
 };
