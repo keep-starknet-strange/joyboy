@@ -115,6 +115,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                   />
                 }
               >
+                {/* In Progress - Lau Chaves */}
                 <Menu.Item
                   label={profile?.username ? `Tip @${profile.username}` : 'Tip'}
                   icon="CoinIcon"
