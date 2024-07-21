@@ -14,6 +14,7 @@ export type AuthStackParams = {
     privateKey: string;
     publicKey: string;
   };
+  ImportKeys:undefined;
 };
 
 export type MainStackParams = {
@@ -46,6 +47,11 @@ export type AuthCreateAccountScreenProps = CompositeScreenProps<
 >;
 export type AuthSaveKeysScreenProps = CompositeScreenProps<
   NativeStackScreenProps<AuthStackParams, 'SaveKeys'>,
+  NativeStackScreenProps<RootStackParams>
+>;
+
+export type AuthImportKeysScreenProps = CompositeScreenProps<
+  NativeStackScreenProps<AuthStackParams, 'ImportKeys'>,
   NativeStackScreenProps<RootStackParams>
 >;
 

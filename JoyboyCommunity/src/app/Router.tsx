@@ -19,6 +19,7 @@ import {useAuth} from '../store/auth';
 import {ThemedStyleSheet} from '../styles';
 import {AuthStackParams, HomeBottomStackParams, MainStackParams, RootStackParams} from '../types';
 import {retrievePublicKey} from '../utils/storage';
+import { ImportKeys } from '../screens/Auth/ImportKeys';
 
 const RootStack = createNativeStackNavigator<RootStackParams>();
 const AuthStack = createNativeStackNavigator<AuthStackParams>();
@@ -117,6 +118,7 @@ const AuthNavigator: React.FC = () => {
       {publicKey && <AuthStack.Screen name="Login" component={Login} />}
       <AuthStack.Screen name="CreateAccount" component={CreateAccount} />
       <AuthStack.Screen name="SaveKeys" component={SaveKeys} />
+      <AuthStack.Screen name="ImportKeys" component={ImportKeys} />
     </AuthStack.Navigator>
   );
 };
