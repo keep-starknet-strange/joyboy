@@ -34,13 +34,12 @@ export function DescriptionFeatures() {
             title="Own your keys, own your destiny"
             description="Take the control of your own Identity, Money, Content and Data. "
           />
-
           <Feature
             img="/assets/money-send.svg"
             title="Payment & Finance"
-            description="You can Tips, Pay, Progammable payment and Gift using Digital identites with a Social graph for Bitcoin & ETH."
+            description="You can Tips, Pay, Progammable payment and Gift using Digital identites"
           />
-            <Feature
+          <Feature
             img="/assets/money-send.svg"
             title="Social graph"
             description="Social network for Community by interests, with privacy and data management."
