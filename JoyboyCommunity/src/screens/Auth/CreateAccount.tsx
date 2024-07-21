@@ -4,7 +4,7 @@ import {useState} from 'react';
 import {Platform} from 'react-native';
 
 import {LockIcon} from '../../assets/icons';
-import {Button, Input} from '../../components';
+import {Button, Input, TextButton} from '../../components';
 import {useNostrContext} from '../../context/NostrContext';
 import {useTheme} from '../../hooks';
 import {useDialog, useToast} from '../../hooks/modals';
@@ -70,6 +70,10 @@ export const CreateAccount: React.FC<AuthCreateAccountScreenProps> = ({navigatio
     navigation.navigate('SaveKeys', {privateKey, publicKey});
   };
 
+  const handleImportKey = () => {
+    navigation.navigate('ImportKeys');
+  };
+
   return (
     <Auth title="Create Account">
       <Input placeholder="@ Username" value={username} onChangeText={setUsername} />
@@ -90,6 +94,8 @@ export const CreateAccount: React.FC<AuthCreateAccountScreenProps> = ({navigatio
       >
         Create Account
       </Button>
+
+      <TextButton onPress={handleImportKey}>Import account</TextButton>
     </Auth>
   );
 };

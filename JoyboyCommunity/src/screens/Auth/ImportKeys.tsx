@@ -9,9 +9,9 @@ import {useNostrContext} from '../../context/NostrContext';
 import {useTheme} from '../../hooks';
 import {useDialog, useToast} from '../../hooks/modals';
 import {Auth} from '../../modules/Auth';
-import { AuthImportKeysScreenProps} from '../../types';
+import {AuthImportKeysScreenProps} from '../../types';
 import {storePassword, storePrivateKey, storePublicKey} from '../../utils/storage';
-import { isValidNostrPrivateKey } from '../../utils/keypair';
+import {isValidNostrPrivateKey} from '../../utils/keypair';
 
 export const ImportKeys: React.FC<AuthImportKeysScreenProps> = ({navigation}) => {
   const {theme} = useTheme();
@@ -41,14 +41,14 @@ export const ImportKeys: React.FC<AuthImportKeysScreenProps> = ({navigation}) =>
       return;
     }
 
-    if(!isValidNostrPrivateKey(privateKey)) {
-        showToast({type: 'error', title: 'Private key not valid'});
-        return;
+    if (!isValidNostrPrivateKey(privateKey)) {
+      showToast({type: 'error', title: 'Private key not valid'});
+      return;
     }
     await storePrivateKey(privateKey, password);
     ndk.signer = new NDKPrivateKeySigner(privateKey);
     const user = await ndk.signer.user();
-    const publicKey= user?.pubkey;
+    const publicKey = user?.pubkey;
     setPublicKey(publicKey);
     const ndkUser = ndk.getUser({pubkey: user?.pubkey});
     ndkUser.profile = {nip05: username};
@@ -82,7 +82,7 @@ export const ImportKeys: React.FC<AuthImportKeysScreenProps> = ({navigation}) =>
   };
 
   return (
-    <Auth title="Import Account">
+    <Auth title="ImportKeys">
       <Input placeholder="@ Username" value={username} onChangeText={setUsername} />
 
       <Input

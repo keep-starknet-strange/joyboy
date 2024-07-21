@@ -29,7 +29,7 @@ export const getPublicKeyFromSecret = (privateKey: string) => {
   }
 };
 
-export const isValidNostrPrivateKey = (key: string): boolean =>  {
+export const isValidNostrPrivateKey = (key: string): boolean => {
   // Check if the string is exactly 64 characters long
   if (key.length !== 64) {
     return false;
@@ -42,4 +42,4 @@ export const isValidNostrPrivateKey = (key: string): boolean =>  {
   }
 
   return true;
-}
+};

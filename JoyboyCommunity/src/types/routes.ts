@@ -14,7 +14,7 @@ export type AuthStackParams = {
     privateKey: string;
     publicKey: string;
   };
-  ImportKeys:undefined;
+  ImportKeys: undefined;
 };
 
 export type MainStackParams = {
