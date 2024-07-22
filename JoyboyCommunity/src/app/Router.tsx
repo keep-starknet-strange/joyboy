@@ -7,6 +7,7 @@ import {StyleSheet, View} from 'react-native';
 import {Icon} from '../components';
 import {useStyles, useTheme} from '../hooks';
 import {CreateAccount} from '../screens/Auth/CreateAccount';
+import {ImportKeys} from '../screens/Auth/ImportKeys';
 import {Login} from '../screens/Auth/Login';
 import {SaveKeys} from '../screens/Auth/SaveKeys';
 import {CreatePost} from '../screens/CreatePost';
@@ -19,7 +20,6 @@ import {useAuth} from '../store/auth';
 import {ThemedStyleSheet} from '../styles';
 import {AuthStackParams, HomeBottomStackParams, MainStackParams, RootStackParams} from '../types';
 import {retrievePublicKey} from '../utils/storage';
-import {ImportKeys} from '../screens/Auth/ImportKeys';
 
 const RootStack = createNativeStackNavigator<RootStackParams>();
 const AuthStack = createNativeStackNavigator<AuthStackParams>();

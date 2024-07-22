@@ -10,8 +10,8 @@ import {useTheme} from '../../hooks';
 import {useDialog, useToast} from '../../hooks/modals';
 import {Auth} from '../../modules/Auth';
 import {AuthImportKeysScreenProps} from '../../types';
-import {storePassword, storePrivateKey, storePublicKey} from '../../utils/storage';
 import {isValidNostrPrivateKey} from '../../utils/keypair';
+import {storePassword, storePrivateKey, storePublicKey} from '../../utils/storage';
 
 export const ImportKeys: React.FC<AuthImportKeysScreenProps> = ({navigation}) => {
   const {theme} = useTheme();
