@@ -7,6 +7,7 @@ import {StyleSheet, View} from 'react-native';
 import {Icon} from '../components';
 import {useStyles, useTheme} from '../hooks';
 import {CreateAccount} from '../screens/Auth/CreateAccount';
+import {ImportKeys} from '../screens/Auth/ImportKeys';
 import {Login} from '../screens/Auth/Login';
 import {SaveKeys} from '../screens/Auth/SaveKeys';
 import {CreatePost} from '../screens/CreatePost';
@@ -117,6 +118,7 @@ const AuthNavigator: React.FC = () => {
       {publicKey && <AuthStack.Screen name="Login" component={Login} />}
       <AuthStack.Screen name="CreateAccount" component={CreateAccount} />
       <AuthStack.Screen name="SaveKeys" component={SaveKeys} />
+      <AuthStack.Screen name="ImportKeys" component={ImportKeys} />
     </AuthStack.Navigator>
   );
 };

@@ -28,3 +28,18 @@ export const getPublicKeyFromSecret = (privateKey: string) => {
     throw new Error('Failed to get public key from secret key');
   }
 };
+
+export const isValidNostrPrivateKey = (key: string): boolean => {
+  // Check if the string is exactly 64 characters long
+  if (key.length !== 64) {
+    return false;
+  }
+
+  // Check if the string contains only hexadecimal characters
+  const hexRegex = /^[0-9a-fA-F]+$/;
+  if (!hexRegex.test(key)) {
+    return false;
+  }
+
+  return true;
+};

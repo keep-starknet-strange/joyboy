@@ -1,48 +1,42 @@
-import {NDKPrivateKeySigner} from '@nostr-dev-kit/ndk';
 import {canUseBiometricAuthentication} from 'expo-secure-store';
 import {useState} from 'react';
 import {Platform} from 'react-native';
 
 import {LockIcon} from '../../assets/icons';
-import {Button, Input, TextButton} from '../../components';
-import {useNostrContext} from '../../context/NostrContext';
+import {Button, Input} from '../../components';
 import {useTheme} from '../../hooks';
 import {useDialog, useToast} from '../../hooks/modals';
 import {Auth} from '../../modules/Auth';
-import {AuthCreateAccountScreenProps} from '../../types';
-import {generateRandomKeypair} from '../../utils/keypair';
+import {AuthImportKeysScreenProps} from '../../types';
+import {getPublicKeyFromSecret, isValidNostrPrivateKey} from '../../utils/keypair';
 import {storePassword, storePrivateKey, storePublicKey} from '../../utils/storage';
 
-export const CreateAccount: React.FC<AuthCreateAccountScreenProps> = ({navigation}) => {
+export const ImportKeys: React.FC<AuthImportKeysScreenProps> = ({navigation}) => {
   const {theme} = useTheme();
 
-  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
-  const {ndk} = useNostrContext();
+  const [privateKey, setPrivateKey] = useState('');
   const {showToast} = useToast();
   const {showDialog, hideDialog} = useDialog();
 
-  const handleCreateAccount = async () => {
-    if (!username) {
-      showToast({type: 'error', title: 'Username is required'});
-      return;
-    }
-
+  const handleImportAccount = async () => {
     if (!password) {
       showToast({type: 'error', title: 'Password is required'});
       return;
     }
 
-    const {privateKey, publicKey} = generateRandomKeypair();
+    if (!privateKey) {
+      showToast({type: 'error', title: 'Private key to import is required'});
+      return;
+    }
 
+    if (!isValidNostrPrivateKey(privateKey)) {
+      showToast({type: 'error', title: 'Private key not valid'});
+      return;
+    }
     await storePrivateKey(privateKey, password);
+    const publicKey = getPublicKeyFromSecret(privateKey);
     await storePublicKey(publicKey);
-
-    ndk.signer = new NDKPrivateKeySigner(privateKey);
-    const ndkUser = ndk.getUser({pubkey: publicKey});
-    ndkUser.profile = {nip05: username};
-    await ndkUser.publish();
 
     const biometySupported = Platform.OS !== 'web' && canUseBiometricAuthentication();
     if (biometySupported) {
@@ -70,13 +64,15 @@ export const CreateAccount: React.FC<AuthCreateAccountScreenProps> = ({navigatio
     navigation.navigate('SaveKeys', {privateKey, publicKey});
   };
 
-  const handleImportKey = () => {
-    navigation.navigate('ImportKeys');
-  };
-
   return (
-    <Auth title="Create Account">
-      <Input placeholder="@ Username" value={username} onChangeText={setUsername} />
+    <Auth title="ImportKeys">
+      <Input
+        left={<LockIcon color={theme.colors.primary} />}
+        value={privateKey}
+        onChangeText={setPrivateKey}
+        secureTextEntry
+        placeholder="Private key"
+      />
 
       <Input
         left={<LockIcon color={theme.colors.primary} />}
@@ -89,13 +85,11 @@ export const CreateAccount: React.FC<AuthCreateAccountScreenProps> = ({navigatio
       <Button
         block
         variant="secondary"
-        disabled={!username || !password}
-        onPress={handleCreateAccount}
+        disabled={!password || !privateKey}
+        onPress={handleImportAccount}
       >
-        Create Account
+        Import Account
       </Button>
-
-      <TextButton onPress={handleImportKey}>Import account</TextButton>
     </Auth>
   );
 };
