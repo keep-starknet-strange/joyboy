@@ -10,6 +10,7 @@ export type TipModalContextType = {
 
   showSuccess: (props: TipSuccessModalProps) => void;
   hideSuccess: () => void;
+  showTipProfile: (userPublicKeyToTip?: string) => void;
 };
 
 export const TipModalContext = createContext<TipModalContextType | null>(null);
@@ -18,10 +19,16 @@ export const TipModalProvider: React.FC<React.PropsWithChildren> = ({children}) 
   const tipModalRef = useRef<TipModal>(null);
 
   const [event, setEvent] = useState<NDKEvent | undefined>();
+  const [publicKeyToTip, setPublicKeyToTip] = useState<string | undefined>();
   const [successModal, setSuccessModal] = useState<TipSuccessModalProps | null>(null);
 
   const show = useCallback((event: NDKEvent) => {
     setEvent(event);
+    tipModalRef.current?.open();
+  }, []);
+
+  const showTipProfile = useCallback((userPublicKey?: string) => {
+    setPublicKeyToTip(userPublicKey);
     tipModalRef.current?.open();
   }, []);
 
@@ -39,8 +46,8 @@ export const TipModalProvider: React.FC<React.PropsWithChildren> = ({children}) 
   }, []);
 
   const context = useMemo(
-    () => ({show, hide, showSuccess, hideSuccess}),
-    [show, hide, showSuccess, hideSuccess],
+    () => ({show, hide, showSuccess, hideSuccess, showTipProfile}),
+    [show, hide, showSuccess, hideSuccess, showTipProfile],
   );
 
   return (
@@ -54,6 +61,7 @@ export const TipModalProvider: React.FC<React.PropsWithChildren> = ({children}) 
         showSuccess={showSuccess}
         hideSuccess={hideSuccess}
         ref={tipModalRef}
+        publicKeyToTip={publicKeyToTip}
       />
 
       {successModal && <TipSuccessModal {...successModal} />}

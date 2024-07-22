@@ -22,6 +22,7 @@ export type TipModal = Modalize;
 
 export type TipModalProps = {
   event?: NDKEvent;
+  publicKeyToTip?: string;
 
   show: (event: NDKEvent) => void;
   hide: () => void;
@@ -30,13 +31,13 @@ export type TipModalProps = {
 };
 
 export const TipModal = forwardRef<Modalize, TipModalProps>(
-  ({event, hide: hideTipModal, showSuccess, hideSuccess}, ref) => {
+  ({event, hide: hideTipModal, showSuccess, hideSuccess, publicKeyToTip}, ref) => {
     const styles = useStyles(stylesheet);
 
     const [token, setToken] = useState<TokenSymbol>(TokenSymbol.ETH);
     const [amount, setAmount] = useState<string>('');
 
-    const {data: profile} = useProfile({publicKey: event?.pubkey});
+    const {data: profile} = useProfile({publicKey: event?.pubkey ?? publicKeyToTip});
 
     const account = useAccount();
     const walletModal = useWalletModal();
@@ -68,7 +69,7 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(
       const depositCallData = CallData.compile([
         amountUint256, // Amount
         TOKENS[token][CHAIN_ID].address, // Token address
-        uint256.bnToUint256(`0x${event?.pubkey}`), // Recipient nostr pubkey
+        uint256.bnToUint256(`0x${event?.pubkey ?? publicKeyToTip}`), // Recipient nostr pubkey
         DEFAULT_TIMELOCK, // timelock
       ]);
 
@@ -97,7 +98,8 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(
             (profile?.nip05 && `@${profile.nip05}`) ??
             profile?.displayName ??
             profile?.name ??
-            event?.pubkey,
+            event?.pubkey ??
+            publicKeyToTip,
           hide: hideSuccess,
         });
       } else {
@@ -130,7 +132,7 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(
                     numberOfLines={1}
                     ellipsizeMode="middle"
                   >
-                    {profile?.displayName ?? profile?.name ?? event?.pubkey}
+                    {profile?.displayName ?? profile?.name ?? event?.pubkey ?? publicKeyToTip}
                   </Text>
 
                   {profile?.nip05 && (
@@ -203,7 +205,8 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(
                 {(profile?.nip05 && `@${profile.nip05}`) ??
                   profile?.displayName ??
                   profile?.name ??
-                  event?.pubkey}
+                  event?.pubkey ??
+                  publicKeyToTip}
               </Text>
             </View>
           </View>
