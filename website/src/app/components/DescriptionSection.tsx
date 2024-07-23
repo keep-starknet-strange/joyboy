@@ -37,17 +37,17 @@ export function DescriptionSection() {
           <Feature
             img="/assets/noAdIcon.svg"
             title="No Advertisement"
-            description="No intrusive advertisements. Your privacy is preserved and the Data owned by you, not the protocol."
+            description="No intrusive advertisements. Your privacy is preserved and the Data is owned by you, not the protocol."
           />
           <Feature
             img="/assets/money-send.svg"
             title="Social Payment"
-            description="Tip, pay and gift your Friends in a Decentralized manner, bring with a Social graph for Bitcoin & ETH."
+            description="Tip, pay, and gift your Friends in a Decentralized manner, bring with you a Social graph for Bitcoin & ETH."
           />
             <Feature
             img="/assets/money-send.svg"
             title="Freedom vision"
-            description="Community project that aims to bring the Freedom and Integrity world. Own your Digital Identity & Money, Content, Data"
+            description="Community project that aims to bring the Freedom and Integrity world. Own your Digital Identity & Money, Content, Data."
           />
         </motion.div>
       </div>
