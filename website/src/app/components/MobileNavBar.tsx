@@ -53,12 +53,12 @@ export function MobileNavBar({setToggle, toggle}: Props) {
             <li className="">Features</li>
             <li className="">Ecosystem</li>
             <li className="">Developers</li>
-            <li>
-              <button className="py-[12px] w-[145px] bg-[#8DAEF1]">Sign up</button>
+            {/* <li>
+              <button className="py-[12px] w-[145px] bg-[#8DAEF1]"> <a href="https://app.joyboy.community" target='_blank'> Sign up</a></button>
             </li>
             <li>
-              <button className="py-[12px] w-[145px] bg-white text-black">Log in</button>
-            </li>
+              <button className="py-[12px] w-[145px] bg-white text-black"><a  href="https://app.joyboy.community" target='_blank'> Log in </a> </button>
+            </li> */}
           </ul>
         </motion.div>
       </div>

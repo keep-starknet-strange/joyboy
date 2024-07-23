@@ -18,10 +18,10 @@ export function Navbar() {
         </Link>
       </div>
       <NavigationLinks />
-      <div className="desktop:flex hidden items-center gap-x-4 font-bold text-sm leading-[16px]">
+      {/* <div className="desktop:flex hidden items-center gap-x-4 font-bold text-sm leading-[16px]">
         <button className="py-[15px] px-[48px] bg-[#8DAEF1]"><a href="https://app.joyboy.community" target='_blank'>Sign up</a></button>
         <button className="py-[15px] px-[48px] bg-white"><a href="https://app.joyboy.community" target='_blank'>Log in</a></button>
-      </div>
+      </div> */}
       <button
         className="flex desktop:hidden"
         onClick={() => {
