@@ -31,7 +31,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
   const userContacts = useContacts({authors: [userPublicKey]});
   const contacts = useContacts({authors: [publicKey]});
   const editContacts = useEditContacts();
-  const {showTipProfile} = useTipModal();
+  const {show: showTipModal} = useTipModal();
 
   const isSelf = publicKey === userPublicKey;
   const isConnected = contacts.data?.includes(userPublicKey);
@@ -121,7 +121,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                   label={profile?.username ? `Tip @${profile.username}` : 'Tip'}
                   icon="CoinIcon"
                   onPress={() => {
-                    showTipProfile(userPublicKey);
+                    showTipModal({pubkey: userPublicKey} as any);
                     setMenuOpen(false);
                   }}
                 />
