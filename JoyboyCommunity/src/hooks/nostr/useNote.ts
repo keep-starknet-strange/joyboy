@@ -11,7 +11,7 @@ export const useNote = (options: UseNoteOptions) => {
   const {ndk} = useNostrContext();
 
   return useQuery({
-    queryKey: ['note', ndk, options.noteId],
+    queryKey: ['note', options.noteId, ndk],
     queryFn: async () => {
       const note = await ndk.fetchEvent({
         kinds: [NDKKind.Text],

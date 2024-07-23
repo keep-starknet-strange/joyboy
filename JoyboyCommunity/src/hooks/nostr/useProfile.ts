@@ -10,7 +10,7 @@ export const useProfile = (options: UseProfileOptions) => {
   const {ndk} = useNostrContext();
 
   return useQuery({
-    queryKey: ['profile', ndk, options.publicKey],
+    queryKey: ['profile', options.publicKey, ndk],
     queryFn: async () => {
       const user = ndk.getUser({pubkey: options.publicKey});
 

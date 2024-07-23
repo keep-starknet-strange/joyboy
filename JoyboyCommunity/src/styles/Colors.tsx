@@ -81,7 +81,7 @@ export const DarkTheme = {
     textSecondary: '#FFFFFF',
     textLight: '#FFFFFF',
     textStrong: '#FFFFFF',
-    onPrimary: '#8F979E',
+    onPrimary: '#FFFFFF',
     onSecondary: '#FFFFFF',
 
     divider: '#1b1b18',
