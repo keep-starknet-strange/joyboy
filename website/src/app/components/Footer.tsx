@@ -19,21 +19,31 @@ export function Footer() {
         <div className="flex gap-x-[40px] tab:gap-x-[122px] text-[14px] leading-[21px] font-normal pt-[46px]">
           <ul className="flex flex-col gap-y-10">
             <li className="font-bold text-base leading-6">Company</li>
-            <li>Sobre Nosotros</li>
-            <li>Soluciones</li>
-            <li>Insights</li>
+            <li>DAO and Community owned</li>
+            <li>Solutions</li>
           </ul>
           <ul className="flex flex-col gap-y-10">
             <li className="font-bold text-base leading-6">Product</li>
-            <li>Contratar Talento</li>
-            <li>Desarrollar Talento</li>
-            <li>Herramientas de Gamificación</li>
+            <li>Nostr client</li>
+            <li>SocialFi features</li>
           </ul>
         </div>
         <div className="flex items-center gap-x-[14px] mt-5 tab:mt-0 self-center tab:self-end">
-          <img src="/assets/facebookIcon.svg" alt="" />
-          <img src="/assets/linkedinIcon.svg" alt="" />
-          <img src="/assets/twitterIcon.svg" alt="" />
+          <a
+            href="https://x.com/joyboystarknet"
+            target="_blank">
+            <img src="/assets/twitterIcon.svg" alt="Joyboy Community Twitter / X" />
+          </a>
+          {/* <a
+            href="https://t.me/JoyboyStarknet"
+            target="_blank">
+            <img src="/assets/telegramIcon.svg" alt="" />
+          </a> */}
+          <a
+            href="https://t.me/JoyboyStarknet"
+            target="_blank">
+            <img src="/assets/telegramIcon.svg" alt="Joyboy Community Telegram " />
+          </a>
         </div>
       </div>
       <h6 className="text-xs tab:text-sm leading-[14px] font-normal text-center mt-4">

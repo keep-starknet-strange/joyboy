@@ -9,10 +9,10 @@ export function Faq() {
         Frequently asked Questions
       </h2>
       <div className="flex flex-col gap-y-[24px] items-center w-full">
-        <FaqBar question="How do i Join Joyboy?" answer="Joyboy" />
-        <FaqBar question="What kind of contents can i post?" answer="" />
-        <FaqBar question="How can i contribute to the Joyboy project?" answer="" />
-        <FaqBar question="How can I jointhe Joyboy community?" answer="" />
+        <FaqBar question="How do i Join Joyboy?" answer="Visit our mobile app and website. Join the Joyboy Community on Telegram, debate, discuss, and contribute to the Freedom vision." />
+        <FaqBar question="What kind of contents can i post?" answer="Whatever, it's a Censorship resistant Social Network and Graph. Express yourself, discuss, debate, see others content based on your interests and friends!" />
+        <FaqBar question="How can i contribute to the Joyboy project?" answer="Join us on Joyboy and Telegram! You can contribute in different way: as Content creator, Marketer, Dev or just a friend, it's a community project that collaborate for our vision!" />
+        <FaqBar question="How can I join the Joyboy community?" answer="It's a Freedom place. Everyone can join and use our Social network, and be a part of the community and contributors!" />
       </div>
     </div>
   );
