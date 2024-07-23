@@ -6,7 +6,7 @@ import {Pressable, View} from 'react-native';
 import {UserPlusIcon} from '../../../assets/icons';
 import {Button, IconButton, Menu, Text} from '../../../components';
 import {useContacts, useEditContacts, useProfile, useStyles, useTheme} from '../../../hooks';
-import {useToast} from '../../../hooks/modals';
+import {useTipModal, useToast} from '../../../hooks/modals';
 import {useAuth} from '../../../store/auth';
 import {ProfileScreenProps} from '../../../types';
 import {ProfileHead} from '../Head';
@@ -32,6 +32,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
   const userContacts = useContacts({authors: [userPublicKey]});
   const contacts = useContacts({authors: [publicKey]});
   const editContacts = useEditContacts();
+  const {show: showTipModal} = useTipModal();
 
   const isSelf = publicKey === userPublicKey;
   const isConnected = contacts.data?.includes(userPublicKey);
@@ -124,6 +125,10 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                 <Menu.Item
                   label={profile?.username ? `Tip @${profile.username}` : 'Tip'}
                   icon="CoinIcon"
+                  onPress={() => {
+                    showTipModal({pubkey: userPublicKey} as any);
+                    setMenuOpen(false);
+                  }}
                 />
                 <Menu.Item
                   label={profile?.username ? `Share @${profile.username}` : 'Share'}

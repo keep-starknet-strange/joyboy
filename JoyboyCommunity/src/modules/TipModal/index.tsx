@@ -140,10 +140,6 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(
                   )}
                 </View>
               </View>
-
-              <View style={styles.likes}>
-                <Text fontSize={11}>16 likes</Text>
-              </View>
             </View>
 
             <Text
