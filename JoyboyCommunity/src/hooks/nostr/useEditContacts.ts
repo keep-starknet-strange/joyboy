@@ -29,6 +29,7 @@ export const useEditContacts = () => {
         contacts.tags = contacts.tags.filter((tag) => tag[1] !== data.pubkey);
       }
 
+      await contacts.sign();
       return contacts.publish();
     },
   });
