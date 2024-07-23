@@ -37,7 +37,7 @@ export function DescriptionFeatures() {
           <Feature
             img="/assets/money-send.svg"
             title="Payment & Finance"
-            description="You can Tips, Pay, Progammable payment and Gift using Digital identites"
+            description="You can Tips, Pay, Progammable payment and Gift using Digital identities"
           />
           <Feature
             img="/assets/money-send.svg"
