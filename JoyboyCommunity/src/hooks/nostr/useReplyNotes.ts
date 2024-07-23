@@ -14,7 +14,7 @@ export const useReplyNotes = (options?: UseReplyNotesOptions) => {
 
   return useInfiniteQuery({
     initialPageParam: 0,
-    queryKey: ['replyNotes', ndk, options?.noteId, options?.authors, options?.search],
+    queryKey: ['replyNotes', options?.noteId, options?.authors, options?.search, ndk],
     getNextPageParam: (lastPage: any, allPages, lastPageParam) => {
       if (!lastPage?.length) return undefined;
 
