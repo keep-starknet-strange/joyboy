@@ -6,7 +6,7 @@ import {Pressable, View} from 'react-native';
 import {UserPlusIcon} from '../../../assets/icons';
 import {Button, IconButton, Menu, Text} from '../../../components';
 import {useContacts, useEditContacts, useProfile, useStyles, useTheme} from '../../../hooks';
-import {useTipModal} from '../../../hooks/modals';
+import {useTipModal, useToast} from '../../../hooks/modals';
 import {useAuth} from '../../../store/auth';
 import {ProfileScreenProps} from '../../../types';
 import {ProfileHead} from '../Head';
@@ -27,6 +27,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
   const [menuOpen, setMenuOpen] = useState(false);
   const publicKey = useAuth((state) => state.publicKey);
 
+  const {showToast} = useToast();
   const queryClient = useQueryClient();
   const userContacts = useContacts({authors: [userPublicKey]});
   const contacts = useContacts({authors: [publicKey]});
@@ -42,12 +43,16 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
 
   const onConnectionPress = () => {
     editContacts.mutateAsync(
-      {pubkey: publicKey, type: isConnected ? 'remove' : 'add'},
+      {pubkey: userPublicKey, type: isConnected ? 'remove' : 'add'},
       {
         onSuccess: () => {
           queryClient.invalidateQueries({queryKey: ['contacts']});
-          userContacts.refetch();
-          contacts.refetch();
+        },
+        onError: () => {
+          showToast({
+            type: 'error',
+            title: isConnected ? 'Failed to unfollow user' : 'Failed to follow user',
+          });
         },
       },
     );

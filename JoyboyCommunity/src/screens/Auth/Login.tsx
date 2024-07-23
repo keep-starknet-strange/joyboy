@@ -79,6 +79,25 @@ export const Login: React.FC<AuthLoginScreenProps> = ({navigation}) => {
     });
   };
 
+  const handleImportAccount = () => {
+    showDialog({
+      title: 'WARNING',
+      description:
+        'Creating a new account will delete your current account. Are you sure you want to continue?',
+      buttons: [
+        {
+          type: 'primary',
+          label: 'Continue',
+          onPress: () => {
+            navigation.navigate('ImportKeys');
+            hideDialog();
+          },
+        },
+        {type: 'default', label: 'Cancel', onPress: hideDialog},
+      ],
+    });
+  };
+
   return (
     <Auth title="Login">
       <Input
@@ -92,8 +111,9 @@ export const Login: React.FC<AuthLoginScreenProps> = ({navigation}) => {
       <Button block variant="secondary" disabled={!password?.length} onPress={handleLogin}>
         Login
       </Button>
-
       <TextButton onPress={handleCreateAccount}>Create Account</TextButton>
+
+      <TextButton onPress={handleImportAccount}>Import Account</TextButton>
     </Auth>
   );
 };

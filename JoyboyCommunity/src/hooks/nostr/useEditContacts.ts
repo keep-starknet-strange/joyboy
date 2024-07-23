@@ -23,12 +23,17 @@ export const useEditContacts = () => {
         contacts.tags = [];
       }
 
+      // Resetting the id and created_at to avoid conflicts
+      contacts.id = undefined as any;
+      contacts.created_at = undefined;
+
       if (data.type === 'add') {
         contacts.tags.push(['p', data.pubkey, '', '']);
       } else {
         contacts.tags = contacts.tags.filter((tag) => tag[1] !== data.pubkey);
       }
 
+      await contacts.sign();
       return contacts.publish();
     },
   });

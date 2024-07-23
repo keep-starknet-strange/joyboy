@@ -28,7 +28,7 @@ export default ThemedStyleSheet((theme) => ({
     position: 'absolute',
     height: 'auto',
     gap: StyleSheet.hairlineWidth,
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.divider,
     borderRadius: 16,
     overflow: 'hidden',
     shadowColor: theme.colors.shadow,
