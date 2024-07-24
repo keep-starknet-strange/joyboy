@@ -18,7 +18,7 @@ import {useProfile, useReact, useReactions, useReplyNotes, useStyles, useTheme} 
 import {useTipModal} from '../../hooks/modals';
 import {useAuth} from '../../store/auth';
 import {MainStackNavigationProps} from '../../types';
-import {shortenPubkey} from '../../utils/helpers';
+import {getImageRatio, shortenPubkey} from '../../utils/helpers';
 import {getElapsedTimeStringFull} from '../../utils/timestamp';
 import stylesheet from './styles';
 
@@ -29,7 +29,6 @@ export type PostProps = {
 
 export const Post: React.FC<PostProps> = ({asComment, event}) => {
   const repostedEvent = undefined;
-  const postSource = undefined;
 
   const {theme} = useTheme();
   const styles = useStyles(stylesheet);
@@ -64,6 +63,16 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
     const dislikesCount = reactions.data.length - likesCount;
     return likesCount - dislikesCount;
   }, [reactions.data]);
+
+  const postSource = useMemo(() => {
+    if (!event?.tags) return;
+
+    const imageTag = event.tags.find((tag) => tag[0] === 'image');
+    if (!imageTag) return;
+
+    const dimensions = imageTag[2].split('x').map(Number);
+    return {uri: imageTag[1], width: dimensions[0], height: dimensions[1]};
+  }, [event?.tags]);
 
   // Animated style for the icon
   const animatedIconStyle = useAnimatedStyle(() => ({
@@ -185,7 +194,13 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
           </Text>
 
           {postSource && (
-            <Image source={{uri: postSource}} resizeMode="cover" style={styles.contentImage} />
+            <Image
+              source={postSource}
+              style={[
+                styles.contentImage,
+                {aspectRatio: getImageRatio(postSource.width, postSource.height)},
+              ]}
+            />
           )}
         </Pressable>
       </View>

@@ -24,6 +24,9 @@ export default ThemedStyleSheet((theme) => ({
     flex: 1,
     backgroundColor: theme.colors.background,
   },
+  form: {
+    flex: 1,
+  },
   input: {
     flex: 1,
     padding: Spacing.large,
@@ -32,6 +35,15 @@ export default ThemedStyleSheet((theme) => ({
     fontSize: 16,
     lineHeight: 24,
     ...Typography.medium,
+  },
+  imageContainer: {
+    padding: Spacing.pagePadding,
+  },
+  image: {
+    width: '100%',
+    resizeMode: 'cover',
+    borderRadius: 8,
+    overflow: 'hidden',
   },
 
   buttons: {
