@@ -74,7 +74,6 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
     return {uri: imageTag[1], width: dimensions[0], height: dimensions[1]};
   }, [event?.tags]);
 
-  // Animated style for the icon
   const animatedIconStyle = useAnimatedStyle(() => ({
     transform: [{scale: scale.value}],
   }));
@@ -90,7 +89,6 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
     navigation.navigate('PostDetail', {postId: event?.id, post: event});
   };
 
-  /** @TODO comment in Nostr */
   const toggleLike = async () => {
     if (!event?.id) return;
 
@@ -226,7 +224,7 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
               <IconButton icon="MoreHorizontalIcon" size={20} onPress={() => setMenuOpen(true)} />
             }
           >
-            <Menu.Item label="Share" icon="ShareIcon" />
+            {/* <Menu.Item label="Share" icon="ShareIcon" /> */}
             <Menu.Item
               label={profile?.username ? `Tip @${profile.username}` : 'Tip'}
               icon="CoinIcon"

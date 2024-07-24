@@ -12,7 +12,7 @@ import {
 } from '@starknet-wc/react';
 import {Platform} from 'react-native';
 
-import {NETWORK_NAME, WALLET_CONNECT_ID} from '../constants/env';
+import {NETWORK_NAME} from '../constants/env';
 import {RpcProviderProvider} from '../context/RpcProvider';
 import {WalletQRModal} from '../modules/WalletQRModal';
 import {providers} from '../services/provider';
@@ -38,14 +38,14 @@ export const StarknetReactProvider: React.FC<React.PropsWithChildren> = ({childr
         chains={[chain]}
         provider={providers}
         connectors={[
-          argentMobileConnector({
+          /* argentMobileConnector({
             chain: NETWORK_NAME,
             wcProjectId: WALLET_CONNECT_ID,
             dappName: 'Joyboy',
             description: 'Joyboy Starknet dApp',
             url: 'https://joyboy.community',
             provider,
-          }),
+          }), */
 
           ...(Platform.OS === 'web' ? injected : []),
         ]}

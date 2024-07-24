@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {useQueryClient} from '@tanstack/react-query';
+import * as Clipboard from 'expo-clipboard';
 import {useState} from 'react';
 import {Pressable, View} from 'react-native';
 
@@ -58,6 +59,11 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
     );
   };
 
+  const handleCopyPublicKey = async () => {
+    await Clipboard.setStringAsync(userPublicKey);
+    showToast({type: 'info', title: 'Public key copied to the clipboard'});
+  };
+
   return (
     <View>
       <ProfileHead
@@ -76,7 +82,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                 Edit profile
               </Button>
 
-              <Menu
+              {/* <Menu
                 open={menuOpen}
                 onClose={() => setMenuOpen(false)}
                 handle={
@@ -93,7 +99,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                   icon="ShareIcon"
                 />
                 <Menu.Item label="About" icon="InfoIconCircular" />
-              </Menu>
+              </Menu> */}
             </>
           ) : (
             <>
@@ -108,7 +114,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                 {isConnected ? 'UnFollow' : 'Follow'}
               </Button>
 
-              <IconButton icon="DoubleMessageIcon" size={20} style={styles.iconButton} />
+              {/* <IconButton icon="DoubleMessageIcon" size={20} style={styles.iconButton} /> */}
 
               <Menu
                 open={menuOpen}
@@ -130,12 +136,12 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                     setMenuOpen(false);
                   }}
                 />
-                <Menu.Item
+                {/* <Menu.Item
                   label={profile?.username ? `Share @${profile.username}` : 'Share'}
                   icon="ShareIcon"
                 />
                 <Menu.Item label="About" icon="InfoIconCircular" />
-                <Menu.Item label="Report user" icon="FlagIcon" />
+                <Menu.Item label="Report user" icon="FlagIcon" /> */}
               </Menu>
             </>
           )
@@ -164,7 +170,12 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
               {userPublicKey}
             </Text>
 
-            <IconButton size={16} icon="CopyIconStack" color="primary" />
+            <IconButton
+              size={16}
+              icon="CopyIconStack"
+              color="primary"
+              onPress={handleCopyPublicKey}
+            />
           </Pressable>
         </View>
 

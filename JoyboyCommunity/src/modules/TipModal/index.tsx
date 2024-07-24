@@ -2,7 +2,6 @@ import {NDKEvent} from '@nostr-dev-kit/ndk';
 import {useAccount} from '@starknet-react/core';
 import {forwardRef, useState} from 'react';
 import {View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {CallData, uint256} from 'starknet';
 
 import {Avatar, Button, Input, Modalize, Picker, Text} from '../../components';
@@ -115,111 +114,109 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(
     };
 
     return (
-      <Modalize title="Tip" ref={ref} modalStyle={styles.modal}>
-        <SafeAreaView edges={['bottom', 'left', 'right']}>
-          <View style={styles.card}>
-            <View style={styles.cardHeader}>
-              <View style={styles.cardContent}>
-                <Avatar size={48} source={require('../../assets/joyboy-logo.png')} />
+      <Modalize title="Tip" ref={ref} disableScrollIfPossible={false} modalStyle={styles.modal}>
+        <View style={styles.card}>
+          <View style={styles.cardHeader}>
+            <View style={styles.cardContent}>
+              <Avatar size={48} source={require('../../assets/joyboy-logo.png')} />
 
-                <View style={styles.cardInfo}>
-                  <Text
-                    fontSize={15}
-                    color="text"
-                    weight="bold"
-                    numberOfLines={1}
-                    ellipsizeMode="middle"
-                  >
-                    {profile?.displayName ?? profile?.name ?? event?.pubkey}
+              <View style={styles.cardInfo}>
+                <Text
+                  fontSize={15}
+                  color="text"
+                  weight="bold"
+                  numberOfLines={1}
+                  ellipsizeMode="middle"
+                >
+                  {profile?.displayName ?? profile?.name ?? event?.pubkey}
+                </Text>
+
+                {profile?.nip05 && (
+                  <Text fontSize={11} color="textLight" weight="regular">
+                    @{profile?.nip05}
                   </Text>
-
-                  {profile?.nip05 && (
-                    <Text fontSize={11} color="textLight" weight="regular">
-                      @{profile?.nip05}
-                    </Text>
-                  )}
-                </View>
+                )}
               </View>
             </View>
-
-            <Text
-              fontSize={13}
-              weight="medium"
-              color="text"
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={styles.cardContentText}
-            >
-              {event?.content}
-            </Text>
-          </View>
-
-          <View style={styles.pickerContainer}>
-            <View>
-              <Picker
-                label="Please select a token"
-                selectedValue={token}
-                onValueChange={(itemValue) => setToken(itemValue as TokenSymbol)}
-              >
-                {Object.values(TOKENS).map((tkn) => (
-                  <Picker.Item
-                    key={tkn[CHAIN_ID].symbol}
-                    label={tkn[CHAIN_ID].name}
-                    value={tkn[CHAIN_ID].symbol}
-                  />
-                ))}
-              </Picker>
-            </View>
-
-            <Input value={amount} onChangeText={setAmount} placeholder="Amount" />
-          </View>
-
-          <View style={styles.sending}>
-            <View style={styles.sendingText}>
-              <Text color="textSecondary" fontSize={16} weight="medium">
-                Sending
-              </Text>
-
-              {amount.length > 0 && token.length > 0 ? (
-                <Text color="primary" fontSize={16} weight="bold">
-                  {amount} {token}
-                </Text>
-              ) : (
-                <Text color="primary" fontSize={16} weight="bold">
-                  ...
-                </Text>
-              )}
-            </View>
-
-            <View style={styles.recipient}>
-              <Text fontSize={16} weight="regular">
-                to
-              </Text>
-              <Text numberOfLines={1} ellipsizeMode="middle" fontSize={16} weight="medium">
-                {(profile?.nip05 && `@${profile.nip05}`) ??
-                  profile?.displayName ??
-                  profile?.name ??
-                  event?.pubkey}
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.submitButton}>
-            <Button variant="secondary" disabled={!isActive} onPress={onTipPress}>
-              Tip
-            </Button>
           </View>
 
           <Text
-            weight="semiBold"
-            color="inputPlaceholder"
             fontSize={13}
-            align="center"
-            style={styles.comment}
+            weight="medium"
+            color="text"
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={styles.cardContentText}
           >
-            Tip friends and support creators with your favorite tokens.
+            {event?.content}
           </Text>
-        </SafeAreaView>
+        </View>
+
+        <View style={styles.pickerContainer}>
+          <View>
+            <Picker
+              label="Please select a token"
+              selectedValue={token}
+              onValueChange={(itemValue) => setToken(itemValue as TokenSymbol)}
+            >
+              {Object.values(TOKENS).map((tkn) => (
+                <Picker.Item
+                  key={tkn[CHAIN_ID].symbol}
+                  label={tkn[CHAIN_ID].name}
+                  value={tkn[CHAIN_ID].symbol}
+                />
+              ))}
+            </Picker>
+          </View>
+
+          <Input value={amount} onChangeText={setAmount} placeholder="Amount" />
+        </View>
+
+        <View style={styles.sending}>
+          <View style={styles.sendingText}>
+            <Text color="textSecondary" fontSize={16} weight="medium">
+              Sending
+            </Text>
+
+            {amount.length > 0 && token.length > 0 ? (
+              <Text color="primary" fontSize={16} weight="bold">
+                {amount} {token}
+              </Text>
+            ) : (
+              <Text color="primary" fontSize={16} weight="bold">
+                ...
+              </Text>
+            )}
+          </View>
+
+          <View style={styles.recipient}>
+            <Text fontSize={16} weight="regular">
+              to
+            </Text>
+            <Text numberOfLines={1} ellipsizeMode="middle" fontSize={16} weight="medium">
+              {(profile?.nip05 && `@${profile.nip05}`) ??
+                profile?.displayName ??
+                profile?.name ??
+                event?.pubkey}
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.submitButton}>
+          <Button variant="secondary" disabled={!isActive} onPress={onTipPress}>
+            Tip
+          </Button>
+        </View>
+
+        <Text
+          weight="semiBold"
+          color="inputPlaceholder"
+          fontSize={13}
+          align="center"
+          style={styles.comment}
+        >
+          Tip friends and support creators with your favorite tokens.
+        </Text>
       </Modalize>
     );
   },

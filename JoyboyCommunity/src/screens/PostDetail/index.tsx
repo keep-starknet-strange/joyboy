@@ -51,7 +51,7 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
       <Header
         showLogo={false}
         left={<IconButton icon="ChevronLeftIcon" size={24} onPress={navigation.goBack} />}
-        right={<IconButton icon="MoreHorizontalIcon" size={24} />}
+        /* right={<IconButton icon="MoreHorizontalIcon" size={24} />} */
         title="Conversation"
       />
 

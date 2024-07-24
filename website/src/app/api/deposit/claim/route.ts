@@ -117,6 +117,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({transaction_hash}, {status: HTTPStatus.OK});
     }
   } catch (error) {
+    console.error(error);
+
     return NextResponse.json(
       {code: ErrorCode.TRANSACTION_ERROR, error},
       {status: HTTPStatus.InternalServerError},

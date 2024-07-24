@@ -3,7 +3,6 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {JoyboyIcon} from '../../assets/icons';
 import {useStyles, useTheme} from '../../hooks';
-import {IconButton} from '../IconButton';
 import {Text} from '../Text';
 import stylesheet from './styles';
 
@@ -39,11 +38,13 @@ export const Header: React.FC<HeaderProps> = ({showLogo = true, left, right, tit
           </View>
         )}
 
-        {right ?? (
+        {right}
+
+        {/* {right ?? (
           <View style={styles.buttons}>
             <IconButton icon="BellIcon" size={20} />
           </View>
-        )}
+        )} */}
       </View>
     </SafeAreaView>
   );
