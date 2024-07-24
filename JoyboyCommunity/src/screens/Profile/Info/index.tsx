@@ -76,7 +76,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                 Edit profile
               </Button>
 
-              <Menu
+              {/* <Menu
                 open={menuOpen}
                 onClose={() => setMenuOpen(false)}
                 handle={
@@ -93,7 +93,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                   icon="ShareIcon"
                 />
                 <Menu.Item label="About" icon="InfoIconCircular" />
-              </Menu>
+              </Menu> */}
             </>
           ) : (
             <>
@@ -108,7 +108,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                 {isConnected ? 'UnFollow' : 'Follow'}
               </Button>
 
-              <IconButton icon="DoubleMessageIcon" size={20} style={styles.iconButton} />
+              {/* <IconButton icon="DoubleMessageIcon" size={20} style={styles.iconButton} /> */}
 
               <Menu
                 open={menuOpen}
@@ -130,12 +130,12 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
                     setMenuOpen(false);
                   }}
                 />
-                <Menu.Item
+                {/* <Menu.Item
                   label={profile?.username ? `Share @${profile.username}` : 'Share'}
                   icon="ShareIcon"
                 />
                 <Menu.Item label="About" icon="InfoIconCircular" />
-                <Menu.Item label="Report user" icon="FlagIcon" />
+                <Menu.Item label="Report user" icon="FlagIcon" /> */}
               </Menu>
             </>
           )
