@@ -57,3 +57,7 @@ export const dataURLToBlob = (dataURL: string) => {
 
   return new Blob([ab], {type: mimeString});
 };
+
+export const getImageRatio = (width: number, height: number, minRatio = 0.75, maxRatio = 1.5) => {
+  return Math.max(minRatio, Math.min(maxRatio, width / height));
+};

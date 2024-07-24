@@ -48,8 +48,10 @@ export default ThemedStyleSheet((theme) => ({
   },
   contentImage: {
     width: '100%',
-    height: 160,
+    height: 'auto',
+    resizeMode: 'cover',
     borderRadius: 8,
+    overflow: 'hidden',
     marginTop: Spacing.small,
   },
 
