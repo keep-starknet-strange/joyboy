@@ -25,6 +25,7 @@ export function DownloadSection() {
         <p className="text-sm desktop:text-[24px] desktop:leading-7 mb-6 tab:mb-[47px] desktop:w-[623px] w-[80%]">
           Joyboy is available on Android, iOS, iPadOS and macOS. It’s free and open source.
         </p>
+        <p>Coming soon</p>
         <div className="flex items-center gap-x-5">
           <button>
             <img src="/assets/appStoreBtn.svg" className="w-[100px] desktop:w-auto" alt="" />
