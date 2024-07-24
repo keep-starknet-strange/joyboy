@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {useQueryClient} from '@tanstack/react-query';
+import * as Clipboard from 'expo-clipboard';
 import {useState} from 'react';
 import {Pressable, View} from 'react-native';
 
@@ -56,6 +57,11 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
         },
       },
     );
+  };
+
+  const handleCopyPublicKey = async () => {
+    await Clipboard.setStringAsync(userPublicKey);
+    showToast({type: 'info', title: 'Public key copied to the clipboard'});
   };
 
   return (
@@ -164,7 +170,12 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({publicKey: userPublicKe
               {userPublicKey}
             </Text>
 
-            <IconButton size={16} icon="CopyIconStack" color="primary" />
+            <IconButton
+              size={16}
+              icon="CopyIconStack"
+              color="primary"
+              onPress={handleCopyPublicKey}
+            />
           </Pressable>
         </View>
 
