@@ -124,6 +124,8 @@ export async function POST(request: NextRequest) {
       );
     }
   } catch (error) {
+    console.error(error);
+
     return NextResponse.json(
       {code: ErrorCode.ESTIMATION_ERROR, error},
       {status: HTTPStatus.InternalServerError},
