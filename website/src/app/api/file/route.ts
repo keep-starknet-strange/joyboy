@@ -28,7 +28,8 @@ export async function POST(request: NextRequest) {
       {status: HTTPStatus.OK},
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
+
     return NextResponse.json(
       {code: ErrorCode.TRANSACTION_ERROR, error},
       {status: HTTPStatus.InternalServerError},
