@@ -1,7 +1,7 @@
 import {ContributeSection} from '../components/ContributeSection';
+import {DescriptionFeatures} from '../components/features/DescriptionFeatures';
 import {Footer} from '../components/Footer';
 import {Navbar} from '../components/Navbar';
-import { DescriptionFeatures } from '../components/features/DescriptionFeatures';
 
 export default function Features() {
   return (
