@@ -45,6 +45,11 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
   const queryClient = useQueryClient();
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isContentExpanded, setIsContentExpanded] = useState(false);
+
+  const toggleExpandedContent = () => {
+    setIsContentExpanded((prev) => !prev);
+  };
 
   const scale = useSharedValue(1);
 
@@ -106,6 +111,9 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
       },
     );
   };
+
+  const content = event?.content || '';
+  const truncatedContent = content.length > 200 ? `${content.slice(0, 200)}...` : content;
 
   return (
     <View style={styles.container}>
@@ -188,8 +196,14 @@ export const Post: React.FC<PostProps> = ({asComment, event}) => {
       <View style={styles.content}>
         <Pressable onPress={handleNavigateToPostDetails}>
           <Text color="textStrong" fontSize={13} lineHeight={20}>
-            {event?.content}
+            {isContentExpanded ? content : truncatedContent}
           </Text>
+
+          {content.length > 200 && (
+            <Pressable onPress={toggleExpandedContent}>
+              <Text style={styles.seeMore}>{isContentExpanded ? 'See less' : 'See more...'}</Text>
+            </Pressable>
+          )}
 
           {postSource && (
             <Image
