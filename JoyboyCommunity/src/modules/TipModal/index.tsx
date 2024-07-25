@@ -1,12 +1,13 @@
 import {NDKEvent} from '@nostr-dev-kit/ndk';
+import {mainnet, sepolia} from '@starknet-react/chains';
 import {useAccount} from '@starknet-react/core';
-import {forwardRef, useState} from 'react';
+import {forwardRef, useEffect, useState} from 'react';
 import {View} from 'react-native';
 import {CallData, uint256} from 'starknet';
 
 import {Avatar, Button, Input, Modalize, Picker, Text} from '../../components';
 import {ESCROW_ADDRESSES} from '../../constants/contracts';
-import {CHAIN_ID} from '../../constants/env';
+import {CHAIN_ID, NETWORK_NAME} from '../../constants/env';
 import {DEFAULT_TIMELOCK, Entrypoint} from '../../constants/misc';
 import {TOKENS, TokenSymbol} from '../../constants/tokens';
 import {useProfile, useStyles, useWaitConnection} from '../../hooks';
@@ -44,6 +45,26 @@ export const TipModal = forwardRef<Modalize, TipModalProps>(
     const waitConnection = useWaitConnection();
 
     const {showDialog, hideDialog} = useDialog();
+
+    useEffect(() => {
+      const handleChainIdChange = () => {
+        const chainId = account.chainId;
+        const currentChainId = NETWORK_NAME === 'SN_MAIN' ? mainnet.id : sepolia.id;
+
+        if (chainId === currentChainId) {
+          hideDialog();
+        } else if (chainId) {
+          showDialog({
+            title: 'Wrong Network',
+            description:
+              'Joyboy currently only supports the Starknet Sepolia network. Please switch to the Sepolia network to continue.',
+            buttons: [],
+          });
+        }
+      };
+
+      handleChainIdChange();
+    }, [account.chainId, hideDialog, showDialog]);
 
     const isActive = !!amount && !!token;
 
