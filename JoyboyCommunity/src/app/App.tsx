@@ -1,6 +1,6 @@
 import '@walletconnect/react-native-compat';
 
-import {starknetChainId, useNetwork} from '@starknet-react/core';
+import {starknetChainId, useAccount} from '@starknet-react/core';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import {useCallback, useEffect, useState} from 'react';
@@ -22,10 +22,10 @@ export default function App() {
 
   const {showDialog, hideDialog} = useDialog();
 
-  const {chain} = useNetwork();
+  const account = useAccount();
 
   useEffect(() => {
-    const chainId = chain.id ? starknetChainId(chain.id) : undefined;
+    const chainId = account.chainId ? starknetChainId(account.chainId) : undefined;
 
     if (chainId) {
       if (chainId !== CHAIN_ID) {
@@ -39,7 +39,9 @@ export default function App() {
         hideDialog();
       }
     }
-  }, [chain.id]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [account.chainId]);
 
   useEffect(() => {
     (async () => {
