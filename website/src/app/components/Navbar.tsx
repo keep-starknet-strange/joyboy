@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
-import { createPortal } from 'react-dom';
-
-import { MobileNavBar } from './MobileNavBar';
-import { NavigationLinks } from './NavigationLinks';
 import Link from 'next/link';
+import React, {useState} from 'react';
+import {createPortal} from 'react-dom';
+
+import {MobileNavBar} from './MobileNavBar';
+import {NavigationLinks} from './NavigationLinks';
 
 export function Navbar() {
   const [toggleNav, setToggleNav] = useState(false);
@@ -26,7 +26,7 @@ export function Navbar() {
         className="flex desktop:hidden"
         onClick={() => {
           setToggleNav(true);
-          window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+          window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
         }}
       >
         <img src="assets/hamburger-icon.svg" className="w-6 h-6" alt="" />

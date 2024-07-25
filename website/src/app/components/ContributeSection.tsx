@@ -25,10 +25,11 @@ export function ContributeSection() {
         <p className="desktop:text-[24px] text-sm mb-10 w-[80%] desktop:w-[623px]  text-center">
           Joyboy is available on iOS, Web and Android. It’s free and open source.
         </p>
-        <a 
-        href='https://github.com/keep-starknet-strange/joyboy'
-        target="_blank"
-        className="py-[15px] desktop:px-[42px] px-[24px] bg-white rounded-[5px] flex gap-x-[10px] items-center text-black">
+        <a
+          href="https://github.com/keep-starknet-strange/joyboy"
+          target="_blank"
+          className="py-[15px] desktop:px-[42px] px-[24px] bg-white rounded-[5px] flex gap-x-[10px] items-center text-black"
+        >
           <img src="/assets/githubLogoDark.svg" alt="" />
           See all issues on Github
           <img src="/assets/go-to.svg" alt="" />

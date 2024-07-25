@@ -44,7 +44,7 @@ export function DescriptionSection() {
             title="Social Payment"
             description="Tip, pay, and gift your Friends in a Decentralized manner, bring with you a Social graph for Bitcoin & ETH."
           />
-            <Feature
+          <Feature
             img="/assets/money-send.svg"
             title="Freedom vision"
             description="Community project that aims to bring the Freedom and Integrity world. Own your Digital Identity & Money, Content, Data."
