@@ -61,12 +61,12 @@ const Menu: React.FC<MenuProps> & MenuSubComponents = ({handle, open, onClose, c
     let Y;
 
     if (handleBounds.pageY + handleBounds.height + 40 > height) {
-        // If the handle is near the bottom, position the menu above the handle
-        Y = handleBounds.pageY - handleBounds.height - 8;
-      } else {
-        // Otherwise, position the menu below the handle
-        Y = handleBounds.pageY + handleBounds.height + 8;
-      }
+      // If the handle is near the bottom, position the menu above the handle
+      Y = handleBounds.pageY - handleBounds.height - 8;
+    } else {
+      // Otherwise, position the menu below the handle
+      Y = handleBounds.pageY + handleBounds.height + 8;
+    }
 
     if (X + menuWidth > width) {
       return {
