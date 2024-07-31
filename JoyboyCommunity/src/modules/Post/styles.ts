@@ -66,4 +66,9 @@ export default ThemedStyleSheet((theme) => ({
     alignItems: 'center',
     gap: Spacing.xxxsmall,
   },
+  seeMore: {
+    color: theme.colors.primary,
+    fontSize: 13,
+    marginTop: Spacing.xsmall,
+  },
 }));

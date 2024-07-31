@@ -1,12 +1,14 @@
 import '@walletconnect/react-native-compat';
 
+import {starknetChainId, useAccount} from '@starknet-react/core';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import {useCallback, useEffect, useState} from 'react';
 import {View} from 'react-native';
 
+import {CHAIN_ID} from '../constants/env';
 import {useTips} from '../hooks';
-import {useToast} from '../hooks/modals';
+import {useDialog, useToast} from '../hooks/modals';
 import {Router} from './Router';
 
 SplashScreen.preventAutoHideAsync();
@@ -17,6 +19,29 @@ export default function App() {
 
   const tips = useTips();
   const {showToast} = useToast();
+
+  const {showDialog, hideDialog} = useDialog();
+
+  const account = useAccount();
+
+  useEffect(() => {
+    const chainId = account.chainId ? starknetChainId(account.chainId) : undefined;
+
+    if (chainId) {
+      if (chainId !== CHAIN_ID) {
+        showDialog({
+          title: 'Wrong Network',
+          description:
+            'Joyboy currently only supports the Starknet Sepolia network. Please switch to the Sepolia network to continue.',
+          buttons: [],
+        });
+      } else {
+        hideDialog();
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [account.chainId]);
 
   useEffect(() => {
     (async () => {

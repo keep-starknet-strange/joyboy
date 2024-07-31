@@ -40,7 +40,7 @@ export const CreatePost: React.FC<CreatePostScreenProps> = ({navigation}) => {
   };
 
   const handleSendNote = async () => {
-    if (!note || note?.length == 0) {
+    if (!note || note?.trim().length == 0) {
       showToast({type: 'error', title: 'Please write your note'});
       return;
     }
