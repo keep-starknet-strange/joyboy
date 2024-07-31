@@ -23,7 +23,7 @@ export const PostDetail: React.FC<PostDetailScreenProps> = ({navigation, route})
   const {showToast} = useToast();
 
   const handleSendComment = async () => {
-    if (!comment || comment?.length == 0) {
+    if (!comment || comment?.trim().length == 0) {
       showToast({type: 'error', title: 'Please write your comment'});
       return;
     }
