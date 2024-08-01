@@ -38,7 +38,7 @@ const Menu: React.FC<MenuProps> & MenuSubComponents = ({handle, open, onClose, c
   const handleRef = useAnimatedRef<Animated.View>();
   const animation = useSharedValue(0);
 
-  const {width} = useWindowDimensions();
+  const {width, height} = useWindowDimensions();
 
   useEffect(() => {
     animation.value = withTiming(open ? 1 : 0, {duration: 150});
@@ -58,7 +58,15 @@ const Menu: React.FC<MenuProps> & MenuSubComponents = ({handle, open, onClose, c
     if (!handleBounds) return {};
 
     const X = handleBounds.pageX;
-    const Y = handleBounds.pageY + handleBounds.height + 8;
+    let Y;
+
+    if (handleBounds.pageY + handleBounds.height + 40 > height) {
+      // If the handle is near the bottom, position the menu above the handle
+      Y = handleBounds.pageY - handleBounds.height - 8;
+    } else {
+      // Otherwise, position the menu below the handle
+      Y = handleBounds.pageY + handleBounds.height + 8;
+    }
 
     if (X + menuWidth > width) {
       return {
@@ -73,7 +81,7 @@ const Menu: React.FC<MenuProps> & MenuSubComponents = ({handle, open, onClose, c
         left: X,
       };
     }
-  }, [width, animation]);
+  }, [width, height, animation]);
 
   return (
     <View style={styles.container}>
