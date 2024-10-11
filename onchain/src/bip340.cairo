@@ -41,28 +41,12 @@ const p: u256 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC
 /// `sha256(tag) || sha256(tag) || bytes(rx) || bytes(px) || m` as u256 where tag =
 /// "BIP0340/challenge".
 fn hash_challenge(rx: u256, px: u256, m: ByteArray) -> u256 {
-    // sha256(tag)
-    let [x0, x1, x2, x3, x4, x5, x6, x7] = compute_sha256_byte_array(@"BIP0340/challenge");
-
-    let mut ba = Default::default();
-    // sha256(tag)
-    ba.append_word(x0.into(), 4);
-    ba.append_word(x1.into(), 4);
-    ba.append_word(x2.into(), 4);
-    ba.append_word(x3.into(), 4);
-    ba.append_word(x4.into(), 4);
-    ba.append_word(x5.into(), 4);
-    ba.append_word(x6.into(), 4);
-    ba.append_word(x7.into(), 4);
-    // sha256(tag)
-    ba.append_word(x0.into(), 4);
-    ba.append_word(x1.into(), 4);
-    ba.append_word(x2.into(), 4);
-    ba.append_word(x3.into(), 4);
-    ba.append_word(x4.into(), 4);
-    ba.append_word(x5.into(), 4);
-    ba.append_word(x6.into(), 4);
-    ba.append_word(x7.into(), 4);
+    //Precomputed values -> tag = 'compute_sha256_byte_array(@"BIP0340/challenge")'
+    // sha256(tag) || sha256(tag)
+    let mut ba: ByteArray = Default::default();
+    ba.append_word(0x7bb52d7a9fef58323eb1bf7a407db382d2f3f2d81bb1224f49fe518f6d48d3, 31);
+    ba.append_word(0x7c7bb52d7a9fef58323eb1bf7a407db382d2f3f2d81bb1224f49fe518f6d48, 31);
+    ba.append_word(0xd37c, 2);
     // bytes(rx)
     ba.append_word(rx.high.into(), 16);
     ba.append_word(rx.low.into(), 16);
