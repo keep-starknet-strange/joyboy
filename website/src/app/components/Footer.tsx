@@ -28,17 +28,33 @@ export function Footer() {
             <li>SocialFi features</li>
           </ul>
         </div>
-        <div className="flex items-center gap-x-[14px] mt-5 tab:mt-0 self-center tab:self-end">
-          <a href="https://x.com/joyboystarknet" target="_blank">
-            <img src="/assets/twitterIcon.svg" alt="Joyboy Community Twitter / X" />
+        <div className="flex items-center gap-x-[10px] mt-5 tab:mt-0 self-center tab:self-end">
+          <a
+            href="https://x.com/joyboystarknet"
+            className=" flex justify-center items-center"
+            target="_blank"
+          >
+            <img
+              src="/assets/twitterIcon.svg"
+              alt="Joyboy Community Twitter / X"
+              className=" w-[42px] h-[42px]"
+            />
           </a>
           {/* <a
             href="https://t.me/JoyboyStarknet"
             target="_blank">
             <img src="/assets/telegramIcon.svg" alt="" />
           </a> */}
-          <a href="https://t.me/JoyboyStarknet" target="_blank">
-            <img src="/assets/telegramIcon.svg" alt="Joyboy Community Telegram " />
+          <a
+            href="https://t.me/JoyboyStarknet"
+            className=" flex justify-center items-center"
+            target="_blank"
+          >
+            <img
+              src="/assets/telegramIcon.svg"
+              alt="Joyboy Community Telegram "
+              className=" w-[42px] h-[42px]"
+            />
           </a>
         </div>
       </div>
